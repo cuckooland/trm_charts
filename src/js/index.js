@@ -137,6 +137,9 @@ chart_reference_frame1 = c3.generate({
     data: data.reference_frame1,
     transition: {
         duration: transition_duration
+    },
+    point: {
+        show: false
     }
 });
 
@@ -180,6 +183,9 @@ chart_reference_frame2 = c3.generate({
     },
     transition: {
         duration: transition_duration
+    },
+    point: {
+        show: false
     }
 });
 
