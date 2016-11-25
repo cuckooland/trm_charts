@@ -275,5 +275,6 @@ d3.select("#delete_last_account").on("click", delete_last_account);
 
 d3.select("#life_expectancy").on("change", update);
 d3.select("#growth").on("change", update);
+d3.select("#calculate_growth").on("click", update);
 d3.select("#dividend_start").on("change", update);
 d3.select("#money_duration").on("change", update);
