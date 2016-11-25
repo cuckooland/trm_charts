@@ -266,9 +266,14 @@ document.getElementById('calculate_growth').addEventListener('change', function 
         document.getElementById('growth').removeAttribute('disabled');
     }
 });
-document.getElementById('generate_button').addEventListener('click', update);
-document.getElementById('reference_frame').addEventListener('change', update);
-document.getElementById('formula_type').addEventListener('change', update);
 
-document.getElementById('add_account').addEventListener('click', add_account);
-document.getElementById('delete_last_account').addEventListener('click', delete_last_account);
+d3.select("#reference_frame").on("change", update);
+d3.select("#formula_type").on("change", update);
+
+d3.select("#add_account").on("click", add_account);
+d3.select("#delete_last_account").on("click", delete_last_account);
+
+d3.select("#life_expectancy").on("change", update);
+d3.select("#growth").on("change", update);
+d3.select("#dividend_start").on("change", update);
+d3.select("#money_duration").on("change", update);
