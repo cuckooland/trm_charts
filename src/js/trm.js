@@ -185,7 +185,8 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
     };
 
     this.calc_growth = function() {
-        this.growth = Math.log(this.life_expectancy/2) / (this.life_expectancy/2);
+        this.growth = Math.pow(this.life_expectancy / 2, 2 / this.life_expectancy) - 1;
+        // this.growth = Math.log(this.life_expectancy/2) / (this.life_expectancy/2);
     };
 
     this.get_people = function(index) {
