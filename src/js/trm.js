@@ -15,7 +15,7 @@
  *
  * Debug c3.js chart data
  *
- *      console.log(myMoney.get_data());
+ *      console.log(myMoney.generate_data());
  *
  * More infos:
  *
@@ -24,16 +24,24 @@
  * @param life_expectancy {int} Members life expectancy
  * @param dividend_start {int} First dividend amount
  * @param money_duration {int} Money duration to generate
+ * @param growth {double} Money duration to generate
+ * @param calculate_growth {boolean} Calculate growth from life expectancy
  */
-var libre_money_class = function(life_expectancy, dividend_start, money_duration) {
+var libre_money_class = function(life_expectancy, dividend_start, money_duration, growth, calculate_growth) {
 
-    this.life_expectancy = life_expectancy || 80;
-    this.dividend_start = dividend_start || 1000;
-    this.money_duration = money_duration || this.life_expectancy * 2;
+    var LIFE_EXPECTANCY = 80;
+    var DIVIDEND_START = 1000;
+    var MONEY_DURATION = 160;
+    var CALCULATE_GROWTH = true;
+    var GROWTH = 20;
+    
+    this.life_expectancy = life_expectancy || LIFE_EXPECTANCY;
+    this.dividend_start = dividend_start || DIVIDEND_START;
+    this.money_duration = money_duration || MONEY_DURATION;
 
-    this.growth = 0;
+    this.growth = growth || GROWTH;
     // Calculate growth from life expectancy
-    this.calculate_growth = true;
+    this.calculate_growth = calculate_growth || CALCULATE_GROWTH;
     this.accounts = [];
     this.plot_hub = {
         'quantitative_UDA': {
@@ -232,7 +240,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
         return false;
 	};
 
-    this.get_data = function () {
+    this.generate_data = function () {
 
         // init data
         this.reset_dividends();

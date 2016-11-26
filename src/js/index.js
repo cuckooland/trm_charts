@@ -1,105 +1,63 @@
 /**
  * Created by vit on 14/10/16.
  */
-/**
- * GUI Form class
- */
-gui_form_class = function () {
-
-    this.life_expectancy = 80;
-    this.dividend_start = 1000;
-    this.money_duration = 160;
-    this.reference_frame = 'quantitative';
-    this.formula_type = 'uda';
-    this.new_account_birth = 1;
-    this.calculate_growth = true;
-    this.growth = 9.22;
-
-    // Fill the form
-    this.init = function () {
-        document.getElementById('life_expectancy').value = this.life_expectancy;
-        document.getElementById('dividend_start').value = this.dividend_start;
-        document.getElementById('money_duration').value = this.money_duration;
-        document.getElementById('new_account_birth').value = this.new_account_birth;
-        document.getElementById('calculate_growth').checked = this.calculate_growth;
-        document.getElementById('growth').value = this.growth;
-    };
-
-    // Capture user entry
-    this.get_data = function () {
-        this.life_expectancy = parseInt(document.getElementById('life_expectancy').value);
-        this.dividend_start = parseInt(document.getElementById('dividend_start').value);
-        this.money_duration = parseInt(document.getElementById('money_duration').value);
-        this.new_account_birth = parseInt(document.getElementById('new_account_birth').value);
-        this.reference_frame = document.getElementById('reference_frame').options[
-            document.getElementById('reference_frame').selectedIndex
-            ].value;
-        this.formula_type = document.getElementById('formula_type').options[
-            document.getElementById('formula_type').selectedIndex
-            ].value;
-        this.calculate_growth = document.getElementById('calculate_growth').checked;
-        if (!this.calculate_growth) {
-            this.growth = parseFloat(document.getElementById('growth').value);
-        }
-    };
-
-    // Create reference frame selector
-    this.set_reference_frames = function (reference_frames) {
-        document.getElementById('reference_frame').options = [];
-        for (var index in Object.getOwnPropertyNames(reference_frames)) {
-            var key = Object.getOwnPropertyNames(reference_frames)[index];
-            document.getElementById('reference_frame').add(
-                new Option(reference_frames[key], key)
-            );
-        }
-    };
-
-    // Create formula selector
-    this.set_formula_selector = function (dividend_formulaes) {
-        document.getElementById('formula_type').options = [];
-        for (var index in Object.getOwnPropertyNames(dividend_formulaes)) {
-            var key = Object.getOwnPropertyNames(dividend_formulaes)[index];
-            document.getElementById('formula_type').add(
-                new Option(dividend_formulaes[key].name, key)
-            );
-        }
-    };
-
-    // Update dynamic values in form
-    this.update = function () {
-        // calculated growth
-        document.getElementById('growth').value = (money.growth * 100).toFixed(2);
+ 
+// Create reference frame selector
+function set_reference_frames(reference_frames) {
+    document.getElementById('reference_frame').options = [];
+    for (var index in Object.getOwnPropertyNames(reference_frames)) {
+        var key = Object.getOwnPropertyNames(reference_frames)[index];
+        document.getElementById('reference_frame').add(
+            new Option(reference_frames[key], key)
+        );
     }
 };
 
-// create instance form handler
-var money_form = {};
-gui_form_class.call(money_form);
+// Create formula selector
+function set_formula_selector(dividend_formulaes) {
+    document.getElementById('formula_type').options = [];
+    for (var index in Object.getOwnPropertyNames(dividend_formulaes)) {
+        var key = Object.getOwnPropertyNames(dividend_formulaes)[index];
+        document.getElementById('formula_type').add(
+            new Option(dividend_formulaes[key].name, key)
+        );
+    }
+};
 
-// fill form with preset data
-money_form.init();
+var TRANSITION_DURATION = 2000;
+
+var NEW_ACCOUNT_BIRTH = 1;
 
 // Create instance context
 var money = {};
 // Create instance of class in context with constructor parameters
-libre_money_class.call(money, money_form.life_expectancy, money_form.dividend_start, money_form.money_duration);
+libre_money_class.call(money);
+
+// Fill the form
+document.getElementById('life_expectancy').value = money.life_expectancy;
+document.getElementById('dividend_start').value = money.dividend_start;
+document.getElementById('money_duration').value = money.money_duration;
+document.getElementById('new_account_birth').value = NEW_ACCOUNT_BIRTH;
+document.getElementById('calculate_growth').checked = money.calculate_growth;
+document.getElementById('growth').value = money.growth;
 
 // capture reference_frames list
-money_form.set_reference_frames(money.reference_frames);
+set_reference_frames(money.reference_frames);
 
 // capture formulaes list
-money_form.set_formula_selector(money.dividend_formulae);
+set_formula_selector(money.dividend_formulae);
 
 // add a member account
 money.add_account('Member 1', 1);
 
 // generate data
-var data = money.get_data();
+var data = money.generate_data();
 
-// update dynamic values in form
-money_form.update();
-
-var transition_duration = 4000;
+// update in form with calculated growth
+if (money.calculate_growth) {
+    document.getElementById('growth').value = (money.growth * 100).toFixed(2);
+}
+enableGrowthForm(money.calculate_growth);
 
 // create and display chart from data
 chart_reference_frame1 = c3.generate({
@@ -136,7 +94,7 @@ chart_reference_frame1 = c3.generate({
     },
     data: data.reference_frame1,
     transition: {
-        duration: transition_duration
+        duration: TRANSITION_DURATION
     },
     point: {
         show: false
@@ -182,7 +140,7 @@ chart_reference_frame2 = c3.generate({
         pattern: ['#d62728', '#ff9896', '#9467bd']
     },
     transition: {
-        duration: transition_duration
+        duration: TRANSITION_DURATION
     },
     point: {
         show: false
@@ -192,20 +150,22 @@ chart_reference_frame2 = c3.generate({
 /**
  * Update chart data
  */
-function update(toUnload) {
-
-    // capture form values
-    money_form.get_data();
+function updateChartData(toUnload) {
 
     // update money values
-    money.life_expectancy = money_form.life_expectancy;
-    money.dividend_start = money_form.dividend_start;
-    money.money_duration = money_form.money_duration;
-    money.reference_frame = money_form.reference_frame;
-    money.formula_type = money_form.formula_type;
-    money.calculate_growth = money_form.calculate_growth;
-    money.growth = money_form.growth / 100;
-    console.log(money_form.growth, money.growth);
+    money.life_expectancy = parseInt(document.getElementById('life_expectancy').value);
+    money.dividend_start = parseInt(document.getElementById('dividend_start').value);
+    money.money_duration = parseInt(document.getElementById('money_duration').value);
+    money.reference_frame = document.getElementById('reference_frame').options[
+        document.getElementById('reference_frame').selectedIndex
+        ].value;
+    money.formula_type = document.getElementById('formula_type').options[
+        document.getElementById('formula_type').selectedIndex
+        ].value;
+    money.calculate_growth = document.getElementById('calculate_growth').checked;
+    if (!money.calculate_growth) {
+        money.growth = parseFloat(document.getElementById('growth').value) / 100;
+    }
     // Axes
     chart_reference_frame1.axis.labels({
         y: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
@@ -215,10 +175,12 @@ function update(toUnload) {
     });
 
     // calculate data
-    var data = money.get_data();
+    var data = money.generate_data();
 
-    // update dynamic values in form
-    money_form.update();
+    // update in form with calculated growth
+    if (money.calculate_growth) {
+        document.getElementById('growth').value = (money.growth * 100).toFixed(2);
+    }
 
     // tell load command to unload old data
     if (toUnload) {
@@ -239,7 +201,7 @@ function delete_last_account() {
     // If account deleted...
     if (account != false) {
         // Update remaining data
-        update(account.id);
+        updateChartData(account.id);
     }
 }
 
@@ -251,30 +213,34 @@ function add_account() {
     var name = 'Member ' + (money.accounts.length + 1)
 
     // capture user entry
-    money_form.get_data();
+    var new_account_birth = parseInt(document.getElementById('new_account_birth').value);
 
     // add a member account at the birth date specified
-    money.add_account(name, parseInt(money_form.new_account_birth));
+    money.add_account(name, parseInt(new_account_birth));
 
-    update();
+    updateChartData();
 }
 
-document.getElementById('calculate_growth').addEventListener('change', function () {
-    if (document.getElementById('calculate_growth').checked) {
+function enableGrowthForm(calculate_growth) {
+    if (calculate_growth) {
         document.getElementById('growth').setAttribute('disabled', 'disabled');
     } else {
         document.getElementById('growth').removeAttribute('disabled');
     }
+}
+
+document.getElementById('calculate_growth').addEventListener('change', function () {
+    enableGrowthForm(document.getElementById('calculate_growth').checked);
 });
 
-d3.select("#reference_frame").on("change", update);
-d3.select("#formula_type").on("change", update);
+d3.select("#reference_frame").on("change", updateChartData);
+d3.select("#formula_type").on("change", updateChartData);
 
 d3.select("#add_account").on("click", add_account);
 d3.select("#delete_last_account").on("click", delete_last_account);
 
-d3.select("#life_expectancy").on("change", update);
-d3.select("#growth").on("change", update);
-d3.select("#calculate_growth").on("click", update);
-d3.select("#dividend_start").on("change", update);
-d3.select("#money_duration").on("change", update);
+d3.select("#life_expectancy").on("change", updateChartData);
+d3.select("#growth").on("change", updateChartData);
+d3.select("#calculate_growth").on("click", updateChartData);
+d3.select("#dividend_start").on("change", updateChartData);
+d3.select("#money_duration").on("change", updateChartData);
