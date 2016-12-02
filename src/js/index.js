@@ -61,12 +61,9 @@ if (money.calculate_growth) {
 }
 enableGrowthForm(money.calculate_growth);
 
-// create and display chart from data
-chart_reference_frame1 = c3.generate({
-    padding: {
-        right: 50 // We try to align the axes of the two plots
-    },
-    bindto: '#chart_reference_frame1',
+// create and display chart from data.accounts
+accounts_chart = c3.generate({
+    bindto: '#accounts_chart',
     axis: {
         x: {
             label: 'Time',
@@ -94,22 +91,22 @@ chart_reference_frame1 = c3.generate({
         item: {
             // bind focus on the two charts
             onmouseover: function (id) {
-                chart_reference_frame1.focus(id);
+                accounts_chart.focus(id);
             }
         }
     },
-    data: data.reference_frame1,
+    data: data.accounts,
     transition: {
         duration: TRANSITION_DURATION
     },
     point: {
-        show: false
+          r: 2
     }
 });
 
-// create and display chart from data
-chart_reference_frame2 = c3.generate({
-    bindto: '#chart_reference_frame2',
+// create and display chart from data.dividend
+dividend_chart = c3.generate({
+    bindto: '#dividend_chart',
     axis: {
         x: {
             label: 'Time',
@@ -120,10 +117,6 @@ chart_reference_frame2 = c3.generate({
         },
         y: {
             label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
-        },
-        y2: {
-            label: 'People',
-            show: true
         }
     },
     tooltip: {
@@ -141,19 +134,111 @@ chart_reference_frame2 = c3.generate({
         item: {
             // bind focus on the two charts
             onmouseover: function (id) {
-                chart_reference_frame2.focus(id);
+                dividend_chart.focus(id);
             }
         }
     },
-    data: data.reference_frame2,
+    data: data.dividend,
     color: {
-        pattern: ['#d62728', '#ff9896', '#9467bd']
+        pattern: ['#d62728']
     },
     transition: {
         duration: TRANSITION_DURATION
     },
     point: {
-        show: false
+          r: 2
+    }
+});
+
+// create and display chart from data.headcount
+headcount_chart = c3.generate({
+    bindto: '#headcount_chart',
+    axis: {
+        x: {
+            label: 'Time',
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
+        },
+        y: {
+            label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+        }
+    },
+    tooltip: {
+        format: {
+            value: function (value, ratio, id, index) {
+                if (id == 'people') {
+                    return value;
+                }
+                var f = d3.format('.2f');
+                return f(value);
+            }
+        }
+    },
+    legend: {
+        item: {
+            // bind focus on the two charts
+            onmouseover: function (id) {
+                headcount_chart.focus(id);
+            }
+        }
+    },
+    data: data.headcount,
+    color: {
+        pattern: ['#ff9896']
+    },
+    transition: {
+        duration: TRANSITION_DURATION
+    },
+    point: {
+          r: 2
+    }
+});
+
+// create and display chart from data.monetary_supply
+monetary_supply_chart = c3.generate({
+    bindto: '#monetary_supply_chart',
+    axis: {
+        x: {
+            label: 'Time',
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
+        },
+        y: {
+            label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+        }
+    },
+    tooltip: {
+        format: {
+            value: function (value, ratio, id, index) {
+                if (id == 'people') {
+                    return value;
+                }
+                var f = d3.format('.2f');
+                return f(value);
+            }
+        }
+    },
+    legend: {
+        item: {
+            // bind focus on the two charts
+            onmouseover: function (id) {
+                monetary_supply_chart.focus(id);
+            }
+        }
+    },
+    data: data.monetary_supply,
+    color: {
+        pattern: ['#9467bd']
+    },
+    transition: {
+        duration: TRANSITION_DURATION
+    },
+    point: {
+          r: 2
     }
 });
 
@@ -177,10 +262,13 @@ function updateChartData(toUnload) {
         money.growth = parseFloat(document.getElementById('growth').value) / 100;
     }
     // Axes
-    chart_reference_frame1.axis.labels({
+    accounts_chart.axis.labels({
         y: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
     });
-    chart_reference_frame2.axis.labels({
+    dividend_chart.axis.labels({
+        y: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+    });
+    monetary_supply_chart.axis.labels({
         y: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
     });
 
@@ -194,13 +282,17 @@ function updateChartData(toUnload) {
 
     // tell load command to unload old data
     if (toUnload) {
-        data.reference_frame1.unload = toUnload;
-        data.reference_frame2.unload = toUnload;
+        data.accounts.unload = toUnload;
+        data.dividend.unload = toUnload;
+        data.headcount.unload = toUnload;
+        data.monetary_supply.unload = toUnload;
     }
 
     // reload data in chart
-    chart_reference_frame1.load(data.reference_frame1);
-    chart_reference_frame2.load(data.reference_frame2);
+    accounts_chart.load(data.accounts);
+    dividend_chart.load(data.dividend);
+    headcount_chart.load(data.headcount);
+    monetary_supply_chart.load(data.monetary_supply);
 }
 
 /**

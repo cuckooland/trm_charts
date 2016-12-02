@@ -37,9 +37,13 @@ label {
     width: 100%;
 }
 
+.chart {
+    display: inline-block;
+    width: 48%;
+    margin: 5px;
+    padding: 5px;
+}
+
 .frame {
     margin: 5px;
-    border: solid 1px;
-    border-color: grey;
-    border-radius: 5px;
 }
