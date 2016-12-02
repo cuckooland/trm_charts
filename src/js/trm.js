@@ -229,12 +229,12 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
         });
 	};
 
-	this.asDate = function(x) {
+	this.asDate = function(index) {
 	    if (this.by_month) {
-    	    return (2000 + Math.trunc(x / 12)) + '-' + (x % 12 + 1) + '-01';
+    	    return (2000 + Math.trunc(index / 12) + 1) + '-' + (index % 12) + '-01';
 	    }
 	    else {
-    	    return (2000 + x) + '-01-01';
+    	    return (2000 + index) + '-01-01';
 	    }
 	}
 	
@@ -249,10 +249,10 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
 	    
 	this.getMoneyDuration = function() {
 	    if (this.by_month) {
-	        return 12 * this.money_duration;
+	        return 12 * this.money_duration + 1;
 	    }
 	    else {
-	        return this.money_duration;
+	        return this.money_duration + 1;
 	    }
 	}
 	
