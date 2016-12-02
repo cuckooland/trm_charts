@@ -24,7 +24,7 @@ function set_formula_selector(dividend_formulaes) {
     }
 };
 
-var TRANSITION_DURATION = 2000;
+var TRANSITION_DURATION = 1000;
 
 var NEW_ACCOUNT_BIRTH = 1;
 
@@ -34,12 +34,14 @@ var money = {};
 libre_money_class.call(money);
 
 // Fill the form
-document.getElementById('life_expectancy').value = money.life_expectancy;
-document.getElementById('dividend_start').value = money.dividend_start;
-document.getElementById('money_duration').value = money.money_duration;
-document.getElementById('new_account_birth').value = NEW_ACCOUNT_BIRTH;
-document.getElementById('calculate_growth').checked = money.calculate_growth;
-document.getElementById('growth').value = money.growth;
+d3.select('#life_expectancy').property("value", money.life_expectancy);
+d3.select('#dividend_start').property("value", money.dividend_start);
+d3.select('#money_duration').property("value", money.money_duration);
+d3.select('#new_account_birth').property("value", money.new_account_birth);
+d3.select('#calculate_growth').property("value", money.calculate_growth);
+d3.select('#growth').property("value", money.growth);
+d3.select("input[value=\"by_month\"]").property("checked", money.by_month)
+d3.select("input[value=\"by_year\"]").property("checked", !money.by_month)
 
 // capture reference_frames list
 set_reference_frames(money.reference_frames);
@@ -67,7 +69,11 @@ chart_reference_frame1 = c3.generate({
     bindto: '#chart_reference_frame1',
     axis: {
         x: {
-            label: 'Year'
+            label: 'Time',
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
         },
         y: {
             label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
@@ -106,7 +112,11 @@ chart_reference_frame2 = c3.generate({
     bindto: '#chart_reference_frame2',
     axis: {
         x: {
-            label: 'Year'
+            label: 'Time',
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
         },
         y: {
             label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
@@ -236,6 +246,8 @@ document.getElementById('calculate_growth').addEventListener('change', function 
 d3.select("#reference_frame").on("change", updateChartData);
 d3.select("#formula_type").on("change", updateChartData);
 
+d3.selectAll(".rythm").on("change", change_rythm);
+
 d3.select("#add_account").on("click", add_account);
 d3.select("#delete_last_account").on("click", delete_last_account);
 
@@ -244,3 +256,14 @@ d3.select("#growth").on("change", updateChartData);
 d3.select("#calculate_growth").on("click", updateChartData);
 d3.select("#dividend_start").on("change", updateChartData);
 d3.select("#money_duration").on("change", updateChartData);
+
+
+function change_rythm() {
+    if (this.value === "by_month") {
+        money.by_month = true;
+    }
+    else {
+        money.by_month = false;
+    }
+    updateChartData();
+}

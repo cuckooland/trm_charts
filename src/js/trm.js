@@ -27,13 +27,14 @@
  * @param growth {double} Money duration to generate
  * @param calculate_growth {boolean} Calculate growth from life expectancy
  */
-var libre_money_class = function(life_expectancy, dividend_start, money_duration, growth, calculate_growth) {
+var libre_money_class = function(life_expectancy, dividend_start, money_duration, growth, calculate_growth, by_month) {
 
-    var LIFE_EXPECTANCY = 80;
+    var LIFE_EXPECTANCY = 70;
     var DIVIDEND_START = 1000;
-    var MONEY_DURATION = 160;
+    var MONEY_DURATION = 5;
     var CALCULATE_GROWTH = true;
     var GROWTH = 20;
+    var BY_MONTH = false;
     
     this.life_expectancy = life_expectancy || LIFE_EXPECTANCY;
     this.dividend_start = dividend_start || DIVIDEND_START;
@@ -42,6 +43,8 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
     this.growth = growth || GROWTH;
     // Calculate growth from life expectancy
     this.calculate_growth = calculate_growth || CALCULATE_GROWTH;
+    this.by_month = by_month || BY_MONTH;
+    
     this.accounts = [];
     this.plot_hub = {
         'quantitative_UDA': {
@@ -204,12 +207,10 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
         for (var index_account = 0; index_account < this.accounts.length; index_account++) {
 
             // if account is born...
-            if (index >= this.accounts[index_account].birth) {
-                // if account is alive...
-                if (index >= this.accounts[index_account].birth && index < this.accounts[index_account].birth + this.life_expectancy) {
-                    // increment people count
-                    people++;
-                }
+            // if account is alive...
+            if (this.getYear(index) >= this.accounts[index_account].birth && this.getYear(index) < this.accounts[index_account].birth + this.life_expectancy) {
+                // increment people count
+                people++;
             }
         }
 
@@ -228,6 +229,42 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
         });
 	};
 
+	this.asDate = function(x) {
+	    if (this.by_month) {
+    	    return (2000 + Math.trunc(x / 12)) + '-' + (x % 12 + 1) + '-01';
+	    }
+	    else {
+    	    return (2000 + x) + '-01-01';
+	    }
+	}
+	
+	this.getGrowth = function() {
+	    if (this.by_month) {
+	        return Math.pow((1 + this.growth), 1/12) - 1;
+	    }
+	    else {
+	        return this.growth;
+	    }
+	}
+	    
+	this.getMoneyDuration = function() {
+	    if (this.by_month) {
+	        return 12 * this.money_duration;
+	    }
+	    else {
+	        return this.money_duration;
+	    }
+	}
+	
+	this.getYear = function(index) {
+	    if (this.by_month) {
+	        return index / 12 + 1;
+	    }
+	    else {
+	        return index;
+	    }
+	}
+	
     /**
      * Return account deleted or false if only one account left
      *
@@ -253,7 +290,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
             // calculate growth
             this.calc_growth();
         }
-        console.log("growrth", this.growth);
+        console.log("growth", this.growth);
         // create c3.js data object
 		var data = {
             reference_frame1: {
@@ -307,13 +344,13 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
         var monetary_mass = 0;
         var average = 0;
         // for each dividend issuance...
-		for (index = 1; index <= this.money_duration; index++) {
+		for (index = 1; index <= this.getMoneyDuration(); index++) {
 
             // add time x axis
-            this.dividends.x.push(index);
-            this.people.x.push(index);
-            this.monetary_mass.x.push(index);
-            this.average.x.push(index);
+            this.dividends.x.push(this.asDate(index));
+            this.people.x.push(this.asDate(index));
+            this.monetary_mass.x.push(this.asDate(index));
+            this.average.x.push(this.asDate(index));
 
             // after first issuance, increase dividend by growth...
             if (index > 1) {
@@ -321,7 +358,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                 people = this.get_people(index);
                 // calculate next dividend depending on formula...
                 dividend = this.dividend_formulae[this.plot_hub[this.reference_frame + '_' + this.formula_type].formula].calculate(
-                    this.growth,
+                    this.getGrowth(),
                     this.dividends.y[this.dividends.y.length - 1],
                     this.monetary_mass.y[this.monetary_mass.y.length - 1],
                     people,
@@ -343,14 +380,14 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                 data.reference_frame1.names[this.accounts[index_account].id] = this.accounts[index_account].name;
 
                 // if account is born...
-                if (index >= this.accounts[index_account].birth) {
+                if (this.getYear(index) >= this.accounts[index_account].birth) {
                     // if account is alive...
-                    if (index >= this.accounts[index_account].birth && index < this.accounts[index_account].birth + this.life_expectancy) {
+                    if (this.getYear(index) < this.accounts[index_account].birth + this.life_expectancy) {
                         // add a dividend to the account balance
                         this.accounts[index_account].balance += this.dividends.y[this.dividends.y.length - 1];
                     }
                     // add x value
-                    this.accounts[index_account].x.push(index);
+                    this.accounts[index_account].x.push(this.asDate(index));
                     // add y value
                     this.accounts[index_account].y.push(this.accounts[index_account].balance);
                 }
@@ -371,7 +408,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
             this.average.y.push(average);
 		}
 
-		for (index = 1; index <= this.money_duration; index++) {
+		for (index = 1; index <= this.getMoneyDuration(); index++) {
 
             this.dividends.display_y.push(this.get_reference_frame_value(this.dividends.y[index-1], index-1));
 
@@ -379,7 +416,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
             for (index_account = 0; index_account < this.accounts.length; index_account++) {
 
                 // if account is born...
-                if (index >= this.accounts[index_account].birth) {
+                if (this.getYear(index) >= this.accounts[index_account].birth) {
                     // add display_y value
                     this.accounts[index_account].display_y.push(this.get_reference_frame_value(this.accounts[index_account].y[index-this.accounts[index_account].birth], index-1));
                 }
