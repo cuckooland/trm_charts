@@ -34,12 +34,6 @@
         </div>
     </div>
     <div class="frame">
-        <label for="new_account_birth">New member birth year</label><input id="new_account_birth" type="text"
-                                                                           title="Set the year of birth of the next new member"/>
-        <input id="add_account" type="button" value="New Member"/>
-        <input id="delete_last_account" type="button" value="Delete Last Member"/>
-    </div>
-    <div class="frame">
         <div class="row">
             <label for="life_expectancy">Life Expectancy</label>
             <input id="life_expectancy" type="text" name="life_expectancy"
@@ -47,28 +41,37 @@
             <span>Years</span>
         </div>
         <div class="row">
-            <label for="growth">Growth</label>
-            <input id="growth" type="text" name="growth" disabled="disabled"
-                   title="Monetary mass growth in percent per year"/>
-            <span>% / Year</span>
-            <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calculate growth from life expectancy (ev) : growth = ln(ev/2)/(ev/2) * 100">
+            <label for="calculate_growth">Calculate growth (c)</label>
+            <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calculate growth per year (c) from life expectancy (ex) : c = (ex/2)^(1/(ex/2)) * 100">
         </div>
         <div class="row">
-            <label for="dividend_start">First Dividend</label>
+            <label for="growth">Growth</label>
+            <input id="growth" type="text" name="growth" disabled="disabled"
+                   title="Monetary supply growth in percent per year"/>
+            <span>% / Year</span>
+        </div>
+        <div class="row">
+          <label><input class= "rythm" type="radio" name="mode" value="by_month"> Per month</label>
+          <label><input class= "rythm" type="radio" name="mode" value="by_year" checked> Per year</label>
+        </div>
+        <div class="row">
+            <label for="dividend_start">First Universal Dividend (UD)</label>
             <input id="dividend_start" type="text" name="dividend_start"
-                   title="Firt dividend value in units"/>
+                   title="Universal Dividend value at the begining of the currency (in currency units)"/>
             <span>Units</span>
         </div>
         <div class="row">
-            <label for="money_duration">Money Duration</label>
+            <label for="money_duration">Displayed period</label>
             <input id="money_duration" type="text" name="money_duration"
-                   title="Duration of the money in years (chart X axis size)"/>
+                   title="Upper bound of the X axis (in years)"/>
             <span>Years</span>
         </div>
-        <div class="row">
-          <label><input class= "rythm" type="radio" name="mode" value="by_month"> By month</label>
-          <label><input class= "rythm" type="radio" name="mode" value="by_year" checked> By year</label>
-        </div>
+    </div>
+    <div class="frame">
+        <label for="new_account_birth">New member birth year</label><input id="new_account_birth" type="text"
+                                                                           title="Set the year of birth of the next new member"/>
+        <input id="add_account" type="button" value="New Member"/>
+        <input id="delete_last_account" type="button" value="Delete Last Member"/>
     </div>
 </form>
 
