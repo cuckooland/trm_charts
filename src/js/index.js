@@ -8,7 +8,7 @@ function set_reference_frames(reference_frames) {
     for (var index in Object.getOwnPropertyNames(reference_frames)) {
         var key = Object.getOwnPropertyNames(reference_frames)[index];
         document.getElementById('reference_frame').add(
-            new Option(reference_frames[key], key)
+            new Option(reference_frames[key].name, key)
         );
     }
 };
@@ -47,7 +47,7 @@ d3.select("input[value=\"by_year\"]").property("checked", !money.by_month)
 set_reference_frames(money.reference_frames);
 
 // capture formulaes list
-set_formula_selector(money.dividend_formulae);
+set_formula_selector(money.dividend_formulaes);
 
 // add a member account
 money.add_account('Member 1', 1);
@@ -73,7 +73,7 @@ accounts_chart = c3.generate({
             }
         },
         y: {
-            label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+            label: money.reference_frames[money.reference_frame].unit_label
         }
     },
     tooltip: {
@@ -116,7 +116,7 @@ dividend_chart = c3.generate({
             }
         },
         y: {
-            label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+            label: money.reference_frames[money.reference_frame].unit_label
         }
     },
     tooltip: {
@@ -162,7 +162,7 @@ headcount_chart = c3.generate({
             }
         },
         y: {
-            label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+            label: 'Headcount'
         }
     },
     tooltip: {
@@ -208,7 +208,7 @@ monetary_supply_chart = c3.generate({
             }
         },
         y: {
-            label: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+            label: money.reference_frames[money.reference_frame].unit_label
         }
     },
     tooltip: {
@@ -263,13 +263,13 @@ function updateChartData(toUnload) {
     }
     // Axes
     accounts_chart.axis.labels({
-        y: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+        y: money.reference_frames[money.reference_frame].unit_label
     });
     dividend_chart.axis.labels({
-        y: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+        y: money.reference_frames[money.reference_frame].unit_label
     });
     monetary_supply_chart.axis.labels({
-        y: money.plot_hub[money.reference_frame + '_' + money.formula_type].unit_label
+        y: money.reference_frames[money.reference_frame].unit_label
     });
 
     // calculate data
