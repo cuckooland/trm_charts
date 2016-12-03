@@ -198,6 +198,15 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
 	    }
 	}
 	
+	this.get_i_time = function(year) {
+	    if (this.by_month) {
+	        return (year -1) * 12 + 1;
+	    }
+	    else {
+	        return year;
+	    }
+	}
+	
     /**
      * Return account deleted or false if only one account left
      *
@@ -358,9 +367,10 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
             for (i_account = 0; i_account < this.accounts.length; i_account++) {
 
                 // if account is born...
-                if (this.getYear(i_time) >= this.accounts[i_account].birth) {
+                var birth_time = this.get_i_time(this.accounts[i_account].birth);
+                if (i_time >= birth_time) {
                     // add display_y value
-                    this.accounts[i_account].display_y.push(this.get_reference_frame_value(this.accounts[i_account].y[i_time-this.accounts[i_account].birth], i_time-1));
+                    this.accounts[i_account].display_y.push(this.get_reference_frame_value(this.accounts[i_account].y[i_time - birth_time], i_time-1));
                 }
             }
 
