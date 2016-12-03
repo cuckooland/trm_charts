@@ -66,22 +66,25 @@ accounts_chart = c3.generate({
     bindto: '#accounts_chart',
     axis: {
         x: {
-            label: 'Time',
+            label: {
+                text: 'Time',
+                position: 'outer-center'
+            },
             type: 'timeseries',
             tick: {
                 format: '%Y-%m-%d'
             }
         },
         y: {
-            label: money.reference_frames[money.reference_frame].unit_label
+            label: {
+                text: money.reference_frames[money.reference_frame].unit_label,
+                position: 'outer-middle'
+            }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                if (id == 'people') {
-                    return value;
-                }
                 var f = d3.format('.2f');
                 return f(value);
             }
@@ -109,22 +112,26 @@ dividend_chart = c3.generate({
     bindto: '#dividend_chart',
     axis: {
         x: {
-            label: 'Time',
+            label: {
+                text: 'Time',
+                position: 'outer-center'
+            },
             type: 'timeseries',
             tick: {
                 format: '%Y-%m-%d'
             }
         },
         y: {
-            label: money.reference_frames[money.reference_frame].unit_label
+            label: {
+                text: money.reference_frames[money.reference_frame].unit_label,
+                position: 'outer-middle'
+            },
+            position: 'outer-top'
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                if (id == 'people') {
-                    return value;
-                }
                 var f = d3.format('.2f');
                 return f(value);
             }
@@ -155,24 +162,27 @@ headcount_chart = c3.generate({
     bindto: '#headcount_chart',
     axis: {
         x: {
-            label: 'Time',
+            label: {
+                text: 'Time',
+                position: 'outer-center'
+            },
             type: 'timeseries',
             tick: {
                 format: '%Y-%m-%d'
             }
         },
         y: {
-            label: 'Headcount'
+            label: {
+                text: 'Headcount',
+                position: 'outer-middle'
+            },
+            position: 'outer-top'
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                if (id == 'people') {
-                    return value;
-                }
-                var f = d3.format('.2f');
-                return f(value);
+                return value;
             }
         }
     },
@@ -201,22 +211,26 @@ monetary_supply_chart = c3.generate({
     bindto: '#monetary_supply_chart',
     axis: {
         x: {
-            label: 'Time',
+            label: {
+                text: 'Time',
+                position: 'outer-center'
+            },
             type: 'timeseries',
             tick: {
                 format: '%Y-%m-%d'
             }
         },
         y: {
-            label: money.reference_frames[money.reference_frame].unit_label
+            label: {
+                text: money.reference_frames[money.reference_frame].unit_label,
+                position: 'outer-middle'
+            },
+            position: 'outer-top'
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                if (id == 'people') {
-                    return value;
-                }
                 var f = d3.format('.2f');
                 return f(value);
             }
