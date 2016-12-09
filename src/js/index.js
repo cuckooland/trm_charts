@@ -73,7 +73,8 @@ accounts_chart = c3.generate({
             type: 'timeseries',
             tick: {
                 format: '%Y-%m-%d'
-            }
+            },
+            min: '2000-01-01'
         },
         y: {
             label: {
@@ -119,7 +120,8 @@ dividend_chart = c3.generate({
             type: 'timeseries',
             tick: {
                 format: '%Y-%m-%d'
-            }
+            },
+            min: '2000-01-01'
         },
         y: {
             label: {
@@ -169,7 +171,8 @@ headcount_chart = c3.generate({
             type: 'timeseries',
             tick: {
                 format: '%Y-%m-%d'
-            }
+            },
+            min: '2000-01-01'
         },
         y: {
             label: {
@@ -218,7 +221,8 @@ monetary_supply_chart = c3.generate({
             type: 'timeseries',
             tick: {
                 format: '%Y-%m-%d'
-            }
+            },
+            min: '2000-01-01'
         },
         y: {
             label: {
