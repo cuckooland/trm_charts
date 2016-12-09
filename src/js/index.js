@@ -80,13 +80,16 @@ accounts_chart = c3.generate({
             label: {
                 text: money.reference_frames[money.reference_frame].unit_label,
                 position: 'outer-middle'
+            },
+            tick: {
+                format: d3.format("s")
             }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                var f = d3.format('.2f');
+                var f = d3.format('.3s');
                 return f(value);
             }
         }
@@ -128,13 +131,16 @@ dividend_chart = c3.generate({
                 text: money.reference_frames[money.reference_frame].unit_label,
                 position: 'outer-middle'
             },
-            position: 'outer-top'
+            position: 'outer-top',
+            tick: {
+                format: d3.format("s")
+            }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                var f = d3.format('.2f');
+                var f = d3.format('.3s');
                 return f(value);
             }
         }
@@ -179,13 +185,17 @@ headcount_chart = c3.generate({
                 text: 'Headcount',
                 position: 'outer-middle'
             },
-            position: 'outer-top'
+            position: 'outer-top',
+            tick: {
+                format: d3.format("d")
+            }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                return value;
+                var f = d3.format('.3d');
+                return f(value);
             }
         }
     },
@@ -229,13 +239,16 @@ monetary_supply_chart = c3.generate({
                 text: money.reference_frames[money.reference_frame].unit_label,
                 position: 'outer-middle'
             },
-            position: 'outer-top'
+            position: 'outer-top',
+            tick: {
+                format: d3.format("s")
+            }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                var f = d3.format('.2f');
+                var f = d3.format('.3s');
                 return f(value);
             }
         }
