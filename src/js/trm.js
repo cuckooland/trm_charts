@@ -364,9 +364,9 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                 average = monetary_mass / this.people.y[i_time];
                 this.average.y.push(average);
                 
-                this.dividends.display_y.push(this.get_reference_frame_value(dividend, this.dividends.length - 1));
-                this.monetary_mass.display_y.push(this.get_reference_frame_value(monetary_mass, this.monetary_mass.length - 1));
-                this.average.display_y.push(this.get_reference_frame_value(average, this.average.length - 1));
+                this.dividends.display_y.push(this.get_reference_frame_value(dividend, this.dividends.y.length - 1));
+                this.monetary_mass.display_y.push(this.get_reference_frame_value(monetary_mass, this.monetary_mass.y.length - 1));
+                this.average.display_y.push(this.get_reference_frame_value(average, this.average.y.length - 1));
                 
                 // for each account...
                 for (i_account = 0; i_account < this.accounts.length; i_account++) {
@@ -377,7 +377,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                         // if account is alive...
                         if (i_time < this.get_i_time(this.accounts[i_account].birth + this.life_expectancy)) {
                             // add display_y value
-                            this.accounts[i_account].display_y.push(this.get_reference_frame_value(this.accounts[i_account].y[this.accounts[i_account].y.length - 1], this.dividends.length - 1));
+                            this.accounts[i_account].display_y.push(this.get_reference_frame_value(this.accounts[i_account].y[this.accounts[i_account].y.length - 1], this.dividends.y.length - 1));
                         }
                     }
                 }
