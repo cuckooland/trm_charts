@@ -280,7 +280,7 @@ function updateChartData(toUnload) {
 
     // update money values
     money.life_expectancy = parseInt(document.getElementById('life_expectancy').value);
-    money.dividend_start = parseInt(document.getElementById('dividend_start').value);
+    money.dividend_start = parseFloat(document.getElementById('dividend_start').value);
     money.money_duration = parseInt(document.getElementById('money_duration').value);
     money.reference_frame = document.getElementById('reference_frame').options[
         document.getElementById('reference_frame').selectedIndex
