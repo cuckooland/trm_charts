@@ -62,8 +62,8 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
             }
         },
         'average': {
-            name: "% (M/N)",
-            unit_label: '% (M/N)',
+            name: "%(M/N)",
+            unit_label: '%(M/N)',
             transform: function(money, value, i_time) {
                 if (money.average.y[i_time] > 0) {
                     return (value / money.average.y[i_time]) * 100;

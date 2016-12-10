@@ -78,7 +78,7 @@ accounts_chart = c3.generate({
         },
         y: {
             label: {
-                text: money.reference_frames[money.reference_frame].unit_label,
+                text: 'Account (' + money.reference_frames[money.reference_frame].unit_label + ')',
                 position: 'outer-middle'
             },
             tick: {
@@ -128,7 +128,7 @@ dividend_chart = c3.generate({
         },
         y: {
             label: {
-                text: money.reference_frames[money.reference_frame].unit_label,
+                text: 'Dividend (' + money.reference_frames[money.reference_frame].unit_label + ')',
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -236,7 +236,7 @@ monetary_supply_chart = c3.generate({
         },
         y: {
             label: {
-                text: money.reference_frames[money.reference_frame].unit_label,
+                text: 'Monetary Mass (' + money.reference_frames[money.reference_frame].unit_label + ')',
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -294,13 +294,13 @@ function updateChartData(toUnload) {
     }
     // Axes
     accounts_chart.axis.labels({
-        y: money.reference_frames[money.reference_frame].unit_label
+        y: 'Account (' + money.reference_frames[money.reference_frame].unit_label + ')',
     });
     dividend_chart.axis.labels({
-        y: money.reference_frames[money.reference_frame].unit_label
+        y: 'Dividend (' + money.reference_frames[money.reference_frame].unit_label + ')',
     });
     monetary_supply_chart.axis.labels({
-        y: money.reference_frames[money.reference_frame].unit_label
+        y: 'Monetary Mass (' + money.reference_frames[money.reference_frame].unit_label + ')',
     });
 
     // calculate data
