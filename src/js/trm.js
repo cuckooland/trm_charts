@@ -82,41 +82,40 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
     this.dividend_formulaes = {
         'UDA': {
             name: "UDA(t) = max[UDA(t-1);c*M(t-1)/N(t)]",
-            calculate: function (growth, previous_dividend, previous_monetary_mass, previous_people, current_people) {
+            calculate: function (money, i_time) {
+                var previous_dividend = money.dividends.y[money.dividends.y.length - 1];
+                var current_people = money.people.y[i_time]
                 if (current_people > 0) {
-                    return Math.max(previous_dividend, growth * (previous_monetary_mass / current_people));
+                    var current_monetary_mass = money.monetary_mass.y[money.monetary_mass.y.length - 1];
+                    return Math.max(previous_dividend, money.getGrowth() * (current_monetary_mass / current_people));
                 } else {
                     return previous_dividend;
                 }
-            },
-            firstDividendPerMonth: function (growth, firstDividendPerYear) {
-                return firstDividendPerYear / 12;
             }
         },
         'UDB': {
             name: "UDB(t) = (1+c)*UDB(t-1)",
-            calculate: function (growth, previous_dividend, previous_monetary_mass, previous_people, current_people) {
+            calculate: function (money, i_time) {
+                var previous_dividend = money.dividends.y[money.dividends.y.length - 1];
+                var current_people = money.people.y[i_time]
                 if (current_people > 0) {
-                    return previous_dividend * (1 + growth);
+                    return previous_dividend * (1 + money.getGrowth());
                 } else {
                     return previous_dividend;
                 }
-            },
-            firstDividendPerMonth: function (growth, firstDividendPerYear) {
-                return firstDividendPerYear * growth / (Math.pow(1 + growth, 12) - 1);
             }
         },
         'UDG': {
             name: "UDĞ(t) = UDĞ(t-1) + c²*M(t-1)/N(t-1)",
-            calculate: function (growth, previous_dividend, previous_monetary_mass, previous_people, current_people) {
+            calculate: function (money, i_time) {
+                var previous_dividend = money.dividends.y[money.dividends.y.length - 1];
+                var previous_people = money.people.y[i_time - 1]
                 if (previous_people > 0) {
-                    return previous_dividend + (Math.pow(growth, 2) * (previous_monetary_mass / previous_people));
+                    var previous_monetary_mass = money.monetary_mass.y[money.monetary_mass.y.length - 2];
+                    return previous_dividend + (Math.pow(money.getGrowth(), 2) * (previous_monetary_mass / previous_people));
                 } else {
                     return previous_dividend;
                 }
-            },
-            firstDividendPerMonth: function (growth, firstDividendPerYear) {
-                return firstDividendPerYear * growth / (Math.pow(1 + growth, 12) - 1);
             }
         }
     };
@@ -150,7 +149,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
 
             // if account is born...
             // if account is alive...
-            if (i_time > this.get_i_time(this.accounts[i_account].birth) && i_time < this.get_i_time(this.accounts[i_account].birth + this.life_expectancy)) {
+            if (i_time >= this.get_i_time(this.accounts[i_account].birth) && i_time < this.get_i_time(this.accounts[i_account].birth + this.life_expectancy)) {
                 // increment people count
                 people++;
             }
@@ -209,7 +208,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
 	
 	this.get_dividend_start = function() {
 	    if (this.by_month) {
-            return this.dividend_formulaes[this.formula_type].firstDividendPerMonth(this.getGrowth(), this.dividend_start);
+            return this.dividend_start * this.getGrowth() / (Math.pow(1 + this.getGrowth(), 12) - 1);
 	    }
 	    else {
 	        return this.dividend_start;
@@ -308,8 +307,8 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
             this.people.y.push(this.get_people(i_time));
 		}
         
-        // for each dividend issuance...
-		for (i_time = 0; i_time <= this.getMoneyDuration(); i_time++) {
+        // for each time of the people existence...
+	    for (i_time = 0; i_time <= this.getMoneyDuration(); i_time++) {
 		    
 		    if (this.people.y[i_time] > 0) {
                 // add time x axis
@@ -320,21 +319,6 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                 this.average.i_time.push(i_time);
                 this.average.x.push(this.asDate(i_time));
     
-                // after first issuance, increase dividend by growth...
-                if (dividend === 0) {
-                    dividend = this.get_dividend_start();
-                }
-                else {
-                    // calculate next dividend depending on formula...
-                    dividend = this.dividend_formulaes[this.formula_type].calculate(
-                        this.getGrowth(),
-                        this.dividends.y[this.dividends.y.length - 1],
-                        this.monetary_mass.y[this.monetary_mass.y.length - 1],
-                        this.people.y[i_time],
-                        this.people.y[i_time - 1]
-                    );
-                }
-    
                 this.dividends.y.push(dividend);
     
                 monetary_mass = 0;
@@ -342,11 +326,17 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                 for (i_account = 0; i_account < this.accounts.length; i_account++) {
     
                     // if account is born...
-                    if (i_time > this.get_i_time(this.accounts[i_account].birth)) {
+                    if (i_time >= this.get_i_time(this.accounts[i_account].birth)) {
                         // if account is alive...
                         if (i_time < this.get_i_time(this.accounts[i_account].birth + this.life_expectancy)) {
-                            // add a dividend to the account balance
-                            this.accounts[i_account].balance += dividend;
+                            if (i_time === 0 || this.people.y[i_time - 1] === 0) {
+                                // when money starts, add some money to each account so that headcount looks like constant  
+                                this.accounts[i_account].balance += this.get_dividend_start() / this.getGrowth();
+                            }
+                            else {
+                                // add a dividend to the account balance
+                                this.accounts[i_account].balance += dividend;
+                            }
                         }
                         // add x value
                         this.accounts[i_account].x.push(this.asDate(i_time));
@@ -364,6 +354,15 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                 average = monetary_mass / this.people.y[i_time];
                 this.average.y.push(average);
                 
+                // after first issuance, increase dividend by growth...
+                if (i_time === 0 || this.people.y[i_time - 1] === 0) {
+                    dividend = this.get_dividend_start();
+                }
+                else {
+                    // calculate next dividend depending on formula...
+                    dividend = this.dividend_formulaes[this.formula_type].calculate(this, i_time);
+                }
+    
                 this.dividends.display_y.push(this.get_reference_frame_value(dividend, this.dividends.y.length - 1));
                 this.monetary_mass.display_y.push(this.get_reference_frame_value(monetary_mass, this.monetary_mass.y.length - 1));
                 this.average.display_y.push(this.get_reference_frame_value(average, this.average.y.length - 1));
@@ -373,7 +372,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
     
                     // if account is born...
                     var birth_time = this.get_i_time(this.accounts[i_account].birth);
-                    if (i_time > birth_time) {
+                    if (i_time >= birth_time) {
                         // if account is alive...
                         if (i_time < this.get_i_time(this.accounts[i_account].birth + this.life_expectancy)) {
                             // add display_y value
@@ -381,9 +380,6 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                         }
                     }
                 }
-            }
-            else {
-                dividend = 0;
             }
 		}
 
@@ -427,7 +423,8 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
      * @returns {number|*}
      */
     this.get_reference_frame_value = function (value, i_time) {
-        return this.reference_frames[this.reference_frame].transform(this, value, i_time);
+        reference_frame_value = this.reference_frames[this.reference_frame].transform(this, value, i_time);
+        return Math.round (reference_frame_value * 100) / 100;
     }
 
 };
