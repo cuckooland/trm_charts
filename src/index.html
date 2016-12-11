@@ -27,52 +27,52 @@
 <form>
     <div class="frame">
         <div class="row">
-            <label for="reference_frame">Reference Frame</label><select id="reference_frame" name="reference_frame"></select>
+            <label class= "leftComp" for="reference_frame">Reference Frame</label><select id="reference_frame" name="reference_frame"></select>
         </div>
         <div class="row">
-            <label for="formula_type">Dividend Formula</label><select id="formula_type" name="formula_type"></select>
+            <label class= "leftComp" for="formula_type">Dividend Formula</label><select id="formula_type" name="formula_type"></select>
         </div>
     </div>
     <div class="frame">
         <div class="row">
-            <label for="life_expectancy">Life Expectancy</label>
+            <label class= "leftComp" for="life_expectancy">Life Expectancy</label>
             <input id="life_expectancy" type="text" name="life_expectancy"
                    title="Members life expectancy in Years"/>
             <span>Years</span>
         </div>
         <div class="row">
-            <label for="calculate_growth">Calculate growth (c)</label>
+            <label class= "leftComp" for="calculate_growth">Calculate Growth (c)</label>
             <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calculate growth per year (c) from life expectancy (ex) : c = (ex/2)^(1/(ex/2)) * 100">
         </div>
         <div class="row">
-            <label for="growth">Growth (c)</label>
+            <label class= "leftComp" for="growth">Growth (c)</label>
             <input id="growth" type="text" name="growth" disabled="disabled"
                    title="Monetary supply growth in percent per year"/>
             <span>% / Year</span>
         </div>
         <div class="row">
-          <label><input class= "rythm" type="radio" name="rythm" value="by_year" checked> Per year</label>
-          <label><input class= "rythm" type="radio" name="rythm" value="by_month"> Per month</label>
+          <label class= "leftComp"><input type="radio" name="rythm" value="by_year" checked> Annual</label>
+          <label><input type="radio" name="rythm" value="by_month"> Monthly Emission</label>
         </div>
         <div class="row">
-            <label for="dividend_start">First Universal Dividend (UD0)</label>
+            <label class= "leftComp" for="dividend_start">First Universal Dividend (UD0)</label>
             <input id="dividend_start" type="text" name="dividend_start"
                    title="Universal Dividend value at the begining of the currency (in currency units)"/>
             <span>Units</span>
         </div>
         <div class="row">
-          <label><input class= "startAccount" type="radio" name="startAccount" value="udByGrowth" checked> First account = UD0/c </label>
-          <label><input class= "startAccount" type="radio" name="startAccount" value="empty"> Empty first account</label>
+          <label class= "leftComp"><input type="radio" name="startAccount" value="udByGrowth" checked> First account = UD0/c </label>
+          <label><input type="radio" name="startAccount" value="empty"> Empty first account</label>
         </div>
         <div class="row">
-            <label for="money_duration">Displayed period</label>
+            <label class= "leftComp" for="money_duration">Displayed period</label>
             <input id="money_duration" type="text" name="money_duration"
                    title="Upper bound of the X axis (in years)"/>
             <span>Years</span>
         </div>
     </div>
     <div class="frame">
-        <label for="new_account_birth">New member birth year</label><input id="new_account_birth" type="text"
+        <label class= "leftComp" for="new_account_birth">New member birth year</label><input id="new_account_birth" type="text"
                                                                            title="Set the year of birth of the next new member"/>
         <input id="add_account" type="button" value="New Member"/>
         <input id="delete_last_account" type="button" value="Delete Last Member"/>
