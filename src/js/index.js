@@ -37,7 +37,7 @@ libre_money_class.call(money);
 d3.select('#life_expectancy').property("value", money.life_expectancy);
 d3.select('#dividend_start').property("value", money.dividend_start);
 d3.select('#money_duration').property("value", money.money_duration);
-d3.select('#new_account_birth').property("value", money.new_account_birth);
+d3.select('#new_account_birth').property("value", NEW_ACCOUNT_BIRTH);
 d3.select('#calculate_growth').property("checked", money.calculate_growth);
 d3.select('#growth').property("value", money.growth);
 d3.select("input[value=\"by_month\"]").property("checked", money.by_month);
