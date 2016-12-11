@@ -42,6 +42,8 @@ d3.select('#calculate_growth').property("checked", money.calculate_growth);
 d3.select('#growth').property("value", money.growth);
 d3.select("input[value=\"by_month\"]").property("checked", money.by_month)
 d3.select("input[value=\"by_year\"]").property("checked", !money.by_month)
+d3.select("input[value=\"empty\"]").property("checked", money.empty_start_account)
+d3.select("input[value=\"udByGrowth\"]").property("checked", !money.empty_start_account)
 
 // capture reference_frames list
 set_reference_frames(money.reference_frames);
@@ -370,6 +372,7 @@ d3.select("#reference_frame").on("change", updateChartData);
 d3.select("#formula_type").on("change", updateChartData);
 
 d3.selectAll(".rythm").on("change", change_rythm);
+d3.selectAll(".startAccount").on("change", change_start_account);
 
 d3.select("#add_account").on("click", add_account);
 d3.select("#delete_last_account").on("click", delete_last_account);
@@ -387,6 +390,16 @@ function change_rythm() {
     }
     else {
         money.by_month = false;
+    }
+    updateChartData();
+}
+
+function change_start_account() {
+    if (this.value === "empty") {
+        money.empty_start_account = true;
+    }
+    else {
+        money.empty_start_account = false;
     }
     updateChartData();
 }

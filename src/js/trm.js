@@ -27,7 +27,7 @@
  * @param growth {double} Money duration to generate
  * @param calculate_growth {boolean} Calculate growth from life expectancy
  */
-var libre_money_class = function(life_expectancy, dividend_start, money_duration, growth, calculate_growth, by_month) {
+var libre_money_class = function(life_expectancy, dividend_start, money_duration, growth, calculate_growth, by_month, empty_start_account) {
 
     var LIFE_EXPECTANCY = 80;
     var DIVIDEND_START = 1000;
@@ -35,6 +35,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
     var CALCULATE_GROWTH = true;
     var GROWTH = 20;
     var BY_MONTH = false;
+    var EMPTY_START_ACCOUNT = false;
     
     this.life_expectancy = life_expectancy || LIFE_EXPECTANCY;
     this.dividend_start = dividend_start || DIVIDEND_START;
@@ -44,6 +45,7 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
     // Calculate growth from life expectancy
     this.calculate_growth = calculate_growth || CALCULATE_GROWTH;
     this.by_month = by_month || BY_MONTH;
+    this.empty_start_account = empty_start_account || EMPTY_START_ACCOUNT;
     
     this.accounts = [];
     this.reference_frames = {
@@ -327,8 +329,10 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                         // if account is alive...
                         if (i_time < this.get_i_time(this.accounts[i_account].birth + this.life_expectancy)) {
                             if (i_time === 0 || this.people.y[i_time - 1] === 0) {
-                                // when money starts, add some money to each account so that headcount looks like constant  
-                                this.accounts[i_account].balance += this.get_dividend_start() / this.getGrowth();
+                        	    if (!this.empty_start_account) {
+                                    // when money starts, add some money to each account so that headcount looks like constant  
+                                    this.accounts[i_account].balance += this.get_dividend_start() / this.getGrowth();
+                                }
                             }
                             else {
                                 // add a dividend to the account balance
