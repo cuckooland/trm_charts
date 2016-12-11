@@ -45,24 +45,24 @@
             <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calculate growth per year (c) from life expectancy (ex) : c = (ex/2)^(1/(ex/2)) * 100">
         </div>
         <div class="row">
-            <label for="growth">Growth</label>
+            <label for="growth">Growth (c)</label>
             <input id="growth" type="text" name="growth" disabled="disabled"
                    title="Monetary supply growth in percent per year"/>
             <span>% / Year</span>
         </div>
         <div class="row">
-          <label><input class= "rythm" type="radio" name="rythm" value="by_month"> Per month</label>
           <label><input class= "rythm" type="radio" name="rythm" value="by_year" checked> Per year</label>
+          <label><input class= "rythm" type="radio" name="rythm" value="by_month"> Per month</label>
         </div>
         <div class="row">
-            <label for="dividend_start">First Universal Dividend (UD)</label>
+            <label for="dividend_start">First Universal Dividend (UD0)</label>
             <input id="dividend_start" type="text" name="dividend_start"
                    title="Universal Dividend value at the begining of the currency (in currency units)"/>
             <span>Units</span>
         </div>
         <div class="row">
-          <label><input class= "startAccount" type="radio" name="startAccount" value="empty"> Empty start account</label>
-          <label><input class= "startAccount" type="radio" name="startAccount" value="udByGrowth" checked> Start account = UD/c </label>
+          <label><input class= "startAccount" type="radio" name="startAccount" value="udByGrowth" checked> First account = UD0/c </label>
+          <label><input class= "startAccount" type="radio" name="startAccount" value="empty"> Empty first account</label>
         </div>
         <div class="row">
             <label for="money_duration">Displayed period</label>
