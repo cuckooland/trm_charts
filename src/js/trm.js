@@ -258,27 +258,21 @@ var libre_money_class = function(life_expectancy, dividend_start, money_duration
                 }
             },
             dividend: {
-                xs: {
-                    'dividend': 'x_dividend'
-                },
+                x: 'x_dividend',
                 names: {
                     'dividend': 'Dividend'
                 },
                 columns: []
             },
             headcount: {
-                xs: {
-                    'people': 'x_people'
-                },
+                x: 'x_people',
                 names: {
                     'people': 'People'
                 },
                 columns: []
             },
             monetary_supply: {
-                xs: {
-                    'monetary_mass': 'x_monetary_mass'
-                },
+                x: 'x_monetary_mass',
                 names: {
                     'monetary_mass': 'Monetary Mass'
                 },
