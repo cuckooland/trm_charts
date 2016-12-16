@@ -93,7 +93,8 @@ accounts_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d'
+                format: '%Y-%m-%d',
+                count: 2
             },
             min: '2000-01-01'
         },
@@ -142,7 +143,8 @@ dividend_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d'
+                format: '%Y-%m-%d',
+                count: 2 
             },
             min: '2000-01-01'
         },
@@ -195,7 +197,8 @@ headcount_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d'
+                format: '%Y-%m-%d',
+                count: 2
             },
             min: '2000-01-01'
         },
@@ -249,7 +252,8 @@ monetary_supply_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d'
+                format: '%Y-%m-%d',
+                count: 2
             },
             min: '2000-01-01'
         },
@@ -290,6 +294,10 @@ monetary_supply_chart = c3.generate({
           r: 2
     }
 });
+
+function toto() {
+    return money.money_duration;
+}
 
 function format1(value) {
     var f = d3.format('s');
