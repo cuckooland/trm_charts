@@ -28,6 +28,25 @@ var TRANSITION_DURATION = 1000;
 
 var NEW_ACCOUNT_BIRTH = 1;
 
+var EXP_FORMATS = {
+    'y': '-24',
+    'z': '-21',
+    'a': '-18',
+    'f': '-15',
+    'p': '-12',
+    'n': '-9',
+    'µ': '-6',
+    'm': '-3',
+    'k': '3',
+    'M': '6',
+    'G': '9',
+    'T': '12',
+    'P': '15',
+    'E': '18',
+    'Z': '21',
+    'Y': '24'
+}
+    
 // Create instance context
 var money = {};
 // Create instance of class in context with constructor parameters
@@ -84,15 +103,14 @@ accounts_chart = c3.generate({
                 position: 'outer-middle'
             },
             tick: {
-                format: d3.format("s")
+                format: format1
             }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                var f = d3.format('.3s');
-                return f(value);
+                return format3(value);
             }
         }
     },
@@ -135,15 +153,14 @@ dividend_chart = c3.generate({
             },
             position: 'outer-top',
             tick: {
-                format: d3.format("s")
+                format: format1
             }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                var f = d3.format('.3s');
-                return f(value);
+                return format3(value);
             }
         }
     },
@@ -243,15 +260,14 @@ monetary_supply_chart = c3.generate({
             },
             position: 'outer-top',
             tick: {
-                format: d3.format("s")
+                format: format1
             }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                var f = d3.format('.3s');
-                return f(value);
+                return format3(value);
             }
         }
     },
@@ -274,6 +290,24 @@ monetary_supply_chart = c3.generate({
           r: 2
     }
 });
+
+function format1(value) {
+    var f = d3.format('s');
+    return withExp(f(value));
+}
+
+function format3(value) {
+    var f = d3.format('.3s');
+    return withExp(f(value));
+}
+
+function withExp(siValue) {
+    var siStr = /[yzafpnµmkMGTPEZY]/.exec(siValue)
+    if (siStr != null) {
+        return siValue.replace(siStr, " e" + EXP_FORMATS[siStr]);
+    }
+    return siValue;
+}
 
 /**
  * Update chart data
