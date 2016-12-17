@@ -87,6 +87,9 @@ enableUD0Forms();
 // create and display chart from data.accounts
 accounts_chart = c3.generate({
     bindto: '#accounts_chart',
+    padding: {
+        right: 20
+    },
     axis: {
         x: {
             label: {
@@ -138,6 +141,9 @@ accounts_chart = c3.generate({
 // create and display chart from data.dividend
 dividend_chart = c3.generate({
     bindto: '#dividend_chart',
+    padding: {
+        right: 20
+    },
     axis: {
         x: {
             label: {
@@ -193,6 +199,9 @@ dividend_chart = c3.generate({
 // create and display chart from data.headcount
 headcount_chart = c3.generate({
     bindto: '#headcount_chart',
+    padding: {
+        right: 20,
+    },
     axis: {
         x: {
             label: {
@@ -249,6 +258,9 @@ headcount_chart = c3.generate({
 // create and display chart from data.monetary_supply
 monetary_supply_chart = c3.generate({
     bindto: '#monetary_supply_chart',
+    padding: {
+        right: 20
+    },
     axis: {
         x: {
             label: {
