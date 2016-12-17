@@ -35,45 +35,44 @@
     </div>
     <div class="frame">
         <div class="row">
-            <label class= "leftComp" for="life_expectancy">Life Expectancy</label>
+            <label class= "leftComp" for="life_expectancy">Life Expectancy (in years)</label>
             <input id="life_expectancy" type="text" name="life_expectancy"
                    title="Members life expectancy in Years"/>
-            <span>Years</span>
         </div>
         <div class="row">
-            <label class= "leftComp" for="calculate_growth">Calculate Growth (c)</label>
+            <label class= "leftComp" for="calculate_growth">Calculate Growth "c"</label>
             <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calculate growth per year (c) from life expectancy (ex) : c = (ex/2)^(1/(ex/2)) * 100">
         </div>
         <div class="row">
-            <label class="leftComp" for="growth">Growth (c)</label>
-            <input id="growth" type="text" name="growth" disabled="disabled"
+            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Annual Emission (in %)</label>
+            <input id="annualGrowth" type="text" name="annualGrowth" disabled="disabled"
                    title="Monetary supply growth in percent per year"/>
-            <span>% / Year</span>
+            <label for="annualDividendStart">First dividend "UD0" (in monetary units)</label>
+            <input id="annualDividendStart" type="text" name="annualDividendStart"
+                   title="Universal Dividend value at the begining of the currency (in monetary units)"/>
         </div>
         <div class="row">
-          <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Annual</label>
-          <label><input class="rythm" type="radio" name="rythm" value="by_month"> Monthly Emission</label>
-        </div>
-        <div class="row">
-            <label class= "leftComp" for="dividend_start">First Universal Dividend (UD0)</label>
-            <input id="dividend_start" type="text" name="dividend_start"
-                   title="Universal Dividend value at the begining of the currency (in currency units)"/>
-            <span>Units</span>
+            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_month"> Monthly Emission (in %)</label>
+            <input id="monthlyGrowth" type="text" name="monthlyGrowth" disabled="disabled"
+                   title="Monetary supply growth in percent per month"/>
+            <label for="monthlyDividendStart">First dividend "UD0" (in monetary units)</label>
+            <input id="monthlyDividendStart" type="text" name="monthlyDividendStart"
+                   title="Universal Dividend value at the begining of the currency (in monetary units)"/>
         </div>
         <div class="row">
           <label class= "leftComp"><input class="startAccount" type="radio" name="startAccount" value="udByGrowth" checked> First account = UD0/c </label>
           <label><input class="startAccount" type="radio" name="startAccount" value="empty"> Empty first account</label>
         </div>
         <div class="row">
-            <label class= "leftComp" for="money_duration">Displayed period</label>
+            <label class= "leftComp" for="money_duration">Displayed period (in years)</label>
             <input id="money_duration" type="text" name="money_duration"
                    title="Upper bound of the X axis (in years)"/>
-            <span>Years</span>
         </div>
     </div>
     <div class="frame">
-        <label class= "leftComp" for="new_account_birth">New member birth year</label><input id="new_account_birth" type="text"
-                                                                           title="Set the year of birth of the next new member"/>
+        <label class= "leftComp" for="new_account_birth">New member birth year</label>
+        <input id="new_account_birth" type="text" name="new_account_birth" 
+               title="Set the year of birth of the next new member"/>
         <input id="add_account" type="button" value="New Member"/>
         <input id="delete_last_account" type="button" value="Delete Last Member"/>
     </div>

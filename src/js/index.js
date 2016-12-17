@@ -52,18 +52,6 @@ var money = {};
 // Create instance of class in context with constructor parameters
 libre_money_class.call(money);
 
-// Fill the form
-d3.select('#life_expectancy').property("value", money.life_expectancy);
-d3.select('#dividend_start').property("value", money.dividend_start);
-d3.select('#money_duration').property("value", money.money_duration);
-d3.select('#new_account_birth').property("value", NEW_ACCOUNT_BIRTH);
-d3.select('#calculate_growth').property("checked", money.calculate_growth);
-d3.select('#growth').property("value", money.growth);
-d3.select("input[value=\"by_month\"]").property("checked", money.by_month);
-d3.select("input[value=\"by_year\"]").property("checked", !money.by_month);
-d3.select("input[value=\"empty\"]").property("checked", money.empty_start_account);
-d3.select("input[value=\"udByGrowth\"]").property("checked", !money.empty_start_account);
-
 // capture reference_frames list
 set_reference_frames(money.reference_frames);
 
@@ -76,11 +64,25 @@ money.add_account('Member 1', 1);
 // generate data
 var data = money.generate_data();
 
+// Fill the form
+d3.select('#life_expectancy').property("value", money.life_expectancy);
+d3.select('#annualDividendStart').property("value", (money.get_dividend_start(money.YEAR)).toFixed(2));
+d3.select('#monthlyDividendStart').property("value", (money.get_dividend_start(money.MONTH)).toFixed(2));
+d3.select('#money_duration').property("value", money.displayedPeriodInYears);
+d3.select('#new_account_birth').property("value", NEW_ACCOUNT_BIRTH);
+d3.select('#calculate_growth').property("checked", money.calculate_growth);
+d3.select("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
+d3.select("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
+d3.select("input[value=\"empty\"]").property("checked", money.empty_start_account);
+d3.select("input[value=\"udByGrowth\"]").property("checked", !money.empty_start_account);
+
 // update in form with calculated growth
 if (money.calculate_growth) {
-    document.getElementById('growth').value = (money.growth * 100).toFixed(2);
+    d3.select('#annualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
+    d3.select('#monthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
 }
-enableGrowthForm(money.calculate_growth);
+enableGrowthForms(money.calculate_growth);
+enableUD0Forms();
 
 // create and display chart from data.accounts
 accounts_chart = c3.generate({
@@ -295,10 +297,6 @@ monetary_supply_chart = c3.generate({
     }
 });
 
-function toto() {
-    return money.money_duration;
-}
-
 function format1(value) {
     var f = d3.format('s');
     return withExp(f(value));
@@ -312,7 +310,7 @@ function format3(value) {
 function withExp(siValue) {
     var siStr = /[yzafpnµmkMGTPEZY]/.exec(siValue)
     if (siStr != null) {
-        return siValue.replace(siStr, " e" + EXP_FORMATS[siStr]);
+        return siValue.replace(siStr, " E" + EXP_FORMATS[siStr]);
     }
     return siValue;
 }
@@ -322,38 +320,8 @@ function withExp(siValue) {
  */
 function updateChartData(toUnload) {
 
-    // update money values
-    money.life_expectancy = parseInt(document.getElementById('life_expectancy').value);
-    money.dividend_start = parseFloat(document.getElementById('dividend_start').value);
-    money.money_duration = parseInt(document.getElementById('money_duration').value);
-    money.reference_frame = document.getElementById('reference_frame').options[
-        document.getElementById('reference_frame').selectedIndex
-        ].value;
-    money.formula_type = document.getElementById('formula_type').options[
-        document.getElementById('formula_type').selectedIndex
-        ].value;
-    money.calculate_growth = document.getElementById('calculate_growth').checked;
-    if (!money.calculate_growth) {
-        money.growth = parseFloat(document.getElementById('growth').value) / 100;
-    }
-    // Axes
-    accounts_chart.axis.labels({
-        y: 'Account (' + money.reference_frames[money.reference_frame].unit_label + ')',
-    });
-    dividend_chart.axis.labels({
-        y: 'Dividend (' + money.reference_frames[money.reference_frame].unit_label + ')',
-    });
-    monetary_supply_chart.axis.labels({
-        y: 'Monetary Mass (' + money.reference_frames[money.reference_frame].unit_label + ')',
-    });
-
     // calculate data
     var data = money.generate_data();
-
-    // update in form with calculated growth
-    if (money.calculate_growth) {
-        document.getElementById('growth').value = (money.growth * 100).toFixed(2);
-    }
 
     // tell load command to unload old data
     if (toUnload) {
@@ -398,20 +366,35 @@ function add_account() {
     updateChartData();
 }
 
-function enableGrowthForm(calculate_growth) {
+function enableGrowthForms(calculate_growth) {
     if (calculate_growth) {
-        document.getElementById('growth').setAttribute('disabled', 'disabled');
+        document.getElementById('annualGrowth').setAttribute('disabled', 'disabled');
+        document.getElementById('monthlyGrowth').setAttribute('disabled', 'disabled');
     } else {
-        document.getElementById('growth').removeAttribute('disabled');
+        if (money.growthTimeUnit === money.MONTH) {
+            document.getElementById('annualGrowth').setAttribute('disabled', 'disabled');
+            document.getElementById('monthlyGrowth').removeAttribute('disabled');
+        }
+        else {
+            document.getElementById('annualGrowth').removeAttribute('disabled');
+            document.getElementById('monthlyGrowth').setAttribute('disabled', 'disabled');
+        }
     }
 }
 
-document.getElementById('calculate_growth').addEventListener('change', function () {
-    enableGrowthForm(document.getElementById('calculate_growth').checked);
-});
+function enableUD0Forms() {
+    if (money.growthTimeUnit === money.MONTH) {
+        document.getElementById('annualDividendStart').setAttribute('disabled', 'disabled');
+        document.getElementById('monthlyDividendStart').removeAttribute('disabled');
+    }
+    else {
+        document.getElementById('annualDividendStart').removeAttribute('disabled');
+        document.getElementById('monthlyDividendStart').setAttribute('disabled', 'disabled');
+    }
+}
 
-d3.select("#reference_frame").on("change", updateChartData);
-d3.select("#formula_type").on("change", updateChartData);
+d3.select("#reference_frame").on("change", change_reference_frame);
+d3.select("#formula_type").on("change", change_formula_type);
 
 d3.selectAll(".rythm").on("change", change_rythm);
 d3.selectAll(".startAccount").on("change", change_start_account);
@@ -419,20 +402,48 @@ d3.selectAll(".startAccount").on("change", change_start_account);
 d3.select("#add_account").on("click", add_account);
 d3.select("#delete_last_account").on("click", delete_last_account);
 
-d3.select("#life_expectancy").on("change", updateChartData);
-d3.select("#growth").on("change", updateChartData);
-d3.select("#calculate_growth").on("click", updateChartData);
-d3.select("#dividend_start").on("change", updateChartData);
-d3.select("#money_duration").on("change", updateChartData);
+d3.select("#life_expectancy").on("change", change_life_expectancy);
+d3.select("#annualGrowth").on("change", changeAnnualGrowth);
+d3.select("#monthlyGrowth").on("change", changeMonthlyGrowth);
+d3.select("#calculate_growth").on("click", change_calculate_growth);
+d3.select("#annualDividendStart").on("change", changeAnnualDividendStart);
+d3.select("#monthlyDividendStart").on("change", changeMonthlyDividendStart);
+d3.select("#money_duration").on("change", change_money_duration);
 
+
+function change_reference_frame() {
+    money.reference_frame = this.options[this.selectedIndex].value;
+        
+    // Axes
+    accounts_chart.axis.labels({
+        y: 'Account (' + money.reference_frames[money.reference_frame].unit_label + ')',
+    });
+    dividend_chart.axis.labels({
+        y: 'Dividend (' + money.reference_frames[money.reference_frame].unit_label + ')',
+    });
+    monetary_supply_chart.axis.labels({
+        y: 'Monetary Mass (' + money.reference_frames[money.reference_frame].unit_label + ')',
+    });
+    
+    updateChartData();
+}
+
+function change_formula_type() {
+    money.formula_type = this.options[this.selectedIndex].value;
+    updateChartData();
+}
 
 function change_rythm() {
     if (this.value === "by_month") {
-        money.by_month = true;
+        money.growthTimeUnit = money.MONTH;
+        money.dividend_start = parseFloat(document.getElementById('monthlyDividendStart').value);
     }
     else {
-        money.by_month = false;
+        money.growthTimeUnit = money.YEAR;
+        money.dividend_start = parseFloat(document.getElementById('annualDividendStart').value);
     }
+    enableGrowthForms(document.getElementById('calculate_growth').checked);
+    enableUD0Forms();
     updateChartData();
 }
 
@@ -443,5 +454,64 @@ function change_start_account() {
     else {
         money.empty_start_account = false;
     }
+    updateChartData();
+}
+
+function change_life_expectancy() {
+    money.life_expectancy = parseInt(this.value);
+    updateChartData();
+    update_calculate_growth();
+}
+
+function changeAnnualGrowth() {
+	money.growth = parseFloat(this.value) / 100;
+    updateChartData();
+    d3.select('#monthlyDividendStart').property("value", (money.get_dividend_start(money.MONTH)).toFixed(2));
+    d3.select('#monthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
+}
+
+function changeMonthlyGrowth() {
+	money.growth = parseFloat(this.value) / 100;
+    updateChartData();
+    d3.select('#annualDividendStart').property("value", (money.get_dividend_start(money.YEAR)).toFixed(2));
+    d3.select('#annualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
+}
+
+function change_calculate_growth() {
+    money.calculate_growth = this.checked;
+    
+    enableGrowthForms(money.calculate_growth);
+    updateChartData();
+    update_calculate_growth();
+}
+
+function update_calculate_growth() {
+    if (money.calculate_growth) {
+        d3.select('#annualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
+        d3.select('#monthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
+        
+        if (money.growthTimeUnit === money.MONTH) {
+            d3.select('#annualDividendStart').property("value", (money.get_dividend_start(money.YEAR)).toFixed(2));
+        }
+        else {
+            d3.select('#monthlyDividendStart').property("value", (money.get_dividend_start(money.MONTH)).toFixed(2));
+        }
+    }
+}
+
+function changeAnnualDividendStart() {
+    money.dividend_start = parseFloat(this.value);
+    updateChartData();
+    d3.select('#monthlyDividendStart').property("value", (money.get_dividend_start(money.MONTH)).toFixed(2));
+}
+
+function changeMonthlyDividendStart() {
+    money.dividend_start = parseFloat(this.value);
+    updateChartData();
+    d3.select('#annualDividendStart').property("value", (money.get_dividend_start(money.YEAR)).toFixed(2));
+}
+
+function change_money_duration() {
+    money.displayedPeriodInYears = parseInt(this.value);
     updateChartData();
 }
