@@ -106,7 +106,7 @@ accounts_chart = c3.generate({
                 position: 'outer-middle'
             },
             tick: {
-                format: format1
+                format: format2
             }
         }
     },
@@ -130,7 +130,8 @@ accounts_chart = c3.generate({
         duration: TRANSITION_DURATION
     },
     point: {
-          r: 2
+        show: true,
+        r: 2
     }
 });
 
@@ -157,7 +158,7 @@ dividend_chart = c3.generate({
             },
             position: 'outer-top',
             tick: {
-                format: format1
+                format: format2
             }
         }
     },
@@ -184,7 +185,8 @@ dividend_chart = c3.generate({
         duration: TRANSITION_DURATION
     },
     point: {
-          r: 2
+        show: true,
+        r: 2
     }
 });
 
@@ -239,7 +241,8 @@ headcount_chart = c3.generate({
         duration: TRANSITION_DURATION
     },
     point: {
-          r: 2
+        show: true,
+        r: 2
     }
 });
 
@@ -266,7 +269,7 @@ monetary_supply_chart = c3.generate({
             },
             position: 'outer-top',
             tick: {
-                format: format1
+                format: format2
             }
         }
     },
@@ -293,12 +296,13 @@ monetary_supply_chart = c3.generate({
         duration: TRANSITION_DURATION
     },
     point: {
-          r: 2
+        show: true,
+        r: 2
     }
 });
 
-function format1(value) {
-    var f = d3.format('s');
+function format2(value) {
+    var f = d3.format('.2s');
     return withExp(f(value));
 }
 

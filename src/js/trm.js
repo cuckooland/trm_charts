@@ -98,7 +98,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     // dididend formulae
     this.dividend_formulaes = {
         'UDA': {
-            name: "UDA(t) = max[UDA(t-1);c*M(t-1)/N(t)]",
+            name: "UDA(t) = max[UDA(t-1);c*M(t)/N(t)]",
             calculate: function (money, i_time) {
                 var previous_dividend = money.dividends.y[money.dividends.y.length - 1];
                 var current_people = money.people.y[i_time]
