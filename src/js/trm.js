@@ -11,7 +11,7 @@
  *
  * Add a member account:
  *
- *      myMoney.add_account('moi', 1);
+ *      myMoney.add_account(1);
  *
  * Debug c3.js chart data
  *
@@ -92,9 +92,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         }
     };    
     
-    this.reference_frame = 'quantitative';
-    this.formula_type = 'UDA';
-
     // dididend formulae
     this.dividend_formulaes = {
         'UDA': {
@@ -136,6 +133,66 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         }
     };
+    
+    // population variation profiles
+    this.population_profiles = {
+        'Uniform': {
+            name: "Uniform",
+            calculate: function (i_time, xMin, xMax, yMax) {
+                xMin = xMin || 0;
+                xMax = xMax || 80;
+                yMax = xMin || 0;
+                
+                if (i_time <= xMin) {
+                    return 0;
+                }
+                if (i_time >= xMax) {
+                    return 0;
+                }
+                return yMax;
+            }
+        },
+        'Triangular': {
+            name: "Triangular",
+            calculate: function (i_time, xMin, xMax, yMax) {
+                xMin = xMin || 0;
+                xMax = xMax || 80;
+                yMax = xMin || 10000;
+                
+                var xMean = (xMax - xMin) / 2;
+                if (i_time <= xMin) {
+                    return 0;
+                }
+                if (i_time >= xMax) {
+                    return 0;
+                }
+                if (i_time <= xMean) {
+                    return Math.trunc(yMax * (i_time - xMin) / (xMean - xMin));
+                }
+                if (i_time >= xMean) {
+                    return Math.trunc(yMax * (xMax - i_time) / (xMax - xMean));
+                }
+                return 0;
+            }
+        },
+        'Cauchy': {
+            name: "Cauchy",
+            calculate: function (i_time, a, xMin, xMax, yMax) {
+                a = a || 2;
+                xMin = xMin || 0;
+                xMax = xMax || 80;
+                yMax = xMin || 10000;
+                
+                var xMean = (xMax - xMin) / 2;
+                var tmp = (i_time - xMean) / a;
+                return Math.trunc(yMax / (1 + tmp * tmp));
+            }
+        }
+    };
+
+    this.reference_frame = 'quantitative';
+    this.formula_type = 'UDA';
+    this.population_profile = 'Uniform';
 
     this.reset_dividends = function () {
         this.dividends = {x: [], i_time: [], y : [], display_y: []};
@@ -179,13 +236,14 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 people++;
             }
         }
+        people = people + this.population_profiles[this.population_profile].calculate(this.get_time(i_time, this.YEAR));
 
         return people;
     };
 
-	this.add_account = function(name, birth) {
+	this.add_account = function(birth) {
 		this.accounts.push({
-            name: name,
+            name: 'Born on ' + this.asDate(birth, this.YEAR),
             id: 'member_' + (this.accounts.length + 1),
             birth: birth,
             balance: 0,
@@ -237,8 +295,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
 	}
 	
 	this.get_i_time = function(timeValue, timeUnit) {
-        timeUnit = timeUnit || this.growthTimeUnit;
-	    
 	    if (timeUnit === this.growthTimeUnit) {
 	        return timeValue;
 	    }
@@ -246,6 +302,19 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
 	        return (timeValue -1) / 12 + 1;
 	    }
         if (timeUnit === this.YEAR) {
+	        return (timeValue -1) * 12 + 1;
+	    }
+        throw "Time unit not managed";
+	}
+	
+	this.get_time = function(i_time, timeUnit) {
+	    if (timeUnit === this.growthTimeUnit) {
+	        return i_time;
+	    }
+        if (timeUnit === this.YEAR) {
+	        return (i_time -1) / 12 + 1;
+	    }
+        if (timeUnit === this.MONTH) {
 	        return (timeValue -1) * 12 + 1;
 	    }
         throw "Time unit not managed";
@@ -363,7 +432,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 this.average.i_time.push(i_time);
                 this.average.x.push(this.asDate(i_time));
     
-                monetary_mass = 0;
                 // for each account...
                 for (i_account = 0; i_account < this.accounts.length; i_account++) {
     
@@ -387,8 +455,18 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                         // add y value
                         this.accounts[i_account].y.push(this.accounts[i_account].balance);
                     }
-                    // increment monetary mass
-                    monetary_mass += this.accounts[i_account].balance;
+                }
+                
+                // increment monetary mass
+                if (i_time === 0 || this.people.y[i_time - 1] === 0) {
+            	    if (!this.empty_start_account) {
+                        // when money starts, add some money to each account so that headcount looks like constant  
+                        monetary_mass += this.people.y[i_time] * this.get_dividend_start() / this.getGrowth();
+                    }
+                }
+                else {
+                    // add a dividend comming from each account
+                    monetary_mass += this.people.y[i_time] * dividend;
                 }
     
                 // add monetary_mass

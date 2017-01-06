@@ -3,7 +3,7 @@
  */
  
 // Create reference frame selector
-function set_reference_frames(reference_frames) {
+function set_reference_selector(reference_frames) {
     document.getElementById('reference_frame').options = [];
     for (var index in Object.getOwnPropertyNames(reference_frames)) {
         var key = Object.getOwnPropertyNames(reference_frames)[index];
@@ -20,6 +20,17 @@ function set_formula_selector(dividend_formulaes) {
         var key = Object.getOwnPropertyNames(dividend_formulaes)[index];
         document.getElementById('formula_type').add(
             new Option(dividend_formulaes[key].name, key)
+        );
+    }
+};
+
+// Create demographic profile selector
+function set_demography_selector(population_profiles) {
+    document.getElementById('demographic_profile').options = [];
+    for (var index in Object.getOwnPropertyNames(population_profiles)) {
+        var key = Object.getOwnPropertyNames(population_profiles)[index];
+        document.getElementById('demographic_profile').add(
+            new Option(population_profiles[key].name, key)
         );
     }
 };
@@ -53,13 +64,16 @@ var money = {};
 libre_money_class.call(money);
 
 // capture reference_frames list
-set_reference_frames(money.reference_frames);
+set_reference_selector(money.reference_frames);
 
 // capture formulaes list
 set_formula_selector(money.dividend_formulaes);
 
+// capture population variation list
+set_demography_selector(money.population_profiles);
+
 // add a member account
-money.add_account('Member 1', 1);
+money.add_account(1);
 
 // generate data
 var data = money.generate_data();
@@ -370,14 +384,11 @@ function delete_last_account() {
  * Add account
  */
 function add_account() {
-    // construct name
-    var name = 'Member ' + (money.accounts.length + 1)
-
     // capture user entry
     var new_account_birth = parseInt(document.getElementById('new_account_birth').value);
 
     // add a member account at the birth date specified
-    money.add_account(name, parseInt(new_account_birth));
+    money.add_account(new_account_birth);
 
     updateChartData();
 }
@@ -411,6 +422,7 @@ function enableUD0Forms() {
 
 d3.select("#reference_frame").on("change", change_reference_frame);
 d3.select("#formula_type").on("change", change_formula_type);
+d3.select("#demographic_profile").on("change", change_demographic_profile);
 
 d3.selectAll(".rythm").on("change", change_rythm);
 d3.selectAll(".startAccount").on("change", change_start_account);
@@ -446,6 +458,11 @@ function change_reference_frame() {
 
 function change_formula_type() {
     money.formula_type = this.options[this.selectedIndex].value;
+    updateChartData();
+}
+
+function change_demographic_profile() {
+    money.population_profile = this.options[this.selectedIndex].value;
     updateChartData();
 }
 
