@@ -131,10 +131,12 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             calculate: function (money, timeStep) {
                 var previous_dividend = money.dividends.values[timeStep - 1];
                 var previous_people = money.people.values[timeStep - 1]
-                if (previous_people > 0) {
+                var current_people = money.people.values[timeStep]
+                if (previous_people > 0 && current_people > 0) {
                     var previous_monetary_mass = money.monetary_mass.values[timeStep - 1];
                     return previous_dividend + (Math.pow(money.getGrowth(), 2) * (previous_monetary_mass / previous_people));
-                } else {
+                }
+                else {
                     return previous_dividend;
                 }
             }
