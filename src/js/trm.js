@@ -143,12 +143,12 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     
     // population variation profiles
     this.population_profiles = {
-        'Uniform': {
-            name: "Uniform",
+        'None': {
+            name: "None",
             calculate: function (timeStep, xMin, xMax, yMax) {
                 xMin = xMin || 0;
                 xMax = xMax || 80;
-                yMax = xMin || 0;
+                yMax = yMax || 0;
                 
                 if (timeStep <= xMin) {
                     return 0;
@@ -164,7 +164,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             calculate: function (timeStep, xMin, xMax, yMax) {
                 xMin = xMin || 0;
                 xMax = xMax || 81;
-                yMax = xMin || 10000;
+                yMax = yMax || 10000;
                 
                 var xMean = (xMax - xMin) / 2;
                 if (timeStep <= xMin) {
@@ -180,6 +180,32 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                     return Math.trunc(yMax * (xMax - timeStep) / (xMax - xMean));
                 }
                 return 0;
+            }
+        },
+        'Plateau': {
+            name: "Plateau",
+            calculate: function (timeStep, xMin, xMax, duration, yMax) {
+                xMin = xMin || 0;
+                xMax = xMax || 81;
+                duration = duration || 60;
+                yMax = yMax || 10000;
+                
+                var slopeDuration = ((xMax - xMin) - duration) / 2;
+                var xMean1 = xMin + slopeDuration;
+                var xMean2 = xMax - slopeDuration;
+                if (timeStep <= xMin) {
+                    return 0;
+                }
+                if (timeStep >= xMax) {
+                    return 0;
+                }
+                if (timeStep <= xMean1) {
+                    return Math.trunc(yMax * (timeStep - xMin) / (xMean1 - xMin));
+                }
+                if (timeStep >= xMean2) {
+                    return Math.trunc(yMax * (xMax - timeStep) / (xMax - xMean2));
+                }
+                return yMax;
             }
         },
         'Cauchy': {
@@ -199,7 +225,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
 
     this.reference_frame = 'quantitative';
     this.formula_type = 'UDA';
-    this.population_profile = 'Uniform';
+    this.population_profile = 'None';
 
     this.reset_dividends = function () {
         this.dividends = {values : [], x: [], y: []};
