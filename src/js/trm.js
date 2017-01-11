@@ -563,14 +563,23 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         data.accounts.columns.push(this.average.x);
         data.accounts.columns.push(this.average.y);
 
+        var toUnload = [];
         // for each account...
         for (i_account = 0; i_account < this.accounts.length; i_account++) {
             // add axis header to data
             this.accounts[i_account].x.unshift(data.accounts.xs[this.accounts[i_account].id]);
             this.accounts[i_account].y.unshift(this.accounts[i_account].id);
             // add data to columns
-            data.accounts.columns.push(this.accounts[i_account].x);
-            data.accounts.columns.push(this.accounts[i_account].y);
+            if (this.accounts[i_account].x.length > 1) {
+                data.accounts.columns.push(this.accounts[i_account].x);
+                data.accounts.columns.push(this.accounts[i_account].y);
+            }
+            else {
+                toUnload.push(this.accounts[i_account].id);
+            }
+        }
+        if (toUnload.length > 0) {
+            data.accounts.unload = toUnload;
         }
 		return data;
     };
