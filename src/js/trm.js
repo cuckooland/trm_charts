@@ -216,11 +216,20 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 a = a || 2;
                 xMin = xMin || 0;
                 xMax = xMax || 80;
-                yMax = xMin || 10000;
+                yMax = yMax || 10000;
                 
                 var xMean = (xMax - xMin) / 2;
                 var tmp = (timeStep - xMean) / a;
                 return Math.trunc(yMax / (1 + tmp * tmp));
+            }
+        },
+        'DampedWave': {
+            name: "Damped Wave",
+            calculate: function (timeStep, yMax) {
+                yMax = yMax || 10000;
+                var x = timeStep / 4;
+                
+                return Math.trunc(yMax * (1 - Math.cos(2*x) / (1 + x * x)));
             }
         }
     };
