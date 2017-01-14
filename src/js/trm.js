@@ -27,9 +27,10 @@
  * @param growth {double} Monetary supply growth in percent (per year or per month, it depends of 'growthTimeUnit')
  * @param dividend_start {int} First dividend amount (at first year or first month, it depends of 'growthTimeUnit')
  * @param empty_start_account {boolean} If 'TRUE', when money starts, add some money to each account so that headcount looks like constant  
- * @param displayedPeriodInYears {int} Money duration to generate
+ * @param displayedPeriodInYears {int} Money duration to generate 
+ * @param maxDemography {int} Order of magnitude of the maximum demography
  */
-var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_growth, growth, dividend_start, empty_start_account, displayedPeriodInYears) {
+var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_growth, growth, dividend_start, empty_start_account, displayedPeriodInYears, maxDemography) {
 
     this.YEAR = 'YEAR';
     this.MONTH = 'MONTH';
@@ -43,6 +44,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     var PER_MONTH_GROWTH = 2;
     var GROWTH_TIME_UNIT = this.YEAR;
     var EMPTY_START_ACCOUNT = false;
+    var MAX_DEMOGRAPHY = 10000;
     
     this.life_expectancy = life_expectancy || LIFE_EXPECTANCY;
     this.dividend_start = dividend_start || DIVIDEND_START;
@@ -51,6 +53,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     this.calculate_growth = calculate_growth || CALCULATE_GROWTH;
     this.growthTimeUnit = growthTimeUnit || GROWTH_TIME_UNIT;
     this.empty_start_account = empty_start_account || EMPTY_START_ACCOUNT;
+    this.maxDemography = maxDemography || MAX_DEMOGRAPHY;
     
     if (this.growthTimeUnit === this.MONTH) {
         this.growth = growth || PER_MONTH_GROWTH;
@@ -147,23 +150,13 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     this.population_profiles = {
         'None': {
             name: "None",
-            calculate: function (timeStep, xMin, xMax, yMax) {
-                xMin = xMin || 0;
-                xMax = xMax || 80;
-                yMax = yMax || 0;
-                
-                if (timeStep <= xMin) {
-                    return 0;
-                }
-                if (timeStep >= xMax) {
-                    return 0;
-                }
-                return yMax;
+            calculate: function (timeStep) {
+                return 0;
             }
         },
         'Triangular': {
             name: "Triangular",
-            calculate: function (timeStep, xMin, xMax, yMax) {
+            calculate: function (timeStep, yMax, xMin, xMax) {
                 xMin = xMin || 0;
                 xMax = xMax || 81;
                 yMax = yMax || 10000;
@@ -186,7 +179,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         },
         'Plateau': {
             name: "Plateau",
-            calculate: function (timeStep, xMin, xMax, duration, yMax) {
+            calculate: function (timeStep, yMax, xMin, xMax, duration) {
                 xMin = xMin || 0;
                 xMax = xMax || 81;
                 duration = duration || 60;
@@ -212,7 +205,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         },
         'Cauchy': {
             name: "Cauchy",
-            calculate: function (timeStep, a, xMin, xMax, yMax) {
+            calculate: function (timeStep, yMax, a, xMin, xMax) {
                 a = a || 2;
                 xMin = xMin || 0;
                 xMax = xMax || 80;
@@ -280,7 +273,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 people++;
             }
         }
-        people = people + this.population_profiles[this.population_profile].calculate(this.getTimeValue(timeStep, this.YEAR));
+        people = people + this.population_profiles[this.population_profile].calculate(this.getTimeValue(timeStep, this.YEAR), this.maxDemography);
 
         return people;
     };

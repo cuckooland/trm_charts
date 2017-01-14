@@ -52,7 +52,7 @@
                         </div>
                         <div class="row">
                             <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Annual Emission (in %)</label>
-                            <input id="annualGrowth" type="text" name="annualGrowth" disabled="disabled"
+                            <input id="annualGrowth" type="text" name="annualGrowth"
                                    title="Monetary supply growth in percent per year"/>
                             <label for="annualDividendStart">First dividend "UD0" (in monetary units)</label>
                             <input id="annualDividendStart" type="text" name="annualDividendStart"
@@ -60,7 +60,7 @@
                         </div>
                         <div class="row">
                             <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_month"> Monthly Emission (in %)</label>
-                            <input id="monthlyGrowth" type="text" name="monthlyGrowth" disabled="disabled"
+                            <input id="monthlyGrowth" type="text" name="monthlyGrowth"
                                    title="Monetary supply growth in percent per month"/>
                             <label for="monthlyDividendStart">First dividend "UD0" (in monetary units)</label>
                             <input id="monthlyDividendStart" type="text" name="monthlyDividendStart"
@@ -72,7 +72,14 @@
                         </div>
                     </div>
                     <div id="HeadCount" class="tabcontent">
-                        <label class= "leftComp" for="demographic_profile">Demographic Profile</label><select id="demographic_profile" name="demographic_profile"></select>
+                        <div class="row">
+                            <label class= "leftComp" for="demographic_profile">Demographic Profile</label><select id="demographic_profile" name="demographic_profile"></select>
+                        </div>
+                        <div class="row">
+                            <label class= "leftComp" for="max_demography">Top Value</label>
+                            <input id="max_demography" type="text" name="max_demography"
+                                   title="Order of magnitude of the maximum demography"/>
+                        </div>
                     </div>
                     <div id="Accounts" class="tabcontent">
                         <label class= "leftComp" for="new_account_birth">New member birth year</label>

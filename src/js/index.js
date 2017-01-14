@@ -83,6 +83,7 @@ d3.select("input[value=\"by_month\"]").property("checked", money.growthTimeUnit 
 d3.select("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
 d3.select("input[value=\"empty\"]").property("checked", money.empty_start_account);
 d3.select("input[value=\"udByGrowth\"]").property("checked", !money.empty_start_account);
+d3.select('#max_demography').property("value", money.maxDemography);
 
 // update in form with calculated growth
 if (money.calculate_growth) {
@@ -91,6 +92,7 @@ if (money.calculate_growth) {
 }
 enableGrowthForms(money.calculate_growth);
 enableUD0Forms();
+enableMaxDemography();
 
 // create and display chart from data.accounts
 accounts_chart = c3.generate({
@@ -434,6 +436,15 @@ function enableUD0Forms() {
     }
 }
 
+function enableMaxDemography() {
+    if (money.population_profile === "None") {
+        d3.select('#max_demography').attr('disabled', 'disabled');
+    }
+    else {
+        d3.select('#max_demography').attr('disabled', null);
+    }
+}
+
 d3.select("#reference_frame").on("change", change_reference_frame);
 d3.select("#formula_type").on("change", change_formula_type);
 d3.select("#demographic_profile").on("change", change_demographic_profile);
@@ -451,6 +462,7 @@ d3.select("#calculate_growth").on("click", change_calculate_growth);
 d3.select("#annualDividendStart").on("change", changeAnnualDividendStart);
 d3.select("#monthlyDividendStart").on("change", changeMonthlyDividendStart);
 d3.select("#money_duration").on("change", change_money_duration);
+d3.select("#max_demography").on("change", change_max_demography);
 
 d3.selectAll(".tablinks").on("click", openTab);
 
@@ -481,6 +493,7 @@ function change_formula_type() {
 
 function change_demographic_profile() {
     money.population_profile = this.options[this.selectedIndex].value;
+    enableMaxDemography();
     updateChartData();
 }
 
@@ -564,6 +577,11 @@ function changeMonthlyDividendStart() {
 
 function change_money_duration() {
     money.displayedPeriodInYears = parseInt(this.value);
+    updateChartData();
+}
+
+function change_max_demography() {
+    money.maxDemography = parseInt(this.value);
     updateChartData();
 }
 
