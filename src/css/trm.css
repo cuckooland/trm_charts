@@ -1,12 +1,7 @@
-.title {
-    font-size: large;
-    margin: 1em;
-    text-align: center;
-}
-
-body {
-    color: darkslateblue;
-}
+html {    font-size: 100%;}
+body{    background-color: #f0f0ff;    font-family: 'Trebuchet MS', Arial, sans-serif;    color: #181818;    font-size: 0.875em;}
+#section{    height: 768px;	min-width: 1024px;	max-width: 100%;	color: #181818;     font-family: "Times New Roman", "Trebuchet MS", Helvetica, Arial, sans-serif;    width: 50em;    margin: auto;    padding: 0.1em;}
+h1{	color: #A07009;    font-style: italic;    font-size: 2.5em;	margin-top: 0.8em;	margin-bottom: 1em;}
 
 select {
     text-align: left;
@@ -34,22 +29,66 @@ label {
 
 .leftComp {
     display: inline-block;
-    width: 40%;
+    width: 20%;
     text-align: right;
     margin:5px;
 }
 
-.row {
-    width: 100%;
-}
-
 .chart {
     display: inline-block;
-    width: 48%;
+    width: 46%;
     margin: 5px;
     padding: 5px;
 }
 
 .frame {
     margin: 5px;
+    border: 1px solid #ccc;
+}
+
+#ChartsPart {
+    background-color: #dedede;	border: 1px solid #aaaaaa;    border-radius: 5px;}
+
+#TrmAppli{	vertical-align: top;    padding: 5px;    background-color: #c9c9c9;    border-radius: 5px;    box-shadow: 0px 2px 5px #1c1a19;}
+
+#Tabs {
+    border: 1px solid #ccc;
+}
+ /* Style the list */
+ul.tab {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #dedede;
+    background-color: #f1f1f1;
+}
+
+/* Float the list items side by side */
+ul.tab li {float: left;}
+
+/* Style the links inside the list items */
+ul.tab li a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of links on hover */
+ul.tab li a:hover {background-color: #ddd;}
+
+/* Create an active/current tablink class */
+ul.tab li a:focus, .active {background-color: #ccc;}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #dedede;
+    border-top: none;
+    height:12em;
 }

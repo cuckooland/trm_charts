@@ -105,6 +105,10 @@ accounts_chart = c3.generate({
         left: 100,
         right: 20
     },
+    size: {
+        height: 300,
+        width: 480
+    },
     axis: {
         x: {
             label: {
@@ -159,6 +163,10 @@ dividend_chart = c3.generate({
     padding: {
         left: 100,
         right: 20
+    },
+    size: {
+        height: 300,
+        width: 480
     },
     axis: {
         x: {
@@ -219,6 +227,10 @@ headcount_chart = c3.generate({
         left: 100,
         right: 20,
     },
+    size: {
+        height: 300,
+        width: 480
+    },
     axis: {
         x: {
             label: {
@@ -278,6 +290,10 @@ monetary_supply_chart = c3.generate({
     padding: {
         left: 100,
         right: 20
+    },
+    size: {
+        height: 300,
+        width: 480
     },
     axis: {
         x: {
@@ -442,6 +458,10 @@ d3.select("#annualDividendStart").on("change", changeAnnualDividendStart);
 d3.select("#monthlyDividendStart").on("change", changeMonthlyDividendStart);
 d3.select("#money_duration").on("change", change_money_duration);
 
+d3.selectAll(".tablinks").on("click", openTab);
+
+document.getElementById("MoneyItem").click();
+
 
 function change_reference_frame() {
     money.reference_frame = this.options[this.selectedIndex].value;
@@ -551,4 +571,15 @@ function changeMonthlyDividendStart() {
 function change_money_duration() {
     money.displayedPeriodInYears = parseInt(this.value);
     updateChartData();
+}
+
+function openTab() {
+    d3.selectAll(".tablinks").classed("active", false);
+    d3.select(this).classed("active", true);
+    
+    d3.selectAll(".tabcontent").style("display", "none");
+    var tabContentId = d3.select(this).attr("tabContentId");
+    d3.select("#" + tabContentId).style("display", "block");
+
+    return false;
 }
