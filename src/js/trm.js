@@ -330,10 +330,10 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         timeUnit = timeUnit || this.growthTimeUnit;
 	    
         if (timeUnit === this.MONTH) {
-	        return 12 * this.displayedPeriodInYears + 1;
+	        return 12 * (this.displayedPeriodInYears - 1) + 1;
 	    }
         if (timeUnit === this.YEAR) {
-	        return this.displayedPeriodInYears + 1;
+	        return this.displayedPeriodInYears;
 	    }
         throw "Time unit not managed";
 	}
