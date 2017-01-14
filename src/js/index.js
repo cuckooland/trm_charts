@@ -4,35 +4,29 @@
  
 // Create reference frame selector
 function set_reference_selector(reference_frames) {
-    document.getElementById('reference_frame').options = [];
-    for (var index in Object.getOwnPropertyNames(reference_frames)) {
-        var key = Object.getOwnPropertyNames(reference_frames)[index];
-        document.getElementById('reference_frame').add(
-            new Option(reference_frames[key].name, key)
-        );
-    }
+    d3.select('#reference_frame').selectAll("option")
+        .data(Object.entries(reference_frames))
+      .enter().append("option")
+        .text(function(d) { return d[1].name; })
+        .attr('value', function(d) { return d[0]; });
 };
 
 // Create formula selector
 function set_formula_selector(dividend_formulaes) {
-    document.getElementById('formula_type').options = [];
-    for (var index in Object.getOwnPropertyNames(dividend_formulaes)) {
-        var key = Object.getOwnPropertyNames(dividend_formulaes)[index];
-        document.getElementById('formula_type').add(
-            new Option(dividend_formulaes[key].name, key)
-        );
-    }
+    d3.select('#formula_type').selectAll("option")
+        .data(Object.entries(dividend_formulaes))
+      .enter().append("option")
+        .text(function(d) { return d[1].name; })
+        .attr('value', function(d) { return d[0]; });
 };
 
 // Create demographic profile selector
 function set_demography_selector(population_profiles) {
-    document.getElementById('demographic_profile').options = [];
-    for (var index in Object.getOwnPropertyNames(population_profiles)) {
-        var key = Object.getOwnPropertyNames(population_profiles)[index];
-        document.getElementById('demographic_profile').add(
-            new Option(population_profiles[key].name, key)
-        );
-    }
+    d3.select('#demographic_profile').selectAll("option")
+        .data(Object.entries(population_profiles))
+      .enter().append("option")
+        .text(function(d) { return d[1].name; })
+        .attr('value', function(d) { return d[0]; });
 };
 
 var TRANSITION_DURATION = 1000;
@@ -415,28 +409,28 @@ function add_account() {
 
 function enableGrowthForms(calculate_growth) {
     if (calculate_growth) {
-        document.getElementById('annualGrowth').setAttribute('disabled', 'disabled');
-        document.getElementById('monthlyGrowth').setAttribute('disabled', 'disabled');
+        d3.select('#annualGrowth').attr('disabled', 'disabled');
+        d3.select('#monthlyGrowth').attr('disabled', 'disabled');
     } else {
         if (money.growthTimeUnit === money.MONTH) {
-            document.getElementById('annualGrowth').setAttribute('disabled', 'disabled');
-            document.getElementById('monthlyGrowth').removeAttribute('disabled');
+            d3.select('#annualGrowth').attr('disabled', 'disabled');
+            d3.select('#monthlyGrowth').attr('disabled', null);
         }
         else {
-            document.getElementById('annualGrowth').removeAttribute('disabled');
-            document.getElementById('monthlyGrowth').setAttribute('disabled', 'disabled');
+            d3.select('#annualGrowth').attr('disabled', null);
+            d3.select('#monthlyGrowth').attr('disabled', 'disabled');
         }
     }
 }
 
 function enableUD0Forms() {
     if (money.growthTimeUnit === money.MONTH) {
-        document.getElementById('annualDividendStart').setAttribute('disabled', 'disabled');
-        document.getElementById('monthlyDividendStart').removeAttribute('disabled');
+        d3.select('#annualDividendStart').attr('disabled', 'disabled');
+        d3.select('#monthlyDividendStart').attr('disabled', null);
     }
     else {
-        document.getElementById('annualDividendStart').removeAttribute('disabled');
-        document.getElementById('monthlyDividendStart').setAttribute('disabled', 'disabled');
+        d3.select('#annualDividendStart').attr('disabled', null);
+        d3.select('#monthlyDividendStart').attr('disabled', 'disabled');
     }
 }
 
@@ -499,7 +493,7 @@ function change_rythm() {
         money.growthTimeUnit = money.YEAR;
         money.dividend_start = parseFloat(document.getElementById('annualDividendStart').value);
     }
-    enableGrowthForms(document.getElementById('calculate_growth').checked);
+    enableGrowthForms(money.calculate_growth);
     enableUD0Forms();
     updateChartData();
 }
