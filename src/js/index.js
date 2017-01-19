@@ -79,8 +79,8 @@ d3.select('#monthlyDividendStart').property("value", (money.get_dividend_start(m
 d3.select('#money_duration').property("value", money.displayedPeriodInYears);
 d3.select('#new_account_birth').property("value", NEW_ACCOUNT_BIRTH);
 d3.select('#calculate_growth').property("checked", money.calculate_growth);
-d3.select("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
-d3.select("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
+d3.selectAll("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
+d3.selectAll("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
 d3.select("input[value=\"empty\"]").property("checked", money.empty_start_account);
 d3.select("input[value=\"udByGrowth\"]").property("checked", !money.empty_start_account);
 d3.select('#max_demography').property("value", money.maxDemography);
@@ -450,6 +450,7 @@ d3.select("#formula_type").on("change", change_formula_type);
 d3.select("#demographic_profile").on("change", change_demographic_profile);
 
 d3.selectAll(".rythm").on("change", change_rythm);
+d3.selectAll(".firstDividend").on("change", change_rythm);
 d3.selectAll(".startAccount").on("change", change_start_account);
 
 d3.select("#add_account").on("click", add_account);
@@ -506,6 +507,10 @@ function change_rythm() {
         money.growthTimeUnit = money.YEAR;
         money.dividend_start = parseFloat(document.getElementById('annualDividendStart').value);
     }
+    
+    d3.selectAll("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
+    d3.selectAll("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
+    
     enableGrowthForms(money.calculate_growth);
     enableUD0Forms();
     updateChartData();

@@ -37,6 +37,7 @@
                 <div id="tabs">
                     <ul class="tab">
                         <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Money Co-Creation</a></li>
+                        <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Starting Account</a></li>
                         <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Demographic Profile</a></li>
                         <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Displayed Accounts</a></li>
                     </ul>
@@ -54,21 +55,31 @@
                             <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Annual Emission (in %)</label>
                             <input id="annualGrowth" type="text" name="annualGrowth"
                                    title="Monetary supply growth in percent per year"/>
-                            <label for="annualDividendStart">First dividend "UD0" (in monetary units)</label>
-                            <input id="annualDividendStart" type="text" name="annualDividendStart"
-                                   title="Universal Dividend value at the begining of the currency (in monetary units)"/>
                         </div>
                         <div class="row">
                             <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_month"> Monthly Emission (in %)</label>
                             <input id="monthlyGrowth" type="text" name="monthlyGrowth"
                                    title="Monetary supply growth in percent per month"/>
-                            <label for="monthlyDividendStart">First dividend "UD0" (in monetary units)</label>
+                        </div>
+                    </div>
+                    <div id="Starting" class="tabcontent">
+                        <div class="row">
+                            <label>First dividend "UD0" (in monetary units)</label>
+                        </div>
+                        <div class="row">
+                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_year" checked>Annual Emission</label>
+                            <input id="annualDividendStart" type="text" name="annualDividendStart"
+                                   title="Universal Dividend value at the begining of the currency (in monetary units)"/>
+                        </div>
+                        <div class="row">
+                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_month" checked>Monthly Emission</label>
                             <input id="monthlyDividendStart" type="text" name="monthlyDividendStart"
                                    title="Universal Dividend value at the begining of the currency (in monetary units)"/>
                         </div>
                         <div class="row">
-                          <label class= "leftComp"><input class="startAccount" type="radio" name="startAccount" value="udByGrowth" checked> First account = UD0/c </label>
-                          <label><input class="startAccount" type="radio" name="startAccount" value="empty"> Empty first account</label>
+                            <label>Starting Account</label>
+                            <label><input class="startAccount" type="radio" name="startAccount" value="udByGrowth" checked>UD0/c</label>
+                            <label><input class="startAccount" type="radio" name="startAccount" value="empty">Empty</label>
                         </div>
                     </div>
                     <div id="HeadCount" class="tabcontent">
@@ -82,11 +93,13 @@
                         </div>
                     </div>
                     <div id="Accounts" class="tabcontent">
-                        <label class= "leftComp" for="new_account_birth">New member birth year</label>
-                        <input id="new_account_birth" type="text" name="new_account_birth" 
-                               title="Set the year of birth of the next new member"/>
-                        <input id="add_account" type="button" value="New Member"/>
-                        <input id="delete_last_account" type="button" value="Delete Last Member"/>
+                        <div class="row">
+                            <label class= "leftComp" for="new_account_birth">New member birth year</label>
+                            <input id="new_account_birth" type="text" name="new_account_birth" 
+                                   title="Set the year of birth of the next new member"/>
+                            <input id="add_account" type="button" value="New Member"/>
+                            <input id="delete_last_account" type="button" value="Delete Last Member"/>
+                        </div>
                     </div>
                 </div>
             </div>
