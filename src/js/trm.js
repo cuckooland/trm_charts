@@ -154,6 +154,22 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 return 0;
             }
         },
+        'Uniform': {
+            name: "Uniform",
+            calculate: function (timeStep, yMax, xMin, xMax) {
+                xMin = xMin || 0;
+                xMax = xMax || 81;
+                yMax = yMax || 10000;
+                
+                if (timeStep <= xMin) {
+                    return 0;
+                }
+                if (timeStep >= xMax) {
+                    return 0;
+                }
+                return yMax;
+            }
+        },       
         'Triangular': {
             name: "Triangular",
             calculate: function (timeStep, yMax, xMin, xMax) {
