@@ -18,7 +18,9 @@
 
     <div id="bloc_page">
         <div id="section">
-			<h1>Relative Theory of Money Charts			</h1>            
+			<h1>Relative Theory of Money Charts
+			</h1>
+            
             <div id="TrmAppli">
                 <div id="ChartsPart">
                     <div id="accounts_chart" class="chart"></div>
@@ -28,73 +30,106 @@
                 </div>
             
                 <div class="frame">
-                    <label class= "leftComp" for="money_duration">Displayed period (in years)</label>
-                    <input id="money_duration" type="text" name="money_duration"
-                           title="Upper bound of the X axis (in years)"/>
-                    <label for="reference_frame">Reference Frame</label><select id="reference_frame" name="reference_frame"></select>
-                    <label for="formula_type">Dividend Formula</label><select id="formula_type" name="formula_type"></select>
+                    <div class="labelledForm">
+                        <label for="money_duration">Displayed period (in years)</label>
+                        <input id="money_duration" type="text" name="money_duration"
+                               title="Upper bound of the X axis (in years)"/>
+                    </div>
+                    <div class="labelledForm">
+                        <label for="reference_frame">Reference Frame</label><select id="reference_frame" name="reference_frame"></select>
+                    </div>
+                    <div class="labelledForm">
+                        <label for="formula_type">Dividend Formula</label><select id="formula_type" name="formula_type"></select>
+                    </div>
                 </div>
                 <div id="tabs">
                     <ul class="tab">
                         <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Money Co-Creation</a></li>
-                        <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Starting Account</a></li>
+                        <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Money Starting</a></li>
                         <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Demographic Profile</a></li>
                         <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Displayed Accounts</a></li>
                     </ul>
                     <div id="AboutMoney" class="tabcontent">
                         <div class="row">
-                            <label class= "leftComp" for="life_expectancy">Life Expectancy (in years)</label>
-                            <input id="life_expectancy" type="text" name="life_expectancy"
-                                   title="Members life expectancy in Years"/>
+                            <div class="labelledForm">
+                                <label for="life_expectancy">Life Expectancy (in years)</label>
+                                <input id="life_expectancy" type="text" name="life_expectancy"
+                                       title="Members life expectancy in Years"/>
+                            </div>
                         </div>
                         <div class="row">
-                            <label class= "leftComp" for="calculate_growth">Calculate Growth "c"</label>
-                            <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calculate growth per year (c) from life expectancy (ex) : c = (ex/2)^(1/(ex/2)) * 100">
+                            <label>Growth "c"</label>
                         </div>
-                        <div class="row">
-                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Annual Emission (in %)</label>
-                            <input id="annualGrowth" type="text" name="annualGrowth"
-                                   title="Monetary supply growth in percent per year"/>
-                        </div>
-                        <div class="row">
-                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_month"> Monthly Emission (in %)</label>
-                            <input id="monthlyGrowth" type="text" name="monthlyGrowth"
-                                   title="Monetary supply growth in percent per month"/>
+                        <div class="subTabContent">
+                            <div class="row">
+                                <div class="labelledForm">
+                                    <label for="calculate_growth">Deduced from Life Expectancy</label>
+                                    <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calculate growth per year (c) from life expectancy (ex) : c = (ex/2)^(1/(ex/2)) * 100">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="labelledForm">
+                                    <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Annual Emission (in %)</label>
+                                    <input id="annualGrowth" type="text" name="annualGrowth"
+                                           title="Monetary supply growth in percent per year"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="labelledForm">
+                                    <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_month"> Monthly Emission (in %)</label>
+                                    <input id="monthlyGrowth" type="text" name="monthlyGrowth"
+                                           title="Monetary supply growth in percent per month"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="Starting" class="tabcontent">
                         <div class="row">
                             <label>First dividend "UD0" (in monetary units)</label>
                         </div>
-                        <div class="row">
-                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_year" checked>Annual Emission</label>
-                            <input id="annualDividendStart" type="text" name="annualDividendStart"
-                                   title="Universal Dividend value at the begining of the currency (in monetary units)"/>
-                        </div>
-                        <div class="row">
-                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_month" checked>Monthly Emission</label>
-                            <input id="monthlyDividendStart" type="text" name="monthlyDividendStart"
-                                   title="Universal Dividend value at the begining of the currency (in monetary units)"/>
+                        <div class="subTabContent">
+                            <div class="row">
+                                <div class="labelledForm">
+                                    <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_year" checked>Annual Emission</label>
+                                    <input id="annualDividendStart" type="text" name="annualDividendStart"
+                                           title="Universal Dividend value at the begining of the currency (in monetary units)"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="labelledForm">
+                                    <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_month" checked>Monthly Emission</label>
+                                    <input id="monthlyDividendStart" type="text" name="monthlyDividendStart"
+                                           title="Universal Dividend value at the begining of the currency (in monetary units)"/>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <label>Starting Account</label>
-                            <label><input class="startAccount" type="radio" name="startAccount" value="udByGrowth" checked>UD0/c</label>
-                            <label><input class="startAccount" type="radio" name="startAccount" value="empty">Empty</label>
+                        </div>
+                        <div class="subTabContent">
+                            <div class="row">
+                                <label><input class="startAccount" type="radio" name="startAccount" value="udByGrowth" checked>UD0/c</label>
+                                <label><input class="startAccount" type="radio" name="startAccount" value="empty">Empty</label>
+                            </div>
                         </div>
                     </div>
                     <div id="HeadCount" class="tabcontent">
                         <div class="row">
-                            <label class= "leftComp" for="demographic_profile">Demographic Profile</label><select id="demographic_profile" name="demographic_profile"></select>
+                            <label for="demographic_profile">Use a Mathematical Function</label><select id="demographic_profile" name="demographic_profile"></select>
                         </div>
-                        <div class="row">
-                            <label class= "leftComp" for="max_demography">Top Value</label>
-                            <input id="max_demography" type="text" name="max_demography"
-                                   title="Order of magnitude of the maximum demography"/>
+                        <div class="subTabContent">
+                            <div class="row">
+                                <div class="labelledForm">
+                                    <label for="max_demography">Top Value</label>
+                                    <input id="max_demography" type="text" name="max_demography"
+                                           title="Order of magnitude of the maximum demography"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="Accounts" class="tabcontent">
                         <div class="row">
-                            <label class= "leftComp" for="new_account_birth">New member birth year</label>
+                            <label for="new_account_birth">New member birth year</label>
                             <input id="new_account_birth" type="text" name="new_account_birth" 
                                    title="Set the year of birth of the next new member"/>
                             <input id="add_account" type="button" value="New Member"/>
