@@ -28,11 +28,13 @@ input[disabled=disabled] {
 
 .subTabContent {
     padding-left: 1em;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
     margin-left: 1em;
     background-color: #d1d1d1;}
 
 .row {
-    margin:0.3em;
+    margin:0.2em;
 }
 
 label {
