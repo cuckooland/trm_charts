@@ -404,10 +404,8 @@ function delete_last_account() {
  * Add account
  */
 function add_account() {
-    // capture user entry
-    var new_account_birth = parseInt(document.getElementById('new_account_birth').value);
-
-    // add a member account at the birth date specified
+    // add a member account with a birth date which is the same as the last account
+    var new_account_birth = money.getLastAccountBirth();
     money.add_account(new_account_birth);
 
     updateChartData();
