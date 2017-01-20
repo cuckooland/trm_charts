@@ -62,7 +62,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         this.growth = growth || PER_YEAR_GROWTH;
     }
     else {
-        throw "Growth time unit not managed";
+        throw new Error("Growth time unit not managed");
     }
     
     this.accounts = [];
@@ -272,7 +272,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             this.growth = Math.pow((1 + growthPerYear), 1/12) - 1;
         }
         else {
-            throw "Growth time unit not managed";
+            throw new Error("Growth time unit not managed");
         }
     };
 
@@ -320,7 +320,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     	    return (2000 + timeStep) + '-01-01';
 	    }
         else {
-            throw "Time unit not managed";
+            throw new Error("Time unit not managed");
         }
 	}
 	
@@ -336,7 +336,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         if (growthTimeUnit === this.YEAR) {
 	        return Math.pow((1 + this.growth), 12) - 1;
 	    }
-        throw "Growth time unit not managed";
+        throw new Error("Growth time unit not managed");
 	}
 	    
 	this.getDisplayedPeriod = function(timeUnit) {
@@ -348,7 +348,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         if (timeUnit === this.YEAR) {
 	        return this.displayedPeriodInYears;
 	    }
-        throw "Time unit not managed";
+        throw new Error("Time unit not managed");
 	}
 	
 	this.getTimeStep = function(timeValue, timeUnit) {
@@ -361,7 +361,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         if (timeUnit === this.YEAR) {
 	        return (timeValue -1) * 12 + 1;
 	    }
-        throw "Time unit not managed";
+        throw new Error("Time unit not managed");
 	}
 	
 	this.getTimeValue = function(timeStep, timeUnit) {
@@ -374,7 +374,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         if (timeUnit === this.MONTH) {
 	        return (timeValue -1) * 12 + 1;
 	    }
-        throw "Time unit not managed";
+        throw new Error("Time unit not managed");
 	}
 	
 	this.get_dividend_start = function(growthTimeUnit) {
@@ -389,7 +389,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         if (growthTimeUnit === this.YEAR) {
             return this.dividend_start * this.getGrowth(this.YEAR) / this.getGrowth(this.MONTH);
 	    }
-        throw "Growth time unit not managed";
+        throw new Error("Growth time unit not managed");
 	}
 	
     /**
@@ -408,7 +408,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         if (this.accounts.length > 0) {
             return this.accounts[this.accounts.length - 1].birth;
         }
-        throw "No account defined";
+        throw new Error("No account defined");
 	};
 
     this.setLastAccountBirth = function(newBirth) {
