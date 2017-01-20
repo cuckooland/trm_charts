@@ -129,11 +129,27 @@
                     </div>
                     <div id="Accounts" class="tabcontent">
                         <div class="row">
-                            <label for="new_account_birth">New member birth year</label>
-                            <input id="new_account_birth" type="text" name="new_account_birth" 
-                                   title="Set the year of birth of the next new member"/>
-                            <input id="add_account" type="button" value="New Member"/>
-                            <input id="delete_last_account" type="button" value="Delete Last Member"/>
+                            <div class="labelledForm">
+                                <label for="new_account_birth">New member birth year</label>
+                                <input id="new_account_birth" type="text" name="new_account_birth" 
+                                       title="Set the year of birth of the next new member"/>
+                            </div>
+                            <input id="add_account" type="button" value="Add New Member"/>
+                        </div>
+                        <div class="row">
+                            <label>Last Added Member</label>
+                        </div>
+                        <div class="subTabContent">
+                            <div class="row">
+                                <div class="labelledForm">
+                                    <label for="change_account_birth">Change birth year</label>
+                                    <input id="change_account_birth" type="text" name="change_account_birth" 
+                                           title="Set the year of birth of the last new member"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <input id="delete_last_account" type="button" value="Remove"/>
+                            </div>
                         </div>
                     </div>
                 </div>

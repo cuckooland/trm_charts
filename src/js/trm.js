@@ -296,7 +296,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
 
 	this.add_account = function(birth) {
 		this.accounts.push({
-            name: 'Born on ' + this.asDate(birth, this.YEAR),
+            name: this.accountName(birth),
             id: 'member_' + (this.accounts.length + 1),
             birth: birth,
             balance: 0,
@@ -305,6 +305,10 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             y: [],
         });
 	};
+	
+	this.accountName = function(birth) {
+        return 'Born on ' + this.asDate(birth, this.YEAR);
+	}
 
 	this.asDate = function(timeStep, timeUnit) {
         timeUnit = timeUnit || this.growthTimeUnit;
@@ -399,6 +403,23 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         }
         return false;
 	};
+	
+    this.getLastAccountBirth = function() {
+        if (this.accounts.length > 0) {
+            return this.accounts[this.accounts.length - 1].birth;
+        }
+        throw "No account defined";
+	};
+
+    this.setLastAccountBirth = function(newBirth) {
+        if (this.accounts.length > 0) {
+            this.accounts[this.accounts.length - 1].birth = newBirth;
+            this.accounts[this.accounts.length - 1].name = this.accountName(newBirth);
+        }
+        else {
+            throw new Error("No account defined");
+        }
+	};
 
     this.generate_data = function () {
 
@@ -455,7 +476,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         // For each account...
 		for (i_account = 0; i_account < this.accounts.length; i_account++) {
 			// add axis mapping
-			data.accounts.xs[this.accounts[i_account].id] = 'x_' + this.accounts[i_account].name;
+			data.accounts.xs[this.accounts[i_account].id] = 'x_' + this.accounts[i_account].id;
             data.accounts.names[this.accounts[i_account].id] = this.accounts[i_account].name;
     
             // reset data
