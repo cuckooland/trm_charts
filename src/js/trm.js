@@ -296,7 +296,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
 
 	this.add_account = function(birth) {
 		this.accounts.push({
-            name: this.accountName(birth),
+            name: this.accountName(this.accounts.length + 1, birth),
             id: 'member_' + (this.accounts.length + 1),
             birth: birth,
             balance: 0,
@@ -306,8 +306,8 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         });
 	};
 	
-	this.accountName = function(birth) {
-        return 'Born on ' + this.asDate(birth, this.YEAR);
+	this.accountName = function(number, birth) {
+        return 'Member ' + number + ' (' + this.asDate(birth, this.YEAR) + ')';
 	}
 
 	this.asDate = function(timeStep, timeUnit) {
@@ -414,7 +414,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     this.setLastAccountBirth = function(newBirth) {
         if (this.accounts.length > 0) {
             this.accounts[this.accounts.length - 1].birth = newBirth;
-            this.accounts[this.accounts.length - 1].name = this.accountName(newBirth);
+            this.accounts[this.accounts.length - 1].name = this.accountName(this.accounts.length, newBirth);
         }
         else {
             throw new Error("No account defined");
