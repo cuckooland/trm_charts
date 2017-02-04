@@ -2,12 +2,19 @@
  * Created by vit on 14/10/16.
  */
  
+String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/\$\{p(\d)\}/g, function(match, id) {
+        return args[id];
+    });
+};
+
 // Create reference frame selector
 function set_reference_selector(reference_frames) {
     d3.select('#reference_frame').selectAll("option")
         .data(Object.entries(reference_frames))
       .enter().append("option")
-        .text(function(d) { return d[1].name; })
+        .text(function(d) { return getRefLabel(d[0]); })
         .attr('value', function(d) { return d[0]; });
 };
 
@@ -16,7 +23,7 @@ function set_formula_selector(dividend_formulaes) {
     d3.select('#formula_type').selectAll("option")
         .data(Object.entries(dividend_formulaes))
       .enter().append("option")
-        .text(function(d) { return d[1].name; })
+        .text(function(d) { return getDividendFormulaLabel(d[0]); })
         .attr('value', function(d) { return d[0]; });
 };
 
@@ -25,8 +32,117 @@ function set_demography_selector(population_profiles) {
     d3.select('#demographic_profile').selectAll("option")
         .data(Object.entries(population_profiles))
       .enter().append("option")
-        .text(function(d) { return d[1].name; })
+        .text(function(d) { return getPopulationProfileLabel(d[0]); })
         .attr('value', function(d) { return d[0]; });
+};
+
+function generate_data() {
+    money.generate_data();
+    
+	var c3Data = {
+        accounts: {
+            xFormat: '%d-%m-%Y',
+            xs: {
+                'average': 'x_average'
+            },
+            names: {
+                'average': 'Moyenne "M/N"'
+            },
+            columns: [],
+            types: {
+                average: 'area',
+            }
+        },
+        dividend: {
+            xFormat: '%d-%m-%Y',
+            x: 'x_dividend',
+            names: {
+                'dividend': 'Dividende'
+            },
+            columns: []
+        },
+        headcount: {
+            xFormat: '%d-%m-%Y',
+            x: 'x_people',
+            names: {
+                'people': 'Nombre d\'individus "N"'
+            },
+            columns: []
+        },
+        monetary_supply: {
+            xFormat: '%d-%m-%Y',
+            x: 'x_monetary_mass',
+            names: {
+                'monetary_mass': 'Masse Monétaire "M"'
+            },
+            columns: []
+        }
+    };
+
+    var i_account, i;
+    // For each account...
+	for (i_account = 0; i_account < money.accounts.length; i_account++) {
+		// add axis mapping
+		c3Data.accounts.xs[money.accounts[i_account].id] = 'x_' + money.accounts[i_account].id;
+        c3Data.accounts.names[money.accounts[i_account].id] = money.accounts[i_account].name;
+	}
+	
+    // add data to columns and add axis header 
+	var xDividends = ['x_dividend'];
+	for (i = 0; i < money.dividends.x.length; i++) {
+	    xDividends.push(asDate(money.dividends.x[i]));
+	}
+    c3Data.dividend.columns.push(xDividends);
+    c3Data.dividend.columns.push(money.dividends.y);
+    c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('dividend');
+    
+	var xPeople = ['x_people'];
+	for (i = 0; i < money.people.x.length; i++) {
+	    xPeople.push(asDate(money.people.x[i]));
+	}
+    c3Data.headcount.columns.push(xPeople);
+    c3Data.headcount.columns.push(money.people.values);
+    c3Data.headcount.columns[c3Data.headcount.columns.length - 1].unshift('people');
+    
+	var xMonetarySupply = ['x_monetary_mass'];
+	for (i = 0; i < money.monetary_mass.x.length; i++) {
+	    xMonetarySupply.push(asDate(money.monetary_mass.x[i]));
+	}
+    c3Data.monetary_supply.columns.push(xMonetarySupply);
+    c3Data.monetary_supply.columns.push(money.monetary_mass.y);
+    c3Data.monetary_supply.columns[c3Data.monetary_supply.columns.length - 1].unshift('monetary_mass');
+    
+	var xAverage = ['x_average'];
+	for (i = 0; i < money.average.x.length; i++) {
+	    xAverage.push(asDate(money.average.x[i]));
+	}
+    c3Data.accounts.columns.push(xAverage);
+    c3Data.accounts.columns.push(money.average.y);
+    c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift('average');
+
+    var toUnload = [];
+    // for each account...
+    for (i_account = 0; i_account < money.accounts.length; i_account++) {
+        // add data to columns
+        if (money.accounts[i_account].x.length > 1) {
+            
+        	var xAccount = [c3Data.accounts.xs[money.accounts[i_account].id]];
+        	for (i = 0; i < money.accounts[i_account].x.length; i++) {
+        	    xAccount.push(asDate(money.accounts[i_account].x[i]));
+        	}
+            c3Data.accounts.columns.push(xAccount);
+            
+            c3Data.accounts.columns.push(money.accounts[i_account].y);
+            c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift(money.accounts[i_account].id);
+        }
+        else {
+            toUnload.push(money.accounts[i_account].id);
+        }
+    }
+    if (toUnload.length > 0) {
+        c3Data.accounts.unload = toUnload;
+    }
+	return c3Data;
 };
 
 var TRANSITION_DURATION = 1000;
@@ -67,10 +183,10 @@ set_formula_selector(money.dividend_formulaes);
 set_demography_selector(money.population_profiles);
 
 // add a member account
-money.add_account(1);
+add_money_account(1);
 
 // generate data
-var data = money.generate_data();
+var data = generate_data();
 
 // Fill the form
 d3.select('#life_expectancy').property("value", money.life_expectancy);
@@ -95,6 +211,64 @@ enableGrowthForms(money.calculate_growth);
 enableUD0Forms();
 enableMaxDemography();
 enableLastAddedMember();
+
+function getRefLabel(reference_frame) {
+    switch(reference_frame) {
+        case 'quantitative':
+            return "Unité Monétaire";
+        case 'relative': 
+            return "Dividende";
+        case 'average':
+            return "%(M/N)";
+        default:
+            throw new Error("Reference frame not managed");
+    }
+}
+
+function getRefUnitLabel(reference_frame) {
+    switch(reference_frame) {
+        case 'quantitative':
+            return 'Unités Monétaires';
+        case 'relative': 
+            return "DU";
+        case 'average':
+            return "%(M/N)";
+        default:
+            throw new Error("Reference frame not managed");
+    }
+}
+
+function getDividendFormulaLabel(dividend_formula) {
+    switch(dividend_formula) {
+        case 'UDA':
+            return "DUA(t) = max[DUA(t-1);c*M(t)/N(t)]";
+        case 'UDB': 
+            return "DUB(t) = (1+c)*DUB(t-1)";
+        case 'UDG':
+            return "DUĞ(t) = DUĞ(t-1) + c²*M(t-1)/N(t-1)";
+        default:
+            throw new Error("Dividend formula not managed");
+    }
+}
+
+function getPopulationProfileLabel(population_profile) {
+    switch(population_profile) {
+        case 'None':
+            return "Aucune";
+        case 'Uniform': 
+            return "Uniforme";
+        case 'Triangular':
+            return "Triangulaire";
+        case 'Plateau':
+            return "Plateau";
+        case 'Cauchy': 
+            return "Cauchy";
+        case 'DampedWave':
+            return "Ondulation Amortie";
+        default:
+            throw new Error("Population profile not managed");
+    }
+}
 
 // create and display chart from data.accounts
 accounts_chart = c3.generate({
@@ -122,7 +296,7 @@ accounts_chart = c3.generate({
         },
         y: {
             label: {
-                text: 'Compte (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
+                text: 'Compte (en ' + getRefUnitLabel(money.reference_frame) + ')',
                 position: 'outer-middle'
             },
             tick: {
@@ -181,7 +355,7 @@ dividend_chart = c3.generate({
         },
         y: {
             label: {
-                text: 'Dividende (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
+                text: 'Dividende (en ' + getRefUnitLabel(money.reference_frame) + ')',
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -308,7 +482,7 @@ monetary_supply_chart = c3.generate({
         },
         y: {
             label: {
-                text: 'Masse Monétaire (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
+                text: 'Masse Monétaire (en ' + getRefUnitLabel(money.reference_frame) + ')',
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -369,7 +543,7 @@ function withExp(siValue) {
 function updateChartData(toUnload) {
 
     // calculate data
-    var data = money.generate_data();
+    var data = generate_data();
 
     // tell load command to unload old data
     if (toUnload) {
@@ -403,14 +577,38 @@ function delete_last_account() {
 /**
  * Add account
  */
+function add_money_account(birth) {
+    var name = accountName(money.accounts.length + 1, birth);
+    money.add_account(birth, name);
+}
+
 function add_account() {
     // add a member account with a birth date which is the same as the last account
     var new_account_birth = money.getLastAccountBirth();
+    var name = accountName(money.accounts.length + 1, birth);
     money.add_account(new_account_birth);
 
     updateChartData();
     d3.select('#change_account_birth').property("value", money.getLastAccountBirth());
     enableLastAddedMember();
+}
+
+function accountName(number, birth) {
+    return "Membre ${p0} (${p1})".format(number, asDate(birth, this.YEAR));
+}
+
+function asDate(timeStep, timeUnit) {
+    timeUnit = timeUnit || money.growthTimeUnit;
+    
+    if (timeUnit === money.MONTH) {
+        return "01-${p0}-${p1}".format(timeStep % 12, 2000 + Math.trunc(timeStep / 12) + 1);
+    }
+    else if (timeUnit === money.YEAR) {
+        return "01-01-${p0}".format(2000 + timeStep);
+    }
+    else {
+        throw new Error("Time unit not managed");
+    }
 }
 
 function enableGrowthForms(calculate_growth) {
@@ -491,13 +689,13 @@ function change_reference_frame() {
         
     // Axes
     accounts_chart.axis.labels({
-        y: 'Compte (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
+        y: 'Compte (en ' + getRefUnitLabel(money.reference_frame) + ')',
     });
     dividend_chart.axis.labels({
-        y: 'Dividende (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
+        y: 'Dividende (en ' + getRefUnitLabel(money.reference_frame) + ')',
     });
     monetary_supply_chart.axis.labels({
-        y: 'Masse Monétaire (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
+        y: 'Masse Monétaire (en ' + getRefUnitLabel(money.reference_frame) + ')',
     });
     
     updateChartData();

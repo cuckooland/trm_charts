@@ -68,15 +68,11 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     this.accounts = [];
     this.reference_frames = {
         'quantitative': {
-            name: "Unité Monétaire",
-            unit_label: 'Unités Monétaires',
             transform: function(money, value, timeStep) {
                 return value;
             }
         },
         'relative': {
-            name: "Dividende",
-            unit_label: 'DU',
             transform: function(money, value, timeStep) {
                 if (money.people.values[timeStep] > 0) {
                     return value / money.dividends.values[timeStep];
@@ -87,8 +83,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'average': {
-            name: "%(M/N)",
-            unit_label: '%(M/N)',
             transform: function(money, value, timeStep) {
                 if (money.monetary_mass.values[timeStep] !== 0) {
                     return value / money.monetary_mass.values[timeStep] * money.people.values[timeStep] * 100;
@@ -105,7 +99,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     // dididend formulae
     this.dividend_formulaes = {
         'UDA': {
-            name: "DUA(t) = max[DUA(t-1);c*M(t)/N(t)]",
             calculate: function (money, timeStep) {
                 var previous_dividend = money.dividends.values[timeStep - 1];
                 var current_people = money.people.values[timeStep]
@@ -118,7 +111,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'UDB': {
-            name: "DUB(t) = (1+c)*DUB(t-1)",
             calculate: function (money, timeStep) {
                 var previous_dividend = money.dividends.values[timeStep - 1];
                 var current_people = money.people.values[timeStep]
@@ -130,7 +122,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'UDG': {
-            name: "DUĞ(t) = DUĞ(t-1) + c²*M(t-1)/N(t-1)",
             calculate: function (money, timeStep) {
                 var previous_dividend = money.dividends.values[timeStep - 1];
                 var previous_people = money.people.values[timeStep - 1]
@@ -149,13 +140,11 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     // population variation profiles
     this.population_profiles = {
         'None': {
-            name: "Aucune",
             calculate: function (timeStep) {
                 return 0;
             }
         },
         'Uniform': {
-            name: "Uniforme",
             calculate: function (timeStep, yMax, xMin, xMax) {
                 xMin = xMin || 0;
                 xMax = xMax || 81;
@@ -171,7 +160,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },       
         'Triangular': {
-            name: "Triangulaire",
             calculate: function (timeStep, yMax, xMin, xMax) {
                 xMin = xMin || 0;
                 xMax = xMax || 81;
@@ -194,7 +182,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'Plateau': {
-            name: "Plateau",
             calculate: function (timeStep, yMax, xMin, xMax, duration) {
                 xMin = xMin || 0;
                 xMax = xMax || 81;
@@ -220,7 +207,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'Cauchy': {
-            name: "Cauchy",
             calculate: function (timeStep, yMax, a, xMin, xMax) {
                 a = a || 2;
                 xMin = xMin || 0;
@@ -233,7 +219,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'DampedWave': {
-            name: "Ondulation Amortie",
             calculate: function (timeStep, yMax) {
                 yMax = yMax || 10000;
                 var x = timeStep / 4;
@@ -294,9 +279,9 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         return people;
     };
 
-	this.add_account = function(birth) {
+	this.add_account = function(birth, name) {
 		this.accounts.push({
-            name: this.accountName(this.accounts.length + 1, birth),
+            name: name,
             id: 'member_' + (this.accounts.length + 1),
             birth: birth,
             balance: 0,
@@ -305,25 +290,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             y: [],
         });
 	};
-	
-	this.accountName = function(number, birth) {
-        return 'Membre ' + number + ' (' + this.asDate(birth, this.YEAR) + ')';
-	}
 
-	this.asDate = function(timeStep, timeUnit) {
-        timeUnit = timeUnit || this.growthTimeUnit;
-	    
-        if (timeUnit === this.MONTH) {
-    	    return '01-' + (timeStep % 12) + '-' + (2000 + Math.trunc(timeStep / 12) + 1);
-	    }
-	    else if (timeUnit === this.YEAR) {
-    	    return '01-01-' + (2000 + timeStep);
-	    }
-        else {
-            throw new Error("Time unit not managed");
-        }
-	}
-	
 	this.getGrowth = function(growthTimeUnit) {
         growthTimeUnit = growthTimeUnit || this.growthTimeUnit;
 	    
@@ -435,54 +402,10 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             this.calc_growth();
         }
         console.log("growth", this.growth);
-        // create c3.js data object
-		var data = {
-            accounts: {
-                xFormat: '%d-%m-%Y',
-                xs: {
-                    'average': 'x_average'
-                },
-                names: {
-                    'average': 'Moyenne "M/N"'
-                },
-                columns: [],
-                types: {
-                    average: 'area',
-                }
-            },
-            dividend: {
-                xFormat: '%d-%m-%Y',
-                x: 'x_dividend',
-                names: {
-                    'dividend': 'Dividende'
-                },
-                columns: []
-            },
-            headcount: {
-                xFormat: '%d-%m-%Y',
-                x: 'x_people',
-                names: {
-                    'people': 'Nombre d\'individus "N"'
-                },
-                columns: []
-            },
-            monetary_supply: {
-                xFormat: '%d-%m-%Y',
-                x: 'x_monetary_mass',
-                names: {
-                    'monetary_mass': 'Masse Monétaire "M"'
-                },
-                columns: []
-            }
-        };
 
         var i_account, timeStep;
         // For each account...
 		for (i_account = 0; i_account < this.accounts.length; i_account++) {
-			// add axis mapping
-			data.accounts.xs[this.accounts[i_account].id] = 'x_' + this.accounts[i_account].id;
-            data.accounts.names[this.accounts[i_account].id] = this.accounts[i_account].name;
-    
             // reset data
             this.accounts[i_account].balance = 0;
             this.accounts[i_account].values = [];
@@ -501,8 +424,6 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         // for each time of the people existence...
 	    for (timeStep = 0; timeStep <= this.getDisplayedPeriod(); timeStep++) {
 		    
-                var date = this.asDate(timeStep);
-                
                 if (moneyStartingStep === -1 && this.people.values[timeStep] !== 0) {
                     moneyStartingStep = timeStep;
                 }
@@ -561,70 +482,30 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 this.average.values.push(average);
 
                 if (moneyStartingStep !== -1) {
-                    this.dividends.x.push(date);
+                    this.dividends.x.push(timeStep);
                     this.dividends.y.push(this.get_reference_frame_value(dividend, timeStep));
                     
-                    this.monetary_mass.x.push(date);
+                    this.monetary_mass.x.push(timeStep);
                     this.monetary_mass.y.push(this.get_reference_frame_value(monetary_mass, timeStep));
                 }
                 
                 if (this.people.values[timeStep] > 0) {
-                    this.average.x.push(date);
+                    this.average.x.push(timeStep);
                     this.average.y.push(this.get_reference_frame_value(average, timeStep));
                 }
                 
-                this.people.x.push(date);
+                this.people.x.push(timeStep);
                 
                 // for each account...
                 for (i_account = 0; i_account < this.accounts.length; i_account++) {
     
                     // if account is born...
                     if (timeStep >= this.getTimeStep(this.accounts[i_account].birth, this.YEAR)) {
-                        this.accounts[i_account].x.push(date);
+                        this.accounts[i_account].x.push(timeStep);
                         this.accounts[i_account].y.push(this.get_reference_frame_value(this.accounts[i_account].balance, timeStep));
                     }
                 }
 		}
-
-        // add axis header to data
-        this.dividends.x.unshift('x_dividend');
-        this.dividends.y.unshift('dividend');
-        this.people.x.unshift('x_people');
-        this.people.values.unshift('people');
-        this.monetary_mass.x.unshift('x_monetary_mass');
-        this.monetary_mass.y.unshift('monetary_mass');
-        this.average.x.unshift('x_average');
-        this.average.y.unshift('average');
-
-        // add data to columns
-        data.dividend.columns.push(this.dividends.x);
-        data.dividend.columns.push(this.dividends.y);
-        data.headcount.columns.push(this.people.x);
-        data.headcount.columns.push(this.people.values);
-        data.monetary_supply.columns.push(this.monetary_mass.x);
-        data.monetary_supply.columns.push(this.monetary_mass.y);
-        data.accounts.columns.push(this.average.x);
-        data.accounts.columns.push(this.average.y);
-
-        var toUnload = [];
-        // for each account...
-        for (i_account = 0; i_account < this.accounts.length; i_account++) {
-            // add axis header to data
-            this.accounts[i_account].x.unshift(data.accounts.xs[this.accounts[i_account].id]);
-            this.accounts[i_account].y.unshift(this.accounts[i_account].id);
-            // add data to columns
-            if (this.accounts[i_account].x.length > 1) {
-                data.accounts.columns.push(this.accounts[i_account].x);
-                data.accounts.columns.push(this.accounts[i_account].y);
-            }
-            else {
-                toUnload.push(this.accounts[i_account].id);
-            }
-        }
-        if (toUnload.length > 0) {
-            data.accounts.unload = toUnload;
-        }
-		return data;
     };
 
     /**
