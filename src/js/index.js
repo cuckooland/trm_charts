@@ -115,14 +115,14 @@ accounts_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d',
+                format: '%d-%m-%Y',
                 count: 2
             },
-            min: '2000-01-01'
+            min: '01-01-2000'
         },
         y: {
             label: {
-                text: 'Account (' + money.reference_frames[money.reference_frame].unit_label + ')',
+                text: 'Compte (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
                 position: 'outer-middle'
             },
             tick: {
@@ -174,14 +174,14 @@ dividend_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d',
+                format: '%d-%m-%Y',
                 count: 2 
             },
-            min: '2000-01-01'
+            min: '01-01-2000'
         },
         y: {
             label: {
-                text: 'Dividend (' + money.reference_frames[money.reference_frame].unit_label + ')',
+                text: 'Dividende (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -237,14 +237,14 @@ headcount_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d',
+                format: '%d-%m-%Y',
                 count: 2
             },
-            min: '2000-01-01'
+            min: '01-01-2000'
         },
         y: {
             label: {
-                text: 'Headcount',
+                text: "Nombre d'individus",
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -301,14 +301,14 @@ monetary_supply_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d',
+                format: '%d-%m-%Y',
                 count: 2
             },
-            min: '2000-01-01'
+            min: '01-01-2000'
         },
         y: {
             label: {
-                text: 'Monetary Mass (' + money.reference_frames[money.reference_frame].unit_label + ')',
+                text: 'Masse Monétaire (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -491,13 +491,13 @@ function change_reference_frame() {
         
     // Axes
     accounts_chart.axis.labels({
-        y: 'Account (' + money.reference_frames[money.reference_frame].unit_label + ')',
+        y: 'Compte (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
     });
     dividend_chart.axis.labels({
-        y: 'Dividend (' + money.reference_frames[money.reference_frame].unit_label + ')',
+        y: 'Dividende (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
     });
     monetary_supply_chart.axis.labels({
-        y: 'Monetary Mass (' + money.reference_frames[money.reference_frame].unit_label + ')',
+        y: 'Masse Monétaire (en ' + money.reference_frames[money.reference_frame].unit_label + ')',
     });
     
     updateChartData();

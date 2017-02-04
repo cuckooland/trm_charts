@@ -68,15 +68,15 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     this.accounts = [];
     this.reference_frames = {
         'quantitative': {
-            name: "Monetary Unit",
-            unit_label: 'monetary units',
+            name: "Unité Monétaire",
+            unit_label: 'Unités Monétaires',
             transform: function(money, value, timeStep) {
                 return value;
             }
         },
         'relative': {
-            name: "Dividend",
-            unit_label: 'UD',
+            name: "Dividende",
+            unit_label: 'DU',
             transform: function(money, value, timeStep) {
                 if (money.people.values[timeStep] > 0) {
                     return value / money.dividends.values[timeStep];
@@ -105,7 +105,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     // dididend formulae
     this.dividend_formulaes = {
         'UDA': {
-            name: "UDA(t) = max[UDA(t-1);c*M(t)/N(t)]",
+            name: "DUA(t) = max[DUA(t-1);c*M(t)/N(t)]",
             calculate: function (money, timeStep) {
                 var previous_dividend = money.dividends.values[timeStep - 1];
                 var current_people = money.people.values[timeStep]
@@ -118,7 +118,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'UDB': {
-            name: "UDB(t) = (1+c)*UDB(t-1)",
+            name: "DUB(t) = (1+c)*DUB(t-1)",
             calculate: function (money, timeStep) {
                 var previous_dividend = money.dividends.values[timeStep - 1];
                 var current_people = money.people.values[timeStep]
@@ -130,7 +130,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'UDG': {
-            name: "UDĞ(t) = UDĞ(t-1) + c²*M(t-1)/N(t-1)",
+            name: "DUĞ(t) = DUĞ(t-1) + c²*M(t-1)/N(t-1)",
             calculate: function (money, timeStep) {
                 var previous_dividend = money.dividends.values[timeStep - 1];
                 var previous_people = money.people.values[timeStep - 1]
@@ -149,13 +149,13 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     // population variation profiles
     this.population_profiles = {
         'None': {
-            name: "None",
+            name: "Aucune",
             calculate: function (timeStep) {
                 return 0;
             }
         },
         'Uniform': {
-            name: "Uniform",
+            name: "Uniforme",
             calculate: function (timeStep, yMax, xMin, xMax) {
                 xMin = xMin || 0;
                 xMax = xMax || 81;
@@ -171,7 +171,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },       
         'Triangular': {
-            name: "Triangular",
+            name: "Triangulaire",
             calculate: function (timeStep, yMax, xMin, xMax) {
                 xMin = xMin || 0;
                 xMax = xMax || 81;
@@ -233,7 +233,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             }
         },
         'DampedWave': {
-            name: "Damped Wave",
+            name: "Ondulation Amortie",
             calculate: function (timeStep, yMax) {
                 yMax = yMax || 10000;
                 var x = timeStep / 4;
@@ -307,17 +307,17 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
 	};
 	
 	this.accountName = function(number, birth) {
-        return 'Member ' + number + ' (' + this.asDate(birth, this.YEAR) + ')';
+        return 'Membre ' + number + ' (' + this.asDate(birth, this.YEAR) + ')';
 	}
 
 	this.asDate = function(timeStep, timeUnit) {
         timeUnit = timeUnit || this.growthTimeUnit;
 	    
         if (timeUnit === this.MONTH) {
-    	    return (2000 + Math.trunc(timeStep / 12) + 1) + '-' + (timeStep % 12) + '-01';
+    	    return '01-' + (timeStep % 12) + '-' + (2000 + Math.trunc(timeStep / 12) + 1);
 	    }
 	    else if (timeUnit === this.YEAR) {
-    	    return (2000 + timeStep) + '-01-01';
+    	    return '01-01-' + (2000 + timeStep);
 	    }
         else {
             throw new Error("Time unit not managed");
@@ -438,11 +438,12 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         // create c3.js data object
 		var data = {
             accounts: {
+                xFormat: '%d-%m-%Y',
                 xs: {
                     'average': 'x_average'
                 },
                 names: {
-                    'average': 'Average "M/N"'
+                    'average': 'Moyenne "M/N"'
                 },
                 columns: [],
                 types: {
@@ -450,23 +451,26 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 }
             },
             dividend: {
+                xFormat: '%d-%m-%Y',
                 x: 'x_dividend',
                 names: {
-                    'dividend': 'Dividend'
+                    'dividend': 'Dividende'
                 },
                 columns: []
             },
             headcount: {
+                xFormat: '%d-%m-%Y',
                 x: 'x_people',
                 names: {
-                    'people': 'Headcount "N"'
+                    'people': 'Nombre d\'individus "N"'
                 },
                 columns: []
             },
             monetary_supply: {
+                xFormat: '%d-%m-%Y',
                 x: 'x_monetary_mass',
                 names: {
-                    'monetary_mass': 'Monetary Mass "M"'
+                    'monetary_mass': 'Masse Monétaire "M"'
                 },
                 columns: []
             }

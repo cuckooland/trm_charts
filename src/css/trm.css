@@ -10,6 +10,11 @@ select {
     margin-left: 1em;
 }
 
+p {
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+}
+
 input[type=text] {
     text-align: right;
     margin-left: 1em;
@@ -22,19 +27,31 @@ input[disabled=disabled] {
 
 .labelledForm {
     display: inline-block;
-    margin:0.1em;
-    margin-right: 1em;
+    margin: 0.1em 1em 0.1em 0em;
 }
 
 .subTabContent {
-    padding-left: 1em;
+    padding-left: 0.8em;
     padding-top: 0.1em;
     padding-bottom: 0.1em;
-    margin-left: 1em;
+    margin-left: 0.8em;
     background-color: #d1d1d1;}
 
 .row {
     margin:0.2em;
+}
+
+.leftPart {
+    width: 35%;
+    float: left;
+}
+
+.rightPart {
+    width: 61%;
+	border: 1px solid #aaaaaa;    border-radius: 5px;    float: left;
+    height:10.2em;
+    margin: 5px 5px 5px 10px;
+    padding: 5px 5px 5px 10px;
 }
 
 label {
@@ -94,7 +111,7 @@ ul.tab li a:focus, .active {background-color: #ccc;}
 /* Style the tab content */
 .tabcontent {
     display: none;
-    padding: 6px 12px;
+    padding: 6px 1px 6px 12px;
     border: 1px solid #dedede;
     border-top: none;
     height:11.5em;
