@@ -22,26 +22,6 @@
 			</h1>
             
             <div id="TrmAppli">
-                <div id="ChartsPart">
-                    <div id="accounts_chart" class="chart"></div>
-                    <div id="dividend_chart" class="chart"></div>
-                    <div id="headcount_chart" class="chart"></div>
-                    <div id="monetary_supply_chart" class="chart"></div>
-                </div>
-            
-                <div class="frame">
-                    <div class="labelledForm">
-                        <label for="money_duration">Période affichée (en année)</label>
-                        <input id="money_duration" type="text" name="money_duration"
-                               title="Upper bound of the X axis (in years)"/>
-                    </div>
-                    <div class="labelledForm">
-                        <label for="reference_frame">Référentiel</label><select id="reference_frame" name="reference_frame"></select>
-                    </div>
-                    <div class="labelledForm">
-                        <label for="formula_type">Formule du dividende</label><select id="formula_type" name="formula_type"></select>
-                    </div>
-                </div>
                 <div id="tabs">
                     <ul class="tab">
                         <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Co-Création Monétaire</a></li>
@@ -181,6 +161,28 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="frame">
+                    <div class="labelledForm">
+                        <label for="money_duration">Période affichée (en année)</label>
+                        <input id="money_duration" type="text" name="money_duration"
+                               title="Upper bound of the X axis (in years)"/>
+                    </div>
+                    <div class="labelledForm">
+                        <label for="reference_frame">Référentiel</label><select id="reference_frame" name="reference_frame"></select>
+                    </div>
+                    <div class="labelledForm">
+                        <label for="formula_type">Formule du dividende</label><select id="formula_type" name="formula_type"></select>
+                    </div>
+                </div>
+                
+                <div id="ChartsPart">
+                    <div id="accounts_chart" class="chart"></div>
+                    <div id="dividend_chart" class="chart"></div>
+                    <div id="headcount_chart" class="chart"></div>
+                    <div id="monetary_supply_chart" class="chart"></div>
+                </div>
+            
             </div>
         </div>
     </div>
