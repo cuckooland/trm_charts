@@ -34,6 +34,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
 
     this.YEAR = 'YEAR';
     this.MONTH = 'MONTH';
+    this.MONEY_BIRTH = 1;
     
     // Default Values
     var LIFE_EXPECTANCY = 80;
@@ -420,21 +421,17 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             this.people.values.push(this.get_people(timeStep));
 		}
         
-        var moneyStartingStep = -1;
+        var moneyBirthStep = this.getTimeStep(this.MONEY_BIRTH, this.YEAR);
         // for each time of the people existence...
 	    for (timeStep = 0; timeStep <= this.getDisplayedPeriod(); timeStep++) {
 		    
-                if (moneyStartingStep === -1 && this.people.values[timeStep] !== 0) {
-                    moneyStartingStep = timeStep;
-                }
-                
-                if (timeStep === moneyStartingStep) {
+                if (timeStep === moneyBirthStep) {
             	    if (!this.empty_start_account) {
                         // when money starts, add some money to each account so that headcount looks like constant  
                         monetary_mass += this.people.values[timeStep] * this.get_dividend_start() / this.getGrowth();
                     }
                 }
-                else if (moneyStartingStep !== -1) {
+                else if (timeStep > moneyBirthStep) {
                     // add a dividend coming from each account
                     monetary_mass += this.people.values[timeStep - 1] * this.dividends.values[timeStep - 1];
                 }
@@ -444,10 +441,10 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     
                 // calculate next dividend...
                 var dividend = 0;
-                if (timeStep === moneyStartingStep) {
+                if (timeStep === moneyBirthStep) {
                     dividend = this.get_dividend_start();
                 }
-                else if (moneyStartingStep !== -1) {
+                else if (timeStep > moneyBirthStep) {
                     // after first issuance, calculate next dividend depending on formula...
                     dividend = this.dividend_formulaes[this.formula_type].calculate(this, timeStep);
                 }
@@ -461,7 +458,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                     if (timeStep >= this.getTimeStep(this.accounts[i_account].birth, this.YEAR)) {
                         // if account is alive...
                         if (timeStep < this.getTimeStep(this.accounts[i_account].birth + this.life_expectancy, this.YEAR)) {
-                            if (timeStep === moneyStartingStep) {
+                            if (timeStep === moneyBirthStep) {
                         	    if (!this.empty_start_account) {
                                     // when money starts, add some money to each account so that headcount looks like constant  
                                     this.accounts[i_account].balance += this.get_dividend_start() / this.getGrowth();
@@ -481,7 +478,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 average = monetary_mass / this.people.values[timeStep];
                 this.average.values.push(average);
 
-                if (moneyStartingStep !== -1) {
+                if (timeStep >= moneyBirthStep) {
                     this.dividends.x.push(timeStep);
                     this.dividends.y.push(this.get_reference_frame_value(dividend, timeStep));
                     

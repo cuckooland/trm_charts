@@ -183,7 +183,7 @@ set_formula_selector(money.dividend_formulaes);
 set_demography_selector(money.population_profiles);
 
 // add a member account
-add_money_account(1);
+add_money_account(money.MONEY_BIRTH);
 
 // generate data
 var data = generate_data();
