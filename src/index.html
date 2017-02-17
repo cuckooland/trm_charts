@@ -95,15 +95,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <label>Compte au départ</label>
-                            </div>
-                            <div class="subTabContent">
-                                <div class="row">
-                                    <label><input class="startAccount" type="radio" name="startAccount" value="udByGrowth" checked>DU0/c</label>
-                                    <label><input class="startAccount" type="radio" name="startAccount" value="empty">Vide</label>
-                                </div>
-                            </div>
                         </div>
                         <div class="rightPart">
                             <p>La monnaie est uniquement créée via le Dividende Universel. Elle démarre avec un premier Dividende que nous noterons DU0.</p>
@@ -137,17 +128,28 @@
                     <div id="Accounts" class="tabcontent">
                         <div class="leftPart">
                             <div class="row">
-                                <input id="add_account" type="button" value="Ajouter un nouveau membre"/>
-                            </div>
-                            <div class="row">
-                                <label>Dernier Membre ajouté</label>
+                                <label>Dernier compte ajouté</label>
+                                <input id="add_account" type="button" value="Afficher un nouveau compte"/>
                             </div>
                             <div class="subTabContent">
                                 <div class="row">
                                     <div class="labelledForm">
                                         <label for="change_account_birth">Année de naissance</label>
                                         <input id="change_account_birth" type="text" name="change_account_birth" 
-                                               title="Positionne l'année de naissance du dernier membre"/>
+                                               title="Positionne l'année de naissance du dernier compte"/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="produceUd">Co-créateur de la monnaie</label>
+                                            <input id="produceUd" type="checkbox" name="produceUd" value="1" checked="checked" title="Permet d'indiquer si ce compte correspond à un producteur de monnaie">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="startingAccount">Montant à la naissance (en UD/c)</label>
+                                            <input id="startingAccount" type="text" name="startingAccount"
+                                                   title="Permet d'indiquer le montant présent sur le compte au départ"/>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">

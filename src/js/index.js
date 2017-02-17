@@ -57,7 +57,7 @@ function generate_data() {
             xFormat: '%d-%m-%Y',
             x: 'x_dividend',
             names: {
-                'dividend': 'Dividende'
+                'dividend': 'Dividende Universel'
             },
             columns: []
         },
@@ -65,7 +65,7 @@ function generate_data() {
             xFormat: '%d-%m-%Y',
             x: 'x_people',
             names: {
-                'people': 'Nombre d\'individus "N"'
+                'people': 'Nombre de co-créateurs "N"'
             },
             columns: []
         },
@@ -97,11 +97,11 @@ function generate_data() {
     c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('dividend');
     
 	var xPeople = ['x_people'];
-	for (i = 0; i < money.people.x.length; i++) {
-	    xPeople.push(asDate(money.people.x[i]));
+	for (i = 0; i < money.udProducerCount.x.length; i++) {
+	    xPeople.push(asDate(money.udProducerCount.x[i]));
 	}
     c3Data.headcount.columns.push(xPeople);
-    c3Data.headcount.columns.push(money.people.values);
+    c3Data.headcount.columns.push(money.udProducerCount.values);
     c3Data.headcount.columns[c3Data.headcount.columns.length - 1].unshift('people');
     
 	var xMonetarySupply = ['x_monetary_mass'];
@@ -197,10 +197,10 @@ d3.select('#new_account_birth').property("value", NEW_ACCOUNT_BIRTH);
 d3.select('#calculate_growth').property("checked", money.calculate_growth);
 d3.selectAll("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
 d3.selectAll("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
-d3.select("input[value=\"empty\"]").property("checked", money.empty_start_account);
-d3.select("input[value=\"udByGrowth\"]").property("checked", !money.empty_start_account);
 d3.select('#max_demography').property("value", money.maxDemography);
 d3.select('#change_account_birth').property("value", money.getLastAccountBirth());
+d3.select('#produceUd').property("checked", money.getLastUdProducer());
+d3.select('#startingAccount').property("value", money.getLastStartingAccount());
 
 // update in form with calculated growth
 if (money.calculate_growth) {
@@ -275,7 +275,7 @@ accounts_chart = c3.generate({
     bindto: '#accounts_chart',
     padding: {
         left: 100,
-        right: 20
+        right: 25
     },
     size: {
         height: 300,
@@ -296,7 +296,7 @@ accounts_chart = c3.generate({
         },
         y: {
             label: {
-                text: 'Compte (en ' + getRefUnitLabel(money.reference_frame) + ')',
+                text: accountYLabel(money.reference_frame),
                 position: 'outer-middle'
             },
             tick: {
@@ -334,7 +334,7 @@ dividend_chart = c3.generate({
     bindto: '#dividend_chart',
     padding: {
         left: 100,
-        right: 20
+        right: 25
     },
     size: {
         height: 300,
@@ -355,7 +355,7 @@ dividend_chart = c3.generate({
         },
         y: {
             label: {
-                text: 'Dividende (en ' + getRefUnitLabel(money.reference_frame) + ')',
+                text: accountYLabel(money.reference_frame),
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -397,7 +397,7 @@ headcount_chart = c3.generate({
     bindto: '#headcount_chart',
     padding: {
         left: 100,
-        right: 20,
+        right: 25,
     },
     size: {
         height: 300,
@@ -418,7 +418,7 @@ headcount_chart = c3.generate({
         },
         y: {
             label: {
-                text: "Nombre d'individus",
+                text: "Nombre de co-créateurs",
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -461,7 +461,7 @@ monetary_supply_chart = c3.generate({
     bindto: '#monetary_supply_chart',
     padding: {
         left: 100,
-        right: 20
+        right: 25
     },
     size: {
         height: 300,
@@ -482,7 +482,7 @@ monetary_supply_chart = c3.generate({
         },
         y: {
             label: {
-                text: 'Masse Monétaire (en ' + getRefUnitLabel(money.reference_frame) + ')',
+                text: accountYLabel(money.reference_frame),
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -578,23 +578,28 @@ function delete_last_account() {
  * Add account
  */
 function add_money_account(birth) {
-    var name = accountName(money.accounts.length + 1, birth);
+    var name = accountName(money.accounts.length, true);
     money.add_account(birth, name);
 }
 
 function add_account() {
     // add a member account with a birth date which is the same as the last account
     var new_account_birth = money.getLastAccountBirth();
-    var name = accountName(money.accounts.length + 1, birth);
-    money.add_account(new_account_birth);
+    var name = accountName(money.accounts.length, true);
+    money.add_account(new_account_birth, name);
 
     updateChartData();
     d3.select('#change_account_birth').property("value", money.getLastAccountBirth());
     enableLastAddedMember();
 }
 
-function accountName(number, birth) {
-    return "Membre ${p0} (${p1})".format(number, asDate(birth, this.YEAR));
+function accountName(individualIndex, udProducer) {
+    if (udProducer) {
+        return "C${p0} (Co-créateur)".format(individualIndex + 1);
+    }
+    else {
+        return "C${p0} (Non-créateur)".format(individualIndex + 1);
+    }
 }
 
 function asDate(timeStep, timeUnit) {
@@ -650,10 +655,12 @@ function enableMaxDemography() {
 function enableLastAddedMember() {
     if (money.accounts.length > 1) {
         d3.select('#change_account_birth').attr('disabled', null);
+        d3.select('#produceUd').attr('disabled', null);
         d3.select('#delete_last_account').attr('disabled', null);
     }
     else {
         d3.select('#change_account_birth').attr('disabled', 'disabled');
+        d3.select('#produceUd').attr('disabled', 'disabled');
         d3.select('#delete_last_account').attr('disabled', 'disabled');
     }
 }
@@ -664,7 +671,6 @@ d3.select("#demographic_profile").on("change", change_demographic_profile);
 
 d3.selectAll(".rythm").on("change", change_rythm);
 d3.selectAll(".firstDividend").on("change", change_rythm);
-d3.selectAll(".startAccount").on("change", change_start_account);
 
 d3.select("#add_account").on("click", add_account);
 d3.select("#delete_last_account").on("click", delete_last_account);
@@ -678,6 +684,8 @@ d3.select("#monthlyDividendStart").on("change", changeMonthlyDividendStart);
 d3.select("#money_duration").on("change", change_money_duration);
 d3.select("#max_demography").on("change", change_max_demography);
 d3.select("#change_account_birth").on("change", change_last_account_birth);
+d3.select("#produceUd").on("click", changeProduceUd);
+d3.select("#startingAccount").on("change", changeStartingAccount);
 
 d3.selectAll(".tablinks").on("click", openTab);
 
@@ -689,16 +697,20 @@ function change_reference_frame() {
         
     // Axes
     accounts_chart.axis.labels({
-        y: 'Compte (en ' + getRefUnitLabel(money.reference_frame) + ')',
+        y: accountYLabel(money.reference_frame),
     });
     dividend_chart.axis.labels({
-        y: 'Dividende (en ' + getRefUnitLabel(money.reference_frame) + ')',
+        y: accountYLabel(money.reference_frame),
     });
     monetary_supply_chart.axis.labels({
-        y: 'Masse Monétaire (en ' + getRefUnitLabel(money.reference_frame) + ')',
+        y: accountYLabel(money.reference_frame),
     });
     
     updateChartData();
+}
+
+function accountYLabel(reference_frame) {
+    return 'Montant (en ' + getRefUnitLabel(reference_frame) + ')'
 }
 
 function change_formula_type() {
@@ -727,16 +739,6 @@ function change_rythm() {
     
     enableGrowthForms(money.calculate_growth);
     enableUD0Forms();
-    updateChartData();
-}
-
-function change_start_account() {
-    if (this.value === "empty") {
-        money.empty_start_account = true;
-    }
-    else {
-        money.empty_start_account = false;
-    }
     updateChartData();
 }
 
@@ -805,7 +807,26 @@ function change_max_demography() {
 }
 
 function change_last_account_birth() {
-    money.setLastAccountBirth(parseInt(this.value));
+    var birth = parseInt(this.value);
+    money.setLastAccountBirth(birth);
+    
+    var name = accountName(money.accounts.length - 1, money.accounts[money.accounts.length - 1].udProducer);
+    money.setLastAccountName(name);
+    
+    updateChartData();
+}
+
+function changeProduceUd() {
+    money.setLastUdProducer(this.checked);
+    
+    var name = accountName(money.accounts.length - 1, money.accounts[money.accounts.length - 1].udProducer);
+    money.setLastAccountName(name);
+    
+    updateChartData();
+}
+
+function changeStartingAccount() {
+    money.setLastStartingAccount(parseFloat(this.value));
     updateChartData();
 }
 
