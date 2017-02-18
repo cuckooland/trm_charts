@@ -12,28 +12,28 @@ String.prototype.format = function() {
 // Create reference frame selector
 function set_reference_selector(reference_frames) {
     d3.select('#reference_frame').selectAll("option")
-        .data(Object.entries(reference_frames))
+        .data(Object.keys(reference_frames))
       .enter().append("option")
-        .text(function(d) { return getRefLabel(d[0]); })
-        .attr('value', function(d) { return d[0]; });
+        .text(function(d) { return getRefLabel(d); })
+        .attr('value', function(d) { return d; });
 };
 
 // Create formula selector
 function set_formula_selector(dividend_formulaes) {
     d3.select('#formula_type').selectAll("option")
-        .data(Object.entries(dividend_formulaes))
+        .data(Object.keys(dividend_formulaes))
       .enter().append("option")
-        .text(function(d) { return getDividendFormulaLabel(d[0]); })
-        .attr('value', function(d) { return d[0]; });
+        .text(function(d) { return getDividendFormulaLabel(d); })
+        .attr('value', function(d) { return d; });
 };
 
 // Create demographic profile selector
 function set_demography_selector(population_profiles) {
     d3.select('#demographic_profile').selectAll("option")
-        .data(Object.entries(population_profiles))
+        .data(Object.keys(population_profiles))
       .enter().append("option")
-        .text(function(d) { return getPopulationProfileLabel(d[0]); })
-        .attr('value', function(d) { return d[0]; });
+        .text(function(d) { return getPopulationProfileLabel(d); })
+        .attr('value', function(d) { return d; });
 };
 
 function generate_data() {
@@ -83,8 +83,9 @@ function generate_data() {
     // For each account...
 	for (i_account = 0; i_account < money.accounts.length; i_account++) {
 		// add axis mapping
-		c3Data.accounts.xs[money.accounts[i_account].id] = 'x_' + money.accounts[i_account].id;
-        c3Data.accounts.names[money.accounts[i_account].id] = money.accounts[i_account].name;
+		var c3Id = getC3Id(money.accounts[i_account].id);
+		c3Data.accounts.xs[c3Id] = 'x_' + c3Id;
+        c3Data.accounts.names[c3Id] = money.accounts[i_account].name;
 	}
 	
     // add data to columns and add axis header 
@@ -123,20 +124,21 @@ function generate_data() {
     var toUnload = [];
     // for each account...
     for (i_account = 0; i_account < money.accounts.length; i_account++) {
+  		var c3Id = getC3Id(money.accounts[i_account].id);
         // add data to columns
         if (money.accounts[i_account].x.length > 1) {
             
-        	var xAccount = [c3Data.accounts.xs[money.accounts[i_account].id]];
+        	var xAccount = [c3Data.accounts.xs[c3Id]];
         	for (i = 0; i < money.accounts[i_account].x.length; i++) {
         	    xAccount.push(asDate(money.accounts[i_account].x[i]));
         	}
             c3Data.accounts.columns.push(xAccount);
             
             c3Data.accounts.columns.push(money.accounts[i_account].y);
-            c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift(money.accounts[i_account].id);
+            c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift(c3Id);
         }
         else {
-            toUnload.push(money.accounts[i_account].id);
+            toUnload.push(c3Id);
         }
     }
     if (toUnload.length > 0) {
@@ -144,6 +146,10 @@ function generate_data() {
     }
 	return c3Data;
 };
+
+function getC3Id(accountId) {
+    return 'member_' + accountId;
+}
 
 var TRANSITION_DURATION = 1000;
 
@@ -183,7 +189,8 @@ set_formula_selector(money.dividend_formulaes);
 set_demography_selector(money.population_profiles);
 
 // add a member account
-add_money_account(money.MONEY_BIRTH);
+var accountIndex = money.add_account();
+updateAccountName(accountIndex);
 
 // generate data
 var data = generate_data();
@@ -198,9 +205,7 @@ d3.select('#calculate_growth').property("checked", money.calculate_growth);
 d3.selectAll("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
 d3.selectAll("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
 d3.select('#max_demography').property("value", money.maxDemography);
-d3.select('#change_account_birth').property("value", money.getLastAccountBirth());
-d3.select('#produceUd').property("checked", money.getLastUdProducer());
-d3.select('#startingAccount').property("value", money.getLastStartingAccount());
+updateAddedMemberArea();
 
 // update in form with calculated growth
 if (money.calculate_growth) {
@@ -210,7 +215,6 @@ if (money.calculate_growth) {
 enableGrowthForms(money.calculate_growth);
 enableUD0Forms();
 enableMaxDemography();
-enableLastAddedMember();
 
 function getRefLabel(reference_frame) {
     switch(reference_frame) {
@@ -561,44 +565,53 @@ function updateChartData(toUnload) {
 }
 
 /**
- * Delete last account
+ * Delete current account
  */
-function delete_last_account() {
-    var account = money.delete_last_account();
+function delete_account() {
+    var account = money.delete_account(getSelectedAccountIndex());
     // If account deleted...
-    if (account != false) {
+    if (account != false && account.length > 0) {
         // Update remaining data
-        updateChartData(account.id);
-        d3.select('#change_account_birth').property("value", money.getLastAccountBirth());
-        enableLastAddedMember();
+		var c3Id = getC3Id(account[0].id);
+        updateChartData(c3Id);
+        updateAddedMemberArea();
     }
+}
+
+function updateAddedMemberArea() {
+    var selectedAccountIndex = getSelectedAccountIndex();
+    d3.select('#change_account_birth').property("value", money.getAccountBirth(getSelectedAccountIndex()));
+    d3.select('#produceUd').property("checked", money.getUdProducer(selectedAccountIndex));
+    d3.select('#startingAccount').property("value", money.getStartingAccount(selectedAccountIndex));
+    enableAddedMemberArea();
+}
+
+function getSelectedAccountIndex() {
+    return money.accounts.length - 1;
 }
 
 /**
- * Add account
+ * add a member account with same attributes as the last account
  */
-function add_money_account(birth) {
-    var name = accountName(money.accounts.length, true);
-    money.add_account(birth, name);
-}
-
 function add_account() {
-    // add a member account with a birth date which is the same as the last account
-    var new_account_birth = money.getLastAccountBirth();
-    var name = accountName(money.accounts.length, true);
-    money.add_account(new_account_birth, name);
-
+    var accountIndex = money.add_account();
+    updateAccountName(accountIndex);
+    
     updateChartData();
-    d3.select('#change_account_birth').property("value", money.getLastAccountBirth());
-    enableLastAddedMember();
+    updateAddedMemberArea();
 }
 
-function accountName(individualIndex, udProducer) {
-    if (udProducer) {
-        return "C${p0} (Co-créateur)".format(individualIndex + 1);
+function updateAccountName(accountIndex) {
+    var name = accountName(money.accounts[accountIndex]);
+    money.setAccountName(accountIndex, name);
+}
+
+function accountName(account) {
+    if (account.udProducer) {
+        return "C${p0} (Co-créateur)".format(account.id);
     }
     else {
-        return "C${p0} (Non-créateur)".format(individualIndex + 1);
+        return "C${p0} (Non-créateur)".format(account.id);
     }
 }
 
@@ -652,16 +665,16 @@ function enableMaxDemography() {
     }
 }
 
-function enableLastAddedMember() {
-    if (money.accounts.length > 1) {
+function enableAddedMemberArea() {
+    if (getSelectedAccountIndex() != 0) {
         d3.select('#change_account_birth').attr('disabled', null);
         d3.select('#produceUd').attr('disabled', null);
-        d3.select('#delete_last_account').attr('disabled', null);
+        d3.select('#delete_account').attr('disabled', null);
     }
     else {
         d3.select('#change_account_birth').attr('disabled', 'disabled');
         d3.select('#produceUd').attr('disabled', 'disabled');
-        d3.select('#delete_last_account').attr('disabled', 'disabled');
+        d3.select('#delete_account').attr('disabled', 'disabled');
     }
 }
 
@@ -673,7 +686,7 @@ d3.selectAll(".rythm").on("change", change_rythm);
 d3.selectAll(".firstDividend").on("change", change_rythm);
 
 d3.select("#add_account").on("click", add_account);
-d3.select("#delete_last_account").on("click", delete_last_account);
+d3.select("#delete_account").on("click", delete_account);
 
 d3.select("#life_expectancy").on("change", change_life_expectancy);
 d3.select("#annualGrowth").on("change", changeAnnualGrowth);
@@ -683,7 +696,7 @@ d3.select("#annualDividendStart").on("change", changeAnnualDividendStart);
 d3.select("#monthlyDividendStart").on("change", changeMonthlyDividendStart);
 d3.select("#money_duration").on("change", change_money_duration);
 d3.select("#max_demography").on("change", change_max_demography);
-d3.select("#change_account_birth").on("change", change_last_account_birth);
+d3.select("#change_account_birth").on("change", change_account_birth);
 d3.select("#produceUd").on("click", changeProduceUd);
 d3.select("#startingAccount").on("change", changeStartingAccount);
 
@@ -806,27 +819,23 @@ function change_max_demography() {
     updateChartData();
 }
 
-function change_last_account_birth() {
+function change_account_birth() {
     var birth = parseInt(this.value);
-    money.setLastAccountBirth(birth);
-    
-    var name = accountName(money.accounts.length - 1, money.accounts[money.accounts.length - 1].udProducer);
-    money.setLastAccountName(name);
-    
+    money.setAccountBirth(getSelectedAccountIndex(), birth);
     updateChartData();
 }
 
 function changeProduceUd() {
-    money.setLastUdProducer(this.checked);
+    var selectedAccountIndex = getSelectedAccountIndex();
+    money.setUdProducer(selectedAccountIndex, this.checked);
     
-    var name = accountName(money.accounts.length - 1, money.accounts[money.accounts.length - 1].udProducer);
-    money.setLastAccountName(name);
+    updateAccountName(selectedAccountIndex);
     
     updateChartData();
 }
 
 function changeStartingAccount() {
-    money.setLastStartingAccount(parseFloat(this.value));
+    money.setStartingAccount(getSelectedAccountIndex(), parseFloat(this.value));
     updateChartData();
 }
 

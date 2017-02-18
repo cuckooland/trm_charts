@@ -11,7 +11,7 @@
  *
  * Add a member account:
  *
- *      myMoney.add_account(1);
+ *      myMoney.add_account();
  *
  * Debug c3.js chart data
  *
@@ -278,18 +278,34 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         return people;
     };
 
-	this.add_account = function(birth, name) {
+    /**
+     * add a member account with same attributes as the last account
+     */
+	this.add_account = function() {
+        var id = 1;
+        var birth = this.MONEY_BIRTH;
+        var startingAccount = 1;
+        var udProducer = true;
+        if (money.accounts.length > 0) {
+            id = money.accounts[money.accounts.length - 1].id + 1;
+            birth = money.accounts[money.accounts.length - 1].birth;
+            startingAccount = money.accounts[money.accounts.length - 1].startingAccount;
+            udProducer = money.accounts[money.accounts.length - 1].udProducer;
+        }
+        var name = "Member " + id;
+        
 		this.accounts.push({
             name: name,
-            id: 'member_' + (this.accounts.length + 1),
+            id: id,
             birth: birth,
             balance: 0,
-            startingAccount: 1,
-            udProducer: true,
+            startingAccount: startingAccount,
+            udProducer: udProducer,
             values: [],
             x: [],
             y: [],
         });
+        return this.accounts.length - 1;
 	};
 
 	this.getGrowth = function(growthTimeUnit) {
@@ -361,78 +377,81 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
 	}
 	
     /**
-     * Return account deleted or false if only one account left
+     * Return account deleted or false for first account
      *
      * @returns {*}|false
      */
-    this.delete_last_account = function() {
-        if (this.accounts.length > 1) {
-            return this.accounts.pop();
+    this.delete_account = function(accountIndex) {
+        if (accountIndex == 0) {
+            return false;
         }
-        return false;
+        if (accountIndex > 0 && accountIndex < this.accounts.length) {
+            return this.accounts.splice(accountIndex, 1);
+        }
+        throw new Error(accountIndex + "is an invalid account index");
 	};
 	
-    this.getLastAccountName = function() {
-        if (this.accounts.length > 0) {
-            return this.accounts[this.accounts.length - 1].name;
+    this.getAccountName = function(accountIndex) {
+        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
+            return this.accounts[accountIndex].name;
         }
-        throw new Error("No account defined");
+        throw new Error(accountIndex + "is an invalid account index");
 	};
 
-    this.setLastAccountName = function(name) {
-        if (this.accounts.length > 0) {
-            this.accounts[this.accounts.length - 1].name = name;
+    this.setAccountName = function(accountIndex, name) {
+        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
+            this.accounts[accountIndex].name = name;
         }
         else {
-            throw new Error("No account defined");
-        }
-	};
-	
-    this.getLastAccountBirth = function() {
-        if (this.accounts.length > 0) {
-            return this.accounts[this.accounts.length - 1].birth;
-        }
-        throw new Error("No account defined");
-	};
-
-    this.setLastAccountBirth = function(birth) {
-        if (this.accounts.length > 0) {
-            this.accounts[this.accounts.length - 1].birth = birth;
-        }
-        else {
-            throw new Error("No account defined");
+            throw new Error(accountIndex + "is an invalid account index");
         }
 	};
 	
-    this.getLastUdProducer = function() {
-        if (this.accounts.length > 0) {
-            return this.accounts[this.accounts.length - 1].udProducer;
+    this.getAccountBirth = function(accountIndex) {
+        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
+            return this.accounts[accountIndex].birth;
         }
-        throw new Error("No account defined");
+        throw new Error(accountIndex + "is an invalid account index");
 	};
 
-    this.setLastUdProducer = function(newUdProducer) {
-        if (this.accounts.length > 0) {
-            this.accounts[this.accounts.length - 1].udProducer = newUdProducer;
+    this.setAccountBirth = function(accountIndex, birth) {
+        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
+            this.accounts[accountIndex].birth = birth;
         }
         else {
-            throw new Error("No account defined");
+            throw new Error(accountIndex + "is an invalid account index");
         }
 	};
 	
-    this.getLastStartingAccount = function() {
-        if (this.accounts.length > 0) {
-            return this.accounts[this.accounts.length - 1].startingAccount;
+    this.getUdProducer = function(accountIndex) {
+        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
+            return this.accounts[accountIndex].udProducer;
         }
-        throw new Error("No account defined");
+        throw new Error(accountIndex + "is an invalid account index");
 	};
 
-    this.setLastStartingAccount = function(newStartingAccount) {
-        if (this.accounts.length > 0) {
-            this.accounts[this.accounts.length - 1].startingAccount = newStartingAccount;
+    this.setUdProducer = function(accountIndex, newUdProducer) {
+        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
+            this.accounts[accountIndex].udProducer = newUdProducer;
         }
         else {
-            throw new Error("No account defined");
+            throw new Error(accountIndex + "is an invalid account index");
+        }
+	};
+	
+    this.getStartingAccount = function(accountIndex) {
+        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
+            return this.accounts[accountIndex].startingAccount;
+        }
+        throw new Error(accountIndex + "is an invalid account index");
+	};
+
+    this.setStartingAccount = function(accountIndex, newStartingAccount) {
+        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
+            this.accounts[accountIndex].startingAccount = newStartingAccount;
+        }
+        else {
+            throw new Error(accountIndex + "is an invalid account index");
         }
 	};
 	
@@ -531,7 +550,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
                 // add average
                 average = monetary_mass / this.udProducerCount.values[timeStep];
                 this.average.values.push(average);
-
+    
                 if (timeStep >= moneyBirthStep) {
                     this.dividends.x.push(timeStep);
                     this.dividends.y.push(this.get_reference_frame_value(dividend, timeStep));
