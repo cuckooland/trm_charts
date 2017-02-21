@@ -36,6 +36,20 @@ function set_demography_selector(population_profiles) {
         .attr('value', function(d) { return d; });
 };
 
+// Join (via D3) account selector to 'money.accounts'
+function joinAccountSelectorToData() {
+    var options = d3.select('#current_account').selectAll("option")
+        .data(money.accounts, function(d) { return d.id; });
+            
+    options.text(function(d) { return d.name; });
+    
+    options.enter().append("option")
+        .text(function(d) { return d.name; })
+        .attr('value', function(d) { return d.id; })
+        
+    options.exit().remove();
+};
+
 function generate_data() {
     money.generate_data();
     
@@ -191,6 +205,8 @@ set_demography_selector(money.population_profiles);
 // add a member account
 var accountIndex = money.add_account();
 updateAccountName(accountIndex);
+joinAccountSelectorToData();
+document.getElementById("current_account").selectedIndex = 0;
 
 // generate data
 var data = generate_data();
@@ -568,12 +584,15 @@ function updateChartData(toUnload) {
  * Delete current account
  */
 function delete_account() {
-    var account = money.delete_account(getSelectedAccountIndex());
+    var selectedAccountIndex = getSelectedAccountIndex();
+    var account = money.delete_account(selectedAccountIndex);
     // If account deleted...
     if (account != false && account.length > 0) {
         // Update remaining data
 		var c3Id = getC3Id(account[0].id);
         updateChartData(c3Id);
+        joinAccountSelectorToData(selectedAccountIndex - 1);
+        document.getElementById("current_account").selectedIndex = selectedAccountIndex - 1;
         updateAddedMemberArea();
     }
 }
@@ -587,7 +606,8 @@ function updateAddedMemberArea() {
 }
 
 function getSelectedAccountIndex() {
-    return money.accounts.length - 1;
+    var sel = document.getElementById('current_account');
+    return sel.selectedIndex;
 }
 
 /**
@@ -598,6 +618,8 @@ function add_account() {
     updateAccountName(accountIndex);
     
     updateChartData();
+    joinAccountSelectorToData();
+    document.getElementById("current_account").selectedIndex = money.accounts.length - 1;
     updateAddedMemberArea();
 }
 
@@ -681,6 +703,7 @@ function enableAddedMemberArea() {
 d3.select("#reference_frame").on("change", change_reference_frame);
 d3.select("#formula_type").on("change", change_formula_type);
 d3.select("#demographic_profile").on("change", change_demographic_profile);
+d3.select("#current_account").on("change", updateAddedMemberArea);
 
 d3.selectAll(".rythm").on("change", change_rythm);
 d3.selectAll(".firstDividend").on("change", change_rythm);
@@ -831,6 +854,7 @@ function changeProduceUd() {
     
     updateAccountName(selectedAccountIndex);
     
+    joinAccountSelectorToData();
     updateChartData();
 }
 
