@@ -630,10 +630,10 @@ function updateAccountName(accountIndex) {
 
 function accountName(account) {
     if (account.udProducer) {
-        return "C${p0} (Co-créateur)".format(account.id);
+        return "Compte ${p0} (Co-créateur)".format(account.id);
     }
     else {
-        return "C${p0} (Non-créateur)".format(account.id);
+        return "Compte ${p0} (Non-créateur)".format(account.id);
     }
 }
 

@@ -26,8 +26,8 @@
                     <ul class="tab">
                         <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Co-Création Monétaire</a></li>
                         <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Départ de la Monnaie</a></li>
-                        <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Profil Démographique </a></li>
                         <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes Affichés</a></li>
+                        <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Profil Démographique </a></li>
                     </ul>
                     <div id="AboutMoney" class="tabcontent">
                         <div class="leftPart">
@@ -66,9 +66,9 @@
                         </div>
                         <div class="rightPart">
                         
-                            <p>La Théorie Relative de la Monnaie propose de créer régulièrement de la nouvelle monnaie qui sera partagée équitablement parmi l’ensemble des individus. C'est ce que l'on appelle la co-création de la monnaie.</p>
+                            <p>Dans la Théorie Relative de la Monnaie, de nouvelles unités monétaires sont créées régulièrement et sont partagées équitablement entre les N individus de la communauté. C'est ce que l'on appelle la co-création de la monnaie.</p>
                             
-                            <p>Afin de n’avantager aucune génération, chacun des N individus doit co-créer régulièrement un même nombre de masse monétaire moyenne M/N. Nous noterons ce nombre par la lettre c. La quantité c*M/N est alors appelée Dividende Universel.</p>
+                            <p>Autrement dit, afin de n’avantager aucune génération, chacun des N individus doit co-créer régulièrement un même nombre de masse monétaire moyenne M/N. Nous noterons ce nombre par la lettre c. La quantité c*M/N est alors appelée Dividende Universel.</p>
                             
                             <p>Le nombre c est fixé une fois pour toutes lors de la mise en place de la monnaie.</p>
                                                     
@@ -97,31 +97,11 @@
                             </div>
                         </div>
                         <div class="rightPart">
-                            <p>La monnaie est uniquement créée via le Dividende Universel. Elle démarre avec un premier Dividende que nous noterons DU0.</p>
+                            <p>La monnaie est uniquement créée via le Dividende Universel. Elle démarre avec un premier Dividende que nous noterons DU0. Les comptes passent alors de 0 à DU0.</p>
                             
-                            <p>Par défaut, dans cette simulation, la population est constituée d'un seul individu. Le but est d'ajouter progressivement des éléments de complexité : dans l'onglet suivant, on pourra étudier l'effet d'une population variant en nombre au fil du temps.</p>
+                            <p>Par défaut, dans cette simulation, la population est constituée d'un seul individu. Le but est d'ajouter progressivement des éléments de complexité. Dans l'onglet suivant, on pourra ajouter d'autre comptes.</p>
                             
-                            <p>La monnaie démarre avec un premier Dividende DU0, et les comptes sont vides. Néanmoins, pour reproduire le cas particulier d'une population stable, on peut créditer les comptes d'un certain montant...</p>
-
-                        </div>
-                    </div>
-                    <div id="HeadCount" class="tabcontent">
-                        <div class="leftPart">
-                            <div class="row">
-                                <label for="demographic_profile">Utiliser une fonction mathématique</label><select id="demographic_profile" name="demographic_profile"></select>
-                            </div>
-                            <div class="subTabContent">
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="max_demography">Valeur Maxi</label>
-                                        <input id="max_demography" type="text" name="max_demography"
-                                               title="Ordre de grandeur de la démographie maximum"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="rightPart">
-                            <p>Dans l'onglet précédent, on a pu voir l'effet d'une variation du nombre d'individus lors du passage de zéro à un membre. Il s'agit désormais d'étudier différentes formes de variations, plus réalistes, en jouant sur la forme et sur l'amplitude.</p>
+                            <p>Pour simuler le démarrage d'une monnaie, les comptes doivent valoir 0 au départ. Mais par défaut, dans cette simulation, ils valent DU0/c afin de reproduire le cas particulier d'une population stable comme présenter dans la TRM en Couleur (partie 1). Cela peut être modifié dans l'onglet suivant.</p>
 
                         </div>
                     </div>
@@ -129,7 +109,7 @@
                         <div class="leftPart">
                             <div class="row">
                                 <select id="current_account" name="current_account"></select>
-                                <input id="add_account" type="button" value="Ajouter un nouveau compte"/>
+                                <input id="add_account" type="button" value="Ajouter un compte"/>
                             </div>
                             <div class="subTabContent">
                                 <div class="row">
@@ -158,7 +138,27 @@
                             </div>
                         </div>
                         <div class="rightPart">
-                            <p>Par défaut, dans cette simulation, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, montant au départ, co-créateur ou non) afin d'étudier l'évolution de leur compte.</p>
+                            <p>Par défaut, dans cette simulation, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps.</p>
+
+                        </div>
+                    </div>
+                    <div id="HeadCount" class="tabcontent">
+                        <div class="leftPart">
+                            <div class="row">
+                                <label for="demographic_profile">Utiliser une fonction mathématique</label><select id="demographic_profile" name="demographic_profile"></select>
+                            </div>
+                            <div class="subTabContent">
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="max_demography">Valeur Maxi</label>
+                                        <input id="max_demography" type="text" name="max_demography"
+                                               title="Ordre de grandeur de la démographie maximum"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rightPart">
+                            <p>Dans l'onglet précédent, on a pu faire varier le nombre d'individus au fil du temps. Il s'agit désormais d'étudier différentes types de variations, plus réalistes, en jouant sur la forme et sur l'amplitude.</p>
 
                         </div>
                     </div>
