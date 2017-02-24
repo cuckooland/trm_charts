@@ -55,7 +55,7 @@ function generate_data() {
     
 	var c3Data = {
         accounts: {
-            xFormat: '%d-%m-%Y',
+            xFormat: DATE_PATTERN,
             xs: {
                 'average': 'x_average'
             },
@@ -68,7 +68,7 @@ function generate_data() {
             }
         },
         dividend: {
-            xFormat: '%d-%m-%Y',
+            xFormat: DATE_PATTERN,
             x: 'x_dividend',
             names: {
                 'dividend': 'Dividende Universel'
@@ -76,7 +76,7 @@ function generate_data() {
             columns: []
         },
         headcount: {
-            xFormat: '%d-%m-%Y',
+            xFormat: DATE_PATTERN,
             x: 'x_people',
             names: {
                 'people': 'Nombre de co-créateurs "N"'
@@ -84,7 +84,7 @@ function generate_data() {
             columns: []
         },
         monetary_supply: {
-            xFormat: '%d-%m-%Y',
+            xFormat: DATE_PATTERN,
             x: 'x_monetary_mass',
             names: {
                 'monetary_mass': 'Masse Monétaire "M"'
@@ -187,6 +187,8 @@ var EXP_FORMATS = {
     'Z': '21',
     'Y': '24'
 }
+
+var DATE_PATTERN = "%d-%m-%Y";
     
 // Create instance context
 var money = {};
@@ -309,7 +311,7 @@ accounts_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%d-%m-%Y',
+                format: DATE_PATTERN,
                 count: 2
             },
             min: '01-01-2000'
@@ -368,7 +370,7 @@ dividend_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%d-%m-%Y',
+                format: DATE_PATTERN,
                 count: 2 
             },
             min: '01-01-2000'
@@ -431,7 +433,7 @@ headcount_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%d-%m-%Y',
+                format: DATE_PATTERN,
                 count: 2
             },
             min: '01-01-2000'
@@ -495,7 +497,7 @@ monetary_supply_chart = c3.generate({
             },
             type: 'timeseries',
             tick: {
-                format: '%d-%m-%Y',
+                format: DATE_PATTERN,
                 count: 2
             },
             min: '01-01-2000'
@@ -640,11 +642,12 @@ function accountName(account) {
 function asDate(timeStep, timeUnit) {
     timeUnit = timeUnit || money.growthTimeUnit;
     
+    var format = d3.time.format(DATE_PATTERN);
     if (timeUnit === money.MONTH) {
-        return "01-${p0}-${p1}".format(timeStep % 12, 2000 + Math.trunc(timeStep / 12) + 1);
+        return format(new Date(2000 + Math.trunc(timeStep / 12) + 1, timeStep % 12 - 1, 1));
     }
     else if (timeUnit === money.YEAR) {
-        return "01-01-${p0}".format(2000 + timeStep);
+        return format(new Date(2000 + timeStep, 0, 1));
     }
     else {
         throw new Error("Time unit not managed");
