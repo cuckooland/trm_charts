@@ -603,7 +603,7 @@ function updateAddedMemberArea() {
     var selectedAccountIndex = getSelectedAccountIndex();
     d3.select('#change_account_birth').property("value", money.getAccountBirth(getSelectedAccountIndex()));
     d3.select('#produceUd').property("checked", money.getUdProducer(selectedAccountIndex));
-    d3.select('#startingRatio').property("value", money.getStartingRatio(selectedAccountIndex));
+    d3.select('#startingPercentage').property("value", money.getStartingPercentage(selectedAccountIndex));
     enableAddedMemberArea();
 }
 
@@ -724,7 +724,7 @@ d3.select("#money_duration").on("change", change_money_duration);
 d3.select("#max_demography").on("change", change_max_demography);
 d3.select("#change_account_birth").on("change", change_account_birth);
 d3.select("#produceUd").on("click", changeProduceUd);
-d3.select("#startingRatio").on("change", changeStartingRatio);
+d3.select("#startingPercentage").on("change", changeStartingPercentage);
 
 d3.selectAll(".tablinks").on("click", openTab);
 
@@ -863,8 +863,8 @@ function changeProduceUd() {
     updateChartData();
 }
 
-function changeStartingRatio() {
-    money.setStartingRatio(getSelectedAccountIndex(), parseFloat(this.value));
+function changeStartingPercentage() {
+    money.setStartingPercentage(getSelectedAccountIndex(), parseFloat(this.value));
     updateChartData();
 }
 

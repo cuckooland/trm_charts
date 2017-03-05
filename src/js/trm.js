@@ -359,17 +359,18 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             // add a dividend coming from each producer
             accountIncrease = this.getDividend(timeStep - 1);
         }
-        if (timeStep === birthStep && !removeStartingAmount && this.accounts[i_account].startingRatio != 0) {
-            // at birth, add some money according to the 'startingRatio' attribute
+        var startingRatio = this.accounts[i_account].startingPercentage / 100;
+        if (timeStep === birthStep && !removeStartingAmount && startingRatio != 0) {
+            // at birth, add some money according to the 'startingPercentage' attribute
             var average = 0;
             var individualCount = this.getIndividualCount(timeStep);
             var previousIndividualCount = this.getIndividualCount(timeStep - 1);
             
-            if (previousIndividualCount > 0 && individualCount / this.accounts[i_account].startingRatio > 1) {
-                accountIncrease += this.getMonetaryMass(timeStep, true) / (individualCount / this.accounts[i_account].startingRatio - 1);
+            if (previousIndividualCount > 0 && individualCount / startingRatio > 1) {
+                accountIncrease += this.getMonetaryMass(timeStep, true) / (individualCount / startingRatio - 1);
             }
             else {
-                accountIncrease += this.accounts[i_account].startingRatio * this.getDividend(timeStep) / this.getGrowth();
+                accountIncrease += startingRatio * this.getDividend(timeStep) / this.getGrowth();
             }
         }
        
@@ -396,12 +397,12 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     this.add_account = function() {
         var id = 1;
         var birth = this.DEFAULT_MONEY_BIRTH;
-        var startingRatio = 1;
+        var startingPercentage = 100;
         var udProducer = true;
         if (money.accounts.length > 0) {
             id = money.accounts[money.accounts.length - 1].id + 1;
             birth = money.accounts[money.accounts.length - 1].birth;
-            startingRatio = money.accounts[money.accounts.length - 1].startingRatio;
+            startingPercentage = money.accounts[money.accounts.length - 1].startingPercentage;
             udProducer = money.accounts[money.accounts.length - 1].udProducer;
         }
         var name = "Member " + id;
@@ -411,7 +412,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
             id: id,
             birth: birth,
             balance: 0,
-            startingRatio: startingRatio,
+            startingPercentage: startingPercentage,
             udProducer: udProducer,
             values: [],
             x: [],
@@ -551,16 +552,16 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
         }
     };
    
-    this.getStartingRatio = function(accountIndex) {
+    this.getStartingPercentage = function(accountIndex) {
         if (accountIndex >= 0 && accountIndex < this.accounts.length) {
-            return this.accounts[accountIndex].startingRatio;
+            return this.accounts[accountIndex].startingPercentage;
         }
         throw new Error(accountIndex + "is an invalid account index");
     };
 
-    this.setStartingRatio = function(accountIndex, newStartingRatio) {
+    this.setStartingPercentage = function(accountIndex, newStartingPercentage) {
         if (accountIndex >= 0 && accountIndex < this.accounts.length) {
-            this.accounts[accountIndex].startingRatio = newStartingRatio;
+            this.accounts[accountIndex].startingPercentage = newStartingPercentage;
         }
         else {
             throw new Error(accountIndex + "is an invalid account index");
