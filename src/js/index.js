@@ -79,7 +79,7 @@ function generate_data() {
             xFormat: DATE_PATTERN,
             x: 'x_people',
             names: {
-                'people': 'Nombre de co-créateurs "N"'
+                'people': 'Nombre d\'individus "N"'
             },
             columns: []
         },
@@ -112,11 +112,11 @@ function generate_data() {
     c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('dividend');
     
 	var xPeople = ['x_people'];
-	for (i = 0; i < money.udProducerCount.x.length; i++) {
-	    xPeople.push(asDate(money.udProducerCount.x[i]));
+	for (i = 0; i < money.individualCount.x.length; i++) {
+	    xPeople.push(asDate(money.individualCount.x[i]));
 	}
     c3Data.headcount.columns.push(xPeople);
-    c3Data.headcount.columns.push(money.udProducerCount.values);
+    c3Data.headcount.columns.push(money.individualCount.values);
     c3Data.headcount.columns[c3Data.headcount.columns.length - 1].unshift('people');
     
 	var xMonetarySupply = ['x_monetary_mass'];
@@ -440,7 +440,7 @@ headcount_chart = c3.generate({
         },
         y: {
             label: {
-                text: "Nombre de co-créateurs",
+                text: "Nombre d\individus",
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -603,7 +603,7 @@ function updateAddedMemberArea() {
     var selectedAccountIndex = getSelectedAccountIndex();
     d3.select('#change_account_birth').property("value", money.getAccountBirth(getSelectedAccountIndex()));
     d3.select('#produceUd').property("checked", money.getUdProducer(selectedAccountIndex));
-    d3.select('#startingAccount').property("value", money.getStartingAccount(selectedAccountIndex));
+    d3.select('#startingRatio').property("value", money.getStartingRatio(selectedAccountIndex));
     enableAddedMemberArea();
 }
 
@@ -724,7 +724,7 @@ d3.select("#money_duration").on("change", change_money_duration);
 d3.select("#max_demography").on("change", change_max_demography);
 d3.select("#change_account_birth").on("change", change_account_birth);
 d3.select("#produceUd").on("click", changeProduceUd);
-d3.select("#startingAccount").on("change", changeStartingAccount);
+d3.select("#startingRatio").on("change", changeStartingRatio);
 
 d3.selectAll(".tablinks").on("click", openTab);
 
@@ -767,10 +767,12 @@ function change_rythm() {
     if (this.value === "by_month") {
         money.growthTimeUnit = money.MONTH;
         money.dividend_start = parseFloat(document.getElementById('monthlyDividendStart').value);
+    	money.growth = parseFloat(document.getElementById('monthlyGrowth').value) / 100;
     }
     else {
         money.growthTimeUnit = money.YEAR;
         money.dividend_start = parseFloat(document.getElementById('annualDividendStart').value);
+    	money.growth = parseFloat(document.getElementById('annualGrowth').value) / 100;
     }
     
     d3.selectAll("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
@@ -861,8 +863,8 @@ function changeProduceUd() {
     updateChartData();
 }
 
-function changeStartingAccount() {
-    money.setStartingAccount(getSelectedAccountIndex(), parseFloat(this.value));
+function changeStartingRatio() {
+    money.setStartingRatio(getSelectedAccountIndex(), parseFloat(this.value));
     updateChartData();
 }
 
