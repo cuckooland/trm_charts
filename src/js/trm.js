@@ -67,12 +67,12 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
    
     this.accounts = [];
     this.referenceFrames = {
-        'quantitative': {
+        'monetaryUnit': {
             transform: function(money, value, timeStep) {
                 return value;
             }
         },
-        'relative': {
+        'dividend': {
             transform: function(money, value, timeStep) {
                 if (money.headcounts.values[timeStep] > 0) {
                     return value / money.dividends.values[timeStep];
@@ -228,7 +228,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         }
     };
 
-    this.referenceFrame = 'quantitative';
+    this.referenceFrame = 'monetaryUnit';
     this.udFormula = 'UDA';
     this.populationProfile = 'None';
 

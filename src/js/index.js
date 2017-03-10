@@ -233,9 +233,9 @@ enableMaxDemography();
 
 function getRefLabel(referenceFrame) {
     switch(referenceFrame) {
-        case 'quantitative':
+        case 'monetaryUnit':
             return "Unité Monétaire";
-        case 'relative': 
+        case 'dividend': 
             return "Dividende";
         case 'average':
             return "%(M/N)";
@@ -246,9 +246,9 @@ function getRefLabel(referenceFrame) {
 
 function getRefUnitLabel(referenceFrame) {
     switch(referenceFrame) {
-        case 'quantitative':
+        case 'monetaryUnit':
             return 'Unités Monétaires';
-        case 'relative': 
+        case 'dividend': 
             return "DU";
         case 'average':
             return "%(M/N)";
