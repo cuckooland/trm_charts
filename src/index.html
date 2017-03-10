@@ -22,50 +22,128 @@
 			</h1>
             
             <div id="TrmAppli">
-                <div id="tabs">
-                    <ul class="tab">
+                <div id="ParamsCommentsAndTabs">
+                    <ul class="tabsBar">
                         <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Co-Création Monétaire</a></li>
                         <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Départ de la Monnaie</a></li>
                         <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes Affichés</a></li>
                         <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Profil Démographique </a></li>
                     </ul>
-                    <div id="AboutMoney" class="tabcontent">
-                        <div class="leftPart">
-                            <div class="row">
-                                <div class="labelledForm">
-                                    <label for="life_expectancy">Espérance de vie (en année)</label>
-                                    <input id="life_expectancy" type="text" name="life_expectancy"
-                                           title="Espérance de vie des individus"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label>Croissance "c"</label>
-                            </div>
-                            <div class="subTabContent">
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="calculate_growth">Déduite de l'espérence de vie</label>
-                                        <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calcule la croissance (c) à partir de l'espérance de vie (ev) : c = (ev/2)^(1/(ev/2)) * 100">
+                    <div id="ParamsAndComments">
+                        <div class="ParamPart">
+                            <div id="AboutMoney" class="tabcontent">
+                                <div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="life_expectancy">Espérance de vie (en année)</label>
+                                            <input id="life_expectancy" type="text" name="life_expectancy"
+                                                   title="Espérance de vie des individus"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label>Croissance "c"</label>
+                                    </div>
+                                    <div class="ParamSection">
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label for="calculate_growth">Déduite de l'espérence de vie</label>
+                                                <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calcule la croissance (c) à partir de l'espérance de vie (ev) : c = (ev/2)^(1/(ev/2)) * 100">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Co-création Annuelle (en %)</label>
+                                                <input id="annualGrowth" type="text" name="annualGrowth"
+                                                       title="Croissance annuelle de la masse monétaire moyenne"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_month"> Co-création Mensuelle (en %)</label>
+                                                <input id="monthlyGrowth" type="text" name="monthlyGrowth"
+                                                       title="Croissance mensuelle de la masse monétaire moyenne"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Co-création Annuelle (en %)</label>
-                                        <input id="annualGrowth" type="text" name="annualGrowth"
-                                               title="Croissance annuelle de la masse monétaire moyenne"/>
+                            </div>
+                            <div id="Starting" class="tabcontent">
+                                <div>
+                                    <div class="row">
+                                        <label>Dividende de départ "DU0" (en unités monétaires)</label>
+                                    </div>
+                                    <div class="ParamSection">
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_year" checked>Co-création Annuelle</label>
+                                                <input id="annualDividendStart" type="text" name="annualDividendStart"
+                                                       title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_month" checked>Co-création Mensuelle</label>
+                                                <input id="monthlyDividendStart" type="text" name="monthlyDividendStart"
+                                                       title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_month"> Co-création Mensuelle (en %)</label>
-                                        <input id="monthlyGrowth" type="text" name="monthlyGrowth"
-                                               title="Croissance mensuelle de la masse monétaire moyenne"/>
+                            </div>
+                            <div id="Accounts" class="tabcontent">
+                                <div>
+                                    <div class="row">
+                                        <select id="current_account" name="current_account"></select>
+                                        <input id="add_account" type="button" value="Ajouter un compte"/>
+                                    </div>
+                                    <div class="ParamSection">
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label for="change_account_birth">Année de naissance</label>
+                                                <input id="change_account_birth" type="text" name="change_account_birth" 
+                                                       title="Positionne l'année de naissance du dernier compte"/>
+                                            </div>
+                                            <div class="row">
+                                                <div class="labelledForm">
+                                                    <label for="produceUd">Co-créateur de la monnaie</label>
+                                                    <input id="produceUd" type="checkbox" name="produceUd" value="1" checked="checked" title="Permet d'indiquer si ce compte correspond à un producteur de monnaie">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="labelledForm">
+                                                    <label for="startingPercentage">Montant à la naissance en %(M/N)</label>
+                                                    <input id="startingPercentage" type="text" name="startingPercentage"
+                                                           title="Permet d'indiquer le montant présent sur le compte au départ"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <input id="delete_account" type="button" value="Supprimer"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="HeadCount" class="tabcontent">
+                                <div>
+                                    <div class="row">
+                                        <label for="demographic_profile">Utiliser une fonction mathématique</label><select id="demographic_profile" name="demographic_profile"></select>
+                                    </div>
+                                    <div class="ParamSection">
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label for="max_demography">Valeur Maxi</label>
+                                                <input id="max_demography" type="text" name="max_demography"
+                                                       title="Ordre de grandeur de la démographie maximum"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="rightPart">
-                        
+                    </div>
+
+                    <div class="CommentPart">
+                        <div class="Comment" id="MoneyItemComment">
                             <p>Dans la Théorie Relative de la Monnaie, de nouvelles unités monétaires sont créées régulièrement et sont partagées équitablement entre les N individus de la communauté. C'est ce que l'on appelle la co-création de la monnaie.</p>
                             
                             <p>Autrement dit, afin de n’avantager aucune époque, chacun des N individus co-créé régulièrement un même nombre de masse monétaire moyenne M/N. Nous noterons ce nombre par la lettre c ; et cette quantité c*M/N est appelée Dividende Universel.</p>
@@ -73,98 +151,26 @@
                             <p>Le nombre c est fixé une fois pour toutes lors de la mise en place de la monnaie.</p>
                                                     
                         </div>
-                    </div>
-                    <div id="Starting" class="tabcontent">
-                        <div class="leftPart">
-                            <div class="row">
-                                <label>Dividende de départ "DU0" (en unités monétaires)</label>
-                            </div>
-                            <div class="subTabContent">
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_year" checked>Co-création Annuelle</label>
-                                        <input id="annualDividendStart" type="text" name="annualDividendStart"
-                                               title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_month" checked>Co-création Mensuelle</label>
-                                        <input id="monthlyDividendStart" type="text" name="monthlyDividendStart"
-                                               title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="rightPart">
+                        <div class="Comment" id="StartingItemComment">
                             <p>La monnaie est uniquement créée via le Dividende Universel. Elle démarre avec un premier Dividende que nous noterons DU0. Les comptes passent alors de 0 à DU0.</p>
                             
                             <p>Par défaut, dans cette simulation, la population est constituée d'un seul individu. Le but est d'ajouter progressivement des éléments de complexité. Dans l'onglet suivant, on pourra ajouter d'autre comptes.</p>
                             
                         </div>
-                    </div>
-                    <div id="Accounts" class="tabcontent">
-                        <div class="leftPart">
-                            <div class="row">
-                                <select id="current_account" name="current_account"></select>
-                                <input id="add_account" type="button" value="Ajouter un compte"/>
-                            </div>
-                            <div class="subTabContent">
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="change_account_birth">Année de naissance</label>
-                                        <input id="change_account_birth" type="text" name="change_account_birth" 
-                                               title="Positionne l'année de naissance du dernier compte"/>
-                                    </div>
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label for="produceUd">Co-créateur de la monnaie</label>
-                                            <input id="produceUd" type="checkbox" name="produceUd" value="1" checked="checked" title="Permet d'indiquer si ce compte correspond à un producteur de monnaie">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label for="startingPercentage">Montant à la naissance en %(M/N)</label>
-                                            <input id="startingPercentage" type="text" name="startingPercentage"
-                                                   title="Permet d'indiquer le montant présent sur le compte au départ"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <input id="delete_account" type="button" value="Supprimer"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="rightPart">
+                        <div class="Comment" id="AccountsItemComment">
                             <p>Par défaut, dans cette simulation, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps.</p>
 
                             <p>On peut donc indiquer un montant à la naissance : au démarrage de la monnaie, il est exprimé en pourcentage de DU0/C ; par la suite, c'est un pourcentage de M/N. Si l'on veut reproduire le cas particulier d'une population stable comme présenter dans la TRM en Couleur (partie 1), on peut le faire en positionnant ce montant à 100 %.</p>
 
                         </div>
-                    </div>
-                    <div id="HeadCount" class="tabcontent">
-                        <div class="leftPart">
-                            <div class="row">
-                                <label for="demographic_profile">Utiliser une fonction mathématique</label><select id="demographic_profile" name="demographic_profile"></select>
-                            </div>
-                            <div class="subTabContent">
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="max_demography">Valeur Maxi</label>
-                                        <input id="max_demography" type="text" name="max_demography"
-                                               title="Ordre de grandeur de la démographie maximum"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="rightPart">
+                        <div class="Comment" id="HeadCountItemComment">
                             <p>Dans l'onglet précédent, on a pu faire varier le nombre d'individus au fil du temps. Il s'agit désormais d'étudier différentes types de variations, plus réalistes, en jouant sur la forme et sur l'amplitude.</p>
 
                         </div>
                     </div>
                 </div>
                 
-                <div class="frame">
+                <div class="MainParams">
                     <div class="labelledForm">
                         <label for="money_duration">Période affichée (en année)</label>
                         <input id="money_duration" type="text" name="money_duration"

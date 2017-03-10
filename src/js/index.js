@@ -876,5 +876,9 @@ function openTab() {
     var tabContentId = d3.select(this).attr("tabContentId");
     d3.select("#" + tabContentId).style("display", "block");
 
+    d3.selectAll(".Comment").style("display", "none");
+    var tabId = d3.select(this).attr("id");
+    d3.select("#" + this.id + "Comment").style("display", "block");
+
     return false;
 }

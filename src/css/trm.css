@@ -34,7 +34,7 @@ input[disabled=disabled] {
     margin: 0.1em 1em 0.1em 0em;
 }
 
-.subTabContent {
+.ParamSection {
     padding-left: 0.8em;
     padding-top: 0.1em;
     padding-bottom: 0.1em;
@@ -45,12 +45,12 @@ input[disabled=disabled] {
     margin:0.2em;
 }
 
-.leftPart {
+.ParamPart {
     width: 35%;
     float: left;
 }
 
-.rightPart {
+.CommentPart {
     width: 61%;
 	border: 1px solid #aaaaaa;    border-radius: 5px;    float: left;
     height:10.5em;
@@ -69,7 +69,7 @@ label {
     padding: 5px;
 }
 
-.frame {
+.MainParams {
     margin: 5px;
     border: 1px solid #ccc;
 }
@@ -79,11 +79,17 @@ label {
 
 #TrmAppli{	vertical-align: top;    padding: 5px;    background-color: #c9c9c9;    border-radius: 5px;    box-shadow: 0px 2px 5px #1c1a19;}
 
-#tabs {
+#ParamsAndComments {
     border: 1px solid #ccc;
 }
+
+#ParamsCommentsAndTabs {
+    border: 1px solid #dedede;
+    border-top: none;
+    height:16em;
+}
  /* Style the list */
-ul.tab {
+ul.tabsBar {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -93,10 +99,10 @@ ul.tab {
 }
 
 /* Float the list items side by side */
-ul.tab li {float: left;}
+ul.tabsBar li {float: left;}
 
 /* Style the links inside the list items */
-ul.tab li a {
+ul.tabsBar li a {
     display: inline-block;
     color: black;
     text-align: center;
@@ -107,16 +113,16 @@ ul.tab li a {
 }
 
 /* Change background color of links on hover */
-ul.tab li a:hover {background-color: #ddd;}
+ul.tabsBar li a:hover {background-color: #ddd;}
 
 /* Create an active/current tablink class */
-ul.tab li a:focus, .active {background-color: #ccc;}
+ul.tabsBar li a:focus, .active {background-color: #ccc;}
 
 /* Style the tab content */
 .tabcontent {
     display: none;
-    padding: 6px 1px 6px 12px;
-    border: 1px solid #dedede;
-    border-top: none;
-    height:12em;
+}
+
+.Comment {
+    display: none;
 }
