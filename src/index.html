@@ -35,8 +35,8 @@
                                 <div>
                                     <div class="row">
                                         <div class="labelledForm">
-                                            <label for="life_expectancy">Espérance de vie (en année)</label>
-                                            <input id="life_expectancy" type="text" name="life_expectancy"
+                                            <label for="LifeExpectancy">Espérance de vie (en année)</label>
+                                            <input id="LifeExpectancy" type="text" name="LifeExpectancy"
                                                    title="Espérance de vie des individus"/>
                                         </div>
                                     </div>
@@ -46,21 +46,21 @@
                                     <div class="ParamSection">
                                         <div class="row">
                                             <div class="labelledForm">
-                                                <label for="calculate_growth">Déduite de l'espérence de vie</label>
-                                                <input id="calculate_growth" type="checkbox" name="calculate_growth" value="1" checked="checked" title="Calcule la croissance (c) à partir de l'espérance de vie (ev) : c = (ev/2)^(1/(ev/2)) * 100">
+                                                <label for="CalculateGrowth">Déduite de l'espérence de vie</label>
+                                                <input id="CalculateGrowth" type="checkbox" name="CalculateGrowth" value="1" checked="checked" title="Calcule la croissance (c) à partir de l'espérance de vie (ev) : c = (ev/2)^(1/(ev/2)) * 100">
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="labelledForm">
                                                 <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_year" checked> Co-création Annuelle (en %)</label>
-                                                <input id="annualGrowth" type="text" name="annualGrowth"
+                                                <input id="AnnualGrowth" type="text" name="AnnualGrowth"
                                                        title="Croissance annuelle de la masse monétaire moyenne"/>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="labelledForm">
                                                 <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="by_month"> Co-création Mensuelle (en %)</label>
-                                                <input id="monthlyGrowth" type="text" name="monthlyGrowth"
+                                                <input id="MonthlyGrowth" type="text" name="MonthlyGrowth"
                                                        title="Croissance mensuelle de la masse monétaire moyenne"/>
                                             </div>
                                         </div>
@@ -76,14 +76,14 @@
                                         <div class="row">
                                             <div class="labelledForm">
                                                 <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_year" checked>Co-création Annuelle</label>
-                                                <input id="annualDividendStart" type="text" name="annualDividendStart"
+                                                <input id="AnnualDividendStart" type="text" name="AnnualDividendStart"
                                                        title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="labelledForm">
                                                 <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="by_month" checked>Co-création Mensuelle</label>
-                                                <input id="monthlyDividendStart" type="text" name="monthlyDividendStart"
+                                                <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"
                                                        title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
                                             </div>
                                         </div>
@@ -93,32 +93,32 @@
                             <div id="Accounts" class="tabcontent">
                                 <div>
                                     <div class="row">
-                                        <select id="current_account" name="current_account"></select>
-                                        <input id="add_account" type="button" value="Ajouter un compte"/>
+                                        <select id="AccountSelector" name="AccountSelector"></select>
+                                        <input id="AddAccount" type="button" value="Ajouter un compte"/>
                                     </div>
                                     <div class="ParamSection">
                                         <div class="row">
                                             <div class="labelledForm">
-                                                <label for="change_account_birth">Année de naissance</label>
-                                                <input id="change_account_birth" type="text" name="change_account_birth" 
+                                                <label for="AccountBirth">Année de naissance</label>
+                                                <input id="AccountBirth" type="text" name="AccountBirth" 
                                                        title="Positionne l'année de naissance du dernier compte"/>
                                             </div>
                                             <div class="row">
                                                 <div class="labelledForm">
-                                                    <label for="produceUd">Co-créateur de la monnaie</label>
-                                                    <input id="produceUd" type="checkbox" name="produceUd" value="1" checked="checked" title="Permet d'indiquer si ce compte correspond à un producteur de monnaie">
+                                                    <label for="ProduceUd">Co-créateur de la monnaie</label>
+                                                    <input id="ProduceUd" type="checkbox" name="ProduceUd" value="1" checked="checked" title="Permet d'indiquer si ce compte correspond à un producteur de monnaie">
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="labelledForm">
-                                                    <label for="startingPercentage">Montant à la naissance en %(M/N)</label>
-                                                    <input id="startingPercentage" type="text" name="startingPercentage"
+                                                    <label for="StartingPercentage">Montant à la naissance en %(M/N)</label>
+                                                    <input id="StartingPercentage" type="text" name="StartingPercentage"
                                                            title="Permet d'indiquer le montant présent sur le compte au départ"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <input id="delete_account" type="button" value="Supprimer"/>
+                                            <input id="DeleteAccount" type="button" value="Supprimer"/>
                                         </div>
                                     </div>
                                 </div>
@@ -126,13 +126,13 @@
                             <div id="HeadCount" class="tabcontent">
                                 <div>
                                     <div class="row">
-                                        <label for="demographic_profile">Utiliser une fonction mathématique</label><select id="demographic_profile" name="demographic_profile"></select>
+                                        <label for="DemographySelector">Utiliser une fonction mathématique</label><select id="DemographySelector" name="DemographySelector"></select>
                                     </div>
                                     <div class="ParamSection">
                                         <div class="row">
                                             <div class="labelledForm">
-                                                <label for="max_demography">Valeur Maxi</label>
-                                                <input id="max_demography" type="text" name="max_demography"
+                                                <label for="MaxDemography">Valeur Maxi</label>
+                                                <input id="MaxDemography" type="text" name="MaxDemography"
                                                        title="Ordre de grandeur de la démographie maximum"/>
                                             </div>
                                         </div>
@@ -172,23 +172,23 @@
                 
                 <div class="MainParams">
                     <div class="labelledForm">
-                        <label for="money_duration">Période affichée (en année)</label>
-                        <input id="money_duration" type="text" name="money_duration"
+                        <label for="MoneyDuration">Période affichée (en année)</label>
+                        <input id="MoneyDuration" type="text" name="MoneyDuration"
                                title="Upper bound of the X axis (in years)"/>
                     </div>
                     <div class="labelledForm">
-                        <label for="reference_frame">Référentiel</label><select id="reference_frame" name="reference_frame"></select>
+                        <label for="ReferenceFrameSelector">Référentiel</label><select id="ReferenceFrameSelector" name="ReferenceFrameSelector"></select>
                     </div>
                     <div class="labelledForm">
-                        <label for="formula_type">Formule du dividende</label><select id="formula_type" name="formula_type"></select>
+                        <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
                     </div>
                 </div>
                 
                 <div id="ChartsPart">
-                    <div id="accounts_chart" class="chart"></div>
-                    <div id="dividend_chart" class="chart"></div>
-                    <div id="headcount_chart" class="chart"></div>
-                    <div id="monetary_supply_chart" class="chart"></div>
+                    <div id="AccountsChart" class="chart"></div>
+                    <div id="DividendChart" class="chart"></div>
+                    <div id="HeadcountChart" class="chart"></div>
+                    <div id="MonetarySupplyChart" class="chart"></div>
                 </div>
             
             </div>
