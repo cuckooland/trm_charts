@@ -263,11 +263,11 @@ function getRefUnitLabel(reference_frame) {
 function getDividendFormulaLabel(dividend_formula) {
     switch(dividend_formula) {
         case 'UDA':
-            return "DUA(t) = max[DUA(t-1);c*M(t)/N(t)]";
+            return "DUA : DU(t) = max[DU(t-1) ; c*M(t)/N(t)]";
         case 'UDB': 
-            return "DUB(t) = (1+c)*DUB(t-1)";
+            return "DUB : DU(t) = (1+c)*DU(t-1)";
         case 'UDG':
-            return "DUĞ(t) = DUĞ(t-1) + c²*M(t-1)/N(t-1)";
+            return "DUĞ : DU(t) = DU(t-1) + c²*M(t-1)/N(t-1)";
         default:
             throw new Error("Dividend formula not managed");
     }

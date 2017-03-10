@@ -25,6 +25,10 @@ input[disabled=disabled] {
     color: #aaaaaa;
 }
 
+.InProgress {
+    font-style: italic;    font-size: 0.5em;    color: #ff5555;
+}
+
 .labelledForm {
     display: inline-block;
     margin: 0.1em 1em 0.1em 0em;

@@ -44,6 +44,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     var GROWTH_TIME_UNIT = this.YEAR;
     var MAX_DEMOGRAPHY = 10000;
     this.DEFAULT_MONEY_BIRTH = 1;
+    this.DEFAULT_STARTING_PERCENT = 0;
    
     this.moneyBirth = -1;
     this.life_expectancy = life_expectancy || LIFE_EXPECTANCY;
@@ -397,7 +398,7 @@ var libre_money_class = function(life_expectancy, growthTimeUnit, calculate_grow
     this.add_account = function() {
         var id = 1;
         var birth = this.DEFAULT_MONEY_BIRTH;
-        var startingPercentage = 100;
+        var startingPercentage = this.DEFAULT_STARTING_PERCENT;
         var udProducer = true;
         if (money.accounts.length > 0) {
             id = money.accounts[money.accounts.length - 1].id + 1;
