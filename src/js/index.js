@@ -10,7 +10,7 @@ String.prototype.format = function() {
 };
 
 // Create reference frame selector
-function set_reference_selector(referenceFrames) {
+function setReferenceFrameSelector(referenceFrames) {
     d3.select('#ReferenceFrameSelector').selectAll("option")
         .data(Object.keys(referenceFrames))
       .enter().append("option")
@@ -19,18 +19,18 @@ function set_reference_selector(referenceFrames) {
 };
 
 // Create formula selector
-function set_formula_selector(dividend_formulaes) {
+function setUdFormulaSelector(dividendFormulas) {
     d3.select('#UdFormulaSelector').selectAll("option")
-        .data(Object.keys(dividend_formulaes))
+        .data(Object.keys(dividendFormulas))
       .enter().append("option")
         .text(function(d) { return getDividendFormulaLabel(d); })
         .attr('value', function(d) { return d; });
 };
 
 // Create demographic profile selector
-function set_demography_selector(population_profiles) {
+function setDemographySelector(populationProfiles) {
     d3.select('#DemographySelector').selectAll("option")
-        .data(Object.keys(population_profiles))
+        .data(Object.keys(populationProfiles))
       .enter().append("option")
         .text(function(d) { return getPopulationProfileLabel(d); })
         .attr('value', function(d) { return d; });
@@ -50,8 +50,8 @@ function joinAccountSelectorToData() {
     options.exit().remove();
 };
 
-function generate_data() {
-    money.generate_data();
+function generateData() {
+    money.generateData();
     
 	var c3Data = {
         accounts: {
@@ -83,23 +83,23 @@ function generate_data() {
             },
             columns: []
         },
-        monetary_supply: {
+        monetarySupply: {
             xFormat: DATE_PATTERN,
-            x: 'x_monetary_mass',
+            x: 'x_monetary_supply',
             names: {
-                'monetary_mass': 'Masse Monétaire "M"'
+                'monetary_supply': 'Masse Monétaire "M"'
             },
             columns: []
         }
     };
 
-    var i_account, i;
+    var iAccount, i;
     // For each account...
-	for (i_account = 0; i_account < money.accounts.length; i_account++) {
+	for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
 		// add axis mapping
-		var c3Id = getC3Id(money.accounts[i_account].id);
+		var c3Id = getC3Id(money.accounts[iAccount].id);
 		c3Data.accounts.xs[c3Id] = 'x_' + c3Id;
-        c3Data.accounts.names[c3Id] = money.accounts[i_account].name;
+        c3Data.accounts.names[c3Id] = money.accounts[iAccount].name;
 	}
 	
     // add data to columns and add axis header 
@@ -112,43 +112,43 @@ function generate_data() {
     c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('dividend');
     
 	var xPeople = ['x_people'];
-	for (i = 0; i < money.individualCount.x.length; i++) {
-	    xPeople.push(asDate(money.individualCount.x[i]));
+	for (i = 0; i < money.headcounts.x.length; i++) {
+	    xPeople.push(asDate(money.headcounts.x[i]));
 	}
     c3Data.headcount.columns.push(xPeople);
-    c3Data.headcount.columns.push(money.individualCount.values);
+    c3Data.headcount.columns.push(money.headcounts.values);
     c3Data.headcount.columns[c3Data.headcount.columns.length - 1].unshift('people');
     
-	var xMonetarySupply = ['x_monetary_mass'];
-	for (i = 0; i < money.monetary_mass.x.length; i++) {
-	    xMonetarySupply.push(asDate(money.monetary_mass.x[i]));
+	var xMonetarySupply = ['x_monetary_supply'];
+	for (i = 0; i < money.monetarySupplies.x.length; i++) {
+	    xMonetarySupply.push(asDate(money.monetarySupplies.x[i]));
 	}
-    c3Data.monetary_supply.columns.push(xMonetarySupply);
-    c3Data.monetary_supply.columns.push(money.monetary_mass.y);
-    c3Data.monetary_supply.columns[c3Data.monetary_supply.columns.length - 1].unshift('monetary_mass');
+    c3Data.monetarySupply.columns.push(xMonetarySupply);
+    c3Data.monetarySupply.columns.push(money.monetarySupplies.y);
+    c3Data.monetarySupply.columns[c3Data.monetarySupply.columns.length - 1].unshift('monetary_supply');
     
 	var xAverage = ['x_average'];
-	for (i = 0; i < money.average.x.length; i++) {
-	    xAverage.push(asDate(money.average.x[i]));
+	for (i = 0; i < money.averages.x.length; i++) {
+	    xAverage.push(asDate(money.averages.x[i]));
 	}
     c3Data.accounts.columns.push(xAverage);
-    c3Data.accounts.columns.push(money.average.y);
+    c3Data.accounts.columns.push(money.averages.y);
     c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift('average');
 
     var toUnload = [];
     // for each account...
-    for (i_account = 0; i_account < money.accounts.length; i_account++) {
-  		var c3Id = getC3Id(money.accounts[i_account].id);
+    for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
+  		var c3Id = getC3Id(money.accounts[iAccount].id);
         // add data to columns
-        if (money.accounts[i_account].x.length > 1) {
+        if (money.accounts[iAccount].x.length > 1) {
             
         	var xAccount = [c3Data.accounts.xs[c3Id]];
-        	for (i = 0; i < money.accounts[i_account].x.length; i++) {
-        	    xAccount.push(asDate(money.accounts[i_account].x[i]));
+        	for (i = 0; i < money.accounts[iAccount].x.length; i++) {
+        	    xAccount.push(asDate(money.accounts[iAccount].x[i]));
         	}
             c3Data.accounts.columns.push(xAccount);
             
-            c3Data.accounts.columns.push(money.accounts[i_account].y);
+            c3Data.accounts.columns.push(money.accounts[iAccount].y);
             c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift(c3Id);
         }
         else {
@@ -191,16 +191,16 @@ var DATE_PATTERN = "%d-%m-%Y";
 // Create instance context
 var money = {};
 // Create instance of class in context with constructor parameters
-libre_money_class.call(money);
+libreMoneyClass.call(money);
 
 // capture reference frames list
-set_reference_selector(money.referenceFrames);
+setReferenceFrameSelector(money.referenceFrames);
 
 // capture formulaes list
-set_formula_selector(money.dividend_formulaes);
+setUdFormulaSelector(money.dividendFormulas);
 
 // capture population variation list
-set_demography_selector(money.population_profiles);
+setDemographySelector(money.populationProfiles);
 
 // add a member account
 var accountIndex = money.addAccount();
@@ -209,16 +209,16 @@ joinAccountSelectorToData();
 document.getElementById("AccountSelector").selectedIndex = 0;
 
 // generate data
-var data = generate_data();
+var data = generateData();
 
 // Fill the form
 d3.select('#LifeExpectancy').property("value", money.lifeExpectancy);
-d3.select('#AnnualDividendStart').property("value", (money.get_dividend_start(money.YEAR)).toFixed(2));
-d3.select('#MonthlyDividendStart').property("value", (money.get_dividend_start(money.MONTH)).toFixed(2));
+d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
+d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
 d3.select('#MoneyDuration').property("value", money.displayedPeriodInYears);
 d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
-d3.selectAll("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
-d3.selectAll("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
+d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
+d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
 d3.select('#MaxDemography').property("value", money.maxDemography);
 updateAddedMemberArea();
 
@@ -257,8 +257,8 @@ function getRefUnitLabel(referenceFrame) {
     }
 }
 
-function getDividendFormulaLabel(dividend_formula) {
-    switch(dividend_formula) {
+function getDividendFormulaLabel(dividendFormula) {
+    switch(dividendFormula) {
         case 'UDA':
             return "DUA : DU(t) = max[DU(t-1) ; c*M(t)/N(t)]";
         case 'UDB': 
@@ -270,8 +270,8 @@ function getDividendFormulaLabel(dividend_formula) {
     }
 }
 
-function getPopulationProfileLabel(population_profile) {
-    switch(population_profile) {
+function getPopulationProfileLabel(populationProfile) {
+    switch(populationProfile) {
         case 'None':
             return "Aucune";
         case 'Uniform': 
@@ -475,7 +475,7 @@ headcountChart = c3.generate({
     }
 });
 
-// create and display chart from data.monetary_supply
+// create and display chart from data.monetarySupply
 monetarySupplyChart = c3.generate({
     bindto: '#MonetarySupplyChart',
     padding: {
@@ -525,7 +525,7 @@ monetarySupplyChart = c3.generate({
             }
         }
     },
-    data: data.monetary_supply,
+    data: data.monetarySupply,
     color: {
         pattern: ['#9467bd']
     },
@@ -562,21 +562,21 @@ function withExp(siValue) {
 function updateChartData(toUnload) {
 
     // calculate data
-    var data = generate_data();
+    var data = generateData();
 
     // tell load command to unload old data
     if (toUnload) {
         data.accounts.unload = toUnload;
         data.dividend.unload = toUnload;
         data.headcount.unload = toUnload;
-        data.monetary_supply.unload = toUnload;
+        data.monetarySupply.unload = toUnload;
     }
 
     // reload data in chart
     accountsChart.load(data.accounts);
     dividendChart.load(data.dividend);
     headcountChart.load(data.headcount);
-    monetarySupplyChart.load(data.monetary_supply);
+    monetarySupplyChart.load(data.monetarySupply);
 }
 
 /**
@@ -679,7 +679,7 @@ function enableUD0Forms() {
 }
 
 function enableMaxDemography() {
-    if (money.population_profile === "None") {
+    if (money.populationProfile === "None") {
         d3.select('#MaxDemography').attr('disabled', 'disabled');
     }
     else {
@@ -755,25 +755,25 @@ function changeUdFormula() {
 }
 
 function changeDemographicProfile() {
-    money.population_profile = this.options[this.selectedIndex].value;
+    money.populationProfile = this.options[this.selectedIndex].value;
     enableMaxDemography();
     updateChartData();
 }
 
 function changeRythm() {
-    if (this.value === "by_month") {
+    if (this.value === "byMonth") {
         money.growthTimeUnit = money.MONTH;
-        money.dividend_start = parseFloat(document.getElementById('MonthlyDividendStart').value);
+        money.dividendStart = parseFloat(document.getElementById('MonthlyDividendStart').value);
     	money.growth = parseFloat(document.getElementById('MonthlyGrowth').value) / 100;
     }
     else {
         money.growthTimeUnit = money.YEAR;
-        money.dividend_start = parseFloat(document.getElementById('AnnualDividendStart').value);
+        money.dividendStart = parseFloat(document.getElementById('AnnualDividendStart').value);
     	money.growth = parseFloat(document.getElementById('AnnualGrowth').value) / 100;
     }
     
-    d3.selectAll("input[value=\"by_month\"]").property("checked", money.growthTimeUnit === money.MONTH);
-    d3.selectAll("input[value=\"by_year\"]").property("checked", money.growthTimeUnit === money.YEAR);
+    d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
+    d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
     
     enableGrowthForms(money.calculateGrowth);
     enableUD0Forms();
@@ -789,14 +789,14 @@ function changeLifeExpectancy() {
 function changeAnnualGrowth() {
 	money.growth = parseFloat(this.value) / 100;
     updateChartData();
-    d3.select('#MonthlyDividendStart').property("value", (money.get_dividend_start(money.MONTH)).toFixed(2));
+    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
     d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
 }
 
 function changeMonthlyGrowth() {
 	money.growth = parseFloat(this.value) / 100;
     updateChartData();
-    d3.select('#AnnualDividendStart').property("value", (money.get_dividend_start(money.YEAR)).toFixed(2));
+    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
     d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
 }
 
@@ -814,24 +814,24 @@ function updateCalculateGrowth() {
         d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
         
         if (money.growthTimeUnit === money.MONTH) {
-            d3.select('#AnnualDividendStart').property("value", (money.get_dividend_start(money.YEAR)).toFixed(2));
+            d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
         }
         else {
-            d3.select('#MonthlyDividendStart').property("value", (money.get_dividend_start(money.MONTH)).toFixed(2));
+            d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
         }
     }
 }
 
 function changeAnnualDividendStart() {
-    money.dividend_start = parseFloat(this.value);
+    money.dividendStart = parseFloat(this.value);
     updateChartData();
-    d3.select('#MonthlyDividendStart').property("value", (money.get_dividend_start(money.MONTH)).toFixed(2));
+    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
 }
 
 function changeMonthlyDividendStart() {
-    money.dividend_start = parseFloat(this.value);
+    money.dividendStart = parseFloat(this.value);
     updateChartData();
-    d3.select('#AnnualDividendStart').property("value", (money.get_dividend_start(money.YEAR)).toFixed(2));
+    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
 }
 
 function changeMoneyDuration() {
