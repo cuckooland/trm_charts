@@ -97,7 +97,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     };   
    
     // dididend formulae
-    this.dividendFormulas = {
+    this.udFormulas = {
         'UDA': {
             calculate: function (money, timeStep) {
                 var previousDividend = money.dividends.values[timeStep - 1];
@@ -138,7 +138,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     };
    
     // population variation profiles
-    this.populationProfiles = {
+    this.demographicProfiles = {
         'None': {
             calculate: function (timeStep) {
                 return 0;
@@ -228,9 +228,9 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         }
     };
 
-    this.referenceFrame = 'monetaryUnit';
-    this.udFormula = 'UDA';
-    this.populationProfile = 'None';
+    this.referenceFrameKey = Object.keys(this.referenceFrames)[0];
+    this.udFormulaKey = Object.keys(this.udFormulas)[0];
+    this.demographicProfileKey = Object.keys(this.demographicProfiles)[0];
 
     this.resetDividends = function () {
         this.dividends = {values : [], x: [], y: []};
@@ -295,7 +295,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                 people++;
             }
         }
-        people = people + this.populationProfiles[this.populationProfile].calculate(this.getTimeValue(timeStep, this.YEAR), this.maxDemography);
+        people = people + this.demographicProfiles[this.demographicProfileKey].calculate(this.getTimeValue(timeStep, this.YEAR), this.maxDemography);
 
         return people;
     };
@@ -311,7 +311,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         }
         else if (timeStep > moneyBirthStep) {
             // after first issuance, calculate next dividend depending on formula...
-            dividend = this.dividendFormulas[this.udFormula].calculate(this, timeStep);
+            dividend = this.udFormulas[this.udFormulaKey].calculate(this, timeStep);
         }
         return dividend;
     };
@@ -325,7 +325,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
        
         if (timeStep >= moneyBirthStep) {
             var previousDividend = this.getDividend(timeStep - 1);
-            var previousDemography = this.populationProfiles[this.populationProfile].calculate(this.getTimeValue(timeStep - 1, this.YEAR), this.maxDemography);
+            var previousDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this.getTimeValue(timeStep - 1, this.YEAR), this.maxDemography);
             monetarySupply = this.getMonetarySupply(timeStep - 1) + previousDemography * previousDividend;
         }
 
@@ -644,7 +644,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
      * @returns {number|*}
      */
     this.applyPov = function (value, timeStep) {
-        var referenceValue = this.referenceFrames[this.referenceFrame].transform(this, value, timeStep);
+        var referenceValue = this.referenceFrames[this.referenceFrameKey].transform(this, value, timeStep);
         return Math.round (referenceValue * 100) / 100;
     }
 

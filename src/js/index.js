@@ -10,30 +10,48 @@ String.prototype.format = function() {
 };
 
 // Create reference frame selector
-function setReferenceFrameSelector(referenceFrames) {
+function setReferenceFrameSelector(money) {
     d3.select('#ReferenceFrameSelector').selectAll("option")
-        .data(Object.keys(referenceFrames))
+        .data(Object.keys(money.referenceFrames))
       .enter().append("option")
         .text(function(d) { return getRefLabel(d); })
         .attr('value', function(d) { return d; });
+        
+    var selectedIndex = Object.keys(money.referenceFrames).indexOf(money.referenceFrameKey);
+    if (selectedIndex == -1) {
+        throw new Error("Reference frame not managed");
+    }
+    document.getElementById("ReferenceFrameSelector").selectedIndex = selectedIndex;
 };
 
 // Create formula selector
-function setUdFormulaSelector(dividendFormulas) {
+function setUdFormulaSelector(money) {
     d3.select('#UdFormulaSelector').selectAll("option")
-        .data(Object.keys(dividendFormulas))
+        .data(Object.keys(money.udFormulas))
       .enter().append("option")
-        .text(function(d) { return getDividendFormulaLabel(d); })
+        .text(function(d) { return getUdFormulaLabel(d); })
         .attr('value', function(d) { return d; });
+    
+    var selectedIndex = Object.keys(money.udFormulas).indexOf(money.udFormulaKey);
+    if (selectedIndex == -1) {
+        throw new Error("Reference frame not managed");
+    }
+    document.getElementById("UdFormulaSelector").selectedIndex = selectedIndex;
 };
 
 // Create demographic profile selector
-function setDemographySelector(populationProfiles) {
+function setDemographySelector(money) {
     d3.select('#DemographySelector').selectAll("option")
-        .data(Object.keys(populationProfiles))
+        .data(Object.keys(money.demographicProfiles))
       .enter().append("option")
-        .text(function(d) { return getPopulationProfileLabel(d); })
+        .text(function(d) { return getDemographicProfileLabel(d); })
         .attr('value', function(d) { return d; });
+    
+    var selectedIndex = Object.keys(money.demographicProfiles).indexOf(money.demographicProfileKey);
+    if (selectedIndex == -1) {
+        throw new Error("Reference frame not managed");
+    }
+    document.getElementById("DemographySelector").selectedIndex = selectedIndex;
 };
 
 // Join (via D3) account selector to 'money.accounts'
@@ -194,13 +212,13 @@ var money = {};
 libreMoneyClass.call(money);
 
 // capture reference frames list
-setReferenceFrameSelector(money.referenceFrames);
+setReferenceFrameSelector(money);
 
 // capture formulaes list
-setUdFormulaSelector(money.dividendFormulas);
+setUdFormulaSelector(money);
 
 // capture population variation list
-setDemographySelector(money.populationProfiles);
+setDemographySelector(money);
 
 // add a member account
 var accountIndex = money.addAccount();
@@ -231,8 +249,8 @@ enableGrowthForms(money.calculateGrowth);
 enableUD0Forms();
 enableMaxDemography();
 
-function getRefLabel(referenceFrame) {
-    switch(referenceFrame) {
+function getRefLabel(referenceFrameKey) {
+    switch(referenceFrameKey) {
         case 'monetaryUnit':
             return "Unité Monétaire";
         case 'dividend': 
@@ -244,8 +262,8 @@ function getRefLabel(referenceFrame) {
     }
 }
 
-function getRefUnitLabel(referenceFrame) {
-    switch(referenceFrame) {
+function getRefUnitLabel(referenceFrameKey) {
+    switch(referenceFrameKey) {
         case 'monetaryUnit':
             return 'Unités Monétaires';
         case 'dividend': 
@@ -257,8 +275,8 @@ function getRefUnitLabel(referenceFrame) {
     }
 }
 
-function getDividendFormulaLabel(dividendFormula) {
-    switch(dividendFormula) {
+function getUdFormulaLabel(udFormulaKey) {
+    switch(udFormulaKey) {
         case 'UDA':
             return "DUA : DU(t) = max[DU(t-1) ; c*M(t)/N(t)]";
         case 'UDB': 
@@ -270,8 +288,8 @@ function getDividendFormulaLabel(dividendFormula) {
     }
 }
 
-function getPopulationProfileLabel(populationProfile) {
-    switch(populationProfile) {
+function getDemographicProfileLabel(demographicProfileKey) {
+    switch(demographicProfileKey) {
         case 'None':
             return "Aucune";
         case 'Uniform': 
@@ -285,7 +303,7 @@ function getPopulationProfileLabel(populationProfile) {
         case 'DampedWave':
             return "Ondulation Amortie";
         default:
-            throw new Error("Population profile not managed");
+            throw new Error("Demographic profile not managed");
     }
 }
 
@@ -315,7 +333,7 @@ accountsChart = c3.generate({
         },
         y: {
             label: {
-                text: accountYLabel(money.referenceFrame),
+                text: accountYLabel(money.referenceFrameKey),
                 position: 'outer-middle'
             },
             tick: {
@@ -374,7 +392,7 @@ dividendChart = c3.generate({
         },
         y: {
             label: {
-                text: accountYLabel(money.referenceFrame),
+                text: accountYLabel(money.referenceFrameKey),
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -501,7 +519,7 @@ monetarySupplyChart = c3.generate({
         },
         y: {
             label: {
-                text: accountYLabel(money.referenceFrame),
+                text: accountYLabel(money.referenceFrameKey),
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -679,7 +697,7 @@ function enableUD0Forms() {
 }
 
 function enableMaxDemography() {
-    if (money.populationProfile === "None") {
+    if (money.demographicProfileKey === "None") {
         d3.select('#MaxDemography').attr('disabled', 'disabled');
     }
     else {
@@ -729,33 +747,33 @@ document.getElementById("MoneyItem").click();
 
 
 function changeReferenceFrame() {
-    money.referenceFrame = this.options[this.selectedIndex].value;
+    money.referenceFrameKey = this.options[this.selectedIndex].value;
         
     // Axes
     accountsChart.axis.labels({
-        y: accountYLabel(money.referenceFrame),
+        y: accountYLabel(money.referenceFrameKey),
     });
     dividendChart.axis.labels({
-        y: accountYLabel(money.referenceFrame),
+        y: accountYLabel(money.referenceFrameKey),
     });
     monetarySupplyChart.axis.labels({
-        y: accountYLabel(money.referenceFrame),
+        y: accountYLabel(money.referenceFrameKey),
     });
     
     updateChartData();
 }
 
-function accountYLabel(referenceFrame) {
-    return 'Montant (en ' + getRefUnitLabel(referenceFrame) + ')'
+function accountYLabel(referenceFrameKey) {
+    return 'Montant (en ' + getRefUnitLabel(referenceFrameKey) + ')'
 }
 
 function changeUdFormula() {
-    money.udFormula = this.options[this.selectedIndex].value;
+    money.udFormulaKey = this.options[this.selectedIndex].value;
     updateChartData();
 }
 
 function changeDemographicProfile() {
-    money.populationProfile = this.options[this.selectedIndex].value;
+    money.demographicProfileKey = this.options[this.selectedIndex].value;
     enableMaxDemography();
     updateChartData();
 }
