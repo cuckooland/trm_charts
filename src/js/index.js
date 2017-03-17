@@ -743,6 +743,8 @@ d3.select("#StartingPercentage").on("change", changeStartingPercentage);
 
 d3.selectAll(".tablinks").on("click", openTab);
 
+d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
+
 document.getElementById("MoneyItem").click();
 
 
@@ -761,6 +763,8 @@ function changeReferenceFrame() {
     });
     
     updateChartData();
+    
+    comment(money.referenceFrameKey);
 }
 
 function accountYLabel(referenceFrameKey) {
@@ -770,12 +774,16 @@ function accountYLabel(referenceFrameKey) {
 function changeUdFormula() {
     money.udFormulaKey = this.options[this.selectedIndex].value;
     updateChartData();
+    
+    comment(money.udFormulaKey);
 }
 
 function changeDemographicProfile() {
     money.demographicProfileKey = this.options[this.selectedIndex].value;
     enableMaxDemography();
     updateChartData();
+    
+    comment(money.demographicProfileKey);
 }
 
 function changeRythm() {
@@ -796,6 +804,8 @@ function changeRythm() {
     enableGrowthForms(money.calculateGrowth);
     enableUD0Forms();
     updateChartData();
+    
+    comment(this.value);
 }
 
 function changeLifeExpectancy() {
@@ -824,6 +834,8 @@ function changeCalculateGrowth() {
     enableGrowthForms(money.calculateGrowth);
     updateChartData();
     updateCalculateGrowth();
+    
+    comment(this.id);
 }
 
 function updateCalculateGrowth() {
@@ -876,6 +888,8 @@ function changeProduceUd() {
     
     joinAccountSelectorToData();
     updateChartData();
+    
+    comment(this.id);
 }
 
 function changeStartingPercentage() {
@@ -891,9 +905,14 @@ function openTab() {
     var tabContentId = d3.select(this).attr("tabContentId");
     d3.select("#" + tabContentId).style("display", "block");
 
+    comment(this.id);
+    
+    return false;
+}
+
+function comment(id) {
     d3.selectAll(".Comment").style("display", "none");
-    var tabId = d3.select(this).attr("id");
-    d3.select("#" + this.id + "Comment").style("display", "block");
+    d3.select("#" + id + "Comment").style("display", "block");
 
     return false;
 }
