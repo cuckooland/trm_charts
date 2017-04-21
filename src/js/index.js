@@ -75,23 +75,35 @@ function generateData() {
         accounts: {
             xFormat: DATE_PATTERN,
             xs: {
-                'average': 'x_average'
+                'average': 'x_average',
+                'scaled_dividend': 'x_scaled_dividend'
             },
             names: {
-                'average': 'Moyenne "M/N"'
+                'average': 'Moyenne "M/N"',
+                'scaled_dividend': 'DU/c'
             },
             columns: [],
             types: {
-                average: 'area',
-            }
+                average: 'area'
+            },
+			regions: {
+				'scaled_dividend':[{'style': 'dashed'}]
+			}
         },
         dividend: {
             xFormat: DATE_PATTERN,
-            x: 'x_dividend',
-            names: {
-                'dividend': 'Dividende Universel'
+            xs: {
+                'dividend' : 'x_dividend',
+                'scaled_average': 'x_scaled_average'
             },
-            columns: []
+            names: {
+                'dividend': 'Dividende Universel',
+                'scaled_average': 'c*M/N'
+            },
+            columns: [],
+			regions: {
+				'scaled_average':[{'style': 'dashed'}]
+			}
         },
         headcount: {
             xFormat: DATE_PATTERN,
@@ -103,14 +115,39 @@ function generateData() {
         },
         monetarySupply: {
             xFormat: DATE_PATTERN,
+            xs: {
+                'monetary_supply' : 'x_monetary_supply',
+                'scaled_monetary_supply': 'x_scaled_monetary_supply'
+            },
             x: 'x_monetary_supply',
             names: {
-                'monetary_supply': 'Masse Monétaire "M"'
+                'monetary_supply': 'Masse Monétaire "M"',
+                'scaled_monetary_supply': 'N*DU/c'
             },
-            columns: []
+            columns: [],
+			regions: {
+				'scaled_monetary_supply':[{'style': 'dashed'}]
+			}
         }
     };
 
+	var xScaledAverages = ['x_scaled_average'];
+	for (i = 0; i < money.averages.x.length; i++) {
+	    xScaledAverages.push(asDate(money.averages.x[i]));
+	}
+	var scaledAverages = ['scaled_average'];
+	for (i = 0; i < money.averages.y.length; i++) {
+	    scaledAverages.push(money.averages.y[i] * money.growth);
+	}
+	var xScaledDividends = ['x_scaled_dividend'];
+	for (i = 0; i < money.dividends.x.length; i++) {
+	    xScaledDividends.push(asDate(money.dividends.x[i]));
+	}
+	var scaledDividends = ['scaled_dividend'];
+	for (i = 0; i < money.dividends.y.length; i++) {
+	    scaledDividends.push(money.dividends.y[i] / money.growth);
+	}
+	
     var iAccount, i;
     // For each account...
 	for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
@@ -129,6 +166,9 @@ function generateData() {
     c3Data.dividend.columns.push(money.dividends.y);
     c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('dividend');
     
+    c3Data.dividend.columns.push(xScaledAverages);
+    c3Data.dividend.columns.push(scaledAverages);
+    
 	var xPeople = ['x_people'];
 	for (i = 0; i < money.headcounts.x.length; i++) {
 	    xPeople.push(asDate(money.headcounts.x[i]));
@@ -145,6 +185,14 @@ function generateData() {
     c3Data.monetarySupply.columns.push(money.monetarySupplies.y);
     c3Data.monetarySupply.columns[c3Data.monetarySupply.columns.length - 1].unshift('monetary_supply');
     
+	var xScaledMonetarySupply = ['x_scaled_monetary_supply'];
+	for (i = 0; i < money.scaledMonetarySupplies.x.length; i++) {
+	    xScaledMonetarySupply.push(asDate(money.scaledMonetarySupplies.x[i]));
+	}
+    c3Data.monetarySupply.columns.push(xScaledMonetarySupply);
+    c3Data.monetarySupply.columns.push(money.scaledMonetarySupplies.y);
+    c3Data.monetarySupply.columns[c3Data.monetarySupply.columns.length - 1].unshift('scaled_monetary_supply');
+    
 	var xAverage = ['x_average'];
 	for (i = 0; i < money.averages.x.length; i++) {
 	    xAverage.push(asDate(money.averages.x[i]));
@@ -152,6 +200,9 @@ function generateData() {
     c3Data.accounts.columns.push(xAverage);
     c3Data.accounts.columns.push(money.averages.y);
     c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift('average');
+
+    c3Data.accounts.columns.push(xScaledDividends);
+    c3Data.accounts.columns.push(scaledDividends);
 
     var toUnload = [];
     // for each account...
@@ -361,7 +412,7 @@ accountsChart = c3.generate({
         duration: TRANSITION_DURATION
     },
     point: {
-        show: true,
+        show: false,
         r: 2
     }
 });
@@ -418,13 +469,13 @@ dividendChart = c3.generate({
     },
     data: data.dividend,
     color: {
-        pattern: ['#d62728']
+        pattern: ['#ff7f0e', '#1f77b4']
     },
     transition: {
         duration: TRANSITION_DURATION
     },
     point: {
-        show: true,
+        show: false,
         r: 2
     }
 });
@@ -488,7 +539,7 @@ headcountChart = c3.generate({
         duration: TRANSITION_DURATION
     },
     point: {
-        show: true,
+        show: false,
         r: 2
     }
 });
@@ -545,13 +596,13 @@ monetarySupplyChart = c3.generate({
     },
     data: data.monetarySupply,
     color: {
-        pattern: ['#9467bd']
+        pattern: ['#9467bd', '#ff9896']
     },
     transition: {
         duration: TRANSITION_DURATION
     },
     point: {
-        show: true,
+        show: false,
         r: 2
     }
 });

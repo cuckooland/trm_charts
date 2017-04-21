@@ -244,6 +244,10 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         this.monetarySupplies = {values : [], x: [], y: []};
     };
 
+    this.resetScaledMonetarySupplies = function () {
+        this.scaledMonetarySupplies = {values : [], x: [], y: []};
+    };
+
     this.resetAverages = function () {
         this.averages = {values : [], x: [], y: []};
     };
@@ -334,6 +338,14 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         }
        
         return monetarySupply;
+    };
+   
+    this.getScaledMonetarySupply = function(timeStep) {
+        if (timeStep < this.scaledMonetarySupplies.values.length) {
+            return this.scaledMonetarySupplies.values[timeStep];
+        }
+        
+        return this.getHeadcount(timeStep) * this.getDividend(timeStep) / this.getGrowth();
     };
    
     this.getAccountBalance = function(iAccount, timeStep) {
@@ -582,6 +594,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         this.resetDividends();
         this.resetHeadcounts();
         this.resetMonetarySupplies();
+        this.resetScaledMonetarySupplies();
         this.resetAverages();
         this.resetAccounts();
         this.resetMoneyBirth();
@@ -598,6 +611,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             this.headcounts.values.push(this.getHeadcount(timeStep));
             this.dividends.values.push(this.getDividend(timeStep));
             this.monetarySupplies.values.push(this.getMonetarySupply(timeStep));
+            this.scaledMonetarySupplies.values.push(this.getScaledMonetarySupply(timeStep));
             for (iAccount = 0; iAccount < this.accounts.length; iAccount++) {
                 this.accounts[iAccount].values.push(this.getAccountBalance(iAccount, timeStep));
             }
@@ -616,6 +630,9 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                
                 this.monetarySupplies.x.push(timeStep);
                 this.monetarySupplies.y.push(this.applyPov(this.getMonetarySupply(timeStep), timeStep));
+               
+                this.scaledMonetarySupplies.x.push(timeStep);
+                this.scaledMonetarySupplies.y.push(this.applyPov(this.getScaledMonetarySupply(timeStep), timeStep));
             }
            
             if (this.headcounts.values[timeStep] > 0) {
