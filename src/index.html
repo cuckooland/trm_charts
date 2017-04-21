@@ -144,70 +144,82 @@
 
                     <div class="CommentPart">
                         <div class="Comment" id="MoneyDurationComment">
-                            <p>MoneyDurationComment</p>
-                                                    
+                            <p>Dans cette simulation, la monnaie démarre en 2000. Sur les graphes, les axes horizontaux ont donc 2000 comme borne minimale. Quant à la borne maximale, elle peut être ajustée grâce à ce champ.</p>
+
+                            <p>A noter : quand la durée étudiée est "petite" (par rapport à l'espérance de vie), le référentiel "Unité monétaire" reste praticable ; quand la durée étudiée devient grande, mieux vaut utiliser un autre référentiel.</p>
+
                         </div>
                         
                         <!-- Reference frames -->
                         <div class="Comment" id="monetaryUnitComment">
-                            <p>monetaryUnitComment</p>
-                                                    
+                            <p>Dans ce référentiel "Unité Monétaire", les axes verticaux des graphes représentant des montants sont exprimés en unités monétaires.</p>
+
+                            <p>D'autres référentiels peuvent être utilisés. Par exemple, il est courant de compter en nombre de salaire : "Tel chose coûte 3 fois mon salaire mensuel".</p>
+
                         </div>
                         <div class="Comment" id="dividendComment">
-                            <p>dividendRefComment</p>
-                                                    
+                            <p>Dans ce référentiel "Dividende", les axes verticaux des graphes représentant des montants sont exprimés en nombre de dividende.</p>
+
+                            <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps du Dividende Universel est peu informative : toutes les valeurs valent 1 et constituent un segment horizontal.</p>
+
                         </div>
                         <div class="Comment" id="averageComment">
-                            <p>averageRefComment</p>
-                                                    
+                            <p>Dans ce référentiel "%(M/N)", les axes verticaux des graphes représentant des montants sont exprimés en pourcentage de la masse monétaire moyenne.</p>
+
+                            <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps de la masse monétaire moyenne est peu informative : toutes les valeurs valent 100 et constituent un segment horizontal.</p>
+
                         </div>
                         
                         <!-- Universal Dividend formulas -->
                         <div class="Comment" id="UDAComment">
-                            <p>UDAComment</p>
-                                                    
+                            <p>Au commencement de la monnaie, le nombre de co-producteurs N passe de 0 à quelques individus. Par défaut, dans cette simulation, elle passe de 0 à 1 individu. Il produit DU0 unités monétaires.</p>
+
                         </div>
                         <div class="Comment" id="UDBComment">
                             <p>UDBComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="UDGComment">
                             <p>UDGComment</p>
-                                                    
+
                         </div>
                         
                         <!-- Money Tab -->
                         <div class="Comment" id="MoneyItemComment">
                             <p>Dans la Théorie Relative de la Monnaie, de nouvelles unités monétaires sont créées régulièrement et sont partagées équitablement entre les N individus de la communauté. C'est ce que l'on appelle la co-création de la monnaie.</p>
                             
-                            <p>Autrement dit, afin de n’avantager aucune époque, chacun des N individus co-créé régulièrement un même nombre de masse monétaire moyenne M/N. Nous noterons ce nombre par la lettre c ; et cette quantité c*M/N est appelée Dividende Universel.</p>
+                            <p>Autrement dit, afin de n’avantager aucune époque, chacun des N individus présents à un instant t co-créé régulièrement un même nombre de masse monétaire moyenne M/N. Nous notons ce nombre par la lettre c ; et cette quantité c*M/N est appelée Dividende Universel (abrégé DU).</p>
                             
                             <p>Le nombre c est fixé une fois pour toutes lors de la mise en place de la monnaie.</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="LifeExpectancyComment">
-                            <p>LifeExpectancyComment</p>
-                                                    
+							<p>Au fil du temps, les anciennes unités monétaires sont doucement dilués dans les nouvelles, à un rythme qui ne doit être ni trop rapide – les anciens co-créateurs seraient lésés –, ni trop lent – les nouveaux seraient floués.</p>
+					
+							<p>On sent ici intuitivement que ce rythme doit dépendre de l&rsquo;espérance de vie de la population.</p>
+							
                         </div>
                         <div class="Comment" id="CalculateGrowthComment">
-                            <p>CalculateGrowthComment</p>
-                                                    
+                            <p>En utilisant cette case à cocher, la valeur de la croissance "c" peut, soit être déduite de l'espérance de vie, soit être entrée à la main.</p>
+
+                            <p>Les radio-boutons situés en dessous permettent de choisir la cadence (annuelle ou mensuelle) pour l'émission des nouvelles unités monétaires.</p>
+
                         </div>
                         <div class="Comment" id="byYearComment">
                             <p>byYearComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="byMonthComment">
                             <p>byMonthComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="AnnualGrowthComment">
                             <p>AnnualGrowthComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="MonthlyGrowthComment">
                             <p>MonthlyGrowthComment</p>
-                                                    
+
                         </div>
                         
                         <!-- Starting Tab -->
@@ -219,11 +231,11 @@
                         </div>
                         <div class="Comment" id="AnnualDividendStartComment">
                             <p>AnnualDividendStartComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="MonthlyDividendStartComment">
                             <p>MonthlyDividendStartComment</p>
-                                                    
+
                         </div>
                         
                         <!-- Accounts Tab -->
@@ -235,15 +247,15 @@
                         </div>
                         <div class="Comment" id="ProduceUdComment">
                             <p>ProduceUdComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="AccountBirthComment">
                             <p>AccountBirthComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="StartingPercentageComment">
                             <p>StartingPercentageComment</p>
-                                                    
+
                         </div>
                         
                         <!-- Headcounts Tab -->
@@ -253,29 +265,29 @@
                         </div>
                         <div class="Comment" id="MaxDemographyComment">
                             <p>MaxDemographyComment</p>
-                                                    
+
                         </div>
                         
                         <!-- Demographic profiles -->
                         <div class="Comment" id="NoneComment">
                             <p>NoneComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="UniformComment">
                             <p>UniformComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="TriangularComment">
                             <p>TriangularComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="PlateauComment">
                             <p>PlateauComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="CauchyComment">
                             <p>CauchyComment</p>
-                                                    
+
                         </div>
                         <div class="Comment" id="DampedWaveComment">
                             <p>DampedWaveComment</p>
@@ -289,7 +301,7 @@
                     <div class="labelledForm">
                         <label for="MoneyDuration">Période affichée (en année)</label>
                         <input id="MoneyDuration" type="text" name="MoneyDuration"
-                               title="Upper bound of the X axis (in years)"/>
+                               title="Borne supérieure de l'axe des X (en année)"/>
                     </div>
                     <div class="labelledForm">
                         <label for="ReferenceFrameSelector">Référentiel</label><select id="ReferenceFrameSelector" name="ReferenceFrameSelector"></select>
