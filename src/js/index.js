@@ -117,37 +117,20 @@ function generateData() {
             xFormat: DATE_PATTERN,
             xs: {
                 'monetary_supply' : 'x_monetary_supply',
-                'scaled_monetary_supply': 'x_scaled_monetary_supply'
+                'cruising_monetary_supply': 'x_cruising_monetary_supply'
             },
             x: 'x_monetary_supply',
             names: {
                 'monetary_supply': 'Masse Monétaire "M"',
-                'scaled_monetary_supply': 'N*DU/c'
+                'cruising_monetary_supply': 'N*DU/c'
             },
             columns: [],
 			regions: {
-				'scaled_monetary_supply':[{'style': 'dashed'}]
+				'cruising_monetary_supply':[{'style': 'dashed'}]
 			}
         }
     };
 
-	var xScaledAverages = ['x_scaled_average'];
-	for (i = 0; i < money.averages.x.length; i++) {
-	    xScaledAverages.push(asDate(money.averages.x[i]));
-	}
-	var scaledAverages = ['scaled_average'];
-	for (i = 0; i < money.averages.y.length; i++) {
-	    scaledAverages.push(money.averages.y[i] * money.growth);
-	}
-	var xScaledDividends = ['x_scaled_dividend'];
-	for (i = 0; i < money.dividends.x.length; i++) {
-	    xScaledDividends.push(asDate(money.dividends.x[i]));
-	}
-	var scaledDividends = ['scaled_dividend'];
-	for (i = 0; i < money.dividends.y.length; i++) {
-	    scaledDividends.push(money.dividends.y[i] / money.growth);
-	}
-	
     var iAccount, i;
     // For each account...
 	for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
@@ -166,8 +149,13 @@ function generateData() {
     c3Data.dividend.columns.push(money.dividends.y);
     c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('dividend');
     
+	var xScaledAverages = ['x_scaled_average'];
+	for (i = 0; i < money.averages.x.length; i++) {
+	    xScaledAverages.push(asDate(money.averages.x[i]));
+	}
     c3Data.dividend.columns.push(xScaledAverages);
-    c3Data.dividend.columns.push(scaledAverages);
+    c3Data.dividend.columns.push(money.scaledAverages.y);
+    c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('scaled_average');
     
 	var xPeople = ['x_people'];
 	for (i = 0; i < money.headcounts.x.length; i++) {
@@ -185,13 +173,13 @@ function generateData() {
     c3Data.monetarySupply.columns.push(money.monetarySupplies.y);
     c3Data.monetarySupply.columns[c3Data.monetarySupply.columns.length - 1].unshift('monetary_supply');
     
-	var xScaledMonetarySupply = ['x_scaled_monetary_supply'];
-	for (i = 0; i < money.scaledMonetarySupplies.x.length; i++) {
-	    xScaledMonetarySupply.push(asDate(money.scaledMonetarySupplies.x[i]));
+	var xCruisingMonetarySupply = ['x_cruising_monetary_supply'];
+	for (i = 0; i < money.cruisingMonetarySupplies.x.length; i++) {
+	    xCruisingMonetarySupply.push(asDate(money.cruisingMonetarySupplies.x[i]));
 	}
-    c3Data.monetarySupply.columns.push(xScaledMonetarySupply);
-    c3Data.monetarySupply.columns.push(money.scaledMonetarySupplies.y);
-    c3Data.monetarySupply.columns[c3Data.monetarySupply.columns.length - 1].unshift('scaled_monetary_supply');
+    c3Data.monetarySupply.columns.push(xCruisingMonetarySupply);
+    c3Data.monetarySupply.columns.push(money.cruisingMonetarySupplies.y);
+    c3Data.monetarySupply.columns[c3Data.monetarySupply.columns.length - 1].unshift('cruising_monetary_supply');
     
 	var xAverage = ['x_average'];
 	for (i = 0; i < money.averages.x.length; i++) {
@@ -201,8 +189,13 @@ function generateData() {
     c3Data.accounts.columns.push(money.averages.y);
     c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift('average');
 
+	var xScaledDividends = ['x_scaled_dividend'];
+	for (i = 0; i < money.dividends.x.length; i++) {
+	    xScaledDividends.push(asDate(money.dividends.x[i]));
+	}
     c3Data.accounts.columns.push(xScaledDividends);
-    c3Data.accounts.columns.push(scaledDividends);
+    c3Data.accounts.columns.push(money.scaledDividends.y);
+    c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift('scaled_dividend');
 
     var toUnload = [];
     // for each account...
@@ -304,12 +297,14 @@ function getRefLabel(referenceFrameKey) {
     switch(referenceFrameKey) {
         case 'monetaryUnit':
             return "Unité Monétaire";
+        case 'monetaryUnitLog':
+            return "Unité Monétaire (log)";
         case 'dividend': 
             return "Dividende";
         case 'average':
             return "%(M/N)";
         default:
-            throw new Error("Reference frame not managed");
+            throw new Error("Reference frame not managed: " + referenceFrameKey);
     }
 }
 
@@ -317,17 +312,21 @@ function getRefUnitLabel(referenceFrameKey) {
     switch(referenceFrameKey) {
         case 'monetaryUnit':
             return 'Unités Monétaires';
+        case 'monetaryUnitLog':
+            return 'Unités Monétaires (log)';
         case 'dividend': 
             return "DU";
         case 'average':
             return "%(M/N)";
         default:
-            throw new Error("Reference frame not managed");
+            throw new Error("Reference frame not managed: " + referenceFrameKey);
     }
 }
 
 function getUdFormulaLabel(udFormulaKey) {
     switch(udFormulaKey) {
+        case 'UD':
+            return "DU : DU(t) = c*M(t)/N(t)";
         case 'UDA':
             return "DUA : DU(t) = max[DU(t-1) ; c*M(t)/N(t)]";
         case 'UDB': 
@@ -335,7 +334,7 @@ function getUdFormulaLabel(udFormulaKey) {
         case 'UDG':
             return "DUĞ : DU(t) = DU(t-1) + c²*M(t-1)/N(t-1)";
         default:
-            throw new Error("Dividend formula not managed");
+            throw new Error("Dividend formula not managed: " + udFormulaKey);
     }
 }
 
@@ -354,7 +353,7 @@ function getDemographicProfileLabel(demographicProfileKey) {
         case 'DampedWave':
             return "Ondulation Amortie";
         default:
-            throw new Error("Demographic profile not managed");
+            throw new Error("Demographic profile not managed: " + demographicProfileKey);
     }
 }
 
