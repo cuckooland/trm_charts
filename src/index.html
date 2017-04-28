@@ -26,120 +26,120 @@
                     <ul class="tabsBar">
                         <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Taux d'expansion</a></li>
                         <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Dividende Universel</a></li>
+                        <li><a href="#Reference" class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</a></li>
                         <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes Affichés</a></li>
                         <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Démographie</a></li>
                     </ul>
                     <div id="ParamsAndComments">
                         <div class="ParamPart">
                             <div id="AboutMoney" class="tabcontent">
-                                <div>
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="LifeExpectancy">Espérance de vie (en année)</label>
+                                        <input id="LifeExpectancy" type="text" name="LifeExpectancy"
+                                               title="Espérance de vie des individus"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label>Croissance "c"</label>
+                                </div>
+                                <div class="ParamSection">
                                     <div class="row">
                                         <div class="labelledForm">
-                                            <label for="LifeExpectancy">Espérance de vie (en année)</label>
-                                            <input id="LifeExpectancy" type="text" name="LifeExpectancy"
-                                                   title="Espérance de vie des individus"/>
+                                            <label for="CalculateGrowth">Déduite de l'espérence de vie</label>
+                                            <input id="CalculateGrowth" type="checkbox" name="CalculateGrowth" value="1" checked="checked" title="Calcule la croissance (c) à partir de l'espérance de vie (ev) : c = (ev/2)^(1/(ev/2)) * 100">
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <label>Croissance "c"</label>
+                                        <div class="labelledForm">
+                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byYear" checked> Co-création Annuelle (en %)</label>
+                                            <input id="AnnualGrowth" type="text" name="AnnualGrowth"
+                                                   title="Croissance annuelle de la masse monétaire moyenne"/>
+                                        </div>
                                     </div>
-                                    <div class="ParamSection">
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label for="CalculateGrowth">Déduite de l'espérence de vie</label>
-                                                <input id="CalculateGrowth" type="checkbox" name="CalculateGrowth" value="1" checked="checked" title="Calcule la croissance (c) à partir de l'espérance de vie (ev) : c = (ev/2)^(1/(ev/2)) * 100">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byYear" checked> Co-création Annuelle (en %)</label>
-                                                <input id="AnnualGrowth" type="text" name="AnnualGrowth"
-                                                       title="Croissance annuelle de la masse monétaire moyenne"/>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byMonth"> Co-création Mensuelle (en %)</label>
-                                                <input id="MonthlyGrowth" type="text" name="MonthlyGrowth"
-                                                       title="Croissance mensuelle de la masse monétaire moyenne"/>
-                                            </div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byMonth"> Co-création Mensuelle (en %)</label>
+                                            <input id="MonthlyGrowth" type="text" name="MonthlyGrowth"
+                                                   title="Croissance mensuelle de la masse monétaire moyenne"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div id="Starting" class="tabcontent">
-                                <div>
+                                <div class="row">
+                                    <label>Dividende de départ "DU0" (en unités monétaires)</label>
+                                </div>
+                                <div class="ParamSection">
                                     <div class="row">
-                                        <label>Dividende de départ "DU0" (en unités monétaires)</label>
-                                    </div>
-                                    <div class="ParamSection">
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byYear" checked>Co-création Annuelle</label>
-                                                <input id="AnnualDividendStart" type="text" name="AnnualDividendStart"
-                                                       title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byMonth" checked>Co-création Mensuelle</label>
-                                                <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"
-                                                       title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
-                                            </div>
+                                        <div class="labelledForm">
+                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byYear" checked>Co-création Annuelle</label>
+                                            <input id="AnnualDividendStart" type="text" name="AnnualDividendStart"
+                                                   title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="labelledForm">
-                                            <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
+                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byMonth" checked>Co-création Mensuelle</label>
+                                            <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"
+                                                   title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="Reference" class="tabcontent">
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="ReferenceFrameSelector">Référentiel</label><select id="ReferenceFrameSelector" name="ReferenceFrameSelector"></select>
                                     </div>
                                 </div>
                             </div>
                             <div id="Accounts" class="tabcontent">
-                                <div>
+                                <div class="row">
+                                    <select id="AccountSelector" name="AccountSelector"></select>
+                                    <input id="AddAccount" type="button" value="Ajouter un compte"/>
+                                </div>
+                                <div class="ParamSection">
                                     <div class="row">
-                                        <select id="AccountSelector" name="AccountSelector"></select>
-                                        <input id="AddAccount" type="button" value="Ajouter un compte"/>
-                                    </div>
-                                    <div class="ParamSection">
+                                        <div class="labelledForm">
+                                            <label for="AccountBirth">Année de naissance</label>
+                                            <input id="AccountBirth" type="text" name="AccountBirth" 
+                                                   title="Positionne l'année de naissance du dernier compte"/>
+                                        </div>
                                         <div class="row">
                                             <div class="labelledForm">
-                                                <label for="AccountBirth">Année de naissance</label>
-                                                <input id="AccountBirth" type="text" name="AccountBirth" 
-                                                       title="Positionne l'année de naissance du dernier compte"/>
-                                            </div>
-                                            <div class="row">
-                                                <div class="labelledForm">
-                                                    <label for="ProduceUd">Co-créateur de la monnaie</label>
-                                                    <input id="ProduceUd" type="checkbox" name="ProduceUd" value="1" checked="checked" title="Permet d'indiquer si ce compte correspond à un producteur de monnaie">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="labelledForm">
-                                                    <label for="StartingPercentage">Montant à la naissance en %(M/N)</label>
-                                                    <input id="StartingPercentage" type="text" name="StartingPercentage"
-                                                           title="Permet d'indiquer le montant présent sur le compte au départ"/>
-                                                </div>
+                                                <label for="ProduceUd">Co-créateur de la monnaie</label>
+                                                <input id="ProduceUd" type="checkbox" name="ProduceUd" value="1" checked="checked" title="Permet d'indiquer si ce compte correspond à un producteur de monnaie">
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <input id="DeleteAccount" type="button" value="Supprimer"/>
+                                            <div class="labelledForm">
+                                                <label for="StartingPercentage">Montant à la naissance en %(M/N)</label>
+                                                <input id="StartingPercentage" type="text" name="StartingPercentage"
+                                                       title="Permet d'indiquer le montant présent sur le compte au départ"/>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <input id="DeleteAccount" type="button" value="Supprimer"/>
                                     </div>
                                 </div>
                             </div>
                             <div id="HeadCount" class="tabcontent">
-                                <div>
+                                <div class="row">
+                                    <label for="DemographySelector">Utiliser une fonction mathématique</label><select id="DemographySelector" name="DemographySelector"></select>
+                                </div>
+                                <div class="ParamSection">
                                     <div class="row">
-                                        <label for="DemographySelector">Utiliser une fonction mathématique</label><select id="DemographySelector" name="DemographySelector"></select>
-                                    </div>
-                                    <div class="ParamSection">
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label for="MaxDemography">Valeur Maxi</label>
-                                                <input id="MaxDemography" type="text" name="MaxDemography"
-                                                       title="Ordre de grandeur de la démographie maximum"/>
-                                            </div>
+                                        <div class="labelledForm">
+                                            <label for="MaxDemography">Valeur Maxi</label>
+                                            <input id="MaxDemography" type="text" name="MaxDemography"
+                                                   title="Ordre de grandeur de la démographie maximum"/>
                                         </div>
                                     </div>
                                 </div>
@@ -152,56 +152,6 @@
                             <p>Dans cette simulation, la monnaie démarre en 2000. Sur les graphes, les axes horizontaux ont donc 2000 comme borne minimale. Quant à la borne maximale, elle peut être ajustée grâce à ce champ.</p>
 
                             <p>A noter : quand la durée étudiée est "petite" (par rapport à l'espérance de vie), le référentiel "Unité monétaire" reste praticable ; quand la durée étudiée devient grande, mieux vaut utiliser un autre référentiel.</p>
-
-                        </div>
-                        
-                        <!-- Reference frames -->
-                        <div class="Comment" id="monetaryUnitComment">
-                            <p>Dans ce référentiel "Unité Monétaire", les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires.</p>
-
-                            <p>D'autres référentiels peuvent être utilisés. Par exemple, il est courant de compter en nombre de salaire : "Tel chose coûte 3 fois mon salaire mensuel".</p>
-
-                        </div>
-                        <div class="Comment" id="monetaryUnitLogComment">
-                            <p>Dans ce référentiel "Unité Monétaire (log)", les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires. Ici, on utilise une unité logarithmique de base 10 : deux graduations dont le rapport vaut 10 sont à distance constante.</p>
-                            
-                            <p>En utilisant une unité logarithmique, les valeurs qui évoluent de façon exponentielles apparaissent comme des droites.</p>
-                            
-                        </div>
-                        <div class="Comment" id="dividendComment">
-                            <p>Dans ce référentiel "Dividende", les axes verticaux des graphes qui représentent des montants sont exprimés en nombre de dividende.</p>
-
-                            <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps du Dividende Universel est peu informative : toutes les valeurs valent 1 et constituent un segment horizontal.</p>
-
-                        </div>
-                        <div class="Comment" id="averageComment">
-                            <p>Dans ce référentiel "%(M/N)", les axes verticaux des graphes qui représentent des montants sont exprimés en pourcentage de la masse monétaire moyenne.</p>
-
-                            <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps de la masse monétaire moyenne est peu informative : toutes les valeurs valent 100 et constituent un segment horizontal.</p>
-
-                        </div>
-                        
-                        <!-- Universal Dividend formulas -->
-                        <div class="Comment" id="BasicUDComment">
-                            <p>Dans « La TRM en Couleur - Partie 1 », la simulation utilise la formule fondamentale DU = c*M/N, et la population N reste constante. Un défaut de cette formule est de très mal se comporter face à une variation brusque de la population. C'est particulièrement notable au commencement de la monnaie, où le DU subit une forte baisse : les participants initiaux se retrouvent alors avec une part extrêmement importante de la monnaie.</p>
-
-                            <p>C'est pourquoi d'autres formulations sont souhaitables, le but étant qu'elles soient moins sensibles aux variations de N, tout en restant équivalentes à la formule fondamentale quand N est stable.</p>
-
-                        </div>
-                        <div class="Comment" id="UDAComment">
-                            <p>Pour palier au défaut d'un DU subissant une très forte baisse (comme observé lors de l'initialisation de la monnaie), on peut décider que le DU (exprimé en unité monétaire) ne doit jamais diminuer au fil du temps, en étant au minimum égal à la valeur fondamentale c*M/N.</p>
-
-                            <p>Remarque : en utilisant l'unité monétaire comme référence, on constate que la courbe du dividende est soit horizontale, soit superposée à la courbe c*M/N.</p>
-
-                            <p>Remarque générale : passer en échelle logarithmique peut aider à mieux voir.</p>
-
-                        </div>
-                        <div class="Comment" id="UDBComment">
-                            <p>UDBComment</p>
-
-                        </div>
-                        <div class="Comment" id="UDGComment">
-                            <p>UDGComment</p>
 
                         </div>
                         
@@ -256,6 +206,58 @@
                         </div>
                         <div class="Comment" id="MonthlyDividendStartComment">
                             <p>MonthlyDividendStartComment</p>
+
+                        </div>
+                        <div class="Comment" id="BasicUDComment">
+                            <p>Dans « La TRM en Couleur - Partie 1 », la simulation utilise la formule fondamentale DU = c*M/N, et la population N reste constante. Un défaut de cette formule est de très mal se comporter face à une variation brusque de la population. C'est particulièrement notable au commencement de la monnaie, où le DU subit une forte baisse : les participants initiaux se retrouvent alors avec une part extrêmement importante de la monnaie.</p>
+
+                            <p>C'est pourquoi d'autres formulations sont souhaitables, le but étant qu'elles soient moins sensibles aux variations de N, tout en restant équivalentes à la formule fondamentale quand N est stable.</p>
+
+                        </div>
+                        <div class="Comment" id="UDAComment">
+                            <p>Pour palier au défaut d'un DU subissant une très forte baisse (comme observé lors de l'initialisation de la monnaie), on peut décider que le DU (exprimé en unité monétaire) ne doit jamais diminuer au fil du temps, en étant au minimum égal à la valeur fondamentale c*M/N.</p>
+
+                            <p>Remarque : en utilisant l'unité monétaire comme référence, on constate que la courbe du dividende est soit horizontale, soit superposée à la courbe c*M/N.</p>
+
+                            <p>Remarque générale : passer en échelle logarithmique peut aider à mieux voir.</p>
+
+                        </div>
+                        <div class="Comment" id="UDBComment">
+                            <p>UDBComment</p>
+
+                        </div>
+                        <div class="Comment" id="UDGComment">
+                            <p>UDGComment</p>
+
+                        </div>
+                        
+                        <!-- Reference Tab -->
+                        <div class="Comment" id="ReferenceItemComment">
+                            <p>ReferenceItemComment</p>
+
+                        </div>
+                        <div class="Comment" id="monetaryUnitComment">
+                            <p>Dans ce référentiel "Unité Monétaire", les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires.</p>
+
+                            <p>D'autres référentiels peuvent être utilisés. Par exemple, il est courant de compter en nombre de salaire : "Tel chose coûte 3 fois mon salaire mensuel".</p>
+
+                        </div>
+                        <div class="Comment" id="monetaryUnitLogComment">
+                            <p>Dans ce référentiel "Unité Monétaire (log)", les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires. Ici, on utilise une unité logarithmique de base 10 : deux graduations dont le rapport vaut 10 sont à distance constante.</p>
+                            
+                            <p>En utilisant une unité logarithmique, les valeurs qui évoluent de façon exponentielles apparaissent comme des droites.</p>
+                            
+                        </div>
+                        <div class="Comment" id="dividendComment">
+                            <p>Dans ce référentiel "Dividende", les axes verticaux des graphes qui représentent des montants sont exprimés en nombre de dividende.</p>
+
+                            <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps du Dividende Universel est peu informative : toutes les valeurs valent 1 et constituent un segment horizontal.</p>
+
+                        </div>
+                        <div class="Comment" id="averageComment">
+                            <p>Dans ce référentiel "%(M/N)", les axes verticaux des graphes qui représentent des montants sont exprimés en pourcentage de la masse monétaire moyenne.</p>
+
+                            <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps de la masse monétaire moyenne est peu informative : toutes les valeurs valent 100 et constituent un segment horizontal.</p>
 
                         </div>
                         
@@ -323,9 +325,6 @@
                         <label for="MoneyDuration">Période affichée (en année)</label>
                         <input id="MoneyDuration" type="text" name="MoneyDuration"
                                title="Borne supérieure de l'axe des X (en année)"/>
-                    </div>
-                    <div class="labelledForm">
-                        <label for="ReferenceFrameSelector">Référentiel</label><select id="ReferenceFrameSelector" name="ReferenceFrameSelector"></select>
                     </div>
                 </div>
                 
