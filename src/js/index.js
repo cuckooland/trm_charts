@@ -325,8 +325,8 @@ function getRefUnitLabel(referenceFrameKey) {
 
 function getUdFormulaLabel(udFormulaKey) {
     switch(udFormulaKey) {
-        case 'UD':
-            return "DU : DU(t) = c*M(t)/N(t)";
+        case 'BasicUD':
+            return "Basique : DU(t) = c*M(t)/N(t)";
         case 'UDA':
             return "DUA : DU(t) = max[DU(t-1) ; c*M(t)/N(t)]";
         case 'UDB': 

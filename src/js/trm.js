@@ -106,7 +106,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
    
     // dididend formulae
     this.udFormulas = {
-        'UD': {
+        'BasicUD': {
             calculate: function (money, timeStep) {
                 var previousDividend = money.dividends.values[timeStep - 1];
                 var currentHeadcount = money.headcounts.values[timeStep]

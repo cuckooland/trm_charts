@@ -24,10 +24,10 @@
             <div id="TrmAppli">
                 <div id="ParamsCommentsAndTabs">
                     <ul class="tabsBar">
-                        <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Co-Création Monétaire</a></li>
-                        <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Départ de la Monnaie</a></li>
+                        <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Taux d'expansion</a></li>
+                        <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Dividende Universel</a></li>
                         <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes Affichés</a></li>
-                        <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Profil Démographique </a></li>
+                        <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Démographie</a></li>
                     </ul>
                     <div id="ParamsAndComments">
                         <div class="ParamPart">
@@ -86,6 +86,11 @@
                                                 <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"
                                                        title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -177,12 +182,18 @@
                         </div>
                         
                         <!-- Universal Dividend formulas -->
-                        <div class="Comment" id="UDComment">
-                            <p>UDComment</p>
+                        <div class="Comment" id="BasicUDComment">
+                            <p>Dans « La TRM en Couleur - Partie 1 », la simulation utilise la formule fondamentale DU = c*M/N, et la population N reste constante. Un défaut de cette formule est de très mal se comporter face à une variation brusque de la population. C'est particulièrement notable au commencement de la monnaie, où le DU subit une forte baisse : les participants initiaux se retrouvent alors avec une part extrêmement importante de la monnaie.</p>
+
+                            <p>C'est pourquoi d'autres formulations sont souhaitables, le but étant qu'elles soient moins sensibles aux variations de N, tout en restant équivalentes à la formule fondamentale quand N est stable.</p>
 
                         </div>
                         <div class="Comment" id="UDAComment">
-                            <p>Au commencement de la monnaie, le nombre de co-producteurs N passe de 0 à quelques individus. Par défaut, dans cette simulation, elle passe de 0 à 1 individu. Il produit DU0 unités monétaires.</p>
+                            <p>Pour palier au défaut d'un DU subissant une très forte baisse (comme observé lors de l'initialisation de la monnaie), on peut décider que le DU (exprimé en unité monétaire) ne doit jamais diminuer au fil du temps, en étant au minimum égal à la valeur fondamentale c*M/N.</p>
+
+                            <p>Remarque : en utilisant l'unité monétaire comme référence, on constate que la courbe du dividende est soit horizontale, soit superposée à la courbe c*M/N.</p>
+
+                            <p>Remarque générale : passer en échelle logarithmique peut aider à mieux voir.</p>
 
                         </div>
                         <div class="Comment" id="UDBComment">
@@ -315,9 +326,6 @@
                     </div>
                     <div class="labelledForm">
                         <label for="ReferenceFrameSelector">Référentiel</label><select id="ReferenceFrameSelector" name="ReferenceFrameSelector"></select>
-                    </div>
-                    <div class="labelledForm">
-                        <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
                     </div>
                 </div>
                 
