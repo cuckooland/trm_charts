@@ -119,7 +119,6 @@ function generateData() {
                 'monetary_supply' : 'x_monetary_supply',
                 'cruising_monetary_supply': 'x_cruising_monetary_supply'
             },
-            x: 'x_monetary_supply',
             names: {
                 'monetary_supply': 'Masse Monétaire "M"',
                 'cruising_monetary_supply': 'N*DU/c'
@@ -162,7 +161,7 @@ function generateData() {
 	    xPeople.push(asDate(money.headcounts.x[i]));
 	}
     c3Data.headcount.columns.push(xPeople);
-    c3Data.headcount.columns.push(money.headcounts.values);
+    c3Data.headcount.columns.push(money.headcounts.y);
     c3Data.headcount.columns[c3Data.headcount.columns.length - 1].unshift('people');
     
 	var xMonetarySupply = ['x_monetary_supply'];
@@ -277,7 +276,8 @@ var data = generateData();
 d3.select('#LifeExpectancy').property("value", money.lifeExpectancy);
 d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
 d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
-d3.select('#MoneyDuration').property("value", money.displayedPeriodInYears);
+d3.select('#TimeLowerBound').property("value", money.timeLowerBoundInYears);
+d3.select('#TimeUpperBound').property("value", money.timeUpperBoundInYears);
 d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
 d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
 d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
@@ -378,8 +378,7 @@ accountsChart = c3.generate({
             tick: {
                 format: DATE_PATTERN,
                 count: 2
-            },
-            min: '01-01-2000'
+            }
         },
         y: {
             label: {
@@ -437,8 +436,7 @@ dividendChart = c3.generate({
             tick: {
                 format: DATE_PATTERN,
                 count: 2 
-            },
-            min: '01-01-2000'
+            }
         },
         y: {
             label: {
@@ -500,8 +498,7 @@ headcountChart = c3.generate({
             tick: {
                 format: DATE_PATTERN,
                 count: 2
-            },
-            min: '01-01-2000'
+            }
         },
         y: {
             label: {
@@ -564,8 +561,7 @@ monetarySupplyChart = c3.generate({
             tick: {
                 format: DATE_PATTERN,
                 count: 2
-            },
-            min: '01-01-2000'
+            }
         },
         y: {
             label: {
@@ -606,6 +602,8 @@ monetarySupplyChart = c3.generate({
     }
 });
 
+setChartTimeBounds();
+
 function format2(value) {
     var f = d3.format('.2s');
     return withExp(f(value));
@@ -645,6 +643,8 @@ function updateChartData(toUnload) {
     dividendChart.load(data.dividend);
     headcountChart.load(data.headcount);
     monetarySupplyChart.load(data.monetarySupply);
+    
+    setChartTimeBounds();
 }
 
 /**
@@ -785,7 +785,8 @@ d3.select("#MonthlyGrowth").on("change", changeMonthlyGrowth);
 d3.select("#CalculateGrowth").on("click", changeCalculateGrowth);
 d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
 d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
-d3.select("#MoneyDuration").on("change", changeMoneyDuration);
+d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
+d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
 d3.select("#MaxDemography").on("change", changeMaxDemography);
 d3.select("#AccountBirth").on("change", changeAccountBirth);
 d3.select("#ProduceUd").on("click", changeProduceUd);
@@ -797,6 +798,14 @@ d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); 
 
 document.getElementById("MoneyItem").click();
 
+
+function setChartTimeBounds() {
+    var lowerBoundDate = asDate(money.getTimeLowerBound(), money.YEAR);
+    accountsChart.axis.min({x: lowerBoundDate});
+    dividendChart.axis.min({x: lowerBoundDate});
+    headcountChart.axis.min({x: lowerBoundDate});
+    monetarySupplyChart.axis.min({x: lowerBoundDate});
+}
 
 function changeReferenceFrame() {
     money.referenceFrameKey = this.options[this.selectedIndex].value;
@@ -914,9 +923,28 @@ function changeMonthlyDividendStart() {
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
 }
 
-function changeMoneyDuration() {
-    money.displayedPeriodInYears = parseInt(this.value);
-    updateChartData();
+function changeTimeLowerBound() {
+    var timeLowerBound = parseInt(this.value);
+    if (timeLowerBound >= 0 && timeLowerBound < 200) {
+        money.setTimeLowerBound(timeLowerBound); 
+        updateChartData();
+        d3.select('#TimeUpperBound').property("value", money.getTimeUpperBound(money.YEAR));
+    }
+    else {
+        d3.select('#TimeLowerBound').property("value", money.getTimeLowerBound(money.YEAR));
+    }
+}
+
+function changeTimeUpperBound() {
+    var timeUpperBound = parseInt(this.value);
+    if (timeUpperBound > 0 && timeUpperBound <= 200) {
+        money.setTimeUpperBound(timeUpperBound); 
+        updateChartData();
+        d3.select('#TimeLowerBound').property("value", money.getTimeLowerBound(money.YEAR));
+    }
+    else {
+        d3.select('#TimeUpperBound').property("value", money.getTimeUpperBound(money.YEAR));
+    }
 }
 
 function changeMaxDemography() {

@@ -27,6 +27,7 @@
                         <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Taux d'expansion</a></li>
                         <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Dividende Universel</a></li>
                         <li><a href="#Reference" class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</a></li>
+                        <li><a href="#Bounds" class="tablinks" id="BoundsItem" tabContentId="Bounds">Période affichée</a></li>
                         <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes Affichés</a></li>
                         <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Démographie</a></li>
                     </ul>
@@ -99,6 +100,27 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="Bounds" class="tabcontent">
+                                <div class="row">
+                                    <label>Période affichée (en année)</label>
+                                </div>
+                                <div class="ParamSection">
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="TimeLowerBound">Borne min</label>
+                                            <input id="TimeLowerBound" type="text" name="TimeLowerBound"
+                                                   title="Borne inférieure de l'axe des X (en année)"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="TimeUpperBound">Borne max</label>
+                                            <input id="TimeUpperBound" type="text" name="TimeUpperBound"
+                                                   title="Borne supérieure de l'axe des X (en année)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="Accounts" class="tabcontent">
                                 <div class="row">
                                     <select id="AccountSelector" name="AccountSelector"></select>
@@ -148,13 +170,6 @@
                     </div>
 
                     <div class="CommentPart">
-                        <div class="Comment" id="MoneyDurationComment">
-                            <p>Dans cette simulation, la monnaie démarre en 2000. Sur les graphes, les axes horizontaux ont donc 2000 comme borne minimale. Quant à la borne maximale, elle peut être ajustée grâce à ce champ.</p>
-
-                            <p>A noter : quand la durée étudiée est "petite" (par rapport à l'espérance de vie), le référentiel "Unité monétaire" reste praticable ; quand la durée étudiée devient grande, mieux vaut utiliser un autre référentiel.</p>
-
-                        </div>
-                        
                         <!-- Money Tab -->
                         <div class="Comment" id="MoneyItemComment">
                             <p>Dans la Théorie Relative de la Monnaie, de nouvelles unités monétaires sont créées régulièrement et sont partagées équitablement entre les N individus de la communauté. C'est ce que l'on appelle la co-création de la monnaie.</p>
@@ -261,6 +276,26 @@
 
                         </div>
                         
+                        <!-- Bounds Tab -->
+                        <div class="Comment" id="BoundsItemComment">
+                            <p>BoundsItemComment</p>
+
+                        </div>
+                        <div class="Comment" id="TimeLowerBoundComment">
+                            <p>Dans cette simulation, la monnaie démarre en 2000. Sur les graphes, les axes horizontaux ont donc par défaut 2000 comme borne inférieure. Cette borne peut être ajustée grâce à ce champ. 0 correspond à 2000, 1 à 2001, etc. La valeur maximale autorisée est 199.</p>
+
+                            <p>A noter : quand la période étudiée est "petite" (par rapport à l'espérance de vie), le référentiel "Unité monétaire" reste praticable ; quand la période étudiée devient grande, mieux vaut utiliser un autre référentiel, ou passer en échelle logarithmique.</p>
+
+                        </div>
+                        
+                        <div class="Comment" id="TimeUpperBoundComment">
+                            <p>Dans cette simulation, la monnaie démarre en 2000. Sur les graphes, les axes horizontaux ont par défaut 2005 comme borne supérieure. Cette borne peut être ajustée grâce à ce champ.</p>
+
+                            <p>A noter : quand la période étudiée est "petite" (par rapport à l'espérance de vie), le référentiel "Unité monétaire" reste praticable ; quand la période étudiée devient grande, mieux vaut utiliser un autre référentiel, ou passer en échelle logarithmique.</p>
+
+                        </div>
+                        
+                        
                         <!-- Accounts Tab -->
                         <div class="Comment" id="AccountsItemComment">
                             <p>Par défaut, dans cette simulation, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps.</p>
@@ -317,14 +352,6 @@
                                                     
                         </div>
                         
-                    </div>
-                </div>
-                
-                <div class="MainParams">
-                    <div class="labelledForm">
-                        <label for="MoneyDuration">Période affichée (en année)</label>
-                        <input id="MoneyDuration" type="text" name="MoneyDuration"
-                               title="Borne supérieure de l'axe des X (en année)"/>
                     </div>
                 </div>
                 

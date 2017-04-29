@@ -26,10 +26,11 @@
  * @param calculateGrowth {boolean} Calculate growth from life expectancy
  * @param growth {double} Monetary supply growth in percent (per year or per month, it depends of 'growthTimeUnit')
  * @param dividendStart {int} First dividend amount (at first year or first month, it depends of 'growthTimeUnit')
- * @param displayedPeriodInYears {int} Money duration to generate
+ * @param timeLowerBoundInYears {int} Time lower bound for plot generation
+ * @param timeUpperBoundInYears {int} Time upper bound for plot generation
  * @param maxDemography {int} Order of magnitude of the maximum demography
  */
-var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, growth, dividendStart, displayedPeriodInYears, maxDemography) {
+var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, growth, dividendStart, timeLowerBoundInYears, timeUpperBoundInYears, maxDemography) {
 
     this.YEAR = 'YEAR';
     this.MONTH = 'MONTH';
@@ -37,7 +38,8 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     // Default Values
     var LIFE_EXPECTANCY = 80;
     var DIVIDEND_START = 1000;
-    var DISPLAYED_PERIOD_IN_YEARS = 5;
+    var TIME_LOWER_BOUND_IN_YEARS = 0;
+    var TIME_UPPER_BOUND_IN_YEARS = 5;
     var CALCULATE_GROWTH = true;
     var PER_YEAR_GROWTH = 20;
     var PER_MONTH_GROWTH = 2;
@@ -49,7 +51,8 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     this.moneyBirth = -1;
     this.lifeExpectancy = lifeExpectancy || LIFE_EXPECTANCY;
     this.dividendStart = dividendStart || DIVIDEND_START;
-    this.displayedPeriodInYears = displayedPeriodInYears || DISPLAYED_PERIOD_IN_YEARS;
+    this.timeLowerBoundInYears = timeLowerBoundInYears || TIME_LOWER_BOUND_IN_YEARS;
+    this.timeUpperBoundInYears = timeUpperBoundInYears || TIME_UPPER_BOUND_IN_YEARS;
 
     this.calculateGrowth = calculateGrowth || CALCULATE_GROWTH;
     this.growthTimeUnit = growthTimeUnit || GROWTH_TIME_UNIT;
@@ -449,18 +452,44 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         throw new Error("Growth time unit not managed");
     }
        
-    this.getDisplayedPeriod = function(timeUnit) {
+    this.getTimeUpperBound = function(timeUnit) {
         timeUnit = timeUnit || this.growthTimeUnit;
        
         if (timeUnit === this.MONTH) {
-            return 12 * (this.displayedPeriodInYears - 1) + 1;
+            return 12 * (this.timeUpperBoundInYears - 1) + 1;
         }
         if (timeUnit === this.YEAR) {
-            return this.displayedPeriodInYears;
+            return this.timeUpperBoundInYears;
         }
         throw new Error("Time unit not managed");
     }
    
+    this.setTimeUpperBound = function(timeValue) {
+        this.timeUpperBoundInYears = timeValue;
+        if (this.timeUpperBoundInYears <= this.timeLowerBoundInYears) {
+            this.timeLowerBoundInYears = this.timeUpperBoundInYears - 1;
+        }
+    }
+    
+    this.getTimeLowerBound = function(timeUnit) {
+        timeUnit = timeUnit || this.growthTimeUnit;
+       
+        if (timeUnit === this.MONTH) {
+            return 12 * this.timeLowerBoundInYears;
+        }
+        if (timeUnit === this.YEAR) {
+            return this.timeLowerBoundInYears;
+        }
+        throw new Error("Time unit not managed");
+    }
+   
+    this.setTimeLowerBound = function(timeValue) {
+        this.timeLowerBoundInYears = timeValue;
+        if (this.timeUpperBoundInYears <= this.timeLowerBoundInYears) {
+            this.timeUpperBoundInYears = this.timeLowerBoundInYears + 1;
+        }
+    }
+    
     this.getTimeStep = function(timeValue, timeUnit) {
         if (timeUnit === this.growthTimeUnit) {
             return timeValue;
@@ -593,7 +622,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         
         this.dividends = {values : [], x: [], y: []};
         this.scaledAverages = {values : [], x: [], y: []};
-        this.headcounts = {values : [], x: []};
+        this.headcounts = {values : [], x: [], y: []};
         this.monetarySupplies = {values : [], x: [], y: []};
         this.cruisingMonetarySupplies = {values : [], x: [], y: []};
         this.averages = {values : [], x: [], y: []};
@@ -608,7 +637,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         var iAccount, timeStep;
         var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
         
-        for (timeStep = 0; timeStep <= this.getDisplayedPeriod(); timeStep++) {
+        for (timeStep = 0; timeStep <= this.getTimeUpperBound(); timeStep++) {
            
             this.headcounts.values.push(this.getHeadcount(timeStep));
             this.dividends.values.push(this.getDividend(timeStep));
@@ -624,7 +653,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         // Set x,y arrays
         // **************
         
-        for (timeStep = 0; timeStep <= this.getDisplayedPeriod(); timeStep++) {
+        for (timeStep = this.getTimeLowerBound(); timeStep <= this.getTimeUpperBound(); timeStep++) {
            
             if (timeStep >= moneyBirthStep) {
                 this.dividends.x.push(timeStep);
@@ -649,6 +678,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             }
            
             this.headcounts.x.push(timeStep);
+            this.headcounts.y.push(this.headcounts.values[timeStep]);
            
             for (iAccount = 0; iAccount < this.accounts.length; iAccount++) {
 
