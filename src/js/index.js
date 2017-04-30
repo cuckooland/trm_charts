@@ -97,7 +97,7 @@ function generateData() {
                 'scaled_average': 'x_scaled_average'
             },
             names: {
-                'dividend': 'Dividende Universel',
+                'dividend': universalDividendLabel(),
                 'scaled_average': 'c*M/N'
             },
             columns: [],
@@ -371,7 +371,7 @@ accountsChart = c3.generate({
     axis: {
         x: {
             label: {
-                text: 'Time',
+                text: timeLabel(),
                 position: 'outer-center'
             },
             type: 'timeseries',
@@ -382,7 +382,7 @@ accountsChart = c3.generate({
         },
         y: {
             label: {
-                text: accountYLabel(money.referenceFrameKey),
+                text: accountYLabel(),
                 position: 'outer-middle'
             },
             tick: {
@@ -429,7 +429,7 @@ dividendChart = c3.generate({
     axis: {
         x: {
             label: {
-                text: 'Time',
+                text: timeLabel(),
                 position: 'outer-center'
             },
             type: 'timeseries',
@@ -440,7 +440,7 @@ dividendChart = c3.generate({
         },
         y: {
             label: {
-                text: accountYLabel(money.referenceFrameKey),
+                text: accountYLabel(),
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -491,7 +491,7 @@ headcountChart = c3.generate({
     axis: {
         x: {
             label: {
-                text: 'Time',
+                text: timeLabel(),
                 position: 'outer-center'
             },
             type: 'timeseries',
@@ -554,7 +554,7 @@ monetarySupplyChart = c3.generate({
     axis: {
         x: {
             label: {
-                text: 'Time',
+                text: timeLabel(),
                 position: 'outer-center'
             },
             type: 'timeseries',
@@ -565,7 +565,7 @@ monetarySupplyChart = c3.generate({
         },
         y: {
             label: {
-                text: accountYLabel(money.referenceFrameKey),
+                text: accountYLabel(),
                 position: 'outer-middle'
             },
             position: 'outer-top',
@@ -800,11 +800,12 @@ document.getElementById("MoneyItem").click();
 
 
 function setChartTimeBounds() {
-    var lowerBoundDate = asDate(money.getTimeLowerBound(), money.YEAR);
-    accountsChart.axis.min({x: lowerBoundDate});
-    dividendChart.axis.min({x: lowerBoundDate});
-    headcountChart.axis.min({x: lowerBoundDate});
-    monetarySupplyChart.axis.min({x: lowerBoundDate});
+    var lowerBoundDate = asDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
+    var upperBoundDate = asDate(money.getTimeUpperBound(money.YEAR), money.YEAR);
+    accountsChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    dividendChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    headcountChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    monetarySupplyChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
 }
 
 function changeReferenceFrame() {
@@ -812,13 +813,13 @@ function changeReferenceFrame() {
         
     // Axes
     accountsChart.axis.labels({
-        y: accountYLabel(money.referenceFrameKey),
+        y: accountYLabel()
     });
     dividendChart.axis.labels({
-        y: accountYLabel(money.referenceFrameKey),
+        y: accountYLabel()
     });
     monetarySupplyChart.axis.labels({
-        y: accountYLabel(money.referenceFrameKey),
+        y: accountYLabel()
     });
     
     updateChartData();
@@ -826,8 +827,32 @@ function changeReferenceFrame() {
     comment(money.referenceFrameKey);
 }
 
-function accountYLabel(referenceFrameKey) {
-    return 'Montant (en ' + getRefUnitLabel(referenceFrameKey) + ')'
+function accountYLabel() {
+    return 'Montant (en ' + getRefUnitLabel(money.referenceFrameKey) + ')'
+}
+
+function timeLabel() {
+    if (money.growthTimeUnit == money.MONTH) {
+        return 'Temps (émission mensuelle)';
+    }
+    else {
+        return 'Temps (émission anuelle)';
+    }
+}
+
+function universalDividendLabel() {
+    switch(money.udFormulaKey) {
+        case 'BasicUD':
+            return "Dividende Universel (Basique)";
+        case 'UDA':
+            return "Dividende Universel (DUA)";
+        case 'UDB': 
+            return "Dividende Universel (DUB)";
+        case 'UDG':
+            return "Dividende Universel (DUĞ)";
+        default:
+            throw new Error("Dividend formula not managed: " + udFormulaKey);
+    }
 }
 
 function changeUdFormula() {
@@ -859,6 +884,20 @@ function changeRythm() {
     
     d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
     d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
+        
+    // Axes
+    accountsChart.axis.labels({
+        x: timeLabel()
+    });
+    dividendChart.axis.labels({
+        x: timeLabel()
+    });
+    headcountChart.axis.labels({
+        x: timeLabel()
+    });
+    monetarySupplyChart.axis.labels({
+        x: timeLabel()
+    });
     
     enableGrowthForms(money.calculateGrowth);
     enableUD0Forms();
