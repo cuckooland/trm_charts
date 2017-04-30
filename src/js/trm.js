@@ -700,7 +700,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
      */
     this.applyPov = function (value, timeStep) {
         var referenceValue = this.referenceFrames[this.referenceFrameKey].transform(this, value, timeStep);
-        return Math.round (referenceValue * 100) / 100;
+        return referenceValue;
     }
 
 };
