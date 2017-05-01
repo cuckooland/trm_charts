@@ -456,7 +456,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         timeUnit = timeUnit || this.growthTimeUnit;
        
         if (timeUnit === this.MONTH) {
-            return 12 * (this.timeUpperBoundInYears - 1) + 1;
+            return 12 * this.timeUpperBoundInYears;
         }
         if (timeUnit === this.YEAR) {
             return this.timeUpperBoundInYears;
@@ -495,10 +495,10 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             return timeValue;
         }
         if (timeUnit === this.MONTH) {
-            return (timeValue -1) / 12 + 1;
+            return timeValue / 12;
         }
         if (timeUnit === this.YEAR) {
-            return (timeValue -1) * 12 + 1;
+            return timeValue * 12;
         }
         throw new Error("Time unit not managed");
     }
@@ -508,10 +508,10 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             return timeStep;
         }
         if (timeUnit === this.YEAR) {
-            return (timeStep -1) / 12 + 1;
+            return timeStep / 12;
         }
         if (timeUnit === this.MONTH) {
-            return (timeValue -1) * 12 + 1;
+            return timeValue * 12;
         }
         throw new Error("Time unit not managed");
     }

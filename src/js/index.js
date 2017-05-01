@@ -709,7 +709,7 @@ function asDate(timeStep, timeUnit) {
     
     var format = d3.time.format(DATE_PATTERN);
     if (timeUnit === money.MONTH) {
-        return format(new Date(2000 + Math.trunc(timeStep / 12) + 1, timeStep % 12 - 1, 1));
+        return format(new Date(2000 + Math.trunc(timeStep / 12), timeStep % 12, 1));
     }
     else if (timeUnit === money.YEAR) {
         return format(new Date(2000 + timeStep, 0, 1));
