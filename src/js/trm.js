@@ -75,12 +75,8 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         'monetaryUnit': {
             transform: function(money, value, timeStep) {
                 return value;
-            }
-        },
-        'monetaryUnitLog': {
-            transform: function(money, value, timeStep) {
-                return Math.log(value) / Math.log(10);
-            }
+            },
+            logScale: false
         },
         'dividend': {
             transform: function(money, value, timeStep) {
@@ -88,7 +84,8 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                     return 0;
                 }
                 return value / money.dividends.values[timeStep];
-            }
+            },
+            logScale: false
         },
         'average': {
             transform: function(money, value, timeStep) {
@@ -99,7 +96,8 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                     return Infinity;
                 }
                 return value / money.monetarySupplies.values[timeStep] * money.headcounts.values[timeStep] * 100;
-            }
+            },
+            logScale: false
         }
     };   
    
@@ -697,6 +695,9 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
      */
     this.applyPov = function (value, timeStep) {
         var referenceValue = this.referenceFrames[this.referenceFrameKey].transform(this, value, timeStep);
+        if (this.referenceFrames[this.referenceFrameKey].logScale) {
+            return Math.log(referenceValue) / Math.log(10);
+        }
         return referenceValue;
     }
     

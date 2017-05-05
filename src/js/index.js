@@ -279,6 +279,7 @@ d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(mon
 d3.select('#TimeLowerBound').property("value", money.timeLowerBoundInYears);
 d3.select('#TimeUpperBound').property("value", money.timeUpperBoundInYears);
 d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
+d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
 d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
 d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
 d3.select('#MaxDemography').property("value", money.maxDemography);
@@ -294,33 +295,45 @@ enableUD0Forms();
 enableMaxDemography();
 
 function getRefLabel(referenceFrameKey) {
+    var refLabel;
     switch(referenceFrameKey) {
         case 'monetaryUnit':
-            return "Unité Monétaire";
-        case 'monetaryUnitLog':
-            return "Unité Monétaire (log)";
+            refLabel = "Unité Monétaire";
+            break;
         case 'dividend': 
-            return "Dividende";
+            refLabel = "Dividende";
+            break;
         case 'average':
-            return "%(M/N)";
+            refLabel = "%(M/N)";
+            break;
         default:
             throw new Error("Reference frame not managed: " + referenceFrameKey);
     }
+    if (money.referenceFrames[money.referenceFrameKey].logScale) {
+        refLabel = refLabel + " (log)";
+    }
+    return refLabel;
 }
 
 function getRefUnitLabel(referenceFrameKey) {
+    var refUnitLabel;
     switch(referenceFrameKey) {
         case 'monetaryUnit':
-            return 'Unités Monétaires';
-        case 'monetaryUnitLog':
-            return 'Unités Monétaires (log)';
+            refUnitLabel = 'Unités Monétaires';
+            break;
         case 'dividend': 
-            return "DU";
+            refUnitLabel = "DU";
+            break;
         case 'average':
-            return "%(M/N)";
+            refUnitLabel = "%(M/N)";
+            break;
         default:
             throw new Error("Reference frame not managed: " + referenceFrameKey);
     }
+    if (money.referenceFrames[money.referenceFrameKey].logScale) {
+        refUnitLabel = refUnitLabel + " (log)";
+    }
+    return refUnitLabel;
 }
 
 function getUdFormulaLabel(udFormulaKey) {
@@ -792,6 +805,7 @@ d3.select("#MonthlyGrowth").on("change", changeMonthlyGrowth);
 d3.select("#CalculateGrowth").on("click", changeCalculateGrowth);
 d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
 d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
+d3.select("#LogScale").on("click", changeLogScale);
 d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
 d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
 d3.select("#MaxDemography").on("change", changeMaxDemography);
@@ -817,6 +831,7 @@ function setChartTimeBounds() {
 
 function changeReferenceFrame() {
     money.referenceFrameKey = this.options[this.selectedIndex].value;
+    d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
         
     // Axes
     accountsChart.axis.labels({
@@ -967,6 +982,25 @@ function changeMonthlyDividendStart() {
     money.dividendStart = parseFloat(this.value);
     updateChartData();
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
+}
+
+function changeLogScale() {
+    money.referenceFrames[money.referenceFrameKey].logScale = !money.referenceFrames[money.referenceFrameKey].logScale
+        
+    // Axes
+    accountsChart.axis.labels({
+        y: accountYLabel()
+    });
+    dividendChart.axis.labels({
+        y: accountYLabel()
+    });
+    monetarySupplyChart.axis.labels({
+        y: accountYLabel()
+    });
+    
+    updateChartData();
+    
+    comment(this.id);
 }
 
 function changeTimeLowerBound() {

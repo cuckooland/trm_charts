@@ -98,6 +98,12 @@
                                     <div class="labelledForm">
                                         <label for="ReferenceFrameSelector">Référentiel</label><select id="ReferenceFrameSelector" name="ReferenceFrameSelector"></select>
                                     </div>
+                                    <div class="ParamSection">
+                                        <div class="labelledForm">
+                                            <label for="LogScale">Echelle logarithmique</label>
+                                            <input id="LogScale" type="checkbox" name="LogScale" value="1">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div id="Bounds" class="tabcontent">
@@ -254,14 +260,14 @@
                         <div class="Comment" id="monetaryUnitComment">
                             <p>Dans ce référentiel "Unité Monétaire", les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires.</p>
 
-                            <p>D'autres référentiels peuvent être utilisés. Par exemple, il est courant de compter en nombre de salaire : "Tel chose coûte 3 fois mon salaire mensuel".</p>
+                            <p>D'autres référentiels peuvent être utilisés. Par exemple, il est courant de compter en nombre de salaire : "Telle chose coûte 3 fois mon salaire mensuel".</p>
 
                         </div>
-                        <div class="Comment" id="monetaryUnitLogComment">
-                            <p>Dans ce référentiel "Unité Monétaire (log)", les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires. Ici, on utilise une unité logarithmique de base 10 : deux graduations dont le rapport vaut 10 sont à distance constante.</p>
+                        <div class="Comment" id="LogScaleComment">
+                            <p>En utilisant cette case à cocher, les axes verticaux des graphes qui représentent des montants utilisent une unité logarithmique de base 10 : deux graduations dont le rapport vaut 10 sont à distance constante.</p>
                             
-                            <p>En utilisant une unité logarithmique, les valeurs qui évoluent de façon exponentielles apparaissent comme des droites.</p>
-                            
+                            <p>En utilisant une unité logarithmique, les courbes qui évoluent de façon exponentielles apparaissent comme des droites.</p>
+
                         </div>
                         <div class="Comment" id="dividendComment">
                             <p>Dans ce référentiel "Dividende", les axes verticaux des graphes qui représentent des montants sont exprimés en nombre de dividende.</p>
