@@ -386,14 +386,14 @@ accountsChart = c3.generate({
                 position: 'outer-middle'
             },
             tick: {
-                format: format2
+                format: tickFormat
             }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                return format3(value);
+                return tooltipFormat(value);
             }
         }
     },
@@ -445,14 +445,14 @@ dividendChart = c3.generate({
             },
             position: 'outer-top',
             tick: {
-                format: format2
+                format: tickFormat
             }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                return format3(value);
+                return tooltipFormat(value);
             }
         }
     },
@@ -570,14 +570,14 @@ monetarySupplyChart = c3.generate({
             },
             position: 'outer-top',
             tick: {
-                format: format2
+                format: tickFormat
             }
         }
     },
     tooltip: {
         format: {
             value: function (value, ratio, id, index) {
-                return format3(value);
+                return tooltipFormat(value);
             }
         }
     },
@@ -604,12 +604,19 @@ monetarySupplyChart = c3.generate({
 
 setChartTimeBounds();
 
-function format2(value) {
+function tickFormat(value) {
     var f = d3.format('.2s');
     return withExp(f(value));
 }
 
-function format3(value) {
+function tooltipFormat(value) {
+    var isInfinite = money.isInfinite(value);
+    if (isInfinite < 0) {
+        return '-Infini';
+    }
+    if (isInfinite > 0) {
+        return '+Infini';
+    }
     var f = d3.format('.3s');
     return withExp(f(value));
 }

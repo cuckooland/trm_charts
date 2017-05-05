@@ -35,6 +35,8 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     this.YEAR = 'YEAR';
     this.MONTH = 'MONTH';
    
+    this.INFINITY_FACTOR = 1.234567;
+    
     // Default Values
     var LIFE_EXPECTANCY = 80;
     var DIVIDEND_START = 1000;
@@ -77,32 +79,26 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         },
         'monetaryUnitLog': {
             transform: function(money, value, timeStep) {
-                if (value === 0) {
-                    return 0;
-                }
                 return Math.log(value) / Math.log(10);
             }
         },
         'dividend': {
             transform: function(money, value, timeStep) {
-                if (money.headcounts.values[timeStep] > 0) {
-                    return value / money.dividends.values[timeStep];
-                }
-                else {
+                if (value === 0) {
                     return 0;
                 }
+                return value / money.dividends.values[timeStep];
             }
         },
         'average': {
             transform: function(money, value, timeStep) {
-                if (money.monetarySupplies.values[timeStep] !== 0) {
-                    return value / money.monetarySupplies.values[timeStep] * money.headcounts.values[timeStep] * 100;
-                }
                 if (value === 0) {
                     return 0;
                 }
-                // We should return 'Infinity' but it's not well managed by c3
-                return 100;
+                if (money.monetarySupplies.values[timeStep] === 0) {
+                    return Infinity;
+                }
+                return value / money.monetarySupplies.values[timeStep] * money.headcounts.values[timeStep] * 100;
             }
         }
     };   
@@ -690,6 +686,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                 }
             }
         }
+        this.replaceYInfinity();
     };
 
     /**
@@ -702,5 +699,70 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         var referenceValue = this.referenceFrames[this.referenceFrameKey].transform(this, value, timeStep);
         return referenceValue;
     }
-
+    
+    this.replaceYInfinity = function () {
+        
+        var maxAbs1 = this.maxAbs(this.dividends.y, 0);
+        maxAbs1 = this.maxAbs(this.scaledAverages.y, maxAbs1);
+        
+        this.replaceInfinity(this.dividends.y, maxAbs1);
+        this.replaceInfinity(this.scaledAverages.y, maxAbs1);
+        
+        var maxAbs2 = this.maxAbs(this.monetarySupplies.y, 0);
+        maxAbs2 = this.maxAbs(this.cruisingMonetarySupplies.y, maxAbs2);
+        
+        this.replaceInfinity(this.monetarySupplies.y, maxAbs2);
+        this.replaceInfinity(this.cruisingMonetarySupplies.y, maxAbs2);
+        
+        var maxAbs3 = this.maxAbs(this.averages.y, 0);
+        maxAbs3 = this.maxAbs(this.scaledDividends.y, maxAbs3);
+        for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
+            maxAbs3 = this.maxAbs(this.accounts[iAccount].y, maxAbs3);
+        }
+        
+        this.replaceInfinity(this.averages.y, maxAbs3);
+        this.replaceInfinity(this.scaledDividends.y, maxAbs3);
+        for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
+            this.replaceInfinity(this.accounts[iAccount].y, maxAbs3);
+        }
+    }
+    
+    this.replaceInfinity = function (yArray, maxAbs) {
+        var substitute = Math.pow(10, Math.ceil(Math.log(maxAbs * 2) / Math.log(10))) * this.INFINITY_FACTOR;
+        for (i = 0; i < yArray.length; i++) {
+            if (yArray[i] == Number.NEGATIVE_INFINITY) {
+                yArray[i] = - substitute;
+            }
+            
+            if (yArray[i] == Number.POSITIVE_INFINITY) {
+                yArray[i] = substitute;
+            }
+        }
+    }
+    
+    this.maxAbs = function (array, defaultMax) {
+        var maxAbs = defaultMax;
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] != Number.NEGATIVE_INFINITY &&  array[i] != Number.POSITIVE_INFINITY) {
+                var curAbs = Math.abs(array[i]);
+                if (curAbs > maxAbs) {
+                    maxAbs = curAbs;
+                }
+            }
+        }
+        return maxAbs;
+    }
+    
+    this.isInfinite = function (value) {
+        if (value === 0) {
+            return 0;
+        }
+        var epsilon = 0.0001;
+        var exp = Math.log(Math.abs(value) / this.INFINITY_FACTOR) / Math.log(10);
+        if (Math.abs(exp - Math.round(exp)) < epsilon) {
+            return value;
+        }
+        return 0;
+    }
+    
 };
