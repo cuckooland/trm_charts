@@ -138,6 +138,21 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                 }
             }
         },
+        'UDC': {
+            calculate: function (money, timeStep) {
+                var previousDividend = money.dividends.values[timeStep - 1];
+                var currentHeadcount = money.headcounts.values[timeStep]
+                if (currentHeadcount > 0) {
+                    var currentMonetarySupply = money.getMonetarySupply(timeStep);
+                    var udBasic = money.getGrowth() * (currentMonetarySupply / currentHeadcount);
+                    var udb = previousDividend * (1 + money.getGrowth());
+                    return (udBasic + udb) / 2;
+                    //return Math.pow((udBasic * udb), 0.5);
+                } else {
+                    return previousDividend;
+                }
+            }
+        },
         'UDG': {
             calculate: function (money, timeStep) {
                 var previousDividend = money.dividends.values[timeStep - 1];

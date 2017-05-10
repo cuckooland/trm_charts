@@ -344,6 +344,8 @@ function getUdFormulaLabel(udFormulaKey) {
             return "DUA : DU(t) = max[DU(t-1) ; c*M(t)/N(t)]";
         case 'UDB': 
             return "DUB : DU(t) = (1+c)*DU(t-1)";
+        case 'UDC': 
+            return "DUC : DU(t) = 1/2 [(1+c)*DU(t-1) + c*M(t)/N(t)]";
         case 'UDG':
             return "DUĞ : DU(t) = DU(t-1) + c²*M(t-1)/N(t-1)";
         default:
@@ -870,6 +872,8 @@ function universalDividendLabel() {
             return "Dividende Universel (DUA)";
         case 'UDB': 
             return "Dividende Universel (DUB)";
+        case 'UDC': 
+            return "Dividende Universel (DUC)";
         case 'UDG':
             return "Dividende Universel (DUĞ)";
         default:

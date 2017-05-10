@@ -28,7 +28,7 @@
                         <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Dividende Universel</a></li>
                         <li><a href="#Reference" class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</a></li>
                         <li><a href="#Bounds" class="tablinks" id="BoundsItem" tabContentId="Bounds">Période affichée</a></li>
-                        <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes Affichés</a></li>
+                        <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes affichés</a></li>
                         <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Démographie</a></li>
                     </ul>
                     <div id="ParamsAndComments">
@@ -53,14 +53,14 @@
                                     </div>
                                     <div class="row">
                                         <div class="labelledForm">
-                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byYear" checked> Co-création Annuelle (en %)</label>
+                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byYear" checked> Co-création annuelle (en %)</label>
                                             <input id="AnnualGrowth" type="text" name="AnnualGrowth"
                                                    title="Croissance annuelle de la masse monétaire moyenne"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="labelledForm">
-                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byMonth"> Co-création Mensuelle (en %)</label>
+                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byMonth"> Co-création mensuelle (en %)</label>
                                             <input id="MonthlyGrowth" type="text" name="MonthlyGrowth"
                                                    title="Croissance mensuelle de la masse monétaire moyenne"/>
                                         </div>
@@ -74,14 +74,14 @@
                                 <div class="ParamSection">
                                     <div class="row">
                                         <div class="labelledForm">
-                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byYear" checked>Co-création Annuelle</label>
+                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byYear" checked>Co-création annuelle</label>
                                             <input id="AnnualDividendStart" type="text" name="AnnualDividendStart"
                                                    title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="labelledForm">
-                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byMonth" checked>Co-création Mensuelle</label>
+                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byMonth" checked>Co-création mensuelle</label>
                                             <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"
                                                    title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
                                         </div>
@@ -198,19 +198,29 @@
 
                         </div>
                         <div class="Comment" id="byYearComment">
-                            <p>byYearComment</p>
+                            <p>Avec cette case à cocher, on choisit un mode de co-création monétaire dont la fréquence est l'année. Il est intéressant de comparer avec d'autres fréquences, c'est pourquoi le mois est également disponible.</p>
 
                         </div>
                         <div class="Comment" id="byMonthComment">
-                            <p>byMonthComment</p>
+                            <p>Avec cette case à cocher, on choisit un mode de co-création monétaire dont la fréquence est le mois.</p>
+
+                            <p>En utilisant la formule de base du Dividende Universel, notez par exemple combien cette formulation favorise les premiers entrants (au démarrage de la monnaie) par rapport à des entrants plus tardifs. L'effet est encore plus criant quand l'émission est mensuelle.</p>
+
+                            <p>On peut visualiser des entrants plus tardifs en se rendant dans l'onglet "Comptes Affichés".</p>
 
                         </div>
                         <div class="Comment" id="AnnualGrowthComment">
-                            <p>AnnualGrowthComment</p>
+                            <p>Par défaut, le taux c est calculé à partir de l'espérance de vie : c<sub>annuelle</sub> = (ev/2) <sup>1 / (ev/2)</sup> - 1
+                            <br>La TRM en couleur (Partie 1) en dit plus à ce sujet.</p>
+
+                            <p>A noter : si on choisit d'utiliser un taux mensuel et de le renseigner à la main, le champ du taux annuel est automatiquement modifié afin de faciliter les comparaisons entre les deux rythmes. La formule utilisée est alors : c<sub>annuelle</sub> = (1 + c<sub>mensuelle</sub>)<sup>12</sup> - 1</p>
 
                         </div>
                         <div class="Comment" id="MonthlyGrowthComment">
-                            <p>MonthlyGrowthComment</p>
+                            <p>Par défaut, le taux c mensuel est calculé à partir du taux annuel selon la formule : 
+                            <br>c<sub>mensuelle</sub> = (1 + c<sub>annuelle</sub>)<sup>1/12</sup> - 1</p>
+                            
+                            <p>A noter : si on choisit d'utiliser un taux annuel et de le renseigner à la main, le champ du taux mensuel est automatiquement modifié en utilisant cette même formule, ceci afin de faciliter les comparaisons entre les deux rythmes.</p>
 
                         </div>
                         
@@ -218,15 +228,18 @@
                         <div class="Comment" id="StartingItemComment">
                             <p>La monnaie est uniquement créée via le Dividende Universel. Elle démarre avec un premier Dividende que nous noterons DU0. Les comptes passent alors de 0 à DU0.</p>
                             
-                            <p>Par défaut, dans cette simulation, la population est constituée d'un seul individu. Le but est d'ajouter progressivement des éléments de complexité. Dans l'onglet suivant, on pourra ajouter d'autre comptes.</p>
-                            
                         </div>
                         <div class="Comment" id="AnnualDividendStartComment">
-                            <p>AnnualDividendStartComment</p>
+                            <p>Par défaut, si le rythme de co-création monétaire est annuel, le premier dividende DU0 vaut 1000 unités monétaires. C'est une valeur tout à fait arbitraire.</p>
 
+                            <p>A noter : si on choisit d'utiliser un taux mensuel et de renseigner le DU0 mensuel à la main, le champ du DU0 annuel est automatiquement modifié afin de faciliter les comparaisons entre les deux rythmes. La formule utilisée est alors : DU0<sub>annuel</sub> = DU0<sub>mensuel</sub> &times; c<sub>annuelle</sub> / c<sub>mensuelle</sub></p>
+                            
                         </div>
                         <div class="Comment" id="MonthlyDividendStartComment">
-                            <p>MonthlyDividendStartComment</p>
+                            <p>Par défaut, le dividende DU0 mensuel est calculé à partir du DU0 annuel selon la formule : 
+                            <br>DU0<sub>mensuel</sub> = DU0<sub>annuel</sub> &times; c<sub>mensuelle</sub> / c<sub>annuelle</sub></p>
+                            
+                            <p>A noter : si on choisit d'utiliser un taux annuel et de renseigner le DU0 annuel à la main, le champ du DU0 mensuel est automatiquement modifié en utilisant cette même formule, ceci afin de faciliter les comparaisons entre les deux rythmes.</p>
 
                         </div>
                         <div class="Comment" id="BasicUDComment">
@@ -240,27 +253,40 @@
 
                             <p>Remarque : en utilisant l'unité monétaire comme référence, on constate que la courbe du dividende est soit horizontale, soit superposée à la courbe c*M/N.</p>
 
-                            <p>Remarque générale : passer en échelle logarithmique peut aider à mieux voir.</p>
+                            <p>Remarque générale : dans certaines configurations, passer en échelle logarithmique peut aider à comparer chaque courbe.</p>
 
                         </div>
                         <div class="Comment" id="UDBComment">
-                            <p>UDBComment</p>
+                            <p>Remarque préliminaire : quand la population N reste constante, toutes les formulations du DU doivent être équivalentes à la formule fondamentale DU = c*M/N. Dans ces conditions, à chaque co-création, la masse monétaire augmente d'un facteur c. Autrement dit, si c vaut 10 % par an, la masse monétaire augmente de 10 % par an. Et il en va de même avec le DU annuel : il augmente de 10 % chaque année. Ce qui correspond à la formule : DU(t) = (1+c)*DU(t-1)</p>
+
+                            <p>Ayant noté qu'en régime à N constant on a cette propriété DU(t) = (1+c)*DU(t-1), il est intéressant d'en faire une formule de calcul du DU et d'en étudier le comportement quand N varie.</p>
+
+                        </div>
+                        <div class="Comment" id="UDCComment">
+                            <p>Comme DUB ne fait pas du tout intervenir les variations de N, une idée peut être de faire intervenir N en mixant la formule du DU basique avec celle de DUB. On obtient alors la formule :
+                            <br>DUC = 1/2 [DU<sub>basique</sub> + DUB]</p>
 
                         </div>
                         <div class="Comment" id="UDGComment">
-                            <p>UDGComment</p>
+                            <p>Précédemment, on a vu DUC qui était construit en mixant DU basique et DUB. DUĞ peut être vu comme une autre façon de les mixer :</p>
+
+                            <p>Avec la formulation DUB, on a DU(t) = (1+c)*DU(t-1) ou dit autrement DU(t) = DU(t-1) + c*DU(t-1)</p>
+                            
+                            <p>Avec la formulation basique, on a DU(t-1) = c*M(t-1)/N(t-1)
+
+                            <p>En mixant les deux, on a DU(t) = DU(t-1) + c*c*M(t-1)/N(t-1) 
 
                         </div>
                         
                         <!-- Reference Tab -->
                         <div class="Comment" id="ReferenceItemComment">
-                            <p>ReferenceItemComment</p>
+                            <p>Par défaut, les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires. On dit alors que l'on utilise l'unité monétaire comme référence des mesures. Mais on peut vouloir utiliser d'autres référentiels. Par exemple, il est courant de compter en nombre de salaire : "Telle chose coûte 3 fois mon salaire mensuel".</p>
+
+                            <p>Ce simulateur permet l'utilisation de quelques référentiels permettant de mettre en évidence différents aspects.</p>
 
                         </div>
                         <div class="Comment" id="monetaryUnitComment">
                             <p>Dans ce référentiel "Unité Monétaire", les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires.</p>
-
-                            <p>D'autres référentiels peuvent être utilisés. Par exemple, il est courant de compter en nombre de salaire : "Telle chose coûte 3 fois mon salaire mensuel".</p>
 
                         </div>
                         <div class="Comment" id="LogScaleComment">
@@ -284,7 +310,7 @@
                         
                         <!-- Bounds Tab -->
                         <div class="Comment" id="BoundsItemComment">
-                            <p>BoundsItemComment</p>
+                            <p>Suivant ce que l'on veut étudier, il peut être intéressant de réduire l'affichage à une petite période, ou au contraire, de l'élargir à une plus grande période. Cet onglet permet donc de positionner les bornes inférieures et supérieurs des axes horizontaux (axes des temps).</p>
 
                         </div>
                         <div class="Comment" id="TimeLowerBoundComment">
@@ -306,19 +332,17 @@
                         <div class="Comment" id="AccountsItemComment">
                             <p>Par défaut, dans cette simulation, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps.</p>
 
-                            <p>On peut donc indiquer un montant à la naissance : au démarrage de la monnaie, il est exprimé en pourcentage de DU0/C ; par la suite, c'est un pourcentage de M/N. Si l'on veut reproduire le cas particulier d'une population stable comme présenter dans la TRM en Couleur (partie 1), on peut le faire en positionnant ce montant à 100 %.</p>
+                        </div>
+                        <div class="Comment" id="AccountBirthComment">
+                            <p>Ce champ permet d'indiquer la date de création du compte couramment sélectionné. On peut voir cette valeur comme la date de naissance de l'individu possédant ce compte.</p>
 
                         </div>
                         <div class="Comment" id="ProduceUdComment">
-                            <p>ProduceUdComment</p>
-
-                        </div>
-                        <div class="Comment" id="AccountBirthComment">
-                            <p>AccountBirthComment</p>
+                            <p>Cette case à cocher permet d'indiquer si le couramment sélectionné correspond à un co-producteur de la monnaie.</p>
 
                         </div>
                         <div class="Comment" id="StartingPercentageComment">
-                            <p>StartingPercentageComment</p>
+                            <p>A chaque individu peut être attribuer un montant à la naissance : au démarrage de la monnaie, ce montant est exprimé en pourcentage de DU0/C ; par la suite, c'est un pourcentage de M/N. Si l'on veut reproduire le cas particulier d'une population stable comme présenter dans la TRM en Couleur (partie 1), on peut le faire en positionnant ce montant à 100 %.</p>
 
                         </div>
                         
@@ -334,7 +358,7 @@
                         
                         <!-- Demographic profiles -->
                         <div class="Comment" id="NoneComment">
-                            <p>NoneComment</p>
+                            <p>Il peut être utile de n'attribuer aucun profil démographique. Dans ce cas, la courbe affichant les variations de N est uniquement déduite des comptes qui sont définis dans l'onglet "Comptes affichés".</p>
 
                         </div>
                         <div class="Comment" id="UniformComment">
