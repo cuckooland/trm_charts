@@ -160,14 +160,34 @@
                             </div>
                             <div id="HeadCount" class="tabcontent">
                                 <div class="row">
-                                    <label for="DemographySelector">Utiliser une fonction mathématique</label><select id="DemographySelector" name="DemographySelector"></select>
+                                    <label for="DemographySelector">Profile</label><select id="DemographySelector" name="DemographySelector"></select>
                                 </div>
-                                <div class="ParamSection">
+                                <div class="ParamSection" id="DemographyParamSection">
                                     <div class="row">
                                         <div class="labelledForm">
-                                            <label for="MaxDemography">Valeur Maxi</label>
+                                            <label for="MaxDemography">Sommet (en Unité Monétaire)</label>
                                             <input id="MaxDemography" type="text" name="MaxDemography"
                                                    title="Ordre de grandeur de la démographie maximum"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="xMinDemography">Début (en année)</label>
+                                            <input id="xMinDemography" type="text" name="xMinDemography"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="xMaxDemography">Fin (en année)</label>
+                                            <input id="xMaxDemography" type="text" name="xMaxDemography"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="xMpvDemography">Sommet (en année)</label>
+                                            <input id="xMpvDemography" type="text" name="xMpvDemography"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="plateauDemography">Durée (en année)</label>
+                                            <input id="plateauDemography" type="text" name="plateauDemography"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="xScaleDemography">Paramètre d'échelle</label>
+                                            <input id="xScaleDemography" type="text" name="xScaleDemography"/>
                                         </div>
                                     </div>
                                 </div>
@@ -356,13 +376,34 @@
 
                         </div>
                         
+                        <div class="Comment" id="xMinDemographyComment">
+                            <p>xMinDemographyComment</p>
+
+                        </div>
+                        
+                        <div class="Comment" id="xMaxDemographyComment">
+                            <p>xMaxDemographyComment</p>
+
+                        </div>
+                        
+                        <div class="Comment" id="xMpvDemographyComment">
+                            <p>xMpvDemographyComment</p>
+
+                        </div>
+                        
+                        <div class="Comment" id="plateauDemographyComment">
+                            <p>plateauDemographyComment</p>
+
+                        </div>
+                        
+                        <div class="Comment" id="xScaleDemographyComment">
+                            <p>xScaleDemographyComment</p>
+
+                        </div>
+                        
                         <!-- Demographic profiles -->
                         <div class="Comment" id="NoneComment">
                             <p>Il peut être utile de n'attribuer aucun profil démographique. Dans ce cas, la courbe affichant les variations de N est uniquement déduite des comptes qui sont définis dans l'onglet "Comptes affichés".</p>
-
-                        </div>
-                        <div class="Comment" id="UniformComment">
-                            <p>UniformComment</p>
 
                         </div>
                         <div class="Comment" id="TriangularComment">

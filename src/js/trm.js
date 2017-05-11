@@ -29,8 +29,9 @@
  * @param timeLowerBoundInYears {int} Time lower bound for plot generation
  * @param timeUpperBoundInYears {int} Time upper bound for plot generation
  * @param maxDemography {int} Order of magnitude of the maximum demography
+ * @param widthDemography {int} Used to define a duration of the demography profile
  */
-var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, growth, dividendStart, timeLowerBoundInYears, timeUpperBoundInYears, maxDemography) {
+var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, growth, dividendStart, timeLowerBoundInYears, timeUpperBoundInYears, maxDemography, xMinDemography, xMaxDemography, xMpvDemography, plateauDemography, xScaleDemography) {
 
     this.YEAR = 'YEAR';
     this.MONTH = 'MONTH';
@@ -47,6 +48,11 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     var PER_MONTH_GROWTH = 2;
     var GROWTH_TIME_UNIT = this.YEAR;
     var MAX_DEMOGRAPHY = 10000;
+    var XMIN_DEMOGRAPHY = 0;
+    var XMAX_DEMOGRAPHY = 80;
+    var XMPV_DEMOGRAPHY = 40;
+    var PLATEAU_DEMOGRAPHY = 78;
+    var XSCALE_DEMOGRAPHY = 4;
     this.DEFAULT_MONEY_BIRTH = 1;
     this.DEFAULT_STARTING_PERCENT = 0;
    
@@ -59,6 +65,11 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     this.calculateGrowth = calculateGrowth || CALCULATE_GROWTH;
     this.growthTimeUnit = growthTimeUnit || GROWTH_TIME_UNIT;
     this.maxDemography = maxDemography || MAX_DEMOGRAPHY;
+    this.xMinDemography = xMinDemography || XMIN_DEMOGRAPHY;
+    this.xMaxDemography = xMaxDemography || XMAX_DEMOGRAPHY;
+    this.xMpvDemography = xMpvDemography || XMPV_DEMOGRAPHY;
+    this.plateauDemography = plateauDemography || PLATEAU_DEMOGRAPHY;
+    this.xScaleDemography = xScaleDemography || XSCALE_DEMOGRAPHY;
    
     if (this.growthTimeUnit === this.MONTH) {
         this.growth = growth || PER_MONTH_GROWTH;
@@ -172,90 +183,58 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     // population variation profiles
     this.demographicProfiles = {
         'None': {
-            calculate: function (timeStep) {
+            calculate: function (money, timeStep) {
                 return 0;
             }
         },
-        'Uniform': {
-            calculate: function (timeStep, yMax, xMin, xMax) {
-                xMin = xMin || 0;
-                xMax = xMax || 81;
-                yMax = yMax || 10000;
-               
-                if (timeStep <= xMin) {
-                    return 0;
-                }
-                if (timeStep >= xMax) {
-                    return 0;
-                }
-                return yMax;
-            }
-        },
         'Triangular': {
-            calculate: function (timeStep, yMax, xMin, xMax) {
-                xMin = xMin || 0;
-                xMax = xMax || 81;
-                yMax = yMax || 10000;
-               
-                var xMean = (xMax - xMin) / 2;
-                if (timeStep <= xMin) {
+            calculate: function (money, timeStep) {
+                if (timeStep <= money.xMinDemography) {
                     return 0;
                 }
-                if (timeStep >= xMax) {
+                if (timeStep >= money.xMaxDemography) {
                     return 0;
                 }
-                if (timeStep <= xMean) {
-                    return Math.trunc(yMax * (timeStep - xMin) / (xMean - xMin));
+                if (timeStep <= money.xMpvDemography) {
+                    return Math.trunc(money.maxDemography * (timeStep - money.xMinDemography) / (money.xMpvDemography - money.xMinDemography));
                 }
-                if (timeStep >= xMean) {
-                    return Math.trunc(yMax * (xMax - timeStep) / (xMax - xMean));
+                if (timeStep >= money.xMpvDemography) {
+                    return Math.trunc(money.maxDemography * (money.xMaxDemography - timeStep) / (money.xMaxDemography - money.xMpvDemography));
                 }
                 return 0;
             }
         },
         'Plateau': {
-            calculate: function (timeStep, yMax, xMin, xMax, duration) {
-                xMin = xMin || 0;
-                xMax = xMax || 81;
-                duration = duration || 60;
-                yMax = yMax || 10000;
-               
-                var slopeDuration = ((xMax - xMin) - duration) / 2;
-                var xMean1 = xMin + slopeDuration;
-                var xMean2 = xMax - slopeDuration;
-                if (timeStep <= xMin) {
+            calculate: function (money, timeStep) {
+                var slopeDuration = ((money.xMaxDemography - money.xMinDemography) - money.plateauDemography) / 2;
+                var xMean1 = money.xMinDemography + slopeDuration;
+                var xMean2 = money.xMaxDemography - slopeDuration;
+                if (timeStep <= money.xMinDemography) {
                     return 0;
                 }
-                if (timeStep >= xMax) {
+                if (timeStep >= money.xMaxDemography) {
                     return 0;
                 }
                 if (timeStep <= xMean1) {
-                    return Math.trunc(yMax * (timeStep - xMin) / (xMean1 - xMin));
+                    return Math.trunc(money.maxDemography * (timeStep - money.xMinDemography) / (xMean1 - money.xMinDemography));
                 }
                 if (timeStep >= xMean2) {
-                    return Math.trunc(yMax * (xMax - timeStep) / (xMax - xMean2));
+                    return Math.trunc(money.maxDemography * (money.xMaxDemography - timeStep) / (money.xMaxDemography - xMean2));
                 }
-                return yMax;
+                return money.maxDemography;
             }
         },
         'Cauchy': {
-            calculate: function (timeStep, yMax, a, xMin, xMax) {
-                a = a || 2;
-                xMin = xMin || 0;
-                xMax = xMax || 80;
-                yMax = yMax || 10000;
-               
-                var xMean = (xMax - xMin) / 2;
-                var tmp = (timeStep - xMean) / a;
-                return Math.trunc(yMax / (1 + tmp * tmp));
+            calculate: function (money, timeStep) {
+                var tmp = (timeStep - money.xMpvDemography) / money.xScaleDemography;
+                return Math.trunc(money.maxDemography / (1 + tmp * tmp));
             }
         },
         'DampedWave': {
-            calculate: function (timeStep, yMax) {
-                yMax = yMax || 10000;
-                var x = timeStep / 4;
+            calculate: function (money, timeStep) {
+                var x = timeStep / (2 * money.xScaleDemography);
                
-                return Math.trunc(yMax * (1 - Math.cos(2*x) / (1 + x * x)));
+                return Math.trunc(money.maxDemography * (1 - Math.cos(2*x) / (1 + x * x)));
             }
         }
     };
@@ -311,7 +290,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                 people++;
             }
         }
-        people = people + this.demographicProfiles[this.demographicProfileKey].calculate(this.getTimeValue(timeStep, this.YEAR), this.maxDemography);
+        people = people + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
 
         return people;
     };
@@ -341,7 +320,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
        
         if (timeStep >= moneyBirthStep) {
             var previousDividend = this.getDividend(timeStep - 1);
-            var previousDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this.getTimeValue(timeStep - 1, this.YEAR), this.maxDemography);
+            var previousDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep - 1, this.YEAR));
             monetarySupply = this.getMonetarySupply(timeStep - 1) + previousDemography * previousDividend;
         }
 

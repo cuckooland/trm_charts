@@ -283,6 +283,11 @@ d3.select('#LogScale').property("checked", money.referenceFrames[money.reference
 d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
 d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
 d3.select('#MaxDemography').property("value", money.maxDemography);
+d3.select('#xMinDemography').property("value", money.xMinDemography);
+d3.select('#xMaxDemography').property("value", money.xMaxDemography);
+d3.select('#xMpvDemography').property("value", money.xMpvDemography);
+d3.select('#plateauDemography').property("value", money.plateauDemography);
+d3.select('#xScaleDemography').property("value", money.xScaleDemography);
 updateAddedMemberArea();
 
 // update in form with calculated growth
@@ -292,7 +297,7 @@ if (money.calculateGrowth) {
 }
 enableGrowthForms(money.calculateGrowth);
 enableUD0Forms();
-enableMaxDemography();
+enableDemographyFields();
 
 function getRefLabel(referenceFrameKey) {
     var refLabel;
@@ -356,9 +361,7 @@ function getUdFormulaLabel(udFormulaKey) {
 function getDemographicProfileLabel(demographicProfileKey) {
     switch(demographicProfileKey) {
         case 'None':
-            return "Aucune";
-        case 'Uniform': 
-            return "Uniforme";
+            return "Aucun";
         case 'Triangular':
             return "Triangulaire";
         case 'Plateau':
@@ -768,12 +771,47 @@ function enableUD0Forms() {
     }
 }
 
-function enableMaxDemography() {
+function enableDemographyFields() {
+    document.getElementById("MaxDemography").parentNode.style.display='none';
+    document.getElementById("xMinDemography").parentNode.style.display='none';
+    document.getElementById("xMaxDemography").parentNode.style.display='none';
+    document.getElementById("xMpvDemography").parentNode.style.display='none';
+    document.getElementById("plateauDemography").parentNode.style.display='none';
+    document.getElementById("xScaleDemography").parentNode.style.display='none';
+
     if (money.demographicProfileKey === "None") {
-        d3.select('#MaxDemography').attr('disabled', 'disabled');
+        d3.select("#DemographyParamSection").style("display", "none");
     }
     else {
-        d3.select('#MaxDemography').attr('disabled', null);
+        d3.select("#DemographyParamSection").style("display", "block");
+    }
+
+    switch(money.demographicProfileKey) {
+        case 'None':
+            break;
+        case 'Triangular': 
+            document.getElementById("MaxDemography").parentNode.style.display='block';
+            document.getElementById("xMinDemography").parentNode.style.display='block';
+            document.getElementById("xMaxDemography").parentNode.style.display='block';
+            document.getElementById("xMpvDemography").parentNode.style.display='block';
+            break;
+        case 'Plateau': 
+            document.getElementById("MaxDemography").parentNode.style.display='block';
+            document.getElementById("xMinDemography").parentNode.style.display='block';
+            document.getElementById("xMaxDemography").parentNode.style.display='block';
+            document.getElementById("plateauDemography").parentNode.style.display='block';
+            break;
+        case 'Cauchy':
+            document.getElementById("MaxDemography").parentNode.style.display='block';
+            document.getElementById("xMpvDemography").parentNode.style.display='block';
+            document.getElementById("xScaleDemography").parentNode.style.display='block';
+            break;
+        case 'DampedWave':
+            document.getElementById("MaxDemography").parentNode.style.display='block';
+            document.getElementById("xScaleDemography").parentNode.style.display='block';
+            break;
+        default:
+            throw new Error("Demographic profile not managed: " + udFormulaKey);
     }
 }
 
@@ -811,6 +849,11 @@ d3.select("#LogScale").on("click", changeLogScale);
 d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
 d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
 d3.select("#MaxDemography").on("change", changeMaxDemography);
+d3.select("#xMinDemography").on("change", changeXMinDemography);
+d3.select("#xMaxDemography").on("change", changeXMaxDemography);
+d3.select("#xMpvDemography").on("change", changeXMpvDemography);
+d3.select("#plateauDemography").on("change", changePlateauDemography);
+d3.select("#xScaleDemography").on("change", changeXScaleDemography);
 d3.select("#AccountBirth").on("change", changeAccountBirth);
 d3.select("#ProduceUd").on("click", changeProduceUd);
 d3.select("#StartingPercentage").on("change", changeStartingPercentage);
@@ -890,7 +933,7 @@ function changeUdFormula() {
 
 function changeDemographicProfile() {
     money.demographicProfileKey = this.options[this.selectedIndex].value;
-    enableMaxDemography();
+    enableDemographyFields();
     updateChartData();
     
     comment(money.demographicProfileKey);
@@ -1032,14 +1075,80 @@ function changeTimeUpperBound() {
 }
 
 function changeMaxDemography() {
-    money.maxDemography = parseInt(this.value);
-    updateChartData();
+    var maxDemography = parseInt(this.value);
+    if (maxDemography >= 0 && maxDemography < 1000000) {
+        money.maxDemography = maxDemography;
+        updateChartData();
+    }
+    else {
+        d3.select('#MaxDemography').property("value", money.maxDemography);
+    }
+}
+
+function changeXMinDemography() {
+    var xMinDemography = parseInt(this.value);
+    if (xMinDemography >= 0 && xMinDemography < 200) {
+        money.xMinDemography = xMinDemography;
+        updateChartData();
+    }
+    else {
+        d3.select('#xMinDemography').property("value", money.xMinDemography);
+    }
+}
+
+function changeXMaxDemography() {
+    var xMaxDemography = parseInt(this.value);
+    if (xMaxDemography >= 1 && xMaxDemography < 199) {
+        money.xMaxDemography = xMaxDemography;
+        updateChartData();
+    }
+    else {
+        d3.select('#xMaxDemography').property("value", money.xMaxDemography);
+    }
+}
+
+function changeXMpvDemography() {
+    var xMpvDemography = parseInt(this.value);
+    if (xMpvDemography >= 1 && xMpvDemography < 199) {
+        money.xMpvDemography = xMpvDemography;
+        updateChartData();
+    }
+    else {
+        d3.select('#xMpvDemography').property("value", money.xMpvDemography);
+    }
+}
+
+function changePlateauDemography() {
+    var plateauDemography = parseInt(this.value);
+    if (plateauDemography >= 0 && plateauDemography < 199) {
+        money.plateauDemography = plateauDemography;
+        updateChartData();
+    }
+    else {
+        d3.select('#plateauDemography').property("value", money.plateauDemography);
+    }
+}
+
+function changeXScaleDemography() {
+    var xScaleDemography = parseInt(this.value);
+    if (xScaleDemography > 0) {
+        money.xScaleDemography = xScaleDemography;
+        updateChartData();
+    }
+    else {
+        d3.select('#xScaleDemography').property("value", money.xScaleDemography);
+    }
 }
 
 function changeAccountBirth() {
     var birth = parseInt(this.value);
-    money.setAccountBirth(getSelectedAccountIndex(), birth);
-    updateChartData();
+    if (birth >= 0 && birth < 200) {
+        money.setAccountBirth(getSelectedAccountIndex(), birth);
+        updateChartData();
+    }
+    else {
+        d3.select('#AccountBirth').property("value", money.getAccountBirth(getSelectedAccountIndex()));
+    }
 }
 
 function changeProduceUd() {
@@ -1055,8 +1164,14 @@ function changeProduceUd() {
 }
 
 function changeStartingPercentage() {
-    money.setStartingPercentage(getSelectedAccountIndex(), parseFloat(this.value));
-    updateChartData();
+    var startingPercentage = parseFloat(this.value);
+    if (startingPercentage >= 0) {
+        money.setStartingPercentage(getSelectedAccountIndex(), startingPercentage);
+        updateChartData();
+    }
+    else {
+        d3.select('#StartingPercentage').property("value", money.getStartingPercentage(getSelectedAccountIndex()));
+    }
 }
 
 function openTab() {
