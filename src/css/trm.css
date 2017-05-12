@@ -86,10 +86,12 @@ input[disabled=disabled] {
 	border: 1px solid #aaaaaa;
     border-radius: 5px;
     float: left;
-    height:10.5em;
+    height:11em;
     margin: 5px 5px 5px 10px;
     padding: 5px 5px 5px 10px;
 }
+
+.CommentPart ul{    margin-top: 0.6em;    margin-bottom: 0.6em;    padding-left: 1.5em; /* pour éviter la superposition du contenu */}
 
 label {
     color: darkslateblue;
@@ -124,7 +126,7 @@ label {
 #ParamsCommentsAndTabs {
     border: 1px solid #dedede;
     border-top: none;
-    height:16em;
+    height:16.5em;
 }
  /* Style the list */
 ul.tabsBar {

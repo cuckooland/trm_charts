@@ -853,8 +853,9 @@ d3.selectAll(".tablinks").on("click", openTab);
 
 d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
 
-document.getElementById("MoneyItem").click();
+d3.selectAll(".chart").on("click", function() { comment(this.id); });
 
+document.getElementById("MoneyItem").click();
 
 function setChartTimeBounds() {
     var lowerBoundDate = asDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
