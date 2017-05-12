@@ -1,8 +1,36 @@
-html {    font-size: 100%;}
-body{    background-color: #f0f0ff;    font-family: 'Trebuchet MS', Arial, sans-serif;    color: #181818;    font-size: 0.875em;}
-#section{    height: 768px;	min-width: 1024px;	max-width: 100%;	color: #181818;     font-family: "Times New Roman", "Trebuchet MS", Helvetica, Arial, sans-serif;    width: 50em;    margin: auto;    padding: 0.1em;}
+html 
+{
+    font-size: 100%;
+}
 
-h1{	color: #A07009;    font-style: italic;    font-size: 2.5em;	margin-top: 0.8em;	margin-bottom: 1em;}
+body
+{
+    background-color: #f0f0ff;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    color: #181818;
+    font-size: 0.875em;
+}
+
+#section
+{
+    height: 768px;
+	min-width: 1024px;
+	max-width: 100%;
+	color: #181818; 
+    font-family: "Times New Roman", "Trebuchet MS", Helvetica, Arial, sans-serif;
+    width: 50em;
+    margin: auto;
+    padding: 0.1em;
+}
+
+h1
+{
+	color: #A07009;
+    font-style: italic;
+    font-size: 2.5em;
+	margin-top: 0.8em;
+	margin-bottom: 1em;
+}
 
 select {
     text-align: left;
@@ -26,7 +54,9 @@ input[disabled=disabled] {
 }
 
 .InProgress {
-    font-style: italic;    font-size: 0.5em;    color: #ff5555;
+    font-style: italic;
+    font-size: 0.5em;
+    color: #ff5555;
 }
 
 .labelledForm {
@@ -39,7 +69,8 @@ input[disabled=disabled] {
     padding-top: 0.1em;
     padding-bottom: 0.1em;
     margin-left: 0.8em;
-    background-color: #d1d1d1;}
+    background-color: #d1d1d1;
+}
 
 .row {
     margin:0.2em;
@@ -52,7 +83,9 @@ input[disabled=disabled] {
 
 .CommentPart {
     width: 61%;
-	border: 1px solid #aaaaaa;    border-radius: 5px;    float: left;
+	border: 1px solid #aaaaaa;
+    border-radius: 5px;
+    float: left;
     height:10.5em;
     margin: 5px 5px 5px 10px;
     padding: 5px 5px 5px 10px;
@@ -70,9 +103,19 @@ label {
 }
 
 #ChartsPart {
-    background-color: #dedede;	border: 1px solid #aaaaaa;    border-radius: 5px;}
+    background-color: #dedede;
+	border: 1px solid #aaaaaa;
+    border-radius: 5px;
+}
 
-#TrmAppli{	vertical-align: top;    padding: 5px;    background-color: #c9c9c9;    border-radius: 5px;    box-shadow: 0px 2px 5px #1c1a19;}
+#TrmAppli
+{
+	vertical-align: top;
+    padding: 5px;
+    background-color: #c9c9c9;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px #1c1a19;
+}
 
 #ParamsAndComments {
     border: 1px solid #ccc;
@@ -120,4 +163,12 @@ ul.tabsBar li a:focus, .active {background-color: #ccc;}
 
 .Comment {
     display: none;
+}
+
+.c3-line {
+  stroke-width: 1.5px;
+}
+
+#AccountsChart .c3-line-scaled-dividend, #DividendChart .c3-line-scaled-average, #MonetarySupplyChart .c3-line-cruising-monetary-supply {
+  stroke-width: .5px;
 }

@@ -85,10 +85,7 @@ function generateData() {
             columns: [],
             types: {
                 average: 'area'
-            },
-			regions: {
-				'scaled_dividend':[{'style': 'dashed'}]
-			}
+            }
         },
         dividend: {
             xFormat: DATE_PATTERN,
@@ -100,10 +97,7 @@ function generateData() {
                 'dividend': universalDividendLabel(),
                 'scaled_average': 'c*M/N'
             },
-            columns: [],
-			regions: {
-				'scaled_average':[{'style': 'dashed'}]
-			}
+            columns: []
         },
         headcount: {
             xFormat: DATE_PATTERN,
@@ -123,10 +117,7 @@ function generateData() {
                 'monetary_supply': 'Masse Monétaire "M"',
                 'cruising_monetary_supply': 'N*DU/c'
             },
-            columns: [],
-			regions: {
-				'cruising_monetary_supply':[{'style': 'dashed'}]
-			}
+            columns: []
         }
     };
 
@@ -1130,7 +1121,7 @@ function changePlateauDemography() {
 }
 
 function changeXScaleDemography() {
-    var xScaleDemography = parseInt(this.value);
+    var xScaleDemography = parseFloat(this.value);
     if (xScaleDemography > 0) {
         money.xScaleDemography = xScaleDemography;
         updateChartData();
