@@ -2,12 +2,133 @@
  * Created by vit on 14/10/16.
  */
  
+const TRANSITION_DURATION = 1000;
+
+const EXP_FORMATS = {
+    'y': '-24',
+    'z': '-21',
+    'a': '-18',
+    'f': '-15',
+    'p': '-12',
+    'n': '-9',
+    'µ': '-6',
+    'm': '-3',
+    'k': '3',
+    'M': '6',
+    'G': '9',
+    'T': '12',
+    'P': '15',
+    'E': '18',
+    'Z': '21',
+    'Y': '24'
+}
+
+const DATE_PATTERN = "%d-%m-%Y";
+
+// Add a 'format' function to String
 String.prototype.format = function() {
     var args = arguments;
     return this.replace(/\$\{p(\d)\}/g, function(match, id) {
         return args[id];
     });
 };
+
+// Create instance context
+var money = {};
+// Create instance of class in context with constructor parameters
+libreMoneyClass.call(money);
+
+// capture configurations list
+setConfigSelector();
+
+// capture reference frames list
+setReferenceFrameSelector(money);
+
+// capture formulas list
+setUdFormulaSelector(money);
+
+// capture population variation list
+setDemographySelector(money);
+
+// add a member account
+var accountIndex = money.addAccount();
+updateAccountName(accountIndex);
+joinAccountSelectorToData();
+document.getElementById("AccountSelector").selectedIndex = 0;
+
+// Fill the form
+d3.select('#LifeExpectancy').property("value", money.lifeExpectancy);
+d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
+d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
+d3.select('#TimeLowerBound').property("value", money.timeLowerBoundInYears);
+d3.select('#TimeUpperBound').property("value", money.timeUpperBoundInYears);
+d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
+d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
+d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
+d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
+d3.select('#MaxDemography').property("value", money.maxDemography);
+d3.select('#xMinDemography').property("value", money.xMinDemography);
+d3.select('#xMaxDemography').property("value", money.xMaxDemography);
+d3.select('#xMpvDemography').property("value", money.xMpvDemography);
+d3.select('#plateauDemography').property("value", money.plateauDemography);
+d3.select('#xScaleDemography').property("value", money.xScaleDemography);
+updateAddedMemberArea();
+
+// update in form with calculated growth
+if (money.calculateGrowth) {
+    d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
+    d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
+}
+enableGrowthForms(money.calculateGrowth);
+enableUD0Forms();
+enableDemographyFields();
+
+// generate C3 charts
+money.generateData();
+generateAccountsChart();
+generateDividendChart();
+generateHeadcountChart();
+generateMonetarySupplyChart();
+setChartTimeBounds();
+
+d3.select("#ConfigSelector").on("change", changeConfiguration);
+d3.select("#ReferenceFrameSelector").on("change", changeReferenceFrame);
+d3.select("#UdFormulaSelector").on("change", changeUdFormula);
+d3.select("#DemographySelector").on("change", changeDemographicProfile);
+d3.select("#AccountSelector").on("change", updateAddedMemberArea);
+
+d3.selectAll(".rythm").on("change", changeRythm);
+d3.selectAll(".firstDividend").on("change", changeRythm);
+
+d3.select("#AddAccount").on("click", addAccount);
+d3.select("#DeleteAccount").on("click", deleteAccount);
+
+d3.select("#LifeExpectancy").on("change", changeLifeExpectancy);
+d3.select("#AnnualGrowth").on("change", changeAnnualGrowth);
+d3.select("#MonthlyGrowth").on("change", changeMonthlyGrowth);
+d3.select("#CalculateGrowth").on("click", changeCalculateGrowth);
+d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
+d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
+d3.select("#LogScale").on("click", changeLogScale);
+d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
+d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
+d3.select("#MaxDemography").on("change", changeMaxDemography);
+d3.select("#xMinDemography").on("change", changeXMinDemography);
+d3.select("#xMaxDemography").on("change", changeXMaxDemography);
+d3.select("#xMpvDemography").on("change", changeXMpvDemography);
+d3.select("#plateauDemography").on("change", changePlateauDemography);
+d3.select("#xScaleDemography").on("change", changeXScaleDemography);
+d3.select("#AccountBirth").on("change", changeAccountBirth);
+d3.select("#ProduceUd").on("click", changeProduceUd);
+d3.select("#StartingPercentage").on("change", changeStartingPercentage);
+
+d3.selectAll(".tablinks").on("click", openTab);
+
+d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
+
+d3.selectAll(".chart").on("click", function() { comment(this.id); });
+
+document.getElementById("IntroItem").click();
 
 // Create configuration selector
 function setConfigSelector() {
@@ -79,125 +200,50 @@ function joinAccountSelectorToData() {
     options.exit().remove();
 };
 
-function generateData() {
-    money.generateData();
-    
-	var c3Data = {
-        accounts: {
-            xFormat: DATE_PATTERN,
-            xs: {
-                'average': 'x_average',
-                'scaled_dividend': 'x_scaled_dividend'
-            },
-            names: {
-                'average': 'Moyenne "M/N"',
-                'scaled_dividend': 'DU/c'
-            },
-            columns: [],
-            types: {
-                average: 'area'
-            }
+function generateAccountsData() {
+	var accountsData = {
+        xFormat: DATE_PATTERN,
+        xs: {
+            'average': 'x_average',
+            'scaled_dividend': 'x_scaled_dividend'
         },
-        dividend: {
-            xFormat: DATE_PATTERN,
-            xs: {
-                'dividend' : 'x_dividend',
-                'scaled_average': 'x_scaled_average'
-            },
-            names: {
-                'dividend': universalDividendLabel(),
-                'scaled_average': 'c*M/N'
-            },
-            columns: []
+        names: {
+            'average': 'Moyenne "M/N"',
+            'scaled_dividend': 'DU/c'
         },
-        headcount: {
-            xFormat: DATE_PATTERN,
-            x: 'x_people',
-            names: {
-                'people': 'Nombre d\'individus "N"'
-            },
-            columns: []
-        },
-        monetarySupply: {
-            xFormat: DATE_PATTERN,
-            xs: {
-                'monetary_supply' : 'x_monetary_supply',
-                'cruising_monetary_supply': 'x_cruising_monetary_supply'
-            },
-            names: {
-                'monetary_supply': 'Masse Monétaire "M"',
-                'cruising_monetary_supply': 'N*DU/c'
-            },
-            columns: []
+        columns: [],
+        types: {
+            average: 'area'
         }
     };
-
+    
     var iAccount, i;
     // For each account...
 	for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
 		// add axis mapping
 		var c3Id = getC3Id(money.accounts[iAccount].id);
-		c3Data.accounts.xs[c3Id] = 'x_' + c3Id;
-        c3Data.accounts.names[c3Id] = money.accounts[iAccount].name;
+		accountsData.xs[c3Id] = 'x_' + c3Id;
+        accountsData.names[c3Id] = money.accounts[iAccount].name;
 	}
 	
     // add data to columns and add axis header 
-	var xDividends = ['x_dividend'];
-	for (i = 0; i < money.dividends.x.length; i++) {
-	    xDividends.push(asDate(money.dividends.x[i]));
-	}
-    c3Data.dividend.columns.push(xDividends);
-    c3Data.dividend.columns.push(money.dividends.y);
-    c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('dividend');
-    
-	var xScaledAverages = ['x_scaled_average'];
-	for (i = 0; i < money.averages.x.length; i++) {
-	    xScaledAverages.push(asDate(money.averages.x[i]));
-	}
-    c3Data.dividend.columns.push(xScaledAverages);
-    c3Data.dividend.columns.push(money.scaledAverages.y);
-    c3Data.dividend.columns[c3Data.dividend.columns.length - 1].unshift('scaled_average');
-    
-	var xPeople = ['x_people'];
-	for (i = 0; i < money.headcounts.x.length; i++) {
-	    xPeople.push(asDate(money.headcounts.x[i]));
-	}
-    c3Data.headcount.columns.push(xPeople);
-    c3Data.headcount.columns.push(money.headcounts.y);
-    c3Data.headcount.columns[c3Data.headcount.columns.length - 1].unshift('people');
-    
-	var xMonetarySupply = ['x_monetary_supply'];
-	for (i = 0; i < money.monetarySupplies.x.length; i++) {
-	    xMonetarySupply.push(asDate(money.monetarySupplies.x[i]));
-	}
-    c3Data.monetarySupply.columns.push(xMonetarySupply);
-    c3Data.monetarySupply.columns.push(money.monetarySupplies.y);
-    c3Data.monetarySupply.columns[c3Data.monetarySupply.columns.length - 1].unshift('monetary_supply');
-    
-	var xCruisingMonetarySupply = ['x_cruising_monetary_supply'];
-	for (i = 0; i < money.cruisingMonetarySupplies.x.length; i++) {
-	    xCruisingMonetarySupply.push(asDate(money.cruisingMonetarySupplies.x[i]));
-	}
-    c3Data.monetarySupply.columns.push(xCruisingMonetarySupply);
-    c3Data.monetarySupply.columns.push(money.cruisingMonetarySupplies.y);
-    c3Data.monetarySupply.columns[c3Data.monetarySupply.columns.length - 1].unshift('cruising_monetary_supply');
-    
 	var xAverage = ['x_average'];
 	for (i = 0; i < money.averages.x.length; i++) {
 	    xAverage.push(asDate(money.averages.x[i]));
 	}
-    c3Data.accounts.columns.push(xAverage);
-    c3Data.accounts.columns.push(money.averages.y);
-    c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift('average');
+    accountsData.columns.push(xAverage);
+    accountsData.columns.push(money.averages.y);
+    accountsData.columns[accountsData.columns.length - 1].unshift('average');
 
 	var xScaledDividends = ['x_scaled_dividend'];
 	for (i = 0; i < money.dividends.x.length; i++) {
 	    xScaledDividends.push(asDate(money.dividends.x[i]));
 	}
-    c3Data.accounts.columns.push(xScaledDividends);
-    c3Data.accounts.columns.push(money.scaledDividends.y);
-    c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift('scaled_dividend');
+    accountsData.columns.push(xScaledDividends);
+    accountsData.columns.push(money.scaledDividends.y);
+    accountsData.columns[accountsData.columns.length - 1].unshift('scaled_dividend');
 
+    // Manage accounts to unload
     var toUnload = [];
     // for each account...
     for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
@@ -205,104 +251,118 @@ function generateData() {
         // add data to columns
         if (money.accounts[iAccount].x.length > 1) {
             
-        	var xAccount = [c3Data.accounts.xs[c3Id]];
+        	var xAccount = [accountsData.xs[c3Id]];
         	for (i = 0; i < money.accounts[iAccount].x.length; i++) {
         	    xAccount.push(asDate(money.accounts[iAccount].x[i]));
         	}
-            c3Data.accounts.columns.push(xAccount);
+            accountsData.columns.push(xAccount);
             
-            c3Data.accounts.columns.push(money.accounts[iAccount].y);
-            c3Data.accounts.columns[c3Data.accounts.columns.length - 1].unshift(c3Id);
+            accountsData.columns.push(money.accounts[iAccount].y);
+            accountsData.columns[accountsData.columns.length - 1].unshift(c3Id);
         }
         else {
             toUnload.push(c3Id);
         }
     }
     if (toUnload.length > 0) {
-        c3Data.accounts.unload = toUnload;
+        accountsData.unload = toUnload;
     }
-	return c3Data;
+    return accountsData;
+}
+	
+function generateDividendData() {
+    var dividendData = {
+        xFormat: DATE_PATTERN,
+        xs: {
+            'dividend' : 'x_dividend',
+            'scaled_average': 'x_scaled_average'
+        },
+        names: {
+            'dividend': universalDividendLabel(),
+            'scaled_average': 'c*M/N'
+        },
+        columns: []
+    };
+    
+    // add data to columns and add axis header 
+	var xDividends = ['x_dividend'];
+	for (i = 0; i < money.dividends.x.length; i++) {
+	    xDividends.push(asDate(money.dividends.x[i]));
+	}
+    dividendData.columns.push(xDividends);
+    dividendData.columns.push(money.dividends.y);
+    dividendData.columns[dividendData.columns.length - 1].unshift('dividend');
+    
+	var xScaledAverages = ['x_scaled_average'];
+	for (i = 0; i < money.averages.x.length; i++) {
+	    xScaledAverages.push(asDate(money.averages.x[i]));
+	}
+    dividendData.columns.push(xScaledAverages);
+    dividendData.columns.push(money.scaledAverages.y);
+    dividendData.columns[dividendData.columns.length - 1].unshift('scaled_average');
+    
+    return dividendData;
+}
+
+function generateHeadcountData() {
+    var headcountData = {
+        xFormat: DATE_PATTERN,
+        x: 'x_people',
+        names: {
+            'people': 'Nombre d\'individus "N"'
+        },
+        columns: []
+    };
+    
+    // add data to columns and add axis header 
+	var xPeople = ['x_people'];
+	for (i = 0; i < money.headcounts.x.length; i++) {
+	    xPeople.push(asDate(money.headcounts.x[i]));
+	}
+    headcountData.columns.push(xPeople);
+    headcountData.columns.push(money.headcounts.y);
+    headcountData.columns[headcountData.columns.length - 1].unshift('people');
+    
+    return headcountData;
+}
+    
+function generateMonetarySupplyData() {
+    var monetarySupplyData = {
+        xFormat: DATE_PATTERN,
+        xs: {
+            'monetary_supply' : 'x_monetary_supply',
+            'cruising_monetary_supply': 'x_cruising_monetary_supply'
+        },
+        names: {
+            'monetary_supply': 'Masse Monétaire "M"',
+            'cruising_monetary_supply': 'N*DU/c'
+        },
+        columns: []
+    };
+
+    // add data to columns and add axis header 
+	var xMonetarySupply = ['x_monetary_supply'];
+	for (i = 0; i < money.monetarySupplies.x.length; i++) {
+	    xMonetarySupply.push(asDate(money.monetarySupplies.x[i]));
+	}
+    monetarySupplyData.columns.push(xMonetarySupply);
+    monetarySupplyData.columns.push(money.monetarySupplies.y);
+    monetarySupplyData.columns[monetarySupplyData.columns.length - 1].unshift('monetary_supply');
+    
+	var xCruisingMonetarySupply = ['x_cruising_monetary_supply'];
+	for (i = 0; i < money.cruisingMonetarySupplies.x.length; i++) {
+	    xCruisingMonetarySupply.push(asDate(money.cruisingMonetarySupplies.x[i]));
+	}
+    monetarySupplyData.columns.push(xCruisingMonetarySupply);
+    monetarySupplyData.columns.push(money.cruisingMonetarySupplies.y);
+    monetarySupplyData.columns[monetarySupplyData.columns.length - 1].unshift('cruising_monetary_supply');
+    
+	return monetarySupplyData;
 };
 
 function getC3Id(accountId) {
     return 'member_' + accountId;
 }
-
-var TRANSITION_DURATION = 1000;
-
-var EXP_FORMATS = {
-    'y': '-24',
-    'z': '-21',
-    'a': '-18',
-    'f': '-15',
-    'p': '-12',
-    'n': '-9',
-    'µ': '-6',
-    'm': '-3',
-    'k': '3',
-    'M': '6',
-    'G': '9',
-    'T': '12',
-    'P': '15',
-    'E': '18',
-    'Z': '21',
-    'Y': '24'
-}
-
-var DATE_PATTERN = "%d-%m-%Y";
-    
-// Create instance context
-var money = {};
-// Create instance of class in context with constructor parameters
-libreMoneyClass.call(money);
-
-// capture configurations list
-setConfigSelector();
-
-// capture reference frames list
-setReferenceFrameSelector(money);
-
-// capture formulas list
-setUdFormulaSelector(money);
-
-// capture population variation list
-setDemographySelector(money);
-
-// add a member account
-var accountIndex = money.addAccount();
-updateAccountName(accountIndex);
-joinAccountSelectorToData();
-document.getElementById("AccountSelector").selectedIndex = 0;
-
-// generate data
-var data = generateData();
-
-// Fill the form
-d3.select('#LifeExpectancy').property("value", money.lifeExpectancy);
-d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
-d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
-d3.select('#TimeLowerBound').property("value", money.timeLowerBoundInYears);
-d3.select('#TimeUpperBound').property("value", money.timeUpperBoundInYears);
-d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
-d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
-d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
-d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
-d3.select('#MaxDemography').property("value", money.maxDemography);
-d3.select('#xMinDemography').property("value", money.xMinDemography);
-d3.select('#xMaxDemography').property("value", money.xMaxDemography);
-d3.select('#xMpvDemography').property("value", money.xMpvDemography);
-d3.select('#plateauDemography').property("value", money.plateauDemography);
-d3.select('#xScaleDemography').property("value", money.xScaleDemography);
-updateAddedMemberArea();
-
-// update in form with calculated growth
-if (money.calculateGrowth) {
-    d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
-    d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
-}
-enableGrowthForms(money.calculateGrowth);
-enableUD0Forms();
-enableDemographyFields();
 
 function getRefLabel(referenceFrameKey) {
     var refLabel;
@@ -380,252 +440,258 @@ function getDemographicProfileLabel(demographicProfileKey) {
     }
 }
 
-// create and display chart from data.accounts
-accountsChart = c3.generate({
-    bindto: '#AccountsChart',
-    padding: {
-        left: 100,
-        right: 25
-    },
-    size: {
-        height: 300,
-        width: 480
-    },
-    axis: {
-        x: {
-            label: {
-                text: timeLabel(),
-                position: 'outer-center'
+// create and display chart from money.accounts
+function generateAccountsChart() {
+    accountsChart = c3.generate({
+        bindto: '#AccountsChart',
+        padding: {
+            left: 100,
+            right: 25
+        },
+        size: {
+            height: 300,
+            width: 480
+        },
+        axis: {
+            x: {
+                label: {
+                    text: timeLabel(),
+                    position: 'outer-center'
+                },
+                type: 'timeseries',
+                tick: {
+                    format: DATE_PATTERN,
+                    count: 2
+                }
             },
-            type: 'timeseries',
-            tick: {
-                format: DATE_PATTERN,
-                count: 2
+            y: {
+                label: {
+                    text: accountYLabel(),
+                    position: 'outer-middle'
+                },
+                tick: {
+                    format: tickFormat
+                }
             }
         },
-        y: {
-            label: {
-                text: accountYLabel(),
-                position: 'outer-middle'
-            },
-            tick: {
-                format: tickFormat
-            }
-        }
-    },
-    tooltip: {
-        format: {
-            value: function (value, ratio, id, index) {
-                return tooltipFormat(value);
-            }
-        }
-    },
-    legend: {
-        item: {
-            // bind focus on the two charts
-            onmouseover: function (id) {
-                accountsChart.focus(id);
-            }
-        }
-    },
-    data: data.accounts,
-    transition: {
-        duration: TRANSITION_DURATION
-    },
-    point: {
-        show: false,
-        r: 2
-    }
-});
-
-// create and display chart from data.dividend
-dividendChart = c3.generate({
-    bindto: '#DividendChart',
-    padding: {
-        left: 100,
-        right: 25
-    },
-    size: {
-        height: 300,
-        width: 480
-    },
-    axis: {
-        x: {
-            label: {
-                text: timeLabel(),
-                position: 'outer-center'
-            },
-            type: 'timeseries',
-            tick: {
-                format: DATE_PATTERN,
-                count: 2 
+        tooltip: {
+            format: {
+                value: function (value, ratio, id, index) {
+                    return tooltipFormat(value);
+                }
             }
         },
-        y: {
-            label: {
-                text: accountYLabel(),
-                position: 'outer-middle'
-            },
-            position: 'outer-top',
-            tick: {
-                format: tickFormat
-            }
-        }
-    },
-    tooltip: {
-        format: {
-            value: function (value, ratio, id, index) {
-                return tooltipFormat(value);
-            }
-        }
-    },
-    legend: {
-        item: {
-            // bind focus on the two charts
-            onmouseover: function (id) {
-                dividendChart.focus(id);
-            }
-        }
-    },
-    data: data.dividend,
-    color: {
-        pattern: ['#ff7f0e', '#1f77b4']
-    },
-    transition: {
-        duration: TRANSITION_DURATION
-    },
-    point: {
-        show: false,
-        r: 2
-    }
-});
-
-// create and display chart from data.headcount
-headcountChart = c3.generate({
-    bindto: '#HeadcountChart',
-    padding: {
-        left: 100,
-        right: 25,
-    },
-    size: {
-        height: 300,
-        width: 480
-    },
-    axis: {
-        x: {
-            label: {
-                text: timeLabel(),
-                position: 'outer-center'
-            },
-            type: 'timeseries',
-            tick: {
-                format: DATE_PATTERN,
-                count: 2
+        legend: {
+            item: {
+                // bind focus on the two charts
+                onmouseover: function (id) {
+                    accountsChart.focus(id);
+                }
             }
         },
-        y: {
-            label: {
-                text: "Nombre d\individus",
-                position: 'outer-middle'
-            },
-            position: 'outer-top',
-            tick: {
-                format: d3.format("d")
-            }
+        data: generateAccountsData(),
+        transition: {
+            duration: TRANSITION_DURATION
+        },
+        point: {
+            show: false,
+            r: 2
         }
-    },
-    tooltip: {
-        format: {
-            value: function (value, ratio, id, index) {
-                var f = d3.format('.3d');
-                return f(value);
-            }
-        }
-    },
-    legend: {
-        item: {
-            // bind focus on the two charts
-            onmouseover: function (id) {
-                headcountChart.focus(id);
-            }
-        }
-    },
-    data: data.headcount,
-    color: {
-        pattern: ['#ff9896']
-    },
-    transition: {
-        duration: TRANSITION_DURATION
-    },
-    point: {
-        show: false,
-        r: 2
-    }
-});
+    });
+}
 
-// create and display chart from data.monetarySupply
-monetarySupplyChart = c3.generate({
-    bindto: '#MonetarySupplyChart',
-    padding: {
-        left: 100,
-        right: 25
-    },
-    size: {
-        height: 300,
-        width: 480
-    },
-    axis: {
-        x: {
-            label: {
-                text: timeLabel(),
-                position: 'outer-center'
+// create and display chart from money.dividend
+function generateDividendChart() {
+    dividendChart = c3.generate({
+        bindto: '#DividendChart',
+        padding: {
+            left: 100,
+            right: 25
+        },
+        size: {
+            height: 300,
+            width: 480
+        },
+        axis: {
+            x: {
+                label: {
+                    text: timeLabel(),
+                    position: 'outer-center'
+                },
+                type: 'timeseries',
+                tick: {
+                    format: DATE_PATTERN,
+                    count: 2 
+                }
             },
-            type: 'timeseries',
-            tick: {
-                format: DATE_PATTERN,
-                count: 2
+            y: {
+                label: {
+                    text: accountYLabel(),
+                    position: 'outer-middle'
+                },
+                position: 'outer-top',
+                tick: {
+                    format: tickFormat
+                }
             }
         },
-        y: {
-            label: {
-                text: accountYLabel(),
-                position: 'outer-middle'
-            },
-            position: 'outer-top',
-            tick: {
-                format: tickFormat
+        tooltip: {
+            format: {
+                value: function (value, ratio, id, index) {
+                    return tooltipFormat(value);
+                }
             }
-        }
-    },
-    tooltip: {
-        format: {
-            value: function (value, ratio, id, index) {
-                return tooltipFormat(value);
+        },
+        legend: {
+            item: {
+                // bind focus on the two charts
+                onmouseover: function (id) {
+                    dividendChart.focus(id);
+                }
             }
+        },
+        data: generateDividendData(),
+        color: {
+            pattern: ['#ff7f0e', '#1f77b4']
+        },
+        transition: {
+            duration: TRANSITION_DURATION
+        },
+        point: {
+            show: false,
+            r: 2
         }
-    },
-    legend: {
-        item: {
-            // bind focus on the two charts
-            onmouseover: function (id) {
-                monetarySupplyChart.focus(id);
-            }
-        }
-    },
-    data: data.monetarySupply,
-    color: {
-        pattern: ['#9467bd', '#ff9896']
-    },
-    transition: {
-        duration: TRANSITION_DURATION
-    },
-    point: {
-        show: false,
-        r: 2
-    }
-});
+    });
+}
 
-setChartTimeBounds();
+// create and display chart from money.headcount
+function generateHeadcountChart() {
+    headcountChart = c3.generate({
+        bindto: '#HeadcountChart',
+        padding: {
+            left: 100,
+            right: 25,
+        },
+        size: {
+            height: 300,
+            width: 480
+        },
+        axis: {
+            x: {
+                label: {
+                    text: timeLabel(),
+                    position: 'outer-center'
+                },
+                type: 'timeseries',
+                tick: {
+                    format: DATE_PATTERN,
+                    count: 2
+                }
+            },
+            y: {
+                label: {
+                    text: "Nombre d\individus",
+                    position: 'outer-middle'
+                },
+                position: 'outer-top',
+                tick: {
+                    format: d3.format("d")
+                }
+            }
+        },
+        tooltip: {
+            format: {
+                value: function (value, ratio, id, index) {
+                    var f = d3.format('.3d');
+                    return f(value);
+                }
+            }
+        },
+        legend: {
+            item: {
+                // bind focus on the two charts
+                onmouseover: function (id) {
+                    headcountChart.focus(id);
+                }
+            }
+        },
+        data: generateHeadcountData(),
+        color: {
+            pattern: ['#ff9896']
+        },
+        transition: {
+            duration: TRANSITION_DURATION
+        },
+        point: {
+            show: false,
+            r: 2
+        }
+    });
+}
+
+// create and display chart from money.monetarySupply
+function generateMonetarySupplyChart() {
+    monetarySupplyChart = c3.generate({
+        bindto: '#MonetarySupplyChart',
+        padding: {
+            left: 100,
+            right: 25
+        },
+        size: {
+            height: 300,
+            width: 480
+        },
+        axis: {
+            x: {
+                label: {
+                    text: timeLabel(),
+                    position: 'outer-center'
+                },
+                type: 'timeseries',
+                tick: {
+                    format: DATE_PATTERN,
+                    count: 2
+                }
+            },
+            y: {
+                label: {
+                    text: accountYLabel(),
+                    position: 'outer-middle'
+                },
+                position: 'outer-top',
+                tick: {
+                    format: tickFormat
+                }
+            }
+        },
+        tooltip: {
+            format: {
+                value: function (value, ratio, id, index) {
+                    return tooltipFormat(value);
+                }
+            }
+        },
+        legend: {
+            item: {
+                // bind focus on the two charts
+                onmouseover: function (id) {
+                    monetarySupplyChart.focus(id);
+                }
+            }
+        },
+        data: generateMonetarySupplyData(),
+        color: {
+            pattern: ['#9467bd', '#ff9896']
+        },
+        transition: {
+            duration: TRANSITION_DURATION
+        },
+        point: {
+            show: false,
+            r: 2
+        }
+    });
+}
 
 function tickFormat(value) {
     var f = d3.format('.2s');
@@ -657,22 +723,26 @@ function withExp(siValue) {
  */
 function updateChartData(toUnload) {
 
-    // calculate data
-    var data = generateData();
+    // calculate C3 data
+    money.generateData();
+    var accountsData = generateAccountsData();
+    var dividendData = generateDividendData();
+    var headcountData = generateHeadcountData();
+    var monetarySupplyData = generateMonetarySupplyData();
 
     // tell load command to unload old data
     if (toUnload) {
-        data.accounts.unload = toUnload;
-        data.dividend.unload = toUnload;
-        data.headcount.unload = toUnload;
-        data.monetarySupply.unload = toUnload;
+        accountsData.unload = toUnload;
+        dividendData.unload = toUnload;
+        headcountData.unload = toUnload;
+        monetarySupplyData.unload = toUnload;
     }
 
     // reload data in chart
-    accountsChart.load(data.accounts);
-    dividendChart.load(data.dividend);
-    headcountChart.load(data.headcount);
-    monetarySupplyChart.load(data.monetarySupply);
+    accountsChart.load(accountsData);
+    dividendChart.load(dividendData);
+    headcountChart.load(headcountData);
+    monetarySupplyChart.load(monetarySupplyData);
     
     setChartTimeBounds();
 }
@@ -832,45 +902,6 @@ function enableAddedMemberArea() {
         d3.select('#DeleteAccount').attr('disabled', 'disabled');
     }
 }
-
-d3.select("#ConfigSelector").on("change", changeConfiguration);
-d3.select("#ReferenceFrameSelector").on("change", changeReferenceFrame);
-d3.select("#UdFormulaSelector").on("change", changeUdFormula);
-d3.select("#DemographySelector").on("change", changeDemographicProfile);
-d3.select("#AccountSelector").on("change", updateAddedMemberArea);
-
-d3.selectAll(".rythm").on("change", changeRythm);
-d3.selectAll(".firstDividend").on("change", changeRythm);
-
-d3.select("#AddAccount").on("click", addAccount);
-d3.select("#DeleteAccount").on("click", deleteAccount);
-
-d3.select("#LifeExpectancy").on("change", changeLifeExpectancy);
-d3.select("#AnnualGrowth").on("change", changeAnnualGrowth);
-d3.select("#MonthlyGrowth").on("change", changeMonthlyGrowth);
-d3.select("#CalculateGrowth").on("click", changeCalculateGrowth);
-d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
-d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
-d3.select("#LogScale").on("click", changeLogScale);
-d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
-d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
-d3.select("#MaxDemography").on("change", changeMaxDemography);
-d3.select("#xMinDemography").on("change", changeXMinDemography);
-d3.select("#xMaxDemography").on("change", changeXMaxDemography);
-d3.select("#xMpvDemography").on("change", changeXMpvDemography);
-d3.select("#plateauDemography").on("change", changePlateauDemography);
-d3.select("#xScaleDemography").on("change", changeXScaleDemography);
-d3.select("#AccountBirth").on("change", changeAccountBirth);
-d3.select("#ProduceUd").on("click", changeProduceUd);
-d3.select("#StartingPercentage").on("change", changeStartingPercentage);
-
-d3.selectAll(".tablinks").on("click", openTab);
-
-d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
-
-d3.selectAll(".chart").on("click", function() { comment(this.id); });
-
-document.getElementById("IntroItem").click();
 
 function setChartTimeBounds() {
     var lowerBoundDate = asDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
