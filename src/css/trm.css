@@ -36,6 +36,7 @@ select {
     text-align: left;
     margin:0.3em;
     margin-left: 1em;
+    font-size: 0.875em;
 }
 
 p {
@@ -46,7 +47,11 @@ p {
 input[type=text] {
     text-align: right;
     margin-left: 1em;
-    width: 6em;
+    width: 5em;
+}
+
+input[type=button] {
+    font-size: 0.875em;
 }
 
 input[disabled=disabled] {
