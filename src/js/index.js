@@ -9,6 +9,17 @@ String.prototype.format = function() {
     });
 };
 
+// Create configuration selector
+function setConfigSelector() {
+    d3.select('#ConfigSelector').selectAll("option")
+        .data(['Configuration par défaut', 'Configuration remarquable 1', 'Configuration remarquable 2', 'Configuration remarquable 3', 'Configuration remarquable 4', 'Configuration remarquable 5'])
+      .enter().append("option")
+        .text(function(d) { return d; })
+        .attr('value', function(d) { return d; });
+        
+    document.getElementById("ConfigSelector").selectedIndex = 0;
+}
+
 // Create reference frame selector
 function setReferenceFrameSelector(money) {
     d3.select('#ReferenceFrameSelector').selectAll("option")
@@ -245,10 +256,13 @@ var money = {};
 // Create instance of class in context with constructor parameters
 libreMoneyClass.call(money);
 
+// capture configurations list
+setConfigSelector();
+
 // capture reference frames list
 setReferenceFrameSelector(money);
 
-// capture formulaes list
+// capture formulas list
 setUdFormulaSelector(money);
 
 // capture population variation list
@@ -819,6 +833,7 @@ function enableAddedMemberArea() {
     }
 }
 
+d3.select("#ConfigSelector").on("change", changeConfiguration);
 d3.select("#ReferenceFrameSelector").on("change", changeReferenceFrame);
 d3.select("#UdFormulaSelector").on("change", changeUdFormula);
 d3.select("#DemographySelector").on("change", changeDemographicProfile);
@@ -855,7 +870,7 @@ d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); 
 
 d3.selectAll(".chart").on("click", function() { comment(this.id); });
 
-document.getElementById("MoneyItem").click();
+document.getElementById("IntroItem").click();
 
 function setChartTimeBounds() {
     var lowerBoundDate = asDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
@@ -864,6 +879,9 @@ function setChartTimeBounds() {
     dividendChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
     headcountChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
     monetarySupplyChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+}
+
+function changeConfiguration() {
 }
 
 function changeReferenceFrame() {

@@ -24,16 +24,27 @@
             <div id="TrmAppli">
                 <div id="ParamsCommentsAndTabs">
                     <ul class="tabsBar">
-                        <li><a href="#AboutMoney" class="tablinks" id="MoneyItem" tabContentId="AboutMoney">Taux d'expansion</a></li>
-                        <li><a href="#Starting" class="tablinks" id="StartingItem" tabContentId="Starting">Dividende Universel</a></li>
+                        <li><a href="#Intro" class="tablinks" id="IntroItem" tabContentId="Intro">Par où commencer</a></li>
+                        <li><a href="#GrowingRate" class="tablinks" id="GrowingRateItem" tabContentId="GrowingRate">Taux d'expansion</a></li>
+                        <li><a href="#UniversalDivividend" class="tablinks" id="UdItem" tabContentId="UniversalDivividend">Dividende Universel</a></li>
                         <li><a href="#Reference" class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</a></li>
                         <li><a href="#Bounds" class="tablinks" id="BoundsItem" tabContentId="Bounds">Période affichée</a></li>
                         <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes affichés</a></li>
-                        <li><a href="#HeadCount" class="tablinks" id="HeadCountItem" tabContentId="HeadCount">Démographie</a></li>
+                        <li><a href="#Demography" class="tablinks" id="DemographyItem" tabContentId="Demography">Démographie</a></li>
                     </ul>
                     <div id="ParamsAndComments">
                         <div class="ParamPart">
-                            <div id="AboutMoney" class="tabcontent">
+                            <!-- Intro Tab Parameters -->
+                            <div id="Intro" class="tabcontent">
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="ConfigSelector">Configuration à étudier</label><select id="ConfigSelector" name="ConfigSelector"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Money Tab Parameters -->
+                            <div id="GrowingRate" class="tabcontent">
                                 <div class="row">
                                     <div class="labelledForm">
                                         <label for="LifeExpectancy">Espérance de vie (en année)</label>
@@ -67,7 +78,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="Starting" class="tabcontent">
+                            
+                            <!-- Universal Divividend Tab Parameters -->
+                            <div id="UniversalDivividend" class="tabcontent">
                                 <div class="row">
                                     <label>Dividende de départ "DU0" (en unités monétaires)</label>
                                 </div>
@@ -93,6 +106,8 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Reference Tab Parameters -->
                             <div id="Reference" class="tabcontent">
                                 <div class="row">
                                     <div class="labelledForm">
@@ -106,6 +121,8 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Bounds Tab Parameters -->
                             <div id="Bounds" class="tabcontent">
                                 <div class="row">
                                     <label>Période affichée (en année)</label>
@@ -127,6 +144,8 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Accounts Tab Parameters -->
                             <div id="Accounts" class="tabcontent">
                                 <div class="row">
                                     <select id="AccountSelector" name="AccountSelector"></select>
@@ -158,7 +177,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="HeadCount" class="tabcontent">
+                            
+                            <!-- Demography Tab Parameters -->
+                            <div id="Demography" class="tabcontent">
                                 <div class="row">
                                     <label for="DemographySelector">Profile</label><select id="DemographySelector" name="DemographySelector"></select>
                                 </div>
@@ -196,7 +217,7 @@
                     </div>
 
                     <div class="CommentPart">
-                        <!-- Charts -->
+                        <!-- Charts Comments -->
                         <div class="Comment" id="AccountsChartComment">
                             <p>Ce premier diagramme (en haut à gauche) représente l'évolution au fil du temps de :</p>
                             
@@ -227,8 +248,14 @@
 
                         </div>
 
-                        <!-- Money Tab -->
-                        <div class="Comment" id="MoneyItemComment">
+                        <!-- Intro Tab Comments -->
+                        <div class="Comment" id="IntroItemComment">
+                            <p>Ce simulateur a une configuration par défaut. Cet onglet permet de mettre en avant d'autres configurations.</p>
+                            
+                        </div>
+                        
+                        <!-- Growing Rate Tab Comments -->
+                        <div class="Comment" id="GrowingRateItemComment">
                             <p>Dans la Théorie Relative de la Monnaie, de nouvelles unités monétaires sont créées régulièrement et sont partagées équitablement entre les N individus de la communauté. C'est ce que l'on appelle la co-création de la monnaie.</p>
                             
                             <p>Autrement dit, afin de n’avantager aucune époque, chacun des N individus présents à un instant t co-crée régulièrement un même nombre de masse monétaire moyenne M/N. Nous notons ce nombre par la lettre c ; et cette quantité c*M/N est appelée Dividende Universel (abrégé DU).</p>
@@ -275,8 +302,8 @@
 
                         </div>
                         
-                        <!-- Starting Tab -->
-                        <div class="Comment" id="StartingItemComment">
+                        <!-- Universal Divividend Tab Comments -->
+                        <div class="Comment" id="UdItemComment">
                             <p>La monnaie est uniquement créée via le Dividende Universel. Elle démarre avec un premier Dividende que nous noterons DU0. Les comptes passent alors de 0 à DU0.</p>
                             
                         </div>
@@ -329,7 +356,7 @@
 
                         </div>
                         
-                        <!-- Reference Tab -->
+                        <!-- Reference Tab Comments -->
                         <div class="Comment" id="ReferenceItemComment">
                             <p>Par défaut, les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires. On dit alors que l'on utilise l'unité monétaire comme référence des mesures. Mais on peut vouloir utiliser d'autres référentiels. Par exemple, il est courant de compter en nombre de salaire : "Telle chose coûte 3 fois mon salaire mensuel".</p>
 
@@ -359,7 +386,7 @@
 
                         </div>
                         
-                        <!-- Bounds Tab -->
+                        <!-- Bounds Tab Comments -->
                         <div class="Comment" id="BoundsItemComment">
                             <p>Suivant ce que l'on veut étudier, il peut être intéressant de réduire l'affichage à une petite période, ou au contraire, de l'élargir à une plus grande période. Cet onglet permet donc de positionner les bornes inférieures et supérieurs des axes horizontaux (axes des temps).</p>
 
@@ -379,7 +406,7 @@
                         </div>
                         
                         
-                        <!-- Accounts Tab -->
+                        <!-- Accounts Tab Comments -->
                         <div class="Comment" id="AccountsItemComment">
                             <p>Par défaut, dans cette simulation, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps.</p>
 
@@ -397,8 +424,8 @@
 
                         </div>
                         
-                        <!-- Headcounts Tab -->
-                        <div class="Comment" id="HeadCountItemComment">
+                        <!-- Demography Tab Comments -->
+                        <div class="Comment" id="DemographyItemComment">
                             <p>Dans l'onglet "Comptes affichés", on a pu faire varier le nombre d'individus N au fil du temps. Il s'agit désormais d'étudier différentes types de variations, plus réalistes, en jouant sur la forme et sur l'amplitude.</p>
 
                         </div>
@@ -432,7 +459,7 @@
 
                         </div>
                         
-                        <!-- Demographic profiles -->
+                        <!-- Demography Tab Comments -->
                         <div class="Comment" id="NoneComment">
                             <p>Il peut être utile de n'attribuer aucun profil démographique. Dans ce cas, la courbe affichant les variations de N est uniquement déduite des comptes qui sont définis dans l'onglet "Comptes affichés".</p>
 

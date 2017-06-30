@@ -86,7 +86,7 @@ input[disabled=disabled] {
 	border: 1px solid #aaaaaa;
     border-radius: 5px;
     float: left;
-    height:11em;
+    height:11.5em;
     margin: 5px 5px 5px 10px;
     padding: 5px 5px 5px 10px;
 }
@@ -139,24 +139,30 @@ ul.tabsBar {
 }
 
 /* Float the list items side by side */
-ul.tabsBar li {float: left;}
+ul.tabsBar li {
+    float: left;
+}
 
 /* Style the links inside the list items */
 ul.tabsBar li a {
     display: inline-block;
     color: black;
     text-align: center;
-    padding: 14px 16px;
+    padding: 0.8em 0.8em;
     text-decoration: none;
     transition: 0.3s;
-    font-size: 1.2em;
+    font-size: 1em;
 }
 
 /* Change background color of links on hover */
-ul.tabsBar li a:hover {background-color: #ddd;}
+ul.tabsBar li a:hover {
+    background-color: #ddd;
+}
 
 /* Create an active/current tablink class */
-ul.tabsBar li a:focus, .active {background-color: #ccc;}
+ul.tabsBar li a:focus, .active {
+    background-color: #ccc;
+}
 
 /* Style the tab content */
 .tabcontent {
