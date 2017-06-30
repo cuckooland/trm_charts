@@ -39,20 +39,20 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     this.INFINITY_FACTOR = 1.234567;
     
     // Default Values
-    var LIFE_EXPECTANCY = 80;
-    var DIVIDEND_START = 1000;
-    var TIME_LOWER_BOUND_IN_YEARS = 0;
-    var TIME_UPPER_BOUND_IN_YEARS = 5;
-    var CALCULATE_GROWTH = true;
-    var PER_YEAR_GROWTH = 20;
-    var PER_MONTH_GROWTH = 2;
-    var GROWTH_TIME_UNIT = this.YEAR;
-    var MAX_DEMOGRAPHY = 10000;
-    var XMIN_DEMOGRAPHY = 0;
-    var XMAX_DEMOGRAPHY = 80;
-    var XMPV_DEMOGRAPHY = 40;
-    var PLATEAU_DEMOGRAPHY = 78;
-    var XSCALE_DEMOGRAPHY = 4;
+    const LIFE_EXPECTANCY = 80;
+    const DIVIDEND_START = 1000;
+    const TIME_LOWER_BOUND_IN_YEARS = 0;
+    const TIME_UPPER_BOUND_IN_YEARS = 5;
+    const CALCULATE_GROWTH = true;
+    const PER_YEAR_GROWTH = 20;
+    const PER_MONTH_GROWTH = 2;
+    const GROWTH_TIME_UNIT = this.YEAR;
+    const MAX_DEMOGRAPHY = 10000;
+    const XMIN_DEMOGRAPHY = 0;
+    const XMAX_DEMOGRAPHY = 80;
+    const XMPV_DEMOGRAPHY = 40;
+    const PLATEAU_DEMOGRAPHY = 78;
+    const XSCALE_DEMOGRAPHY = 4;
     this.DEFAULT_MONEY_BIRTH = 1;
     this.DEFAULT_STARTING_PERCENT = 0;
    
@@ -678,7 +678,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                 }
             }
         }
-        this.replaceYInfinity();
+        this.adaptYValues();
     };
 
     /**
@@ -695,19 +695,23 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         return referenceValue;
     }
     
-    this.replaceYInfinity = function () {
+    /**
+     * - since infinity value is not well managed by C3.js, replace it by a value easily recognizable and greater than all other values;
+     * - round values to avoid noises (due to numerical instability) in constant series of values.
+     */
+    this.adaptYValues = function () {
         
         var maxAbs1 = this.maxAbs(this.dividends.y, 0);
         maxAbs1 = this.maxAbs(this.scaledAverages.y, maxAbs1);
         
-        this.replaceInfinity(this.dividends.y, maxAbs1);
-        this.replaceInfinity(this.scaledAverages.y, maxAbs1);
+        this.adaptValues(this.dividends.y, maxAbs1);
+        this.adaptValues(this.scaledAverages.y, maxAbs1);
         
         var maxAbs2 = this.maxAbs(this.monetarySupplies.y, 0);
         maxAbs2 = this.maxAbs(this.cruisingMonetarySupplies.y, maxAbs2);
         
-        this.replaceInfinity(this.monetarySupplies.y, maxAbs2);
-        this.replaceInfinity(this.cruisingMonetarySupplies.y, maxAbs2);
+        this.adaptValues(this.monetarySupplies.y, maxAbs2);
+        this.adaptValues(this.cruisingMonetarySupplies.y, maxAbs2);
         
         var maxAbs3 = this.maxAbs(this.averages.y, 0);
         maxAbs3 = this.maxAbs(this.scaledDividends.y, maxAbs3);
@@ -715,22 +719,27 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             maxAbs3 = this.maxAbs(this.accounts[iAccount].y, maxAbs3);
         }
         
-        this.replaceInfinity(this.averages.y, maxAbs3);
-        this.replaceInfinity(this.scaledDividends.y, maxAbs3);
+        this.adaptValues(this.averages.y, maxAbs3);
+        this.adaptValues(this.scaledDividends.y, maxAbs3);
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
-            this.replaceInfinity(this.accounts[iAccount].y, maxAbs3);
+            this.adaptValues(this.accounts[iAccount].y, maxAbs3);
         }
     }
     
-    this.replaceInfinity = function (yArray, maxAbs) {
+    this.adaptValues = function (yArray, maxAbs) {
         var substitute = Math.pow(10, Math.ceil(Math.log(maxAbs * 2) / Math.log(10))) * this.INFINITY_FACTOR;
         for (i = 0; i < yArray.length; i++) {
             if (yArray[i] == Number.NEGATIVE_INFINITY) {
+                // Replace NEGATIVE_INFINITY by a value easily recognizable and smaller than all other values
                 yArray[i] = - substitute;
             }
-            
-            if (yArray[i] == Number.POSITIVE_INFINITY) {
+            else if (yArray[i] == Number.POSITIVE_INFINITY) {
+                // Replace POSITIVE_INFINITY by a value easily recognizable and greater than all other values
                 yArray[i] = substitute;
+            }
+            else {
+                // Round values to avoid noises (due to numerical instability) in constant series of values
+                yArray[i] = Math.round(yArray[i]*100)/100;
             }
         }
     }
