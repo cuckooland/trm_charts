@@ -19,13 +19,13 @@
             <div id="TrmAppli">
                 <div id="ParamsCommentsAndTabs">
                     <ul class="tabsBar">
-                        <li><a href="#Intro" class="tablinks" id="IntroItem" tabContentId="Intro">Par où commencer</a></li>
-                        <li><a href="#GrowingRate" class="tablinks" id="GrowingRateItem" tabContentId="GrowingRate">Taux d'expansion</a></li>
-                        <li><a href="#UniversalDivividend" class="tablinks" id="UdItem" tabContentId="UniversalDivividend">Dividende Universel</a></li>
-                        <li><a href="#Reference" class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</a></li>
-                        <li><a href="#Bounds" class="tablinks" id="BoundsItem" tabContentId="Bounds">Période affichée</a></li>
-                        <li><a href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes affichés</a></li>
-                        <li><a href="#Demography" class="tablinks" id="DemographyItem" tabContentId="Demography">Démographie</a></li>
+                        <li><span class="tablinks" id="IntroItem" tabContentId="Intro">Par où commencer</span></li>
+                        <li><span href="#GrowingRate" class="tablinks" id="GrowingRateItem" tabContentId="GrowingRate">Taux d'expansion</span></li>
+                        <li><span href="#UniversalDividend" class="tablinks" id="UdItem" tabContentId="UniversalDividend">Dividende Universel</span></li>
+                        <li><span href="#Reference" class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</span></li>
+                        <li><span href="#Bounds" class="tablinks" id="BoundsItem" tabContentId="Bounds">Période affichée</span></li>
+                        <li><span href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes affichés</span></li>
+                        <li><span href="#Demography" class="tablinks" id="DemographyItem" tabContentId="Demography">Démographie</span></li>
                     </ul>
                     <div id="ParamsAndComments">
                         <div class="ParamPart">
@@ -33,7 +33,12 @@
                             <div id="Intro" class="tabcontent">
                                 <div class="row">
                                     <div class="labelledForm">
-                                        <label for="ConfigSelector">Configuration à étudier</label><select id="ConfigSelector" name="ConfigSelector"></select>
+                                        <label for="ConfigSelector1">Thème 1</label><select id="ConfigSelector1" name="ConfigSelector1"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="ConfigSelector2">Thème 2</label><select id="ConfigSelector2" name="ConfigSelector2"></select>
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +80,7 @@
                             </div>
                             
                             <!-- Universal Divividend Tab Parameters -->
-                            <div id="UniversalDivividend" class="tabcontent">
+                            <div id="UniversalDividend" class="tabcontent">
                                 <div class="row">
                                     <label>Dividende de départ "DU0" (en unités monétaires)</label>
                                 </div>
@@ -248,6 +253,26 @@
                             <p>Ce simulateur a une configuration par défaut. Cet onglet permet de mettre en avant d'autres configurations.</p>
                             
                         </div>
+                        <div class="Comment" id="config1-1Comment">
+                            <p>Commentaires de la config 1.1</p>
+                            
+                        </div>
+                        <div class="Comment" id="config1-2Comment">
+                            <p>Commentaires de la config 1.2</p>
+                            
+                        </div>
+                        <div class="Comment" id="config1-3Comment">
+                            <p>Où l'on vérifie que la masse est multiplié par 40 au bout de 40 ans...</p>
+                            
+                        </div>
+                        <div class="Comment" id="config2-1Comment">
+                            <p>Commentaires de la config 2.1</p>
+                            
+                        </div>
+                        <div class="Comment" id="config2-2Comment">
+                            <p>Commentaires de la config 2.2</p>
+                            
+                        </div>
                         
                         <!-- Growing Rate Tab Comments -->
                         <div class="Comment" id="GrowingRateItemComment">
@@ -383,7 +408,7 @@
                         
                         <!-- Bounds Tab Comments -->
                         <div class="Comment" id="BoundsItemComment">
-                            <p>Suivant ce que l'on veut étudier, il peut être intéressant de réduire l'affichage à une petite période, ou au contraire, de l'élargir à une plus grande période. Cet onglet permet donc de positionner les bornes inférieures et supérieurs des axes horizontaux (axes des temps).</p>
+                            <p>Suivant ce que l'on veut étudier, il peut être intéressant de réduire l'affichage à une petite période, ou au contraire, de l'élargir à une plus grande période. Cet onglet permet donc de positionner les bornes inférieures et supérieures des axes horizontaux (axes des temps).</p>
 
                         </div>
                         <div class="Comment" id="TimeLowerBoundComment">
@@ -493,7 +518,9 @@
     <!-- javascript sources -->
     <script type="application/javascript" src="js/vendor/d3/d3-3.5.6.min.js"></script>
     <script type="application/javascript" src="js/vendor/c3/c3.min.js"></script>
+    <script type="application/javascript" src="js/vendor/lz-string.min.js"></script>
     <script type="application/javascript" src="js/trm.js"></script>
+    <script type="application/javascript" src="js/configurations.js"></script>
     <script type="application/javascript" src="js/index.js"></script>
 
 </body>

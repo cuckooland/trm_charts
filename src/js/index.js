@@ -38,150 +38,284 @@ var money = {};
 // Create instance of class in context with constructor parameters
 libreMoneyClass.call(money);
 
-// capture configurations list
-setConfigSelector();
+var curConfigId = "";
+var curTabId = "";
+var commentedId = "";
 
-// capture reference frames list
-setReferenceFrameSelector(money);
+window.addEventListener('popstate', function(e) {
+    var encodedURI = e.state;
 
-// capture formulas list
-setUdFormulaSelector(money);
+    if (encodedURI !== null) {
+        applyEncodedURI(encodedURI);
+    }
+});
 
-// capture population variation list
-setDemographySelector(money);
+initSelectors();
 
-// add a member account
-var accountIndex = money.addAccount();
-updateAccountName(accountIndex);
-joinAccountSelectorToData();
-document.getElementById("AccountSelector").selectedIndex = 0;
+generateC3Charts();
 
-// Fill the form
-d3.select('#LifeExpectancy').property("value", money.lifeExpectancy);
-d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
-d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
-d3.select('#TimeLowerBound').property("value", money.timeLowerBoundInYears);
-d3.select('#TimeUpperBound').property("value", money.timeUpperBoundInYears);
-d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
-d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
-d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
-d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
-d3.select('#MaxDemography').property("value", money.maxDemography);
-d3.select('#xMinDemography').property("value", money.xMinDemography);
-d3.select('#xMaxDemography').property("value", money.xMaxDemography);
-d3.select('#xMpvDemography').property("value", money.xMpvDemography);
-d3.select('#plateauDemography').property("value", money.plateauDemography);
-d3.select('#xScaleDemography').property("value", money.xScaleDemography);
-updateAddedMemberArea();
+if (!applyEncodedURIFromLocation()) {
+    applyJSonRep(configs1['config1-1']);
+    var encodedURI = asEncodedURI();
+    window.history.replaceState(encodedURI, '', '?' + encodedURI);
+}
 
-// update in form with calculated growth
-if (money.calculateGrowth) {
+initCallbacks();
+
+// Fill the forms
+function fillForms() {
+    d3.select('#LifeExpectancy').property("value", money.lifeExpectancy);
+    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
+    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
+    d3.select('#TimeLowerBound').property("value", money.timeLowerBoundInYears);
+    d3.select('#TimeUpperBound').property("value", money.timeUpperBoundInYears);
+    d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
+    d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
+    d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
+    d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
+    d3.select('#MaxDemography').property("value", money.maxDemography);
+    d3.select('#xMinDemography').property("value", money.xMinDemography);
+    d3.select('#xMaxDemography').property("value", money.xMaxDemography);
+    d3.select('#xMpvDemography').property("value", money.xMpvDemography);
+    d3.select('#plateauDemography').property("value", money.plateauDemography);
+    d3.select('#xScaleDemography').property("value", money.xScaleDemography);
     d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
     d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
 }
-enableGrowthForms(money.calculateGrowth);
-enableUD0Forms();
-enableDemographyFields();
 
-// generate C3 charts
-money.generateData();
-generateAccountsChart();
-generateDividendChart();
-generateHeadcountChart();
-generateMonetarySupplyChart();
-setChartTimeBounds();
-
-d3.select("#ConfigSelector").on("change", changeConfiguration);
-d3.select("#ReferenceFrameSelector").on("change", changeReferenceFrame);
-d3.select("#UdFormulaSelector").on("change", changeUdFormula);
-d3.select("#DemographySelector").on("change", changeDemographicProfile);
-d3.select("#AccountSelector").on("change", updateAddedMemberArea);
-
-d3.selectAll(".rythm").on("change", changeRythm);
-d3.selectAll(".firstDividend").on("change", changeRythm);
-
-d3.select("#AddAccount").on("click", addAccount);
-d3.select("#DeleteAccount").on("click", deleteAccount);
-
-d3.select("#LifeExpectancy").on("change", changeLifeExpectancy);
-d3.select("#AnnualGrowth").on("change", changeAnnualGrowth);
-d3.select("#MonthlyGrowth").on("change", changeMonthlyGrowth);
-d3.select("#CalculateGrowth").on("click", changeCalculateGrowth);
-d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
-d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
-d3.select("#LogScale").on("click", changeLogScale);
-d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
-d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
-d3.select("#MaxDemography").on("change", changeMaxDemography);
-d3.select("#xMinDemography").on("change", changeXMinDemography);
-d3.select("#xMaxDemography").on("change", changeXMaxDemography);
-d3.select("#xMpvDemography").on("change", changeXMpvDemography);
-d3.select("#plateauDemography").on("change", changePlateauDemography);
-d3.select("#xScaleDemography").on("change", changeXScaleDemography);
-d3.select("#AccountBirth").on("change", changeAccountBirth);
-d3.select("#ProduceUd").on("click", changeProduceUd);
-d3.select("#StartingPercentage").on("change", changeStartingPercentage);
-
-d3.selectAll(".tablinks").on("click", openTab);
-
-d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
-
-d3.selectAll(".chart").on("click", function() { comment(this.id); });
-
-document.getElementById("IntroItem").click();
-
-// Create configuration selector
-function setConfigSelector() {
-    d3.select('#ConfigSelector').selectAll("option")
-        .data(['Configuration par défaut', 'Configuration remarquable 1', 'Configuration remarquable 2', 'Configuration remarquable 3', 'Configuration remarquable 4', 'Configuration remarquable 5'])
-      .enter().append("option")
-        .text(function(d) { return d; })
-        .attr('value', function(d) { return d; });
-        
-    document.getElementById("ConfigSelector").selectedIndex = 0;
+function enableForms() {
+    enableGrowthForms(money.calculateGrowth);
+    enableUD0Forms();
+    enableDemographyFields();
 }
 
+// generate C3 charts
+function generateC3Charts() {
+    money.generateData();
+    generateAccountsChart();
+    generateDividendChart();
+    generateHeadcountChart();
+    generateMonetarySupplyChart();
+    setChartTimeBounds();
+}
+
+function initCallbacks() {
+    d3.select("#ConfigSelector1").on("change", changeConfiguration1);
+    d3.select("#ConfigSelector2").on("change", changeConfiguration2);
+    d3.select("#ReferenceFrameSelector").on("change", changeReferenceFrame);
+    d3.select("#UdFormulaSelector").on("change", changeUdFormula);
+    d3.select("#DemographySelector").on("change", changeDemographicProfile);
+    d3.select("#AccountSelector").on("change", changeAccountSelection);
+
+    d3.selectAll(".rythm").on("change", changeRythm);
+    d3.selectAll(".firstDividend").on("change", changeRythm);
+
+    d3.select("#AddAccount").on("click", clickAddAccount);
+    d3.select("#DeleteAccount").on("click", clickDeleteAccount);
+
+    d3.select("#LifeExpectancy").on("change", changeLifeExpectancy);
+    d3.select("#AnnualGrowth").on("change", changeAnnualGrowth);
+    d3.select("#MonthlyGrowth").on("change", changeMonthlyGrowth);
+    d3.select("#CalculateGrowth").on("click", changeCalculateGrowth);
+    d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
+    d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
+    d3.select("#LogScale").on("click", changeLogScale);
+    d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
+    d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
+    d3.select("#MaxDemography").on("change", changeMaxDemography);
+    d3.select("#xMinDemography").on("change", changeXMinDemography);
+    d3.select("#xMaxDemography").on("change", changeXMaxDemography);
+    d3.select("#xMpvDemography").on("change", changeXMpvDemography);
+    d3.select("#plateauDemography").on("change", changePlateauDemography);
+    d3.select("#xScaleDemography").on("change", changeXScaleDemography);
+    d3.select("#AccountBirth").on("change", changeAccountBirth);
+    d3.select("#ProduceUd").on("click", changeProduceUd);
+    d3.select("#StartingPercentage").on("change", changeStartingPercentage);
+
+    d3.selectAll(".tablinks").on("click", clickTab);
+
+    d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
+
+    d3.selectAll(".chart").on("click", function() { comment(this.id); });
+}
+
+function asEncodedURI() {
+    var moneyAsJSon = money.asJSonRep();
+    var guiAsJSon = {
+        'curTabId' : curTabId,
+        'curConfigId' : curConfigId,
+        'accountsChart' : {
+            'hiddenSeries' : getHiddenDataKeys(accountsChart)
+        },
+        'dividendChart' : {
+            'hiddenSeries' : getHiddenDataKeys(dividendChart)
+        },
+        'headcountChart' : {
+            'hiddenSeries' : getHiddenDataKeys(headcountChart)
+        },
+        'monetarySupplyChart' : {
+            'hiddenSeries' : getHiddenDataKeys(monetarySupplyChart)
+        },
+        'selectedAccount' : document.getElementById("AccountSelector").selectedIndex,
+        'commentedId' : commentedId
+    };
+    var jsonRep = {
+        'moneyAsJSon' : moneyAsJSon,
+        'guiAsJSon' : guiAsJSon
+    };
+    var stringRep = JSON.stringify(jsonRep);
+    var encodedURI = LZString.compressToEncodedURIComponent(stringRep);
+    return encodedURI;
+}
+
+function applyEncodedURIFromLocation() {
+    if (window.location.search.length > 1) {
+        var encodedURI = window.location.search.substr(1);
+        return applyEncodedURI(encodedURI);
+    }
+    return false;
+}
+
+function applyEncodedURI(encodedURI) {
+    var stringRep = LZString.decompressFromEncodedURIComponent(encodedURI);
+    if (stringRep.length != 0) {
+        var jsonRep = JSON.parse(stringRep);
+        applyJSonRep(jsonRep);
+        return true;
+    }
+    return false;
+}
+
+function applyJSonRep(jsonRep) {
+    money.applyJSonRep(jsonRep.moneyAsJSon);
+    
+    fillForms();
+    enableForms();
+    joinAccountSelectorToData();
+    document.getElementById("AccountSelector").selectedIndex = jsonRep.guiAsJSon.selectedAccount;
+    
+    curConfigId = jsonRep.guiAsJSon.curConfigId;
+    setConfigSelection();
+    
+    setReferenceFrameSelection(money);
+    setUdFormulaSelection(money);
+    setDemographySelection(money);
+    
+    updateAddedMemberArea();
+    updateAccountYLabels();
+    updateChartData();
+    openTab(jsonRep.guiAsJSon.curTabId);
+    comment(jsonRep.guiAsJSon.commentedId);
+    
+    setHiddenSeries(accountsChart, jsonRep.guiAsJSon.accountsChart.hiddenSeries);
+    setHiddenSeries(dividendChart, jsonRep.guiAsJSon.dividendChart.hiddenSeries);
+    setHiddenSeries(headcountChart, jsonRep.guiAsJSon.headcountChart.hiddenSeries);
+    setHiddenSeries(monetarySupplyChart, jsonRep.guiAsJSon.monetarySupplyChart.hiddenSeries);
+}
+    
+function setHiddenSeries(chart, hiddenSeries) {
+    chart.hide(hiddenSeries);
+    
+    var data = chart.data();
+    var shownDataKeys = [];
+    for (var i = 0; i < data.length; i++) {
+        if (hiddenSeries.indexOf(data[i].id) < 0) {
+            shownDataKeys.push(data[i].id);
+        }
+    }
+    
+    chart.show(shownDataKeys);
+}
+
+// Init the different selectors
+function initSelectors() {
+    feedConfigSelector1();
+    feedConfigSelector2();
+    feedReferenceFrameSelector(money);
+    feedUdFormulaSelector(money);
+    feedDemographySelector(money);
+}
+
+// Create configuration selector
+function feedConfigSelector1() {
+    d3.select('#ConfigSelector1').selectAll("option")
+        .data(Object.keys(configs1))
+      .enter().append("option")
+        .text(function(d) { return getConfigLabel(d); })
+        .attr('value', function(d) { return d; });
+}
+
+function feedConfigSelector2() {
+    d3.select('#ConfigSelector2').selectAll("option")
+        .data(Object.keys(configs2))
+      .enter().append("option")
+        .text(function(d) { return getConfigLabel(d); })
+        .attr('value', function(d) { return d; });
+}
+
+function setConfigSelection() {
+    var selectedIndex = Object.keys(configs1).indexOf(curConfigId);
+    if (selectedIndex != -1) {
+        document.getElementById("ConfigSelector1").selectedIndex = selectedIndex;
+        document.getElementById("ConfigSelector2").selectedIndex = 0;
+        return;
+    }
+    var selectedIndex = Object.keys(configs2).indexOf(curConfigId);
+    if (selectedIndex != -1) {
+        document.getElementById("ConfigSelector2").selectedIndex = selectedIndex;
+        document.getElementById("ConfigSelector1").selectedIndex = 0;
+        return;
+    }
+    throw new Error("Configuration not managed: " + curConfigId);
+};
+
 // Create reference frame selector
-function setReferenceFrameSelector(money) {
+function feedReferenceFrameSelector(money) {
     d3.select('#ReferenceFrameSelector').selectAll("option")
         .data(Object.keys(money.referenceFrames))
       .enter().append("option")
         .text(function(d) { return getRefLabel(d); })
         .attr('value', function(d) { return d; });
-        
+};
+
+function setReferenceFrameSelection(money) {
     var selectedIndex = Object.keys(money.referenceFrames).indexOf(money.referenceFrameKey);
     if (selectedIndex == -1) {
-        throw new Error("Reference frame not managed");
+        throw new Error("Reference frame not managed: " + money.referenceFrameKey);
     }
     document.getElementById("ReferenceFrameSelector").selectedIndex = selectedIndex;
 };
 
 // Create formula selector
-function setUdFormulaSelector(money) {
+function feedUdFormulaSelector(money) {
     d3.select('#UdFormulaSelector').selectAll("option")
         .data(Object.keys(money.udFormulas))
       .enter().append("option")
         .text(function(d) { return getUdFormulaLabel(d); })
         .attr('value', function(d) { return d; });
-    
+};
+
+function setUdFormulaSelection(money) {
     var selectedIndex = Object.keys(money.udFormulas).indexOf(money.udFormulaKey);
     if (selectedIndex == -1) {
-        throw new Error("Reference frame not managed");
+        throw new Error("Reference frame not managed: " + money.udFormulaKey);
     }
     document.getElementById("UdFormulaSelector").selectedIndex = selectedIndex;
 };
 
 // Create demographic profile selector
-function setDemographySelector(money) {
+function feedDemographySelector(money) {
     d3.select('#DemographySelector').selectAll("option")
         .data(Object.keys(money.demographicProfiles))
       .enter().append("option")
         .text(function(d) { return getDemographicProfileLabel(d); })
         .attr('value', function(d) { return d; });
-    
+};
+
+function setDemographySelection(money) {
     var selectedIndex = Object.keys(money.demographicProfiles).indexOf(money.demographicProfileKey);
     if (selectedIndex == -1) {
-        throw new Error("Reference frame not managed");
+        throw new Error("Reference frame not managed: " + money.demographicProfileKey);
     }
     document.getElementById("DemographySelector").selectedIndex = selectedIndex;
 };
@@ -191,10 +325,10 @@ function joinAccountSelectorToData() {
     var options = d3.select('#AccountSelector').selectAll("option")
         .data(money.accounts, function(d) { return d.id; });
             
-    options.text(function(d) { return d.name; });
+    options.text(function(d) { return accountName(d); });
     
     options.enter().append("option")
-        .text(function(d) { return d.name; })
+        .text(function(d) { return accountName(d); })
         .attr('value', function(d) { return d.id; })
         
     options.exit().remove();
@@ -223,7 +357,7 @@ function generateAccountsData() {
 		// add axis mapping
 		var c3Id = getC3Id(money.accounts[iAccount].id);
 		accountsData.xs[c3Id] = 'x_' + c3Id;
-        accountsData.names[c3Id] = money.accounts[iAccount].name;
+        accountsData.names[c3Id] = fullAccountName(money.accounts[iAccount]);
 	}
 	
     // add data to columns and add axis header 
@@ -243,7 +377,7 @@ function generateAccountsData() {
     accountsData.columns.push(money.scaledDividends.y);
     accountsData.columns[accountsData.columns.length - 1].unshift('scaled_dividend');
 
-    // Manage accounts to unload
+    // Depending on X axis bounds, some accounts are not visible => use 'unload' flag
     var toUnload = [];
     // for each account...
     for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
@@ -309,7 +443,7 @@ function generateHeadcountData() {
         xFormat: DATE_PATTERN,
         x: 'x_people',
         names: {
-            'people': 'Nombre d\'individus "N"'
+            'people': 'Nombre d\'individus "N" (' + getDemographicProfileLabel(money.demographicProfileKey) + ')'
         },
         columns: []
     };
@@ -362,6 +496,33 @@ function generateMonetarySupplyData() {
 
 function getC3Id(accountId) {
     return 'member_' + accountId;
+}
+
+function getConfigLabel(configKey) {
+    var configLabel;
+    switch(configKey) {
+        case 'none':
+            configLabel = "";
+            break;
+        case 'config1-1':
+            configLabel = "Configuration 1";
+            break;
+        case 'config1-2': 
+            configLabel = "Configuration 2";
+            break;
+        case 'config1-3': 
+            configLabel = "Configuration 3";
+            break;
+        case 'config2-1': 
+            configLabel = "Configuration 1";
+            break;
+        case 'config2-2': 
+            configLabel = "Configuration 2";
+            break;
+        default:
+            throw new Error("Unknown configuration: " + configKey);
+    }
+    return configLabel;
 }
 
 function getRefLabel(referenceFrameKey) {
@@ -426,7 +587,7 @@ function getUdFormulaLabel(udFormulaKey) {
 function getDemographicProfileLabel(demographicProfileKey) {
     switch(demographicProfileKey) {
         case 'None':
-            return "Aucun";
+            return "Aucun profile";
         case 'Triangular':
             return "Triangulaire";
         case 'Plateau':
@@ -483,9 +644,9 @@ function generateAccountsChart() {
         },
         legend: {
             item: {
-                // bind focus on the two charts
-                onmouseover: function (id) {
-                    accountsChart.focus(id);
+                onclick: function (id) {
+                    accountsChart.toggle(id);
+                    pushNewHistoryState();
                 }
             }
         },
@@ -544,9 +705,9 @@ function generateDividendChart() {
         },
         legend: {
             item: {
-                // bind focus on the two charts
-                onmouseover: function (id) {
-                    dividendChart.focus(id);
+                onclick: function (id) {
+                    dividendChart.toggle(id);
+                    pushNewHistoryState();
                 }
             }
         },
@@ -609,9 +770,9 @@ function generateHeadcountChart() {
         },
         legend: {
             item: {
-                // bind focus on the two charts
-                onmouseover: function (id) {
-                    headcountChart.focus(id);
+                onclick: function (id) {
+                    headcountChart.toggle(id);
+                    pushNewHistoryState();
                 }
             }
         },
@@ -673,9 +834,9 @@ function generateMonetarySupplyChart() {
         },
         legend: {
             item: {
-                // bind focus on the two charts
-                onmouseover: function (id) {
-                    monetarySupplyChart.focus(id);
+                onclick: function (id) {
+                    monetarySupplyChart.toggle(id);
+                    pushNewHistoryState();
                 }
             }
         },
@@ -721,7 +882,7 @@ function withExp(siValue) {
 /**
  * Update chart data
  */
-function updateChartData(toUnload) {
+function updateChartData() {
 
     // calculate C3 data
     money.generateData();
@@ -730,14 +891,8 @@ function updateChartData(toUnload) {
     var headcountData = generateHeadcountData();
     var monetarySupplyData = generateMonetarySupplyData();
 
-    // tell load command to unload old data
-    if (toUnload) {
-        accountsData.unload = toUnload;
-        dividendData.unload = toUnload;
-        headcountData.unload = toUnload;
-        monetarySupplyData.unload = toUnload;
-    }
-
+    updateToUnload(accountsChart, accountsData);
+    
     // reload data in chart
     accountsChart.load(accountsData);
     dividendChart.load(dividendData);
@@ -745,6 +900,35 @@ function updateChartData(toUnload) {
     monetarySupplyChart.load(monetarySupplyData);
     
     setChartTimeBounds();
+}
+
+function updateToUnload(chart, newData) {
+    var oldData = chart.data();
+    var newDataKeys = Object.keys(newData.xs);
+    // on cherche les oldData[i].id qui ne sont pas présents dans Object.keys(newData.xs)
+    var toUnload = newData.unload;
+    if (!toUnload) {
+        toUnload = [];
+    }
+    for (var i = 0; i < oldData.length; i++) {
+        if (newDataKeys.indexOf(oldData[i].id) < 0) {
+            toUnload.push(oldData[i].id);
+        }
+    }
+    newData.unload = toUnload;
+}
+
+function getHiddenDataKeys(chart) {
+    var data = chart.data();
+    var shownDataKeys = chart.data.shown().map(function(d) { return d.id; });
+    var hiddenDataKeys = [];
+    for (var i = 0; i < data.length; i++) {
+        if (shownDataKeys.indexOf(data[i].id) < 0) {
+            hiddenDataKeys.push(data[i].id);
+        }
+    }
+    
+    return hiddenDataKeys;
 }
 
 /**
@@ -756,8 +940,7 @@ function deleteAccount() {
     // If account deleted...
     if (account != false && account.length > 0) {
         // Update remaining data
-		var c3Id = getC3Id(account[0].id);
-        updateChartData(c3Id);
+        updateChartData();
         joinAccountSelectorToData(selectedAccountIndex - 1);
         document.getElementById("AccountSelector").selectedIndex = selectedAccountIndex - 1;
         updateAddedMemberArea();
@@ -781,18 +964,12 @@ function getSelectedAccountIndex() {
  * add a member account with same attributes as the last account
  */
 function addAccount() {
-    var accountIndex = money.addAccount();
-    updateAccountName(accountIndex);
+    money.addAccount();
     
     updateChartData();
     joinAccountSelectorToData();
     document.getElementById("AccountSelector").selectedIndex = money.accounts.length - 1;
     updateAddedMemberArea();
-}
-
-function updateAccountName(accountIndex) {
-    var name = accountName(money.accounts[accountIndex]);
-    money.setAccountName(accountIndex, name);
 }
 
 function accountName(account) {
@@ -801,6 +978,15 @@ function accountName(account) {
     }
     else {
         return "Compte ${p0} (Non-créateur)".format(account.id);
+    }
+}
+
+function fullAccountName(account) {
+    if (account.udProducer) {
+        return "Compte ${p0} (Co-créateur, ${p1})".format(account.id, account.StartingPercentage);
+    }
+    else {
+        return "Compte ${p0} (Non-créateur, ${p1})".format(account.id, account.StartingPercentage);
     }
 }
 
@@ -815,7 +1001,7 @@ function asDate(timeStep, timeUnit) {
         return format(new Date(2000 + timeStep, 0, 1));
     }
     else {
-        throw new Error("Time unit not managed");
+        throw new Error("Time unit not managed: " + timeUnit);
     }
 }
 
@@ -912,29 +1098,6 @@ function setChartTimeBounds() {
     monetarySupplyChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
 }
 
-function changeConfiguration() {
-}
-
-function changeReferenceFrame() {
-    money.referenceFrameKey = this.options[this.selectedIndex].value;
-    d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
-        
-    // Axes
-    accountsChart.axis.labels({
-        y: accountYLabel()
-    });
-    dividendChart.axis.labels({
-        y: accountYLabel()
-    });
-    monetarySupplyChart.axis.labels({
-        y: accountYLabel()
-    });
-    
-    updateChartData();
-    
-    comment(money.referenceFrameKey);
-}
-
 function accountYLabel() {
     return 'Montant (en ' + getRefUnitLabel(money.referenceFrameKey) + ')'
 }
@@ -944,7 +1107,7 @@ function timeLabel() {
         return 'Temps (émission mensuelle)';
     }
     else {
-        return 'Temps (émission anuelle)';
+        return 'Temps (émission annuelle)';
     }
 }
 
@@ -965,19 +1128,111 @@ function universalDividendLabel() {
     }
 }
 
+function openTab(tabId) {
+    d3.selectAll(".tablinks").classed("active", false);
+    d3.select("#" + tabId).classed("active", true);
+    
+    d3.selectAll(".tabcontent").style("display", "none");
+    var tabContentId = d3.select("#" + tabId).attr("tabContentId");
+    d3.select("#" + tabContentId).style("display", "block");
+
+    curTabId = tabId;
+}
+
+function comment(id) {
+    d3.selectAll(".Comment").style("display", "none");
+    d3.select("#" + id + "Comment").style("display", "block");
+
+    commentedId = id;
+    
+    return false;
+}
+
+function pushNewHistoryState() {
+    var encodedURI = asEncodedURI();
+    window.history.pushState(encodedURI, '', '?' + encodedURI);
+}
+
+// Callbacks
+// *********
+
+function changeConfiguration1() {
+    curConfigId = this.options[this.selectedIndex].value;
+    if (curConfigId != 'none') {
+        var jsonRep = configs1[curConfigId];
+        applyJSonRep(jsonRep);
+        comment(curConfigId);
+    }
+    else {
+        comment("IntroItem");
+    }
+    pushNewHistoryState();
+}
+
+function changeConfiguration2() {
+    curConfigId = this.options[this.selectedIndex].value;
+    if (curConfigId != 'none') {
+        var jsonRep = configs2[curConfigId];
+        applyJSonRep(jsonRep);
+        comment(curConfigId);
+    }
+    else {
+        comment("IntroItem");
+    }
+    pushNewHistoryState();
+}
+
+function changeAccountSelection() {
+    updateAddedMemberArea();
+    pushNewHistoryState();
+}
+
+function clickAddAccount() {
+    addAccount();
+    pushNewHistoryState();
+}
+
+function clickDeleteAccount() {
+    deleteAccount();
+    pushNewHistoryState();
+}
+
+function changeReferenceFrame() {
+    money.referenceFrameKey = this.options[this.selectedIndex].value;
+    d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
+        
+    updateAccountYLabels();
+    
+    updateChartData();
+    comment(money.referenceFrameKey);
+    pushNewHistoryState();
+}
+
+function updateAccountYLabels() {
+    accountsChart.axis.labels({
+        y: accountYLabel()
+    });
+    dividendChart.axis.labels({
+        y: accountYLabel()
+    });
+    monetarySupplyChart.axis.labels({
+        y: accountYLabel()
+    });
+}
+
 function changeUdFormula() {
     money.udFormulaKey = this.options[this.selectedIndex].value;
     updateChartData();
-    
     comment(money.udFormulaKey);
+    pushNewHistoryState();
 }
 
 function changeDemographicProfile() {
     money.demographicProfileKey = this.options[this.selectedIndex].value;
     enableDemographyFields();
     updateChartData();
-    
     comment(money.demographicProfileKey);
+    pushNewHistoryState();
 }
 
 function changeRythm() {
@@ -1012,14 +1267,15 @@ function changeRythm() {
     enableGrowthForms(money.calculateGrowth);
     enableUD0Forms();
     updateChartData();
-    
     comment(this.value);
+    pushNewHistoryState();
 }
 
 function changeLifeExpectancy() {
     money.lifeExpectancy = parseInt(this.value);
     updateChartData();
     updateCalculateGrowth();
+    pushNewHistoryState();
 }
 
 function changeAnnualGrowth() {
@@ -1027,6 +1283,7 @@ function changeAnnualGrowth() {
     updateChartData();
     d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
     d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
+    pushNewHistoryState();
 }
 
 function changeMonthlyGrowth() {
@@ -1034,6 +1291,7 @@ function changeMonthlyGrowth() {
     updateChartData();
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
     d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
+    pushNewHistoryState();
 }
 
 function changeCalculateGrowth() {
@@ -1042,8 +1300,8 @@ function changeCalculateGrowth() {
     enableGrowthForms(money.calculateGrowth);
     updateChartData();
     updateCalculateGrowth();
-    
     comment(this.id);
+    pushNewHistoryState();
 }
 
 function updateCalculateGrowth() {
@@ -1064,31 +1322,24 @@ function changeAnnualDividendStart() {
     money.dividendStart = parseFloat(this.value);
     updateChartData();
     d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
+    pushNewHistoryState();
 }
 
 function changeMonthlyDividendStart() {
     money.dividendStart = parseFloat(this.value);
     updateChartData();
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
+    pushNewHistoryState();
 }
 
 function changeLogScale() {
     money.referenceFrames[money.referenceFrameKey].logScale = !money.referenceFrames[money.referenceFrameKey].logScale
-        
-    // Axes
-    accountsChart.axis.labels({
-        y: accountYLabel()
-    });
-    dividendChart.axis.labels({
-        y: accountYLabel()
-    });
-    monetarySupplyChart.axis.labels({
-        y: accountYLabel()
-    });
+    
+    updateAccountYLabels();
     
     updateChartData();
-    
     comment(this.id);
+    pushNewHistoryState();
 }
 
 function changeTimeLowerBound() {
@@ -1101,6 +1352,7 @@ function changeTimeLowerBound() {
     else {
         d3.select('#TimeLowerBound').property("value", money.getTimeLowerBound(money.YEAR));
     }
+    pushNewHistoryState();
 }
 
 function changeTimeUpperBound() {
@@ -1113,6 +1365,7 @@ function changeTimeUpperBound() {
     else {
         d3.select('#TimeUpperBound').property("value", money.getTimeUpperBound(money.YEAR));
     }
+    pushNewHistoryState();
 }
 
 function changeMaxDemography() {
@@ -1124,6 +1377,7 @@ function changeMaxDemography() {
     else {
         d3.select('#MaxDemography').property("value", money.maxDemography);
     }
+    pushNewHistoryState();
 }
 
 function changeXMinDemography() {
@@ -1135,6 +1389,7 @@ function changeXMinDemography() {
     else {
         d3.select('#xMinDemography').property("value", money.xMinDemography);
     }
+    pushNewHistoryState();
 }
 
 function changeXMaxDemography() {
@@ -1146,6 +1401,7 @@ function changeXMaxDemography() {
     else {
         d3.select('#xMaxDemography').property("value", money.xMaxDemography);
     }
+    pushNewHistoryState();
 }
 
 function changeXMpvDemography() {
@@ -1157,6 +1413,7 @@ function changeXMpvDemography() {
     else {
         d3.select('#xMpvDemography').property("value", money.xMpvDemography);
     }
+    pushNewHistoryState();
 }
 
 function changePlateauDemography() {
@@ -1168,6 +1425,7 @@ function changePlateauDemography() {
     else {
         d3.select('#plateauDemography').property("value", money.plateauDemography);
     }
+    pushNewHistoryState();
 }
 
 function changeXScaleDemography() {
@@ -1179,6 +1437,7 @@ function changeXScaleDemography() {
     else {
         d3.select('#xScaleDemography').property("value", money.xScaleDemography);
     }
+    pushNewHistoryState();
 }
 
 function changeAccountBirth() {
@@ -1190,18 +1449,18 @@ function changeAccountBirth() {
     else {
         d3.select('#AccountBirth').property("value", money.getAccountBirth(getSelectedAccountIndex()));
     }
+    pushNewHistoryState();
 }
 
 function changeProduceUd() {
     var selectedAccountIndex = getSelectedAccountIndex();
     money.setUdProducer(selectedAccountIndex, this.checked);
     
-    updateAccountName(selectedAccountIndex);
-    
     joinAccountSelectorToData();
     updateChartData();
     
     comment(this.id);
+    pushNewHistoryState();
 }
 
 function changeStartingPercentage() {
@@ -1213,24 +1472,13 @@ function changeStartingPercentage() {
     else {
         d3.select('#StartingPercentage').property("value", money.getStartingPercentage(getSelectedAccountIndex()));
     }
+    pushNewHistoryState();
 }
 
-function openTab() {
-    d3.selectAll(".tablinks").classed("active", false);
-    d3.select(this).classed("active", true);
-    
-    d3.selectAll(".tabcontent").style("display", "none");
-    var tabContentId = d3.select(this).attr("tabContentId");
-    d3.select("#" + tabContentId).style("display", "block");
-
+function clickTab() {
+    openTab(this.id);
     comment(this.id);
+    pushNewHistoryState();
     
-    return false;
-}
-
-function comment(id) {
-    d3.selectAll(".Comment").style("display", "none");
-    d3.select("#" + id + "Comment").style("display", "block");
-
     return false;
 }

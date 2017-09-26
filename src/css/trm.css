@@ -96,7 +96,12 @@ input[disabled=disabled] {
     padding: 5px 5px 5px 10px;
 }
 
-.CommentPart ul{    margin-top: 0.6em;    margin-bottom: 0.6em;    padding-left: 1.5em; /* pour éviter la superposition du contenu */}
+.CommentPart ul
+{
+    margin-top: 0.6em;
+    margin-bottom: 0.6em;
+    padding-left: 1.5em; /* pour éviter la superposition du contenu */
+}
 
 label {
     color: darkslateblue;
@@ -133,7 +138,8 @@ label {
     border-top: none;
     height:16.5em;
 }
- /* Style the list */
+
+/* Style the list */
 ul.tabsBar {
     list-style-type: none;
     margin: 0;
@@ -149,7 +155,7 @@ ul.tabsBar li {
 }
 
 /* Style the links inside the list items */
-ul.tabsBar li a {
+ul.tabsBar li span {
     display: inline-block;
     color: black;
     text-align: center;
@@ -157,15 +163,16 @@ ul.tabsBar li a {
     text-decoration: none;
     transition: 0.3s;
     font-size: 1em;
+    cursor: pointer;
 }
 
 /* Change background color of links on hover */
-ul.tabsBar li a:hover {
+ul.tabsBar li span:hover {
     background-color: #ddd;
 }
 
 /* Create an active/current tablink class */
-ul.tabsBar li a:focus, .active {
+ul.tabsBar li span:focus, .active {
     background-color: #ccc;
 }
 
