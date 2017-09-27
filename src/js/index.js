@@ -348,6 +348,12 @@ function generateAccountsData() {
         columns: [],
         types: {
             average: 'area'
+        },
+        onmouseover : function(d) { 
+            showAllTooltips(accountsChart, d);
+        },
+        onmouseout : function(d) {
+            hideAllTooltips();
         }
     };
     
@@ -403,7 +409,41 @@ function generateAccountsData() {
     }
     return accountsData;
 }
+
+var tooltipingChart = null;
+
+function showAllTooltips(chart, d) {
+    if (tooltipingChart == null) {
+        tooltipingChart = chart;
+        showTooltip(accountsChart, d);
+        showTooltip(dividendChart, d);
+        showTooltip(headcountChart, d);
+        showTooltip(monetarySupplyChart, d);
+        tooltipingChart = null;
+    }
+}
+
+function showTooltip(chart, d) {
+    if (chart != tooltipingChart) {
+        var shownDataList = chart.data.shown();
+        for (i = 0; i < shownDataList.length; i++) {
+            for (j = 0; j < shownDataList[i].values.length; j++) {
+                if (shownDataList[i].values[j].x.getTime() == d.x.getTime()) {
+                    chart.tooltip.show({ data: {x: d.x, value: shownDataList[i].values[j].value, id: shownDataList[i].id} });
+                    return;
+                }
+            }
+        }
+    }
+}
 	
+function hideAllTooltips() {
+    accountsChart.tooltip.hide();
+    dividendChart.tooltip.hide();
+    headcountChart.tooltip.hide();
+    monetarySupplyChart.tooltip.hide();
+}
+
 function generateDividendData() {
     var dividendData = {
         xFormat: DATE_PATTERN,
@@ -415,7 +455,13 @@ function generateDividendData() {
             'dividend': universalDividendLabel(),
             'scaled_average': 'c*M/N'
         },
-        columns: []
+        columns: [],
+        onmouseover : function(d) { 
+            showAllTooltips(dividendChart, d);
+        },
+        onmouseout : function(d) {
+            hideAllTooltips();
+        }
     };
     
     // add data to columns and add axis header 
@@ -445,7 +491,13 @@ function generateHeadcountData() {
         names: {
             'people': 'Nombre d\'individus "N" (' + getDemographicProfileLabel(money.demographicProfileKey) + ')'
         },
-        columns: []
+        columns: [],
+        onmouseover : function(d) { 
+            showAllTooltips(headcountChart, d);
+        },
+        onmouseout : function(d) {
+            hideAllTooltips();
+        }
     };
     
     // add data to columns and add axis header 
@@ -471,7 +523,13 @@ function generateMonetarySupplyData() {
             'monetary_supply': 'Masse Monétaire "M"',
             'cruising_monetary_supply': 'N*DU/c'
         },
-        columns: []
+        columns: [],
+        onmouseover : function(d) { 
+            showAllTooltips(monetarySupplyChart, d);
+        },
+        onmouseout : function(d) {
+            hideAllTooltips();
+        }
     };
 
     // add data to columns and add axis header 

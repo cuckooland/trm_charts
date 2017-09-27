@@ -42,7 +42,7 @@ var configs1 = {
             "curConfigId" : "config1-1",
             "curTabId": "IntroItem",
             "accountsChart": {
-                "hiddenSeries": ["scaled_dividend"]
+                "hiddenSeries": ['average', "scaled_dividend"]
             },
             "dividendChart": {
                 "hiddenSeries": ["scaled_average"]
@@ -99,7 +99,7 @@ var configs1 = {
             "curConfigId" : "config1-2",
             "curTabId": "IntroItem",
             "accountsChart": {
-                "hiddenSeries": ["scaled_dividend"]
+                "hiddenSeries": ['average', "scaled_dividend"]
             },
             "dividendChart": {
                 "hiddenSeries": ["scaled_average"]
@@ -156,7 +156,7 @@ var configs1 = {
             "curConfigId" : "config1-3",
             "curTabId": "IntroItem",
             "accountsChart": {
-                "hiddenSeries": ["scaled_dividend"]
+                "hiddenSeries": ['average', "scaled_dividend"]
             },
             "dividendChart": {
                 "hiddenSeries": ["scaled_average"]
