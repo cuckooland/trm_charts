@@ -100,8 +100,9 @@ function generateC3Charts() {
 }
 
 function initCallbacks() {
-    d3.select("#ConfigSelector1").on("change", changeConfiguration1);
-    d3.select("#ConfigSelector2").on("change", changeConfiguration2);
+    d3.select("#ConfigSelector1").on("change", function() { changeConfiguration(this, configs1); });
+    d3.select("#ConfigSelector2").on("change", function() { changeConfiguration(this, configs2); });
+    d3.select("#ConfigSelector3").on("change", function() { changeConfiguration(this, configs3); });
     d3.select("#ReferenceFrameSelector").on("change", changeReferenceFrame);
     d3.select("#UdFormulaSelector").on("change", changeUdFormula);
     d3.select("#DemographySelector").on("change", changeDemographicProfile);
@@ -229,25 +230,18 @@ function setHiddenSeries(chart, hiddenSeries) {
 
 // Init the different selectors
 function initSelectors() {
-    feedConfigSelector1();
-    feedConfigSelector2();
+    feedConfigSelector('ConfigSelector1', configs1);
+    feedConfigSelector('ConfigSelector2', configs2);
+    feedConfigSelector('ConfigSelector3', configs3);
     feedReferenceFrameSelector(money);
     feedUdFormulaSelector(money);
     feedDemographySelector(money);
 }
 
 // Create configuration selector
-function feedConfigSelector1() {
-    d3.select('#ConfigSelector1').selectAll("option")
-        .data(Object.keys(configs1))
-      .enter().append("option")
-        .text(function(d) { return getConfigLabel(d); })
-        .attr('value', function(d) { return d; });
-}
-
-function feedConfigSelector2() {
-    d3.select('#ConfigSelector2').selectAll("option")
-        .data(Object.keys(configs2))
+function feedConfigSelector(configSelectorId, configs) {
+    d3.select('#' + configSelectorId).selectAll("option")
+        .data(Object.keys(configs))
       .enter().append("option")
         .text(function(d) { return getConfigLabel(d); })
         .attr('value', function(d) { return d; });
@@ -258,12 +252,21 @@ function setConfigSelection() {
     if (selectedIndex != -1) {
         document.getElementById("ConfigSelector1").selectedIndex = selectedIndex;
         document.getElementById("ConfigSelector2").selectedIndex = 0;
+        document.getElementById("ConfigSelector3").selectedIndex = 0;
         return;
     }
     var selectedIndex = Object.keys(configs2).indexOf(curConfigId);
     if (selectedIndex != -1) {
         document.getElementById("ConfigSelector2").selectedIndex = selectedIndex;
         document.getElementById("ConfigSelector1").selectedIndex = 0;
+        document.getElementById("ConfigSelector3").selectedIndex = 0;
+        return;
+    }
+    var selectedIndex = Object.keys(configs3).indexOf(curConfigId);
+    if (selectedIndex != -1) {
+        document.getElementById("ConfigSelector3").selectedIndex = selectedIndex;
+        document.getElementById("ConfigSelector1").selectedIndex = 0;
+        document.getElementById("ConfigSelector2").selectedIndex = 0;
         return;
     }
     throw new Error("Configuration not managed: " + curConfigId);
@@ -353,7 +356,7 @@ function generateAccountsData() {
             showAllTooltips(accountsChart, d);
         },
         onmouseout : function(d) {
-            hideAllTooltips();
+            hideAllTooltips(accountsChart);
         }
     };
     
@@ -415,33 +418,35 @@ var tooltipingChart = null;
 function showAllTooltips(chart, d) {
     if (tooltipingChart == null) {
         tooltipingChart = chart;
-        showTooltip(accountsChart, d);
-        showTooltip(dividendChart, d);
-        showTooltip(headcountChart, d);
-        showTooltip(monetarySupplyChart, d);
+        var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
+        charts.forEach(function(c) {
+            if (c != chart) {
+                showTooltip(c, d);
+            }
+        });
         tooltipingChart = null;
     }
 }
 
 function showTooltip(chart, d) {
-    if (chart != tooltipingChart) {
-        var shownDataList = chart.data.shown();
-        for (i = 0; i < shownDataList.length; i++) {
-            for (j = 0; j < shownDataList[i].values.length; j++) {
-                if (shownDataList[i].values[j].x.getTime() == d.x.getTime()) {
-                    chart.tooltip.show({ data: {x: d.x, value: shownDataList[i].values[j].value, id: shownDataList[i].id} });
-                    return;
-                }
+    var shownDataList = chart.data.shown();
+    for (i = 0; i < shownDataList.length; i++) {
+        for (j = 0; j < shownDataList[i].values.length; j++) {
+            if (shownDataList[i].values[j].x.getTime() == d.x.getTime()) {
+                chart.tooltip.show({ data: {x: d.x, value: shownDataList[i].values[j].value, id: shownDataList[i].id} });
+                return;
             }
         }
     }
 }
 	
-function hideAllTooltips() {
-    accountsChart.tooltip.hide();
-    dividendChart.tooltip.hide();
-    headcountChart.tooltip.hide();
-    monetarySupplyChart.tooltip.hide();
+function hideAllTooltips(chart) {
+    var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
+    charts.forEach(function(c) {
+        if (c != chart) {
+            c.tooltip.hide();
+        }
+    });
 }
 
 function generateDividendData() {
@@ -456,11 +461,14 @@ function generateDividendData() {
             'scaled_average': 'c*M/N'
         },
         columns: [],
+        types: {
+            dividend: 'area'
+        },
         onmouseover : function(d) { 
             showAllTooltips(dividendChart, d);
         },
         onmouseout : function(d) {
-            hideAllTooltips();
+            hideAllTooltips(dividendChart);
         }
     };
     
@@ -492,11 +500,14 @@ function generateHeadcountData() {
             'people': 'Nombre d\'individus "N" (' + getDemographicProfileLabel(money.demographicProfileKey) + ')'
         },
         columns: [],
+        types: {
+            people: 'area'
+        },
         onmouseover : function(d) { 
             showAllTooltips(headcountChart, d);
         },
         onmouseout : function(d) {
-            hideAllTooltips();
+            hideAllTooltips(headcountChart);
         }
     };
     
@@ -524,11 +535,14 @@ function generateMonetarySupplyData() {
             'cruising_monetary_supply': 'N*DU/c'
         },
         columns: [],
+        types: {
+            monetary_supply: 'area'
+        },
         onmouseover : function(d) { 
             showAllTooltips(monetarySupplyChart, d);
         },
         onmouseout : function(d) {
-            hideAllTooltips();
+            hideAllTooltips(monetarySupplyChart);
         }
     };
 
@@ -576,6 +590,12 @@ function getConfigLabel(configKey) {
             break;
         case 'config2-2': 
             configLabel = "Configuration 2";
+            break;
+        case 'config2-3': 
+            configLabel = "Configuration 3";
+            break;
+        case 'config3-1': 
+            configLabel = "Configuration 1";
             break;
         default:
             throw new Error("Unknown configuration: " + configKey);
@@ -715,6 +735,9 @@ function generateAccountsChart() {
         point: {
             show: false,
             r: 2
+        },
+        onmouseout: function() {
+            hideAllTooltips(accountsChart);
         }
     });
 }
@@ -779,6 +802,9 @@ function generateDividendChart() {
         point: {
             show: false,
             r: 2
+        },
+        onmouseout: function() {
+            hideAllTooltips(dividendChart);
         }
     });
 }
@@ -844,6 +870,9 @@ function generateHeadcountChart() {
         point: {
             show: false,
             r: 2
+        },
+        onmouseout: function() {
+            hideAllTooltips(headcountChart);
         }
     });
 }
@@ -908,6 +937,9 @@ function generateMonetarySupplyChart() {
         point: {
             show: false,
             r: 2
+        },
+        onmouseout: function() {
+            hideAllTooltips(monetarySupplyChart);
         }
     });
 }
@@ -1214,23 +1246,10 @@ function pushNewHistoryState() {
 // Callbacks
 // *********
 
-function changeConfiguration1() {
-    curConfigId = this.options[this.selectedIndex].value;
+function changeConfiguration(selectElement, configs) {
+    curConfigId = selectElement.options[selectElement.selectedIndex].value;
     if (curConfigId != 'none') {
-        var jsonRep = configs1[curConfigId];
-        applyJSonRep(jsonRep);
-        comment(curConfigId);
-    }
-    else {
-        comment("IntroItem");
-    }
-    pushNewHistoryState();
-}
-
-function changeConfiguration2() {
-    curConfigId = this.options[this.selectedIndex].value;
-    if (curConfigId != 'none') {
-        var jsonRep = configs2[curConfigId];
+        var jsonRep = configs[curConfigId];
         applyJSonRep(jsonRep);
         comment(curConfigId);
     }
