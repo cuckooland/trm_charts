@@ -957,6 +957,9 @@ function tooltipFormat(value) {
     if (isInfinite > 0) {
         return '+Infini';
     }
+    if (money.referenceFrames[money.referenceFrameKey].logScale) {
+        value = Math.exp(value * Math.log(10));
+    }
     var f = d3.format('.3s');
     return withExp(f(value));
 }
