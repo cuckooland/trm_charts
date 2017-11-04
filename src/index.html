@@ -223,34 +223,365 @@
 
                     <div class="CommentPart">
                         <!-- Charts Comments -->
-                        <div class="Comment" id="AccountsChartComment">
-                            <p>Ce premier diagramme (en haut à gauche) représente l'évolution au fil du temps de :</p>
+                        <div class="Comment" id="averageComment">
+                            <p>Si la monnaie était répartie de façon égale, quelle valeur aurait chacun des membres ?</p>
                             
-                            <ul>
-                              <li>Un ou plusieurs comptes (voir l'onglet "Comptes affichés") ; par défaut, un seul compte est affiché, intitulé "Compte 1" et correspondant à un co-créateur de la monnaie, comme indiqué entre parenthèses.</li>
-                              <li>La moyenne "M/N" qui répond à la question "Si la monnaie était répartie de façon égale, tel compte subirait-il une baisse ou une hausse ?" Pour mieux la visualiser, la zone entre la courbe et l'axe horizontal est colorée.</li>
-                              <li>La valeur "DU/c" qui permet de voir comment, suivant la formule choisie pour calculer le Dividende Universel (voir onglet "Dividende universel"), la moyenne "M/N" tend vers sa valeur théorique "DU/c".</li>
-                            </ul>
+                            <p>Cette valeur et ses évolutions au fil du temps peuvent être visualisées sur la courbe <span class="averageLabel">M/N</span> (voir le diagramme en haut à gauche). Pour mieux la visualiser, la zone entre la courbe et la droite "Montant=0" est colorée.</p>
+                            
+                            <!-- 
+                            <p>En comparant cette courbe avec celle des comptes, on peut par exemple répondre à la question "Si la monnaie était redistribuée de façon égale, tel compte subirait-il une baisse ou une hausse ?" </p>
+                            -->
+                            
+                            <div class="RefComment MU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="averageLabel">M/N</span> vaut : <span class="averageMuValue">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                <p>= la masse monétaire divisée par le nombre d'individus : <span class="monetarySupplyMuValue">0</span> / <span class="headcountValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="averageLabel">M/N</span> vaut : <span class="averageMuLogValue">0</span> <span class="muLogUnit">Unité monétaire (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisé par le log népérien de 10 : ln(<span class="averageMuValue">0</span>) / ln(10)</p>
+                            </div>
+                            
+                            <div class="RefComment DU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="averageLabel">M/N</span> vaut : <span class="averageDuValue">0</span> <span class="duUnit">DU</span></p>
+                            
+                                <p>= la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="averageMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment DU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="averageLabel">M/N</span> vaut : <span class="averageDuLogValue">0</span> <span class="duLogUnit">DU (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="duUnit">DU</span> divisé par le log népérien de 10 : ln(<span class="averageDuValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="duUnit">DU</span> est égale à celle en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="averageMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MN">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="averageLabel">M/N</span> vaut : <span class="averageMnValue">0</span> <span class="mnUnit">% M/N</span></p>
+                            
+                                <p>= 100 fois la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100 * <span class="averageMuValue">0</span> / (<span class="monetarySupplyMuValue">0</span> / <span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                            <div class="RefComment MN-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="averageLabel">M/N</span> vaut : <span class="averageMnLogValue">0</span> <span class="mnLogUnit">% M/N (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="mnUnit">% M/N</span> divisé par le log népérien de 10 : ln(<span class="averageMnValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="mnUnit">% M/N</span> est égale à 100 fois celle en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100&nbsp;*&nbsp;<span class="averageMuValue">0</span>&nbsp;/&nbsp;(<span class="monetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span>)</p>
+                            </div>
                             
                         </div>
+                        
+                        <div class="Comment" id="stable_averageComment">
+                            <p>Etant donné la valeur du Dividende Universel courant, quelle serait la moyenne M/N attendue si nous étions en régime stable, celui où DU = c*M/N ?</p>
 
-                        <div class="Comment" id="DividendChartComment">
-                            <p>Ce deuxième diagramme (en haut à droite) représente l'évolution au fil du temps du Dividende Universel. La formule choisie pour le calculer (voir onglet "Dividende universel") est indiquée entre parenthèses.</p>
+                            <p>Dans le premier diagramme (en haut à gauche), la courbe <span class="stableAverageLabel">DU stable</span> représente cette valeur au fil du temps. Elle permet de voir comment la moyenne M/N, suivant la formule choisie pour calculer le Dividende Universel (voir onglet "Dividende universel"), tend vers la valeur théorique "DU/c".</p>
 
-                            <p>Une autre courbe est affichée pour représenter la valeur "c*M/N". Elle permet de voir comment le Dividende Universel, suivant la formule choisie pour le calculer, tend vers la valeur théorique "c*M/N".</p>
+                            <div class="RefComment MU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableAverageLabel">DU/c</span> vaut : <span class="stableAverageMuValue">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                <p>= la valeur du DU est augmentée du taux d'expansion "c" puis divisée par "c" : <span class="dividendMuValue">0</span>&nbsp;*&nbsp;(1&nbsp;+&nbsp;<span class="growthValue">0</span>&nbsp;%)&nbsp;/&nbsp;<span class="growthValue">0</span>&nbsp;%</p>
+                            </div>
+                            
+                            <div class="RefComment MU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableAverageLabel">DU/c</span> vaut : <span class="stableAverageMuLogValue">0</span> <span class="muLogUnit">Unité monétaire (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisé par le log népérien de 10 : ln(<span class="stableAverageMuValue">0</span>) / ln(10)</p>
+                            </div>
+                            
+                            <div class="RefComment DU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableAverageLabel">DU/c</span> vaut : <span class="stableAverageDuValue">0</span> <span class="duUnit">DU</span></p>
+                            
+                                <p>= la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="stableAverageMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment DU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableAverageLabel">DU/c</span> vaut : <span class="stableAverageDuLogValue">0</span> <span class="duUnit">DU (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="duUnit">DU</span> divisé par le log népérien de 10 : ln(<span class="stableAverageDuValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="duUnit">DU</span> est égale à celle en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="stableAverageMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MN">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableAverageLabel">DU/c</span> vaut : <span class="stableAverageMnValue">0</span> <span class="mnUnit">% M/N</span></p>
+                            
+                                <p>= 100 fois la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100 * <span class="stableAverageMuValue">0</span> / (<span class="monetarySupplyMuValue">0</span> / <span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                            <div class="RefComment MN-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableAverageLabel">DU/c</span> vaut : <span class="stableAverageMnLogValue">0</span> <span class="mnUnit">% M/N (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="mnUnit">% M/N</span> divisé par le log népérien de 10 : ln(<span class="stableAverageMnValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="mnUnit">% M/N</span> est égale à 100 fois celle en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100&nbsp;*&nbsp;<span class="stableAverageMuValue">0</span>&nbsp;/&nbsp;(<span class="monetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="Comment" id="member_Comment">
+                            <p>Dans ce premier diagramme (en haut à gauche), l'évolution au fil du temps d'un ou plusieurs comptes (voir l'onglet "Comptes affichés") est représentée.</p>
+                            
+                            <p>Par défaut, un seul compte est affiché, intitulé "Compte 1" et correspond à un co-créateur de la monnaie, comme indiqué entre parenthèses.</p>
+                            
+                            <div class="RefComment MU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="accountName">compte</span> vaut : <span class="accountMuValue">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                <p>= la valeur au temps précédent à laquelle s'est ajouté le DU : <span class="previousAccountValue">0</span> + <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="accountName">compte</span> vaut : <span class="accountMuLogValue">0</span> <span class="muLogUnit">Unité Monétaire (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisé par le log népérien de 10 : ln(<span class="accountMuValue">0</span>) / ln(10)</p>
+                            </div>
+                            
+                            <div class="RefComment DU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="accountName">compte</span> vaut : <span class="accountDuValue">0</span> <span class="duUnit">DU</span></p>
+                            
+                                <p>= la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="accountMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment DU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="accountName">compte</span> vaut : <span class="accountDuLogValue">0</span> <span class="duLogUnit">DU (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="duUnit">DU</span> divisé par le log népérien de 10 : ln(<span class="accountDuValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="duUnit">DU</span> est égale à celle en <span class="muUnit">Unité Monétaire</span> divisé par le dernier Dividende Universel : <span class="accountMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MN">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="accountName">compte</span> vaut : <span class="accountMnValue">0</span> <span class="mnUnit">% M/N</span></p>
+                            
+                                <p>= 100 fois la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisé par M/N : 100 * <span class="accountMuValue">0</span> / (<span class="monetarySupplyMuValue">0</span> / <span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                            <div class="RefComment MN-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="accountName">compte</span> vaut : <span class="accountMnLogValue">0</span> <span class="mnLogUnit">% M/N (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="mnUnit">% M/N</span> divisé par le log népérien de 10 : ln(<span class="accountMnValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="mnUnit">% M/N</span> est égale à 100 fois celle en <span class="muUnit">Unité Monétaire</span> divisé par M/N : 100&nbsp;*&nbsp;<span class="accountMuValue">0</span>&nbsp;/&nbsp;(<span class="monetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="Comment" id="dividendComment">
+                            <p>Dans ce deuxième diagramme (en haut à droite), l'évolution au fil du temps du Dividende Universel est représentée. La formule choisie pour le calculer (voir onglet "Dividende universel") est indiquée entre parenthèses.</p>
+
+                            <div class="RefComment MU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="dividendLabel">Dividende Universel</span> vaut : <span class="dividendMuValue">0</span> <span class="muUnit">Unité monétaire</span></p>
+                                
+                                <div class="DuComment BasicUD">
+                                    <p>= le taux d'expansion "c" multiplié par la masse monétaire précédente divisée par le nombre d'individus : <span class="growthValue">0</span>&nbsp;%&nbsp;*&nbsp;<span class="previousMonetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span></p>
+                                </div>
+
+                                <div class="DuComment UDA">
+                                    <p>= la plus grande valeur entre :</p>
+                                    <ul>
+                                        <li>le taux d'expansion "c" multiplié par la masse monétaire précédente divisée par le nombre d'individus : <span class="growthValue">0</span>&nbsp;%&nbsp;*&nbsp;<span class="previousMonetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span> =&nbsp;<span class="basicDividendMuValue">0</span></li>
+                                        <li>le précendent Dividende Universel : <span class="previousDividendMuValue">0</span></li>
+                                    </ul>
+                                </div>
+
+                                <div class="DuComment UDB">
+                                    <p>= le précédent Dividende Universel qui est augmenté du taux d'expansion "c" : (1&nbsp;+&nbsp;<span class="growthValue">0</span>)&nbsp;%&nbsp;*&nbsp;<span class="previousDividendMuValue">0</span></p>
+                                </div>
+
+                                <div class="DuComment UDC">
+                                    <p>= la valeur moyenne entre celle obtenue avec DU<sub>basique</sub> et celle obtenue avec DUB : (<span class="basicDividendMuValue">0</span>&nbsp;+&nbsp;<span class="udbMuValue">0</span>)&nbsp;/&nbsp;2</p>
+                                </div>
+
+                                <div class="DuComment UDG">
+                                    <p>= le précendent Dividende Universel auquel est ajouté le carré du taux d'expansion "c" multiplié par l'antépénultième masse monétaire divisée par le précédent nombre d'individus : <span class="previousDividendMuValue">0</span>&nbsp;+&nbsp;<span class="growthValue">0</span>&nbsp;%<sup>2</sup>&nbsp;*&nbsp;<span class="previous2MonetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="previousHeadcountValue">0</span></p>
+                                </div>
+
+                            </div>
+                            
+                            <div class="RefComment MU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="dividendLabel">Dividende Universel</span> vaut : <span class="dividendMuLogValue">0</span> <span class="muLogUnit">Unité monétaire (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisé par le log népérien de 10 : ln(<span class="dividendMuValue">0</span>) / ln(10)</p>
+                            </div>
+                            
+                            <div class="RefComment DU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="dividendLabel">Dividende Universel</span> vaut : <span class="dividendDuValue">0</span> <span class="duUnit">DU</span></p>
+                            
+                                <p>= la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="dividendMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment DU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="dividendLabel">Dividende Universel</span> vaut : <span class="dividendDuLogValue">0</span> <span class="duUnit">DU (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="duUnit">DU</span> divisé par le log népérien de 10 : ln(<span class="dividendDuValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="duUnit">DU</span> est égale à celle en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="dividendMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MN">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="dividendLabel">Dividende Universel</span> vaut : <span class="dividendMnValue">0</span> <span class="mnUnit">% M/N</span></p>
+                            
+                                <p>= 100 fois la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100 * <span class="dividendMuValue">0</span> / (<span class="dividendMuValue">0</span> / <span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                            <div class="RefComment MN-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="dividendLabel">Dividende Universel</span> vaut : <span class="dividendMnLogValue">0</span> <span class="mnUnit">% M/N (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="mnUnit">% M/N</span> divisé par le log népérien de 10 : ln(<span class="dividendMnValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="mnUnit">% M/N</span> est égale à 100 fois celle en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100&nbsp;*&nbsp;<span class="dividendMuValue">0</span>&nbsp;/&nbsp;(<span class="dividendMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span>)</p>
+                            </div>
 
                         </div>
+                        
+                        <div class="Comment" id="stable_dividendComment">
+                            <p>Etant donné la valeur de la masse monétaire courante, quel serait le Dividende Universel attendu si nous étions en régime stable, celui où DU = c*M/N ?</p>
 
-                        <div class="Comment" id="HeadcountChartComment">
-                            <p>Ce troisième diagramme (en bas à gauche) représente l'évolution au fil du temps du nombre d'individus utilisant la monnaie. Cette population regroupe à la fois des co-créateurs et des non co-créateurs de la monnaie.</p>
+                            <p>Dans le deuxième diagramme (en haut à droite), la courbe <span class="stableDividendLabel">DU stable</span> représente cette valeur au fil du temps. Elle permet de voir comment le Dividende Universel, suivant la formule choisie pour le calculer (voir onglet "Dividende universel"), tend vers la valeur théorique "c*M/N".</p>
 
+                            <div class="RefComment MU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableDividendLabel">DU stable</span> vaut : <span class="stableDividendMuValue">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                <p>= le taux d'expansion "c" multiplié par la masse monétaire divisée par le nombre d'individus, le tout diminué du taux "c" : <span class="growthValue">0</span>&nbsp;%&nbsp;*&nbsp;<span class="monetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span>&nbsp;/&nbsp;(1&nbsp;+&nbsp;<span class="growthValue">0</span>&nbsp;%)</p>
+                            </div>
+                            
+                            <div class="RefComment MU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableDividendLabel">c*M/N</span> vaut : <span class="stableDividendMuLogValue">0</span> <span class="muLogUnit">Unité monétaire (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisé par le log népérien de 10 : ln(<span class="stableDividendMuValue">0</span>) / ln(10)</p>
+                            </div>
+                            
+                            <div class="RefComment DU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableDividendLabel">c*M/N</span> vaut : <span class="stableDividendDuValue">0</span> <span class="duUnit">DU</span></p>
+                            
+                                <p>= la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="stableDividendMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment DU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableDividendLabel">c*M/N</span> vaut : <span class="stableDividendDuLogValue">0</span> <span class="duUnit">DU (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="duUnit">DU</span> divisé par le log népérien de 10 : ln(<span class="stableDividendDuValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="duUnit">DU</span> est égale à celle en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="stableDividendMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MN">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableDividendLabel">c*M/N</span> vaut : <span class="stableDividendMnValue">0</span> <span class="mnUnit">% M/N</span></p>
+                            
+                                <p>= 100 fois la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100 * <span class="stableDividendMuValue">0</span> / (<span class="monetarySupplyMuValue">0</span> / <span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                            <div class="RefComment MN-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableDividendLabel">c*M/N</span> vaut : <span class="stableDividendMnLogValue">0</span> <span class="mnUnit">% M/N (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="mnUnit">% M/N</span> divisé par le log népérien de 10 : ln(<span class="stableDividendMnValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="mnUnit">% M/N</span> est égale à 100 fois celle en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100&nbsp;*&nbsp;<span class="stableDividendMuValue">0</span>&nbsp;/&nbsp;(<span class="monetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span>)</p>
+                            </div>
+                            
                         </div>
+                        
+                        <div class="Comment" id="peopleComment">
+                            <p>Dans ce troisième diagramme (en bas à gauche), l'évolution au fil du temps du nombre d'individus utilisant la monnaie est représentée. Cette population regroupe à la fois des co-créateurs et des non co-créateurs de la monnaie.</p>
 
-                        <div class="Comment" id="MonetarySupplyChartComment">
-                            <p>Ce quatrième diagramme (en bas à droite) représente l'évolution au fil du temps de la masse monétaire.</p>
+                            <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="headcountLabel">Nombre d'individus</span> vaut : <span class="headcountValue">0</span></p>
+                            
+                            <p>= le nombre d'individus définis dans l'onglet "Comptes Affichés" + le nombre d'individus définis via l'onglet "Démographie" pour le profil "<span class="demographyLabel">Cauchy</span>"&nbsp;: <span class="accountsNumberValue">0</span>&nbsp;+&nbsp;<span class="demographyValue">0</span></p>
+                                
+                        </div>
+                        
+                        <div class="Comment" id="monetary_supplyComment">
+                            <p>Dans ce quatrième diagramme (en bas à droite), l'évolution au fil du temps de la masse monétaire est représentée.</p>
 
-                            <p>Une autre courbe est affichée pour représenter la valeur "N*DU/c". Elle permet de voir comment la masse monétaire, suivant la formule choisie pour calculer le Dividende Universel (voir onglet "Dividende universel"), tend vers la valeur théorique "N*DU/c".</p>
+                            <div class="RefComment MU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="monetarySupplyLabel">Masse Monétaire</span> vaut : <span class="monetarySupplyMuValue">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                <p>= la masse monétaire précédente à laquelle s'ajoute le nombre d'individus multiplié par la valeur du Dividende Universel : <span class="previousMonetarySupplyMuValue">0</span>&nbsp;+&nbsp;<span class="headcountValue">0</span>&nbsp;*&nbsp;<span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="monetarySupplyLabel">Masse Monétaire</span> vaut : <span class="monetarySupplyMuLogValue">0</span> <span class="muLogUnit">Unité monétaire (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisé par le log népérien de 10 : ln(<span class="monetarySupplyMuValue">0</span>) / ln(10)</p>
+                            </div>
+                            
+                            <div class="RefComment DU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="monetarySupplyLabel">Masse Monétaire</span> vaut : <span class="monetarySupplyDuValue">0</span> <span class="duUnit">DU</span></p>
+                            
+                                <p>= la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="monetarySupplyMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment DU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="monetarySupplyLabel">Masse Monétaire</span> vaut : <span class="monetarySupplyDuLogValue">0</span> <span class="duUnit">DU (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="duUnit">DU</span> divisé par le log népérien de 10 : ln(<span class="monetarySupplyDuValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="duUnit">DU</span> est égale à celle en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="monetarySupplyMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MN">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="monetarySupplyLabel">Masse Monétaire</span> vaut : <span class="monetarySupplyMnValue">0</span> <span class="mnUnit">% M/N</span></p>
+                            
+                                <p>= 100 fois la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100 * <span class="monetarySupplyMuValue">0</span> / (<span class="monetarySupplyMuValue">0</span> / <span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                            <div class="RefComment MN-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="monetarySupplyLabel">Masse Monétaire</span> vaut : <span class="monetarySupplyMnLogValue">0</span> <span class="mnUnit">% M/N (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="mnUnit">% M/N</span> divisé par le log népérien de 10 : ln(<span class="monetarySupplyMnValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="mnUnit">% M/N</span> est égale à 100 fois celle en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100&nbsp;*&nbsp;<span class="monetarySupplyMuValue">0</span>&nbsp;/&nbsp;(<span class="monetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="Comment" id="stable_monetary_supplyComment">
+                            <p>Etant donné la valeur du Dividende Universel courant, quelle serait la masse monétaire attendue si nous étions en régime stable, celui où DU = c*M/N ?</p>
 
+                            <p>Dans le quatrième diagramme (en bas à droite), la courbe <span class="stableMonetarySupplyLabel">Masse stable</span> représente cette valeur au fil du temps. Elle permet de voir comment la masse monétaire, suivant la formule choisie pour calculer le Dividende Universel (voir onglet "Dividende universel"), tend vers la valeur théorique "N*DU/c".</p>
+
+                            <div class="RefComment MU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableMonetarySupplyLabel">Masse stable</span> vaut : <span class="stableMonetarySupplyMuValue">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                <p>= la valeur du DU est augmentée du taux d'expansion "c" puis divisée par "c" puis multipliée par le nombre d'individus : <span class="dividendMuValue">0</span>&nbsp;*(&nbsp;1&nbsp;+&nbsp;<span class="growthValue">0</span>&nbsp;%)&nbsp;/&nbsp;<span class="growthValue">0</span>&nbsp;%&nbsp;*&nbsp;<span class="headcountValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableMonetarySupplyLabel">N*DU/c</span> vaut : <span class="stableMonetarySupplyMuLogValue">0</span> <span class="muLogUnit">Unité monétaire (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisé par le log népérien de 10 : ln(<span class="stableMonetarySupplyMuValue">0</span>) / ln(10)</p>
+                            </div>
+                            
+                            <div class="RefComment DU">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableMonetarySupplyLabel">N*DU/c</span> vaut : <span class="stableMonetarySupplyDuValue">0</span> <span class="duUnit">DU</span></p>
+                            
+                                <p>= la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="stableMonetarySupplyMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment DU-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableMonetarySupplyLabel">N*DU/c</span> vaut : <span class="stableMonetarySupplyDuLogValue">0</span> <span class="duUnit">DU (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="duUnit">DU</span> divisé par le log népérien de 10 : ln(<span class="stableMonetarySupplyDuValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="duUnit">DU</span> est égale à celle en <span class="muUnit">Unité Monétaire</span> divisée par le dernier Dividende Universel : <span class="stableMonetarySupplyMuValue">0</span> / <span class="dividendMuValue">0</span></p>
+                            </div>
+                            
+                            <div class="RefComment MN">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableMonetarySupplyLabel">N*DU/c</span> vaut : <span class="stableMonetarySupplyMnValue">0</span> <span class="duUnit">% M/N</span></p>
+                            
+                                <p>= 100 fois la valeur exprimée en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100 * <span class="stableMonetarySupplyMuValue">0</span> / (<span class="monetarySupplyMuValue">0</span> / <span class="headcountValue">0</span>)</p>
+                            </div>
+                            
+                            <div class="RefComment MN-log">
+                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableMonetarySupplyLabel">N*DU/c</span> vaut : <span class="stableMonetarySupplyMnLogValue">0</span> <span class="mnUnit">% M/N (log)</span></p>
+                            
+                                <p>= le log népérien de la valeur exprimée en <span class="mnUnit">% M/N</span> divisé par le log népérien de 10 : ln(<span class="stableMonetarySupplyMnValue">0</span>) / ln(10)</p>
+                                
+                                <p>où la valeur exprimée en <span class="mnUnit">% M/N</span> est égale à 100 fois celle en <span class="muUnit">Unité Monétaire</span> divisée par M/N : 100&nbsp;*&nbsp;<span class="stableMonetarySupplyMuValue">0</span>&nbsp;/&nbsp;(<span class="monetarySupplyMuValue">0</span>&nbsp;/&nbsp;<span class="headcountValue">0</span>)</p>
+                            </div>
+                            
                         </div>
 
                         <!-- Intro Tab Comments -->
@@ -386,18 +717,18 @@
 
                         </div>
                         <div class="Comment" id="UDCComment">
-                            <p>Comme DUB ne fait pas du tout intervenir les variations de N, une idée peut être de faire intervenir N en mixant la formule du DU basique avec celle de DUB. On obtient alors la formule :
+                            <p>Comme DUB ne fait pas du tout intervenir les variations de N, une idée peut être de faire intervenir N en mixant la formule du DU<sub>basique</sub> avec celle de DUB. On obtient alors la formule :
                             <br>DUC = 1/2 [DU<sub>basique</sub> + DUB]</p>
 
                         </div>
                         <div class="Comment" id="UDGComment">
-                            <p>Précédemment, on a vu DUC qui était construit en mixant DU basique et DUB. DUĞ peut être vu comme une autre façon de les mixer :</p>
+                            <p>Précédemment, on a vu DUC qui était construit en mixant DU<sub>basique</sub> et DUB. DUĞ peut être vu comme une autre façon de les mixer :</p>
 
                             <p>Avec la formulation DUB, on a DU(t) = (1+c)*DU(t-1) ou dit autrement DU(t) = DU(t-1) + c*DU(t-1)</p>
                             
-                            <p>Avec la formulation basique, on a DU(t-1) = c*M(t-1)/N(t-1)
+                            <p>Avec la formulation basique, on a DU(t-1) = c*M(t-2)/N(t-1)
 
-                            <p>En mixant les deux, on a DU(t) = DU(t-1) + c*c*M(t-1)/N(t-1) 
+                            <p>En mixant les deux, on a DU(t) = DU(t-1) + c*c*M(t-2)/N(t-1) 
 
                         </div>
                         
@@ -408,7 +739,7 @@
                             <p>Ce simulateur permet l'utilisation de quelques référentiels permettant de mettre en évidence différents aspects.</p>
 
                         </div>
-                        <div class="Comment" id="monetaryUnitComment">
+                        <div class="Comment" id="monetaryUnitRefComment">
                             <p>Dans ce référentiel "Unité Monétaire", les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires.</p>
 
                         </div>
@@ -418,13 +749,13 @@
                             <p>En utilisant une unité logarithmique, les courbes qui évoluent de façon exponentielles apparaissent comme des droites.</p>
 
                         </div>
-                        <div class="Comment" id="dividendComment">
+                        <div class="Comment" id="dividendRefComment">
                             <p>Dans ce référentiel "Dividende", les axes verticaux des graphes qui représentent des montants sont exprimés en nombre de dividende.</p>
 
                             <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps du Dividende Universel est peu informative : toutes les valeurs valent 1 et constituent un segment horizontal.</p>
 
                         </div>
-                        <div class="Comment" id="averageComment">
+                        <div class="Comment" id="averageRefComment">
                             <p>Dans ce référentiel "%(M/N)", les axes verticaux des graphes qui représentent des montants sont exprimés en pourcentage de la masse monétaire moyenne.</p>
 
                             <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps de la masse monétaire moyenne est peu informative : toutes les valeurs valent 100 et constituent un segment horizontal.</p>

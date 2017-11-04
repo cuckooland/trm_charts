@@ -42,16 +42,16 @@ var configs1 = {
             "curConfigId" : "config1-1",
             "curTabId": "IntroItem",
             "accountsChart": {
-                "hiddenSeries": ['average', "scaled_dividend"]
+                "hiddenSeries": ['average', "stable_average"]
             },
             "dividendChart": {
-                "hiddenSeries": ["scaled_average"]
+                "hiddenSeries": ["stable_dividend"]
             },
             "headcountChart": {
                 "hiddenSeries": []
             },
             "monetarySupplyChart": {
-                "hiddenSeries": ["cruising_monetary_supply"]
+                "hiddenSeries": ["stable_monetary_supply"]
             },
             "selectedAccount": 0,
             "commentedId": "config1-1"
@@ -99,16 +99,16 @@ var configs1 = {
             "curConfigId" : "config1-2",
             "curTabId": "IntroItem",
             "accountsChart": {
-                "hiddenSeries": ['average', "scaled_dividend"]
+                "hiddenSeries": ['average', "stable_average"]
             },
             "dividendChart": {
-                "hiddenSeries": ["scaled_average"]
+                "hiddenSeries": ["stable_dividend"]
             },
             "headcountChart": {
                 "hiddenSeries": []
             },
             "monetarySupplyChart": {
-                "hiddenSeries": ["cruising_monetary_supply"]
+                "hiddenSeries": ["stable_monetary_supply"]
             },
             "selectedAccount": 0,
             "commentedId": "config1-2"
@@ -156,16 +156,16 @@ var configs1 = {
             "curConfigId" : "config1-3",
             "curTabId": "IntroItem",
             "accountsChart": {
-                "hiddenSeries": ['average', "scaled_dividend"]
+                "hiddenSeries": ['average', "stable_average"]
             },
             "dividendChart": {
-                "hiddenSeries": ["scaled_average"]
+                "hiddenSeries": ["stable_dividend"]
             },
             "headcountChart": {
                 "hiddenSeries": []
             },
             "monetarySupplyChart": {
-                "hiddenSeries": ["cruising_monetary_supply"]
+                "hiddenSeries": ["stable_monetary_supply"]
             },
             "selectedAccount": 0,
             "commentedId": "config1-3"
@@ -223,16 +223,16 @@ var configs2 = {
             "curTabId": "IntroItem",
             "curConfigId": "config2-1",
             "accountsChart": {
-                "hiddenSeries": ["scaled_dividend"]
+                "hiddenSeries": ["stable_average"]
             },
             "dividendChart": {
-                "hiddenSeries": ["scaled_average"]
+                "hiddenSeries": ["stable_dividend"]
             },
             "headcountChart": {
                 "hiddenSeries": []
             },
             "monetarySupplyChart": {
-                "hiddenSeries": ["cruising_monetary_supply"]
+                "hiddenSeries": ["stable_monetary_supply"]
             },
             "selectedAccount": 1,
             "commentedId": "config2-1"
@@ -285,7 +285,7 @@ var configs2 = {
             "curTabId": "IntroItem",
             "curConfigId": "config2-2",
             "accountsChart": {
-                "hiddenSeries": ["scaled_dividend"]
+                "hiddenSeries": ["stable_average"]
             },
             "dividendChart": {
                 "hiddenSeries": []

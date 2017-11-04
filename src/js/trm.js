@@ -112,33 +112,36 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         }
     };   
    
-    // dididend formulae
+    // dididend formulas
     this.udFormulas = {
         'BasicUD': {
+            // BasicUD(t+dt) = c*M(t)/N(t+dt)
             calculate: function (money, timeStep) {
-                var previousDividend = money.dividends.values[timeStep - 1];
                 var currentHeadcount = money.headcounts.values[timeStep]
                 if (currentHeadcount > 0) {
-                    var currentMonetarySupply = money.getMonetarySupply(timeStep);
-                    return money.getGrowth() * (currentMonetarySupply / currentHeadcount);
+                    var previousMonetarySupply = money.getMonetarySupply(timeStep - 1);
+                    return money.getGrowth() * (previousMonetarySupply / currentHeadcount);
                 } else {
+                    var previousDividend = money.dividends.values[timeStep - 1];
                     return previousDividend;
                 }
             }
         },
         'UDA': {
+            // UDA(t+dt) = Max[UDA(t) ; c*M(t)/N(t+dt)]
             calculate: function (money, timeStep) {
                 var previousDividend = money.dividends.values[timeStep - 1];
                 var currentHeadcount = money.headcounts.values[timeStep]
                 if (currentHeadcount > 0) {
-                    var currentMonetarySupply = money.getMonetarySupply(timeStep);
-                    return Math.max(previousDividend, money.getGrowth() * (currentMonetarySupply / currentHeadcount));
+                    var previousMonetarySupply = money.getMonetarySupply(timeStep - 1);
+                    return Math.max(previousDividend, money.getGrowth() * (previousMonetarySupply / currentHeadcount));
                 } else {
                     return previousDividend;
                 }
             }
         },
         'UDB': {
+            // UDB(t+dt) = (1+c)*UDB(t)
             calculate: function (money, timeStep) {
                 var previousDividend = money.dividends.values[timeStep - 1];
                 var currentHeadcount = money.headcounts.values[timeStep]
@@ -150,12 +153,13 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             }
         },
         'UDC': {
+            // UDC(t+dt) = 1/2*(UDBasique + UDB)
             calculate: function (money, timeStep) {
                 var previousDividend = money.dividends.values[timeStep - 1];
                 var currentHeadcount = money.headcounts.values[timeStep]
                 if (currentHeadcount > 0) {
-                    var currentMonetarySupply = money.getMonetarySupply(timeStep);
-                    var udBasic = money.getGrowth() * (currentMonetarySupply / currentHeadcount);
+                    var previousMonetarySupply = money.getMonetarySupply(timeStep - 1);
+                    var udBasic = money.getGrowth() * (previousMonetarySupply / currentHeadcount);
                     var udb = previousDividend * (1 + money.getGrowth());
                     return (udBasic + udb) / 2;
                     //return Math.pow((udBasic * udb), 0.5);
@@ -165,13 +169,14 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             }
         },
         'UDG': {
+            // DU(t+dt) = DU(t) + c² M(t-dt)/N(t)
             calculate: function (money, timeStep) {
                 var previousDividend = money.dividends.values[timeStep - 1];
                 var previousHeadcount = money.headcounts.values[timeStep - 1]
                 var currentHeadcount = money.headcounts.values[timeStep]
                 if (previousHeadcount > 0 && currentHeadcount > 0) {
-                    var previousMonetarySupply = money.monetarySupplies.values[timeStep - 1];
-                    return previousDividend + (Math.pow(money.getGrowth(), 2) * (previousMonetarySupply / previousHeadcount));
+                    var previous2MonetarySupply = money.monetarySupplies.values[timeStep - 2];
+                    return previousDividend + (Math.pow(money.getGrowth(), 2) * (previous2MonetarySupply / previousHeadcount));
                 }
                 else {
                     return previousDividend;
@@ -385,38 +390,30 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             dividend = this.getDividendStart();
         }
         else if (timeStep > moneyBirthStep) {
-            // after first issuance, calculate next dividend depending on formula...
+            // After first issuance, calculate next dividend depending on formula...
             dividend = this.udFormulas[this.udFormulaKey].calculate(this, timeStep);
         }
         return dividend;
     };
    
-    this.getMonetarySupply = function(timeStep, removeStartingAmount) {
-        if (timeStep < this.monetarySupplies.values.length && !removeStartingAmount) {
+    this.getMonetarySupply = function(timeStep) {
+        if (timeStep < this.monetarySupplies.values.length) {
             return this.monetarySupplies.values[timeStep];
         }
         var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
         var monetarySupply = 0;
        
         if (timeStep >= moneyBirthStep) {
-            var previousDividend = this.getDividend(timeStep - 1);
-            var previousDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep - 1, this.YEAR));
-            monetarySupply = this.getMonetarySupply(timeStep - 1) + previousDemography * previousDividend;
+            var currentDividend = this.getDividend(timeStep);
+            var currentDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
+            monetarySupply = this.getMonetarySupply(timeStep - 1) + currentDemography * currentDividend;
         }
 
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
-            monetarySupply += this.getAccountIncrease(iAccount, timeStep, removeStartingAmount);
+            monetarySupply += this.getAccountIncrease(iAccount, timeStep);
         }
        
         return monetarySupply;
-    };
-   
-    this.getCruisingMonetarySupply = function(timeStep) {
-        if (timeStep < this.cruisingMonetarySupplies.values.length) {
-            return this.cruisingMonetarySupplies.values[timeStep];
-        }
-        
-        return this.getHeadcount(timeStep) * this.getDividend(timeStep) / this.getGrowth();
     };
    
     this.getAccountBalance = function(iAccount, timeStep) {
@@ -435,26 +432,29 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         return balance;
     };
    
-    this.getAccountIncrease = function(iAccount, timeStep, removeStartingAmount) {
+    this.getAccountIncrease = function(iAccount, timeStep) {
         var accountIncrease = 0;
         var birthStep = this.getTimeStep(this.accounts[iAccount].birth, this.YEAR);
         var deathStep = this.getTimeStep(this.accounts[iAccount].birth + this.lifeExpectancy, this.YEAR);
-        if (timeStep < deathStep && timeStep > birthStep && this.accounts[iAccount].udProducer) {
-            // add a dividend coming from each producer
-            accountIncrease = this.getDividend(timeStep - 1);
+        if (timeStep < deathStep && timeStep >= birthStep && this.accounts[iAccount].udProducer) {
+            // Add a dividend coming from producer
+            accountIncrease = this.getDividend(timeStep);
         }
+
         var startingRatio = this.accounts[iAccount].StartingPercentage / 100;
-        if (timeStep === birthStep && !removeStartingAmount && startingRatio != 0) {
-            // at birth, add some money according to the 'StartingPercentage' attribute
-            var average = 0;
-            var headcount = this.getHeadcount(timeStep);
-            var previousHeadcount = this.getHeadcount(timeStep - 1);
-            
-            if (previousHeadcount > 0 && headcount / startingRatio > 1) {
-                accountIncrease += this.getMonetarySupply(timeStep, true) / (headcount / startingRatio - 1);
+        if (startingRatio != 0) {
+            // At birth, add some money according to the 'StartingPercentage' attribute
+            var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
+            if (birthStep === moneyBirthStep) {
+                if (timeStep === moneyBirthStep - 1) {
+                    // If this account starts at the same time as the currency, the amount to add is a ratio of UD0/c.
+                    // We artificially add this money to this account just before it exists.
+                    accountIncrease += startingRatio * this.getDividend(moneyBirthStep) / this.getGrowth();
+                }
             }
-            else {
-                accountIncrease += startingRatio * this.getDividend(timeStep) / this.getGrowth();
+            else if (timeStep === birthStep) {
+                // If this account starts later than the currency, the amount to add is a ratio of M/N.
+                accountIncrease += startingRatio * this.getMonetarySupply(timeStep - 1) / this.getHeadcount(timeStep - 1);
             }
         }
        
@@ -483,11 +483,11 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         var birth = this.DEFAULT_MONEY_BIRTH;
         var StartingPercentage = this.DEFAULT_STARTING_PERCENT;
         var udProducer = true;
-        if (money.accounts.length > 0) {
-            id = money.accounts[money.accounts.length - 1].id + 1;
-            birth = money.accounts[money.accounts.length - 1].birth;
-            StartingPercentage = money.accounts[money.accounts.length - 1].StartingPercentage;
-            udProducer = money.accounts[money.accounts.length - 1].udProducer;
+        if (this.accounts.length > 0) {
+            id = this.accounts[this.accounts.length - 1].id + 1;
+            birth = this.accounts[this.accounts.length - 1].birth;
+            StartingPercentage = this.accounts[this.accounts.length - 1].StartingPercentage;
+            udProducer = this.accounts[this.accounts.length - 1].udProducer;
         }
        
         this.accounts.push({
@@ -502,6 +502,15 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         });
     };
 
+    this.searchAccount = function(accountId) {
+        for (var i = 0; i < this.accounts.length; i++) {
+            if (this.accounts[i].id == accountId) {
+                return this.accounts[i];
+            }
+        };
+        return null;
+    }
+    
     this.getGrowth = function(growthTimeUnit) {
         growthTimeUnit = growthTimeUnit || this.growthTimeUnit;
        
@@ -670,12 +679,12 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         // **************
         
         this.dividends = {values : [], x: [], y: []};
-        this.scaledAverages = {values : [], x: [], y: []};
+        this.stableDividends = {x: [], y: []};
         this.headcounts = {values : [], x: [], y: []};
         this.monetarySupplies = {values : [], x: [], y: []};
-        this.cruisingMonetarySupplies = {values : [], x: [], y: []};
+        this.stableMonetarySupplies = {x: [], y: []};
         this.averages = {values : [], x: [], y: []};
-        this.scaledDividends = {values : [], x: [], y: []};
+        this.stableAverages = {x: [], y: []};
         this.resetAccounts();
         this.resetMoneyBirth();
 
@@ -691,7 +700,6 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             this.headcounts.values.push(this.getHeadcount(timeStep));
             this.dividends.values.push(this.getDividend(timeStep));
             this.monetarySupplies.values.push(this.getMonetarySupply(timeStep));
-            this.cruisingMonetarySupplies.values.push(this.getCruisingMonetarySupply(timeStep));
             for (iAccount = 0; iAccount < this.accounts.length; iAccount++) {
                 this.accounts[iAccount].values.push(this.getAccountBalance(iAccount, timeStep));
             }
@@ -708,22 +716,22 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
                 this.dividends.x.push(timeStep);
                 this.dividends.y.push(this.applyPov(this.getDividend(timeStep), timeStep));
                
-                this.scaledDividends.x.push(timeStep);
-                this.scaledDividends.y.push(this.applyPov(this.getDividend(timeStep) / this.getGrowth(), timeStep));
+                this.stableAverages.x.push(timeStep);
+                this.stableAverages.y.push(this.applyPov((1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth(), timeStep));
                
                 this.monetarySupplies.x.push(timeStep);
                 this.monetarySupplies.y.push(this.applyPov(this.getMonetarySupply(timeStep), timeStep));
                
-                this.cruisingMonetarySupplies.x.push(timeStep);
-                this.cruisingMonetarySupplies.y.push(this.applyPov(this.getCruisingMonetarySupply(timeStep), timeStep));
+                this.stableMonetarySupplies.x.push(timeStep);
+                this.stableMonetarySupplies.y.push(this.applyPov(this.getHeadcount(timeStep) * (1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth(), timeStep));
             }
            
-            if (this.headcounts.values[timeStep] > 0) {
+            if (timeStep >= moneyBirthStep && this.headcounts.values[timeStep] > 0) {
                 this.averages.x.push(timeStep);
                 this.averages.y.push(this.applyPov(this.getAverage(timeStep), timeStep));
                
-                this.scaledAverages.x.push(timeStep);
-                this.scaledAverages.y.push(this.applyPov(this.getAverage(timeStep) * this.getGrowth(), timeStep));
+                this.stableDividends.x.push(timeStep);
+                this.stableDividends.y.push(this.applyPov(this.getGrowth() * this.getMonetarySupply(timeStep) / this.getHeadcount(timeStep) / (1 + this.getGrowth()), timeStep));
             }
            
             this.headcounts.x.push(timeStep);
@@ -763,25 +771,25 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     this.adaptYValues = function () {
         
         var maxAbs1 = this.maxAbs(this.dividends.y, 0);
-        maxAbs1 = this.maxAbs(this.scaledAverages.y, maxAbs1);
+        maxAbs1 = this.maxAbs(this.stableDividends.y, maxAbs1);
         
         this.adaptValues(this.dividends.y, maxAbs1);
-        this.adaptValues(this.scaledAverages.y, maxAbs1);
+        this.adaptValues(this.stableDividends.y, maxAbs1);
         
         var maxAbs2 = this.maxAbs(this.monetarySupplies.y, 0);
-        maxAbs2 = this.maxAbs(this.cruisingMonetarySupplies.y, maxAbs2);
+        maxAbs2 = this.maxAbs(this.stableMonetarySupplies.y, maxAbs2);
         
         this.adaptValues(this.monetarySupplies.y, maxAbs2);
-        this.adaptValues(this.cruisingMonetarySupplies.y, maxAbs2);
+        this.adaptValues(this.stableMonetarySupplies.y, maxAbs2);
         
         var maxAbs3 = this.maxAbs(this.averages.y, 0);
-        maxAbs3 = this.maxAbs(this.scaledDividends.y, maxAbs3);
+        maxAbs3 = this.maxAbs(this.stableAverages.y, maxAbs3);
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
             maxAbs3 = this.maxAbs(this.accounts[iAccount].y, maxAbs3);
         }
         
         this.adaptValues(this.averages.y, maxAbs3);
-        this.adaptValues(this.scaledDividends.y, maxAbs3);
+        this.adaptValues(this.stableAverages.y, maxAbs3);
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
             this.adaptValues(this.accounts[iAccount].y, maxAbs3);
         }

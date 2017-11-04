@@ -25,6 +25,44 @@ const EXP_FORMATS = {
 
 const DATE_PATTERN = "%d-%m-%Y";
 
+const LOG_UNIT_SUFFIX = " [log]";
+
+const C3_AVERAGE_ID = "average";
+
+const C3_ACCOUNT_ID_PREFIX = "member_";
+
+const C3_STABLE_AVERAGE_ID = "stable_average";
+
+const C3_DIVIDEND_ID = "dividend";
+
+const C3_STABLE_DIVIDEND_ID = "stable_dividend";
+
+const C3_PEOPLE_ID = "people";
+
+const C3_MONETARY_SUPPLY_ID = "monetary_supply";
+
+const C3_STABLE_MONETARY_SUPPLY_ID = "stable_monetary_supply";
+
+const AVERAGE_LABEL = 'Moyenne "M/N"';
+
+const STABLE_AVERAGE_LABEL = 'M/N stable';
+
+const DIVIDEND_LABEL = 'Dividende Universel';
+
+const STABLE_DIVIDEND_LABEL = 'DU stable';
+
+const HEADCOUNT_LABEL = 'Nombre d\'individus "N"';
+
+const MONETARY_SUPPLY_LABEL = 'Masse Monétaire "M"';
+
+const STABLE_MONETARY_SUPPLY_LABEL = 'Masse stable';
+
+const ACCOUNT_LABEL_PREFIX = 'Compte';
+
+const CO_CREATOR_LABEL = 'Co-créateur';
+
+const NON_CREATOR_LABEL = 'Non-créateur';
+
 // Add a 'format' function to String
 String.prototype.format = function() {
     var args = arguments;
@@ -40,6 +78,7 @@ libreMoneyClass.call(money);
 
 var curConfigId = "";
 var curTabId = "";
+var curSelectedDataId = "";
 var commentedId = "";
 
 window.addEventListener('popstate', function(e) {
@@ -136,8 +175,6 @@ function initCallbacks() {
     d3.selectAll(".tablinks").on("click", clickTab);
 
     d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
-
-    d3.selectAll(".chart").on("click", function() { comment(this.id); });
 }
 
 function asEncodedURI() {
@@ -158,6 +195,8 @@ function asEncodedURI() {
             'hiddenSeries' : getHiddenDataKeys(monetarySupplyChart)
         },
         'selectedAccount' : document.getElementById("AccountSelector").selectedIndex,
+        'selectedSerie' : curSelectedDataId,
+        'selectedPointIndex' : getSelectedPointIndex(),
         'commentedId' : commentedId
     };
     var jsonRep = {
@@ -206,7 +245,14 @@ function applyJSonRep(jsonRep) {
     updateAccountYLabels();
     updateChartData();
     openTab(jsonRep.guiAsJSon.curTabId);
-    comment(jsonRep.guiAsJSon.commentedId);
+    if (jsonRep.guiAsJSon.selectedSerie) {
+        var chart = searchChartWithData(jsonRep.guiAsJSon.selectedSerie);
+        chart.select([jsonRep.guiAsJSon.selectedSerie], [jsonRep.guiAsJSon.selectedPointIndex]);
+        commentChartData(chart, jsonRep.guiAsJSon.selectedSerie);
+    }
+    else {
+        comment(jsonRep.guiAsJSon.commentedId);
+    }
     
     setHiddenSeries(accountsChart, jsonRep.guiAsJSon.accountsChart.hiddenSeries);
     setHiddenSeries(dividendChart, jsonRep.guiAsJSon.dividendChart.hiddenSeries);
@@ -328,10 +374,10 @@ function joinAccountSelectorToData() {
     var options = d3.select('#AccountSelector').selectAll("option")
         .data(money.accounts, function(d) { return d.id; });
             
-    options.text(function(d) { return accountName(d); });
+    options.text(function(d) { return accountName2(d); });
     
     options.enter().append("option")
-        .text(function(d) { return accountName(d); })
+        .text(function(d) { return accountName2(d); })
         .attr('value', function(d) { return d.id; })
         
     options.exit().remove();
@@ -342,11 +388,11 @@ function generateAccountsData() {
         xFormat: DATE_PATTERN,
         xs: {
             'average': 'x_average',
-            'scaled_dividend': 'x_scaled_dividend'
+            'stable_average': 'x_stable_average'
         },
         names: {
-            'average': 'Moyenne "M/N"',
-            'scaled_dividend': 'DU/c'
+            'average': AVERAGE_LABEL,
+            'stable_average': STABLE_AVERAGE_LABEL
         },
         columns: [],
         types: {
@@ -357,16 +403,24 @@ function generateAccountsData() {
         },
         onmouseout : function(d) {
             hideAllTooltips(accountsChart);
-        }
+        },
+        onclick: function(d, element) {
+            commentChartData(accountsChart, d.id);
+            pushNewHistoryState();
+        },
+        selection: {
+            enabled: true,
+            multiple: false
+        }        
     };
     
     var iAccount, i;
     // For each account...
 	for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
 		// add axis mapping
-		var c3Id = getC3Id(money.accounts[iAccount].id);
+		var c3Id = getC3AccountId(money.accounts[iAccount].id);
 		accountsData.xs[c3Id] = 'x_' + c3Id;
-        accountsData.names[c3Id] = fullAccountName(money.accounts[iAccount]);
+        accountsData.names[c3Id] = accountName3(money.accounts[iAccount]);
 	}
 	
     // add data to columns and add axis header 
@@ -378,19 +432,19 @@ function generateAccountsData() {
     accountsData.columns.push(money.averages.y);
     accountsData.columns[accountsData.columns.length - 1].unshift('average');
 
-	var xScaledDividends = ['x_scaled_dividend'];
+	var xStableAverages = ['x_stable_average'];
 	for (i = 0; i < money.dividends.x.length; i++) {
-	    xScaledDividends.push(asDate(money.dividends.x[i]));
+	    xStableAverages.push(asDate(money.dividends.x[i]));
 	}
-    accountsData.columns.push(xScaledDividends);
-    accountsData.columns.push(money.scaledDividends.y);
-    accountsData.columns[accountsData.columns.length - 1].unshift('scaled_dividend');
+    accountsData.columns.push(xStableAverages);
+    accountsData.columns.push(money.stableAverages.y);
+    accountsData.columns[accountsData.columns.length - 1].unshift('stable_average');
 
     // Depending on X axis bounds, some accounts are not visible => use 'unload' flag
     var toUnload = [];
     // for each account...
     for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
-  		var c3Id = getC3Id(money.accounts[iAccount].id);
+  		var c3Id = getC3AccountId(money.accounts[iAccount].id);
         // add data to columns
         if (money.accounts[iAccount].x.length > 1) {
             
@@ -449,16 +503,26 @@ function hideAllTooltips(chart) {
     });
 }
 
+function unselectChartPoints(chart) {
+    curSelectedDataId = "";
+    var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
+    charts.forEach(function(c) {
+        if (c != chart) {
+            c.unselect();
+        }
+    });
+}
+
 function generateDividendData() {
     var dividendData = {
         xFormat: DATE_PATTERN,
         xs: {
             'dividend' : 'x_dividend',
-            'scaled_average': 'x_scaled_average'
+            'stable_dividend': 'x_stable_dividend'
         },
         names: {
             'dividend': universalDividendLabel(),
-            'scaled_average': 'c*M/N'
+            'stable_dividend': STABLE_DIVIDEND_LABEL
         },
         columns: [],
         types: {
@@ -469,6 +533,14 @@ function generateDividendData() {
         },
         onmouseout : function(d) {
             hideAllTooltips(dividendChart);
+        },
+        onclick: function(d, element) {
+            commentChartData(dividendChart, d.id);
+            pushNewHistoryState();
+        },
+        selection: {
+            enabled: true,
+            multiple: false
         }
     };
     
@@ -481,13 +553,13 @@ function generateDividendData() {
     dividendData.columns.push(money.dividends.y);
     dividendData.columns[dividendData.columns.length - 1].unshift('dividend');
     
-	var xScaledAverages = ['x_scaled_average'];
+	var xStableDividends = ['x_stable_dividend'];
 	for (i = 0; i < money.averages.x.length; i++) {
-	    xScaledAverages.push(asDate(money.averages.x[i]));
+	    xStableDividends.push(asDate(money.averages.x[i]));
 	}
-    dividendData.columns.push(xScaledAverages);
-    dividendData.columns.push(money.scaledAverages.y);
-    dividendData.columns[dividendData.columns.length - 1].unshift('scaled_average');
+    dividendData.columns.push(xStableDividends);
+    dividendData.columns.push(money.stableDividends.y);
+    dividendData.columns[dividendData.columns.length - 1].unshift('stable_dividend');
     
     return dividendData;
 }
@@ -497,7 +569,7 @@ function generateHeadcountData() {
         xFormat: DATE_PATTERN,
         x: 'x_people',
         names: {
-            'people': 'Nombre d\'individus "N" (' + getDemographicProfileLabel(money.demographicProfileKey) + ')'
+            'people': HEADCOUNT_LABEL + ' (' + getDemographicProfileLabel(money.demographicProfileKey) + ')'
         },
         columns: [],
         types: {
@@ -508,6 +580,14 @@ function generateHeadcountData() {
         },
         onmouseout : function(d) {
             hideAllTooltips(headcountChart);
+        },
+        onclick: function(d, element) {
+            commentChartData(headcountChart, d.id);
+            pushNewHistoryState();
+        },
+        selection: {
+            enabled: true,
+            multiple: false
         }
     };
     
@@ -528,11 +608,11 @@ function generateMonetarySupplyData() {
         xFormat: DATE_PATTERN,
         xs: {
             'monetary_supply' : 'x_monetary_supply',
-            'cruising_monetary_supply': 'x_cruising_monetary_supply'
+            'stable_monetary_supply': 'x_stable_monetary_supply'
         },
         names: {
-            'monetary_supply': 'Masse Monétaire "M"',
-            'cruising_monetary_supply': 'N*DU/c'
+            'monetary_supply': MONETARY_SUPPLY_LABEL,
+            'stable_monetary_supply': STABLE_MONETARY_SUPPLY_LABEL
         },
         columns: [],
         types: {
@@ -543,6 +623,14 @@ function generateMonetarySupplyData() {
         },
         onmouseout : function(d) {
             hideAllTooltips(monetarySupplyChart);
+        },
+        onclick: function(d, element) {
+            commentChartData(monetarySupplyChart, d.id);
+            pushNewHistoryState();
+        },
+        selection: {
+            enabled: true,
+            multiple: false
         }
     };
 
@@ -555,19 +643,26 @@ function generateMonetarySupplyData() {
     monetarySupplyData.columns.push(money.monetarySupplies.y);
     monetarySupplyData.columns[monetarySupplyData.columns.length - 1].unshift('monetary_supply');
     
-	var xCruisingMonetarySupply = ['x_cruising_monetary_supply'];
-	for (i = 0; i < money.cruisingMonetarySupplies.x.length; i++) {
-	    xCruisingMonetarySupply.push(asDate(money.cruisingMonetarySupplies.x[i]));
+	var xStableMonetarySupply = ['x_stable_monetary_supply'];
+	for (i = 0; i < money.stableMonetarySupplies.x.length; i++) {
+	    xStableMonetarySupply.push(asDate(money.stableMonetarySupplies.x[i]));
 	}
-    monetarySupplyData.columns.push(xCruisingMonetarySupply);
-    monetarySupplyData.columns.push(money.cruisingMonetarySupplies.y);
-    monetarySupplyData.columns[monetarySupplyData.columns.length - 1].unshift('cruising_monetary_supply');
+    monetarySupplyData.columns.push(xStableMonetarySupply);
+    monetarySupplyData.columns.push(money.stableMonetarySupplies.y);
+    monetarySupplyData.columns[monetarySupplyData.columns.length - 1].unshift('stable_monetary_supply');
     
 	return monetarySupplyData;
 };
 
-function getC3Id(accountId) {
-    return 'member_' + accountId;
+function getC3AccountId(accountId) {
+    return C3_ACCOUNT_ID_PREFIX + accountId;
+}
+
+function extractAccountId(c3AccountId) {
+    if (c3AccountId.substr(0, C3_ACCOUNT_ID_PREFIX.length) === C3_ACCOUNT_ID_PREFIX) {
+        return c3AccountId.substring(C3_ACCOUNT_ID_PREFIX.length);
+    }
+    throw new Error(c3AccountId + " doesn't start with the ecpected prefix: " + C3_ACCOUNT_ID_PREFIX);
 }
 
 function getConfigLabel(configKey) {
@@ -603,7 +698,7 @@ function getConfigLabel(configKey) {
     return configLabel;
 }
 
-function getRefLabel(referenceFrameKey) {
+function getRefLabel(referenceFrameKey, withoutLog) {
     var refLabel;
     switch(referenceFrameKey) {
         case 'monetaryUnit':
@@ -618,17 +713,17 @@ function getRefLabel(referenceFrameKey) {
         default:
             throw new Error("Reference frame not managed: " + referenceFrameKey);
     }
-    if (money.referenceFrames[money.referenceFrameKey].logScale) {
-        refLabel = refLabel + " (log)";
+    if (!withoutLog && money.referenceFrames[money.referenceFrameKey].logScale) {
+        refLabel = refLabel + LOG_UNIT_SUFFIX;
     }
     return refLabel;
 }
 
-function getRefUnitLabel(referenceFrameKey) {
+function getRefUnitLabel1(referenceFrameKey) {
     var refUnitLabel;
     switch(referenceFrameKey) {
         case 'monetaryUnit':
-            refUnitLabel = 'Unités Monétaires';
+            refUnitLabel = 'unités';
             break;
         case 'dividend': 
             refUnitLabel = "DU";
@@ -639,8 +734,21 @@ function getRefUnitLabel(referenceFrameKey) {
         default:
             throw new Error("Reference frame not managed: " + referenceFrameKey);
     }
+    return refUnitLabel;
+}
+
+function getRefUnitLabel2(referenceFrameKey) {
+    var refUnitLabel = getRefUnitLabel1(referenceFrameKey);
+    if (referenceFrameKey == 'monetaryUnit') {
+        refUnitLabel = 'unités monétaires';
+    }
+    return refUnitLabel;
+}
+
+function getRefUnitLabel3(referenceFrameKey) {
+    var refUnitLabel = getRefUnitLabel2(referenceFrameKey);
     if (money.referenceFrames[money.referenceFrameKey].logScale) {
-        refUnitLabel = refUnitLabel + " (log)";
+        refUnitLabel = refUnitLabel + LOG_UNIT_SUFFIX;
     }
     return refUnitLabel;
 }
@@ -648,15 +756,15 @@ function getRefUnitLabel(referenceFrameKey) {
 function getUdFormulaLabel(udFormulaKey) {
     switch(udFormulaKey) {
         case 'BasicUD':
-            return "Basique : DU(t) = c*M(t)/N(t)";
+            return "Basique : DU(t) = c*M(t-1)/N(t)";
         case 'UDA':
-            return "DUA : DU(t) = max[DU(t-1) ; c*M(t)/N(t)]";
+            return "DUA : DU(t) = max[DU(t-1) ; c*M(t-1)/N(t)]";
         case 'UDB': 
             return "DUB : DU(t) = (1+c)*DU(t-1)";
         case 'UDC': 
-            return "DUC : DU(t) = 1/2 [(1+c)*DU(t-1) + c*M(t)/N(t)]";
+            return "DUC : DU(t) = 1/2 [(1+c)*DU(t-1) + c*M(t-1)/N(t)]";
         case 'UDG':
-            return "DUĞ : DU(t) = DU(t-1) + c²*M(t-1)/N(t-1)";
+            return "DUĞ : DU(t) = DU(t-1) + c²*M(t-2)/N(t-1)";
         default:
             throw new Error("Dividend formula not managed: " + udFormulaKey);
     }
@@ -716,7 +824,7 @@ function generateAccountsChart() {
         tooltip: {
             format: {
                 value: function (value, ratio, id, index) {
-                    return tooltipFormat(value);
+                    return amountTooltipFormat(value);
                 }
             }
         },
@@ -734,7 +842,10 @@ function generateAccountsChart() {
         },
         point: {
             show: false,
-            r: 2
+            r: 2,
+            select: {
+                r: 3
+            }
         },
         onmouseout: function() {
             hideAllTooltips(accountsChart);
@@ -780,7 +891,7 @@ function generateDividendChart() {
         tooltip: {
             format: {
                 value: function (value, ratio, id, index) {
-                    return tooltipFormat(value);
+                    return amountTooltipFormat(value);
                 }
             }
         },
@@ -801,7 +912,10 @@ function generateDividendChart() {
         },
         point: {
             show: false,
-            r: 2
+            r: 2,
+            select: {
+                r: 3
+            }
         },
         onmouseout: function() {
             hideAllTooltips(dividendChart);
@@ -869,7 +983,10 @@ function generateHeadcountChart() {
         },
         point: {
             show: false,
-            r: 2
+            r: 2,
+            select: {
+                r: 3
+            }
         },
         onmouseout: function() {
             hideAllTooltips(headcountChart);
@@ -915,7 +1032,7 @@ function generateMonetarySupplyChart() {
         tooltip: {
             format: {
                 value: function (value, ratio, id, index) {
-                    return tooltipFormat(value);
+                    return amountTooltipFormat(value);
                 }
             }
         },
@@ -936,7 +1053,10 @@ function generateMonetarySupplyChart() {
         },
         point: {
             show: false,
-            r: 2
+            r: 2,
+            select: {
+                r: 3
+            }
         },
         onmouseout: function() {
             hideAllTooltips(monetarySupplyChart);
@@ -949,7 +1069,7 @@ function tickFormat(value) {
     return withExp(f(value));
 }
 
-function tooltipFormat(value) {
+function amountTooltipFormat(value) {
     var isInfinite = money.isInfinite(value);
     if (isInfinite < 0) {
         return '-Infini';
@@ -961,13 +1081,25 @@ function tooltipFormat(value) {
         value = Math.exp(value * Math.log(10));
     }
     var f = d3.format('.3s');
+    return withExp(f(value)) + ' ' + getRefUnitLabel1(money.referenceFrameKey);
+}
+
+function commentFormat(value) {
+    var isInfinite = money.isInfinite(value);
+    if (value == Number.NEGATIVE_INFINITY) {
+        return '-Infini';
+    }
+    if (value == Number.POSITIVE_INFINITY) {
+        return '+Infini';
+    }
+    var f = d3.format('.3s');
     return withExp(f(value));
 }
 
 function withExp(siValue) {
     var siStr = /[yzafpnµmkMGTPEZY]/.exec(siValue)
     if (siStr != null) {
-        return siValue.replace(siStr, " E" + EXP_FORMATS[siStr]);
+        return siValue.replace(siStr, String.fromCharCode(0xA0) + "E" + EXP_FORMATS[siStr]);
     }
     return siValue;
 }
@@ -1024,6 +1156,28 @@ function getHiddenDataKeys(chart) {
     return hiddenDataKeys;
 }
 
+function getSelectedPointIndex() {
+    var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
+    for (var i = 0; i < charts.length; i++) {
+        var selected = charts[i].selected();
+        if (selected.length == 1) {
+            return selected[0].index;
+        }
+    };    
+    
+    return [];
+}
+
+function searchChartWithData(c3DataId) {
+    var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
+    for (var i = 0; i < charts.length; i++) {
+        if (charts[i].data(c3DataId).length != 0) {
+            return charts[i];
+        }
+    };    
+    throw new Error("c3DataId not managed: " + c3DataId);
+}
+
 /**
  * Delete current account
  */
@@ -1065,21 +1219,25 @@ function addAccount() {
     updateAddedMemberArea();
 }
 
-function accountName(account) {
+function accountName1(account) {
+    return "${p0} ${p1}".format(ACCOUNT_LABEL_PREFIX, account.id);
+}
+
+function accountName2(account) {
     if (account.udProducer) {
-        return "Compte ${p0} (Co-créateur)".format(account.id);
+        return "${p0} (${p1})".format(accountName1(account), CO_CREATOR_LABEL);
     }
     else {
-        return "Compte ${p0} (Non-créateur)".format(account.id);
+        return "${p0} (${p1})".format(accountName1(account), NON_CREATOR_LABEL);
     }
 }
 
-function fullAccountName(account) {
+function accountName3(account) {
     if (account.udProducer) {
-        return "Compte ${p0} (Co-créateur, ${p1})".format(account.id, account.StartingPercentage);
+        return "${p0} (${p1}, ${p2})".format(accountName1(account), CO_CREATOR_LABEL, account.StartingPercentage);
     }
     else {
-        return "Compte ${p0} (Non-créateur, ${p1})".format(account.id, account.StartingPercentage);
+        return "${p0} (${p1}, ${p2})".format(accountName1(account), NON_CREATOR_LABEL, account.StartingPercentage);
     }
 }
 
@@ -1192,7 +1350,7 @@ function setChartTimeBounds() {
 }
 
 function accountYLabel() {
-    return 'Montant (en ' + getRefUnitLabel(money.referenceFrameKey) + ')'
+    return "Montant (en ${p0})".format(getRefUnitLabel3(money.referenceFrameKey));
 }
 
 function timeLabel() {
@@ -1207,15 +1365,15 @@ function timeLabel() {
 function universalDividendLabel() {
     switch(money.udFormulaKey) {
         case 'BasicUD':
-            return "Dividende Universel (Basique)";
+            return "${p0} (${p1})".format(DIVIDEND_LABEL, "Basique");
         case 'UDA':
-            return "Dividende Universel (DUA)";
+            return "${p0} (${p1})".format(DIVIDEND_LABEL, "DUA");
         case 'UDB': 
-            return "Dividende Universel (DUB)";
+            return "${p0} (${p1})".format(DIVIDEND_LABEL, "DUB");
         case 'UDC': 
-            return "Dividende Universel (DUC)";
+            return "${p0} (${p1})".format(DIVIDEND_LABEL, "DUC");
         case 'UDG':
-            return "Dividende Universel (DUĞ)";
+            return "${p0} (${p1})".format(DIVIDEND_LABEL, "DUĞ");
         default:
             throw new Error("Dividend formula not managed: " + udFormulaKey);
     }
@@ -1233,6 +1391,437 @@ function openTab(tabId) {
 }
 
 function comment(id) {
+    unselectChartPoints();
+    return comment0(id);
+}
+
+function commentChartData(chart, c3DataId) {
+    unselectChartPoints(chart);
+    curSelectedDataId = c3DataId;
+    
+    var selectedPoint = chart.selected()[0];
+    var selectedPointIndex = selectedPoint.index;
+    if (c3DataId.startsWith(C3_ACCOUNT_ID_PREFIX)) {
+        var accountId = extractAccountId(c3DataId);
+        var account = money.searchAccount(accountId);
+        var selectedTimeStep = account.x[selectedPoint.index];
+        return commentMemberAccountSerie(account, selectedTimeStep);
+    }
+    
+    switch(c3DataId) {
+        case C3_AVERAGE_ID:
+            var selectedTimeStep = money.averages.x[selectedPoint.index];
+            return commentAverageSerie(selectedTimeStep);
+        case C3_STABLE_AVERAGE_ID:
+            var selectedTimeStep = money.stableAverages.x[selectedPoint.index];
+            return commentStableAverageSerie(selectedTimeStep);
+        case C3_DIVIDEND_ID: 
+            var selectedTimeStep = money.dividends.x[selectedPoint.index];
+            return commentDividendSerie(selectedTimeStep);
+        case C3_STABLE_DIVIDEND_ID: 
+            var selectedTimeStep = money.stableDividends.x[selectedPoint.index];
+            return commentStableDividendSerie(selectedTimeStep);
+        case C3_PEOPLE_ID: 
+            var selectedTimeStep = money.headcounts.x[selectedPoint.index];
+            return commentHeadcountSerie(selectedTimeStep);
+        case C3_MONETARY_SUPPLY_ID: 
+            var selectedTimeStep = money.monetarySupplies.x[selectedPoint.index];
+            return commentMonetarySupplySerie(selectedTimeStep);
+        case C3_STABLE_MONETARY_SUPPLY_ID: 
+            var selectedTimeStep = money.stableMonetarySupplies.x[selectedPoint.index];
+            return commentStableMoneratarySupplySerie(selectedTimeStep);
+        default:
+            throw new Error("Unknown c3DataId: " + c3DataId);
+    }
+}
+
+function getRefDisplay(referenceFrameKey) {
+    var refDisplay;
+    switch(referenceFrameKey) {
+        case 'monetaryUnit':
+            refDisplay = "MU";
+            break;
+        case 'dividend': 
+            refDisplay = "DU";
+            break;
+        case 'average':
+            refDisplay = "MN";
+            break;
+        default:
+            throw new Error("Reference frame not managed: " + referenceFrameKey);
+    }
+    if (money.referenceFrames[money.referenceFrameKey].logScale) {
+        refDisplay = refDisplay + "-log";
+    }
+    return refDisplay;
+}
+
+function commentAverageSerie(timeStep) {
+    var dividendMuValue = money.dividends.values[timeStep];
+    var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
+    var headcountValue = money.headcounts.values[timeStep];
+    
+    var averageMuValue = money.averages.values[timeStep];
+    var averageMuLogValue = Math.log(averageMuValue) / Math.log(10);
+    var averageDuValue = averageMuValue / dividendMuValue;
+    var averageDuLogValue = Math.log(averageDuValue) / Math.log(10);
+    var averageMnValue = 100 * averageMuValue / (monetarySupplyMuValue / headcountValue);
+    var averageMnLogValue = Math.log(averageMnValue) / Math.log(10);
+
+    var f = d3.format('.3d');
+    
+    var muUnitLabel = getRefUnitLabel2('monetaryUnit');
+    var duUnitLabel = getRefUnitLabel2('dividend');
+    var mnUnitLabel = getRefUnitLabel2('average');
+    
+    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.averageLabel").text(AVERAGE_LABEL);
+    
+    d3.selectAll("span.averageMuValue").text(commentFormat(averageMuValue));
+    d3.selectAll("span.muUnit").text(muUnitLabel);
+    d3.selectAll("span.averageMuLogValue").text(commentFormat(averageMuLogValue));
+    d3.selectAll("span.muLogUnit").text(muUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.averageDuValue").text(commentFormat(averageDuValue));
+    d3.selectAll("span.duUnit").text(duUnitLabel);
+    d3.selectAll("span.averageDuLogValue").text(commentFormat(averageDuLogValue));
+    d3.selectAll("span.duLogUnit").text(duUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.averageMnValue").text(commentFormat(averageMnValue));
+    d3.selectAll("span.mnUnit").text(mnUnitLabel);
+    d3.selectAll("span.averageMnLogValue").text(commentFormat(averageMnLogValue));
+    d3.selectAll("span.mnLogUnit").text(mnUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendMuValue").text(commentFormat(dividendMuValue));
+    d3.selectAll("span.monetarySupplyMuValue").text(commentFormat(monetarySupplyMuValue));
+    d3.selectAll("span.headcountValue").text(f(headcountValue));
+    
+    commentAccordingToRef();
+
+    return comment0(C3_AVERAGE_ID);
+}
+
+function commentStableAverageSerie(timeStep) {
+    var dividendMuValue = money.dividends.values[timeStep];
+    var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
+    var headcountValue = money.headcounts.values[timeStep];
+    
+    var growthValue = money.getGrowth();
+    var stableAverageMuValue = (1 + growthValue) * dividendMuValue / growthValue;
+    var stableAverageMuLogValue = Math.log(stableAverageMuValue) / Math.log(10);
+    var stableAverageDuValue = stableAverageMuValue / dividendMuValue;
+    var stableAverageDuLogValue = Math.log(stableAverageDuValue) / Math.log(10);
+    var stableAverageMnValue = 100 * stableAverageMuValue / (monetarySupplyMuValue / headcountValue);
+    var stableAverageMnLogValue = Math.log(stableAverageMnValue) / Math.log(10);
+
+    var f = d3.format('.3d');
+    
+    var muUnitLabel = getRefUnitLabel2('monetaryUnit');
+    var duUnitLabel = getRefUnitLabel2('dividend');
+    var mnUnitLabel = getRefUnitLabel2('average');
+    
+    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.growthValue").text(commentFormat(growthValue * 100));
+    d3.selectAll("span.stableAverageLabel").text(STABLE_AVERAGE_LABEL);
+    
+    d3.selectAll("span.stableAverageMuValue").text(commentFormat(stableAverageMuValue));
+    d3.selectAll("span.muUnit").text(muUnitLabel);
+    d3.selectAll("span.stableAverageMuLogValue").text(commentFormat(stableAverageMuLogValue));
+    d3.selectAll("span.muLogUnit").text(muUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.stableAverageDuValue").text(commentFormat(stableAverageDuValue));
+    d3.selectAll("span.duUnit").text(duUnitLabel);
+    d3.selectAll("span.stableAverageDuLogValue").text(commentFormat(stableAverageDuLogValue));
+    d3.selectAll("span.duLogUnit").text(duUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.stableAverageMnValue").text(commentFormat(stableAverageMnValue));
+    d3.selectAll("span.mnUnit").text(mnUnitLabel);
+    d3.selectAll("span.stableAverageMnLogValue").text(commentFormat(stableAverageMnLogValue));
+    d3.selectAll("span.mnLogUnit").text(mnUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendMuValue").text(commentFormat(dividendMuValue));
+    d3.selectAll("span.monetarySupplyMuValue").text(commentFormat(monetarySupplyMuValue));
+    d3.selectAll("span.headcountValue").text(f(headcountValue));
+    
+    commentAccordingToRef();
+    
+    return comment0(C3_STABLE_AVERAGE_ID);
+}
+
+function commentDividendSerie(timeStep) {
+    var dividendMuValue = money.dividends.values[timeStep];
+    var previousDividendMuValue = money.dividends.values[timeStep - 1];
+    var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
+    var previousMonetarySupplyMuValue = money.monetarySupplies.values[timeStep - 1];
+    var previous2MonetarySupplyMuValue = money.monetarySupplies.values[timeStep - 2];
+    var headcountValue = money.headcounts.values[timeStep];
+    var previousHeadcountValue = money.headcounts.values[timeStep - 1];
+    
+    var growthValue = money.getGrowth();
+    var dividendMuLogValue = Math.log(dividendMuValue) / Math.log(10);
+    var dividendDuValue = dividendMuValue / dividendMuValue;
+    var dividendDuLogValue = Math.log(dividendDuValue) / Math.log(10);
+    var dividendMnValue = 100 * dividendMuValue / (dividendMuValue / headcountValue);
+    var dividendMnLogValue = Math.log(dividendMnValue) / Math.log(10);
+
+    var f = d3.format('.3d');
+    
+    var muUnitLabel = getRefUnitLabel2('monetaryUnit');
+    var duUnitLabel = getRefUnitLabel2('dividend');
+    var mnUnitLabel = getRefUnitLabel2('average');
+    
+    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.growthValue").text(commentFormat(growthValue * 100));
+    d3.selectAll("span.dividendLabel").text(DIVIDEND_LABEL);
+    d3.selectAll("span.previousMonetarySupplyMuValue").text(commentFormat(previousMonetarySupplyMuValue));
+    d3.selectAll("span.previousDividendMuValue").text(commentFormat(previousDividendMuValue));
+    d3.selectAll("span.basicDividendMuValue").text(commentFormat(growthValue * previousMonetarySupplyMuValue / headcountValue));
+    d3.selectAll("span.udbMuValue").text(commentFormat((1 + growthValue) * previousDividendMuValue));
+    d3.selectAll("span.previousHeadcountValue").text(f(previousHeadcountValue));
+    d3.selectAll("span.previous2MonetarySupplyMuValue").text(commentFormat(previous2MonetarySupplyMuValue));
+    
+    d3.selectAll("span.dividendMuValue").text(commentFormat(dividendMuValue));
+    d3.selectAll("span.muUnit").text(muUnitLabel);
+    d3.selectAll("span.dividendMuLogValue").text(commentFormat(dividendMuLogValue));
+    d3.selectAll("span.muLogUnit").text(muUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendDuValue").text(commentFormat(dividendDuValue));
+    d3.selectAll("span.duUnit").text(duUnitLabel);
+    d3.selectAll("span.dividendDuLogValue").text(commentFormat(dividendDuLogValue));
+    d3.selectAll("span.duLogUnit").text(duUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendMnValue").text(commentFormat(dividendMnValue));
+    d3.selectAll("span.mnUnit").text(mnUnitLabel);
+    d3.selectAll("span.dividendMnLogValue").text(commentFormat(dividendMnLogValue));
+    d3.selectAll("span.mnLogUnit").text(mnUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendMuValue").text(commentFormat(dividendMuValue));
+    d3.selectAll("span.headcountValue").text(f(headcountValue));
+    
+    commentAccordingToRef();
+    commentAccordingToUD();
+    
+    return comment0(C3_DIVIDEND_ID);
+}
+
+function commentStableDividendSerie(timeStep) {
+    var dividendMuValue = money.dividends.values[timeStep];
+    var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
+    var headcountValue = money.headcounts.values[timeStep];
+    
+    var growthValue = money.getGrowth();
+    var stableDividendMuValue = growthValue * monetarySupplyMuValue / headcountValue / (1 + growthValue);
+    var stableDividendMuLogValue = Math.log(stableDividendMuValue) / Math.log(10);
+    var stableDividendDuValue = stableDividendMuValue / dividendMuValue;
+    var stableDividendDuLogValue = Math.log(stableDividendDuValue) / Math.log(10);
+    var stableDividendMnValue = 100 * stableDividendMuValue / (monetarySupplyMuValue / headcountValue);
+    var stableDividendMnLogValue = Math.log(stableDividendMnValue) / Math.log(10);
+
+    var f = d3.format('.3d');
+    
+    var muUnitLabel = getRefUnitLabel2('monetaryUnit');
+    var duUnitLabel = getRefUnitLabel2('dividend');
+    var mnUnitLabel = getRefUnitLabel2('average');
+    
+    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.growthValue").text(commentFormat(growthValue * 100));
+    d3.selectAll("span.stableDividendLabel").text(STABLE_DIVIDEND_LABEL);
+    
+    d3.selectAll("span.stableDividendMuValue").text(commentFormat(stableDividendMuValue));
+    d3.selectAll("span.muUnit").text(muUnitLabel);
+    d3.selectAll("span.stableDividendMuLogValue").text(commentFormat(stableDividendMuLogValue));
+    d3.selectAll("span.muLogUnit").text(muUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.stableDividendDuValue").text(commentFormat(stableDividendDuValue));
+    d3.selectAll("span.duUnit").text(duUnitLabel);
+    d3.selectAll("span.stableDividendDuLogValue").text(commentFormat(stableDividendDuLogValue));
+    d3.selectAll("span.duLogUnit").text(duUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.stableDividendMnValue").text(commentFormat(stableDividendMnValue));
+    d3.selectAll("span.mnUnit").text(mnUnitLabel);
+    d3.selectAll("span.stableDividendMnLogValue").text(commentFormat(stableDividendMnLogValue));
+    d3.selectAll("span.mnLogUnit").text(mnUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendMuValue").text(commentFormat(dividendMuValue));
+    d3.selectAll("span.monetarySupplyMuValue").text(commentFormat(monetarySupplyMuValue));
+    d3.selectAll("span.headcountValue").text(f(headcountValue));
+    
+    commentAccordingToRef();
+    
+    return comment0(C3_STABLE_DIVIDEND_ID);
+}
+
+function commentHeadcountSerie(timeStep) {
+    var headcountValue = money.headcounts.values[timeStep];
+    var demographyValue = money.demographicProfiles[money.demographicProfileKey].calculate(money, money.getTimeValue(timeStep, money.YEAR));
+    var f = d3.format('.3d');
+    
+    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.headcountLabel").text(HEADCOUNT_LABEL);
+    d3.selectAll("span.headcountValue").text(f(headcountValue));
+    
+    d3.selectAll("span.demographyLabel").text(getDemographicProfileLabel(money.demographicProfileKey));
+    d3.selectAll("span.accountsNumberValue").text(headcountValue - demographyValue);
+    d3.selectAll("span.demographyValue").text(demographyValue);
+    
+    return comment0(C3_PEOPLE_ID);
+}
+
+function commentMonetarySupplySerie(timeStep) {
+    var dividendMuValue = money.dividends.values[timeStep];
+    var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
+    var previousMonetarySupplyMuValue = money.monetarySupplies.values[timeStep - 1];
+    var headcountValue = money.headcounts.values[timeStep];
+    
+    var monetarySupplyMuLogValue = Math.log(monetarySupplyMuValue) / Math.log(10);
+    var monetarySupplyDuValue = monetarySupplyMuValue / dividendMuValue;
+    var monetarySupplyDuLogValue = Math.log(monetarySupplyDuValue) / Math.log(10);
+    var monetarySupplyMnValue = 100 * monetarySupplyMuValue / (monetarySupplyMuValue / headcountValue);
+    var monetarySupplyMnLogValue = Math.log(monetarySupplyMnValue) / Math.log(10);
+
+    var f = d3.format('.3d');
+    
+    var muUnitLabel = getRefUnitLabel2('monetaryUnit');
+    var duUnitLabel = getRefUnitLabel2('dividend');
+    var mnUnitLabel = getRefUnitLabel2('average');
+    
+    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.monetarySupplyLabel").text(MONETARY_SUPPLY_LABEL);
+    d3.selectAll("span.previousMonetarySupplyMuValue").text(commentFormat(previousMonetarySupplyMuValue));
+    
+    d3.selectAll("span.monetarySupplyMuValue").text(commentFormat(monetarySupplyMuValue));
+    d3.selectAll("span.muUnit").text(muUnitLabel);
+    d3.selectAll("span.monetarySupplyMuLogValue").text(commentFormat(monetarySupplyMuLogValue));
+    d3.selectAll("span.muLogUnit").text(muUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.monetarySupplyDuValue").text(commentFormat(monetarySupplyDuValue));
+    d3.selectAll("span.duUnit").text(duUnitLabel);
+    d3.selectAll("span.monetarySupplyDuLogValue").text(commentFormat(monetarySupplyDuLogValue));
+    d3.selectAll("span.duLogUnit").text(duUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.monetarySupplyMnValue").text(commentFormat(monetarySupplyMnValue));
+    d3.selectAll("span.mnUnit").text(mnUnitLabel);
+    d3.selectAll("span.monetarySupplyMnLogValue").text(commentFormat(monetarySupplyMnLogValue));
+    d3.selectAll("span.mnLogUnit").text(mnUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendMuValue").text(commentFormat(dividendMuValue));
+    d3.selectAll("span.monetarySupplyMuValue").text(commentFormat(monetarySupplyMuValue));
+    d3.selectAll("span.headcountValue").text(f(headcountValue));
+    
+    commentAccordingToRef();
+    
+    return comment0(C3_MONETARY_SUPPLY_ID);
+}
+
+function commentStableMoneratarySupplySerie(timeStep) {
+    var dividendMuValue = money.dividends.values[timeStep];
+    var nextDividendMuValue = money.dividends.values[timeStep + 1];
+    var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
+    var headcountValue = money.headcounts.values[timeStep];
+    
+    var growthValue = money.getGrowth();
+    var stableMonetarySupplyMuValue = headcountValue * (1 + growthValue) * dividendMuValue / growthValue;
+    var stableMonetarySupplyMuLogValue = Math.log(stableMonetarySupplyMuValue) / Math.log(10);
+    var stableMonetarySupplyDuValue = stableMonetarySupplyMuValue / dividendMuValue;
+    var stableMonetarySupplyDuLogValue = Math.log(stableMonetarySupplyDuValue) / Math.log(10);
+    var stableMonetarySupplyMnValue = 100 * stableMonetarySupplyMuValue / (monetarySupplyMuValue / headcountValue);
+    var stableMonetarySupplyMnLogValue = Math.log(stableMonetarySupplyMnValue) / Math.log(10);
+
+    var f = d3.format('.3d');
+    
+    var muUnitLabel = getRefUnitLabel2('monetaryUnit');
+    var duUnitLabel = getRefUnitLabel2('dividend');
+    var mnUnitLabel = getRefUnitLabel2('average');
+    
+    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.growthValue").text(commentFormat(growthValue * 100));
+    d3.selectAll("span.stableMonetarySupplyLabel").text(STABLE_MONETARY_SUPPLY_LABEL);
+    d3.selectAll("span.nextDividendMuValue").text(commentFormat(nextDividendMuValue));
+    
+    d3.selectAll("span.stableMonetarySupplyMuValue").text(commentFormat(stableMonetarySupplyMuValue));
+    d3.selectAll("span.muUnit").text(muUnitLabel);
+    d3.selectAll("span.stableMonetarySupplyMuLogValue").text(commentFormat(stableMonetarySupplyMuLogValue));
+    d3.selectAll("span.muLogUnit").text(muUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.stableMonetarySupplyDuValue").text(commentFormat(stableMonetarySupplyDuValue));
+    d3.selectAll("span.duUnit").text(duUnitLabel);
+    d3.selectAll("span.stableMonetarySupplyDuLogValue").text(commentFormat(stableMonetarySupplyDuLogValue));
+    d3.selectAll("span.duLogUnit").text(duUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.stableMonetarySupplyMnValue").text(commentFormat(stableMonetarySupplyMnValue));
+    d3.selectAll("span.mnUnit").text(mnUnitLabel);
+    d3.selectAll("span.stableMonetarySupplyMnLogValue").text(commentFormat(stableMonetarySupplyMnLogValue));
+    d3.selectAll("span.mnLogUnit").text(mnUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendMuValue").text(commentFormat(dividendMuValue));
+    d3.selectAll("span.monetarySupplyMuValue").text(commentFormat(monetarySupplyMuValue));
+    d3.selectAll("span.headcountValue").text(f(headcountValue));
+    
+    commentAccordingToRef();
+    
+    return comment0(C3_STABLE_MONETARY_SUPPLY_ID);
+}
+
+function commentMemberAccountSerie(account, timeStep) {
+    var dividendMuValue = money.dividends.values[timeStep];
+    var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
+    var headcountValue = money.headcounts.values[timeStep];
+    
+    var accountMuValue = account.values[timeStep];
+    var accountMuLogValue = Math.log(accountMuValue) / Math.log(10);
+    var accountDuValue = accountMuValue / dividendMuValue;
+    var accountDuLogValue = Math.log(accountDuValue) / Math.log(10);
+    var accountMnValue = 100 * accountMuValue / (monetarySupplyMuValue / headcountValue);
+    var accountMnLogValue = Math.log(accountMnValue) / Math.log(10);
+
+    var f = d3.format('.3d');
+    
+    var muUnitLabel = getRefUnitLabel2('monetaryUnit');
+    var duUnitLabel = getRefUnitLabel2('dividend');
+    var mnUnitLabel = getRefUnitLabel2('average');
+    
+    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.accountName").text(accountName1(account));
+    
+    d3.selectAll("span.accountMuValue").text(commentFormat(accountMuValue));
+    d3.selectAll("span.muUnit").text(muUnitLabel);
+    d3.selectAll("span.accountMuLogValue").text(commentFormat(accountMuLogValue));
+    d3.selectAll("span.muLogUnit").text(muUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.accountDuValue").text(commentFormat(accountDuValue));
+    d3.selectAll("span.duUnit").text(duUnitLabel);
+    d3.selectAll("span.accountDuLogValue").text(commentFormat(accountDuLogValue));
+    d3.selectAll("span.duLogUnit").text(duUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.accountMnValue").text(commentFormat(accountMnValue));
+    d3.selectAll("span.mnUnit").text(mnUnitLabel);
+    d3.selectAll("span.accountMnLogValue").text(commentFormat(accountMnLogValue));
+    d3.selectAll("span.mnLogUnit").text(mnUnitLabel + LOG_UNIT_SUFFIX);
+    
+    d3.selectAll("span.dividendMuValue").text(commentFormat(dividendMuValue));
+    d3.selectAll("span.monetarySupplyMuValue").text(commentFormat(monetarySupplyMuValue));
+    d3.selectAll("span.headcountValue").text(f(headcountValue));
+    if (timeStep > 0) {
+        var previousMuAccountValue = account.values[timeStep - 1];
+        d3.selectAll("span.previousAccountValue").text(commentFormat(previousMuAccountValue));
+    }
+    commentAccordingToRef();
+    
+    return comment0(C3_ACCOUNT_ID_PREFIX);
+}
+
+function commentAccordingToRef() {
+    d3.selectAll("div.RefComment").style("display", "none");
+    var refDisplay = getRefDisplay(money.referenceFrameKey);
+    d3.selectAll("div." + refDisplay).style("display", "block");
+}
+
+function commentAccordingToUD() {
+    d3.selectAll("div.DuComment").style("display", "none");
+    d3.selectAll("div." + money.udFormulaKey).style("display", "block");
+}
+
+function comment0(id) {
     d3.selectAll(".Comment").style("display", "none");
     d3.select("#" + id + "Comment").style("display", "block");
 
@@ -1284,7 +1873,7 @@ function changeReferenceFrame() {
     updateAccountYLabels();
     
     updateChartData();
-    comment(money.referenceFrameKey);
+    comment(money.referenceFrameKey + 'Ref');
     pushNewHistoryState();
 }
 
