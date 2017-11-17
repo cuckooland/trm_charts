@@ -1241,6 +1241,53 @@ function accountName3(account) {
     }
 }
 
+function accountAgeLabel(account, timeStep, timeUnit) {
+    timeUnit = timeUnit || money.growthTimeUnit;
+    
+    var year = 0;
+    var month = 0;
+    if (timeUnit === money.MONTH) {
+        year = Math.trunc(timeStep / 12)  - account.birth;
+        month = timeStep % 12;
+    }
+    else if (timeUnit === money.YEAR) {
+        year = timeStep - account.birth;
+        month = 0;
+    }
+    else {
+        throw new Error("Time unit not managed: " + timeUnit);
+    }
+    if (year == 0 && month == 0) {
+        if (timeUnit === money.MONTH) {
+            return "0 mois";
+        }
+        else if (timeUnit === money.YEAR) {
+            return "0 année";
+        }
+    }
+    if (year == 0) {
+        return "${p0} mois".format(month);
+    }
+    if (month == 0) {
+        if (year == 1) {
+            return "${p0} an".format(year);
+        }
+        return "${p0} ans".format(year);
+    }
+    else if (month == 1) {
+        if (year == 1) {
+            return "${p0} an et ${p1} mois".format(year, month);
+        }
+        return "${p0} ans et ${p1} mois".format(year, month);
+    }
+    else {
+        if (year == 1) {
+            return "${p0} an et ${p1} mois".format(year, month);
+        }
+        return "${p0} ans et ${p1} mois".format(year, month);
+    }
+}
+
 function asDate(timeStep, timeUnit) {
     timeUnit = timeUnit || money.growthTimeUnit;
     
@@ -1782,6 +1829,7 @@ function commentMemberAccountSerie(account, timeStep) {
     
     d3.selectAll("span.dateValue").text(asDate(timeStep));
     d3.selectAll("span.accountName").text(accountName1(account));
+    d3.selectAll("span.accountAge").text(accountAgeLabel(account, timeStep));
     
     d3.selectAll("span.accountMuValue").text(commentFormat(accountMuValue));
     d3.selectAll("span.muUnit").text(muUnitLabel);

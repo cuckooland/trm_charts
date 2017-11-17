@@ -133,7 +133,7 @@ var configs1 = {
             "lifeExpectancy": 80,
             "dividendStart": 96.6,
             "timeLowerBoundInYears": 0,
-            "timeUpperBoundInYears": 41,
+            "timeUpperBoundInYears": 40,
             "calculateGrowth": true,
             "growthTimeUnit": "YEAR",
             "growth": 0.09660822712436135,
