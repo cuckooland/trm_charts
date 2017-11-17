@@ -1508,7 +1508,7 @@ function commentAverageSerie(timeStep) {
     var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
     var headcountValue = money.headcounts.values[timeStep];
     
-    var averageMuValue = money.averages.values[timeStep];
+    var averageMuValue = money.getAverage(timeStep);
     var averageMuLogValue = Math.log(averageMuValue) / Math.log(10);
     var averageDuValue = averageMuValue / dividendMuValue;
     var averageDuLogValue = Math.log(averageDuValue) / Math.log(10);

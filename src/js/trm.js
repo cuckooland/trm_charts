@@ -462,9 +462,6 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     }
    
     this.getAverage = function(timeStep) {
-        if (timeStep < this.averages.values.length) {
-            return this.averages.values[timeStep];
-        }
         var average = 0;
         var headcount = this.getHeadcount(timeStep);
        
@@ -683,7 +680,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         this.headcounts = {values : [], x: [], y: []};
         this.monetarySupplies = {values : [], x: [], y: []};
         this.stableMonetarySupplies = {x: [], y: []};
-        this.averages = {values : [], x: [], y: []};
+        this.averages = {x: [], y: []};
         this.stableAverages = {x: [], y: []};
         this.resetAccounts();
         this.resetMoneyBirth();
@@ -703,7 +700,6 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             for (iAccount = 0; iAccount < this.accounts.length; iAccount++) {
                 this.accounts[iAccount].values.push(this.getAccountBalance(iAccount, timeStep));
             }
-            this.averages.values.push(this.getAverage(timeStep));
         }
 
         // **************
