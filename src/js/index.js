@@ -45,7 +45,7 @@ const C3_STABLE_MONETARY_SUPPLY_ID = "stable_monetary_supply";
 
 const AVERAGE_LABEL = 'Moyenne "M/N"';
 
-const STABLE_AVERAGE_LABEL = 'M/N stable';
+const STABLE_AVERAGE_LABEL = 'M/N' + String.fromCharCode(0xA0) + 'stable';
 
 const DIVIDEND_LABEL = 'Dividende Universel';
 
@@ -708,7 +708,7 @@ function getRefLabel(referenceFrameKey, withoutLog) {
             refLabel = "Dividende";
             break;
         case 'average':
-            refLabel = "%(M/N)";
+            refLabel = "% (M/N)";
             break;
         default:
             throw new Error("Reference frame not managed: " + referenceFrameKey);
@@ -729,7 +729,7 @@ function getRefUnitLabel1(referenceFrameKey) {
             refUnitLabel = "DU";
             break;
         case 'average':
-            refUnitLabel = "%(M/N)";
+            refUnitLabel = "% (M/N)";
             break;
         default:
             throw new Error("Reference frame not managed: " + referenceFrameKey);

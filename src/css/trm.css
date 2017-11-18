@@ -46,8 +46,8 @@ p {
 
 input[type=text] {
     text-align: right;
-    margin-left: 1em;
-    width: 5em;
+    margin-left: 0.5em;
+    width: 4em;
 }
 
 input[type=button] {
@@ -70,7 +70,7 @@ input[disabled=disabled] {
 }
 
 .ParamSection {
-    padding-left: 0.8em;
+    padding-left: 0.6em;
     padding-top: 0.1em;
     padding-bottom: 0.1em;
     margin-left: 0.8em;
@@ -82,12 +82,12 @@ input[disabled=disabled] {
 }
 
 .ParamPart {
-    width: 35%;
+    width: 33%;
     float: left;
 }
 
 .CommentPart {
-    width: 61%;
+    width: 63%;
 	border: 1px solid #aaaaaa;
     border-radius: 5px;
     float: left;
