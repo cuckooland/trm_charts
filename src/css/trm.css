@@ -39,11 +39,6 @@ select {
     font-size: 0.875em;
 }
 
-p {
-    margin-top:0.5em;
-    margin-bottom:0.5em;
-}
-
 input[type=text] {
     text-align: right;
     margin-left: 0.5em;
@@ -94,6 +89,11 @@ input[disabled=disabled] {
     height:11.5em;
     margin: 5px 5px 5px 10px;
     padding: 5px 5px 5px 10px;
+}
+
+.CommentPart p {
+    margin-top:0em;
+    margin-bottom:0.5em;
 }
 
 .CommentPart ul
