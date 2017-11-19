@@ -804,7 +804,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             }
             else {
                 // Round values to avoid noises (due to numerical instability) in constant series of values
-                yArray[i] = Math.round(yArray[i]*100)/100;
+                yArray[i] = Math.round(yArray[i]*100000)/100000;
             }
         }
     }

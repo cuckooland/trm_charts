@@ -762,7 +762,7 @@ function getUdFormulaLabel(udFormulaKey) {
         case 'UDB': 
             return "DUB : DU(t) = (1+c)*DU(t-1)";
         case 'UDC': 
-            return "DUC : DU(t) = 1/2 [(1+c)*DU(t-1) + c*M(t-1)/N(t)]";
+            return "DUC : DU(t) = 1/2 [c*M(t-1)/N(t) + (1+c)*DU(t-1)]";
         case 'UDG':
             return "DUĞ : DU(t) = DU(t-1) + c²*M(t-2)/N(t-1)";
         default:
@@ -1077,11 +1077,16 @@ function amountTooltipFormat(value) {
     if (isInfinite > 0) {
         return '+Infini';
     }
-    if (money.referenceFrames[money.referenceFrameKey].logScale) {
-        value = Math.exp(value * Math.log(10));
-    }
     var f = d3.format('.3s');
-    return withExp(f(value)) + ' ' + getRefUnitLabel1(money.referenceFrameKey);
+    var unit = getRefUnitLabel1(money.referenceFrameKey);
+    if (money.referenceFrames[money.referenceFrameKey].logScale) {
+        var noLogValue = Math.exp(value * Math.log(10));
+        var f3f = d3.format('.3f');
+        return "${p0} ${p1} = 1E ${p2}".format(withExp(f(noLogValue)), unit, f3f(value));
+    }
+    else {
+        return "${p0} ${p1}".format(withExp(f(value)), unit);
+    }
 }
 
 function commentFormat(value) {
@@ -1608,7 +1613,7 @@ function commentDividendSerie(timeStep) {
     var dividendMuLogValue = Math.log(dividendMuValue) / Math.log(10);
     var dividendDuValue = dividendMuValue / dividendMuValue;
     var dividendDuLogValue = Math.log(dividendDuValue) / Math.log(10);
-    var dividendMnValue = 100 * dividendMuValue / (dividendMuValue / headcountValue);
+    var dividendMnValue = 100 * dividendMuValue / (monetarySupplyMuValue / headcountValue);
     var dividendMnLogValue = Math.log(dividendMnValue) / Math.log(10);
 
     var f = d3.format('.3d');
@@ -1620,6 +1625,7 @@ function commentDividendSerie(timeStep) {
     d3.selectAll("span.dateValue").text(asDate(timeStep));
     d3.selectAll("span.growthValue").text(commentFormat(growthValue * 100));
     d3.selectAll("span.dividendLabel").text(DIVIDEND_LABEL);
+    d3.selectAll("span.monetarySupplyMuValue").text(commentFormat(monetarySupplyMuValue));
     d3.selectAll("span.previousMonetarySupplyMuValue").text(commentFormat(previousMonetarySupplyMuValue));
     d3.selectAll("span.previousDividendMuValue").text(commentFormat(previousDividendMuValue));
     d3.selectAll("span.basicDividendMuValue").text(commentFormat(growthValue * previousMonetarySupplyMuValue / headcountValue));
