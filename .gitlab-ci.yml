@@ -1,0 +1,16 @@
+pages:
+  stage: deploy
+  environment:
+    name: production
+    url: http://$CI_PROJECT_NAMESPACE.pages.duniter.org/$CI_PROJECT_NAME
+  script:
+  - mkdir .public
+  - cp -r src/index.html .public
+  - mv .public public
+  artifacts:
+    paths:
+    - public
+  tags:
+  - pages
+  only:
+  - master
