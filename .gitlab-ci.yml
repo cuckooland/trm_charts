@@ -5,7 +5,7 @@ pages:
     url: http://$CI_PROJECT_NAMESPACE.pages.duniter.org/$CI_PROJECT_NAME
   script:
   - mkdir .public
-  - cp -r src/index.html .public
+  - cp -r src/* .public
   - mv .public public
   artifacts:
     paths:
