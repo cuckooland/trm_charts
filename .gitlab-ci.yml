@@ -20,6 +20,24 @@ push_to_github:
         - mv packed-refs-new packed-refs
         - bash -c "git push --force --mirror github 2>&1 | grep -v duniter-gitlab; echo $?"
 
+enforce_readme:
+    stage: github-sync
+    variables:
+        GIT_STRATEGY: none
+    script:
+      - rm -rf ./*
+      - rm -rf .git
+      - git clone $GITHUB_URL_AND_KEY .
+      - git config --global user.email "contact@duniter.org"
+      - git config --global user.name "Duniter"
+      - git checkout master
+      - cat .duniter/github_disclaimer.md > README.md.new
+      - cat README.md >> README.md.new
+      - cp README.md.new README.md
+      - git commit -am "Enforce github readme"
+      - git push origin master
+
+
 pages:
     stage: deploy
     environment:
