@@ -24,6 +24,8 @@ enforce_readme:
     stage: github-sync
     variables:
         GIT_STRATEGY: none
+    tags:
+      - github
     script:
       - rm -rf ./*
       - rm -rf .git
