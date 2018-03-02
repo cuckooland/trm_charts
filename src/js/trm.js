@@ -244,9 +244,24 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         }
     };
 
-    this.referenceFrameKey = Object.keys(this.referenceFrames)[0];
-    this.udFormulaKey = Object.keys(this.udFormulas)[0];
-    this.demographicProfileKey = Object.keys(this.demographicProfiles)[0];
+    this.MONETARY_UNIT_REF_KEY = Object.keys(this.referenceFrames)[0];
+    this.DIVIDEND_REF_KEY = Object.keys(this.referenceFrames)[1];
+    this.AVERAGE_REF_KEY = Object.keys(this.referenceFrames)[2];
+    this.referenceFrameKey = this.MONETARY_UNIT_REF_KEY;
+
+    this.BASIC_UD_KEY = Object.keys(this.udFormulas)[0];
+    this.UDA_KEY = Object.keys(this.udFormulas)[1];
+    this.UDB_KEY = Object.keys(this.udFormulas)[2];
+    this.UDC_KEY = Object.keys(this.udFormulas)[3];
+    this.UDG_KEY = Object.keys(this.udFormulas)[4];
+    this.udFormulaKey = this.BASIC_UD_KEY;
+
+    this.NONE_PROFILE_KEY = Object.keys(this.demographicProfiles)[0];
+    this.TRIANGULAR_PROFILE_KEY = Object.keys(this.demographicProfiles)[1];
+    this.PLATEAU_PROFILE_KEY = Object.keys(this.demographicProfiles)[2];
+    this.CAUCHY_PROFILE_KEY = Object.keys(this.demographicProfiles)[3];
+    this.DAMPEDWAVE_PROFILE_KEY = Object.keys(this.demographicProfiles)[4];
+    this.demographicProfileKey = this.NONE_PROFILE_KEY;
 
     this.resetAccounts = function () {
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
@@ -282,7 +297,7 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         if (timeStep < this.headcounts.values.length) {
             return this.headcounts.values[timeStep];
         }
-        var people = 0;
+        var headcount = 0;
 
         // for each account...
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
@@ -292,12 +307,12 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             // if account is alive...
             if (timeStep >= birthStep && timeStep < deathStep) {
                 // increment people count
-                people++;
+                headcount++;
             }
         }
-        people = people + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
+        headcount = headcount + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
 
-        return people;
+        return headcount;
     };
 
     this.asJSonRep = function() {
@@ -306,13 +321,13 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
             'referenceFrameKey' : this.referenceFrameKey,
             'referenceFrames' : {
                 'monetaryUnit': {
-                    'logScale': this.referenceFrames['monetaryUnit'].logScale
+                    'logScale': this.referenceFrames[this.MONETARY_UNIT_REF_KEY].logScale
                 },
                 'dividend': {
-                    'logScale': this.referenceFrames['dividend'].logScale
+                    'logScale': this.referenceFrames[this.DIVIDEND_REF_KEY].logScale
                 },
                 'average': {
-                    'logScale': this.referenceFrames['average'].logScale
+                    'logScale': this.referenceFrames[this.AVERAGE_REF_KEY].logScale
                 }
             },
             'lifeExpectancy' : this.lifeExpectancy,
@@ -346,9 +361,9 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
         this.lifeExpectancy = jsonRep.lifeExpectancy;
         this.udFormulaKey = jsonRep.udFormulaKey;
         this.referenceFrameKey = jsonRep.referenceFrameKey;
-        this.referenceFrames['monetaryUnit'].logScale = jsonRep.referenceFrames.monetaryUnit.logScale;
-        this.referenceFrames['dividend'].logScale = jsonRep.referenceFrames.dividend.logScale;
-        this.referenceFrames['average'].logScale = jsonRep.referenceFrames.average.logScale;
+        this.referenceFrames[this.MONETARY_UNIT_REF_KEY].logScale = jsonRep.referenceFrames.monetaryUnit.logScale;
+        this.referenceFrames[this.DIVIDEND_REF_KEY].logScale = jsonRep.referenceFrames.dividend.logScale;
+        this.referenceFrames[this.AVERAGE_REF_KEY].logScale = jsonRep.referenceFrames.average.logScale;
         this.dividendStart = jsonRep.dividendStart;
         this.timeLowerBoundInYears = jsonRep.timeLowerBoundInYears;
         this.timeUpperBoundInYears = jsonRep.timeUpperBoundInYears;

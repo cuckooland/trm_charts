@@ -192,3 +192,23 @@ ul.tabsBar li span:focus, .active {
 #AccountsChart .c3-line-scaled-dividend, #DividendChart .c3-line-scaled-average, #MonetarySupplyChart .c3-line-cruising-monetary-supply {
   stroke-width: .5px;
 }
+
+span.account, 
+span.average, 
+span.stableAverage,
+span.dividend,
+span.stableDividend,
+span.headcount,
+span.monetarySupply,
+span.stableMonetarySupply {
+    background-color: #dedede;    
+    padding: 1px 1px 1px 1px;
+	border: 1px solid #aaaaaa;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.current:not(.nolink), .previous, .previous2 {
+    cursor: pointer;
+}
+
