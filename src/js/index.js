@@ -618,12 +618,6 @@ function generateAccountsData() {
         types: {
             average: 'area'
         },
-        onmouseover : function(d) { 
-            showAllTooltips(accountsChart, d);
-        },
-        onmouseout : function(d) {
-            hideAllTooltips(accountsChart);
-        },
         onclick: function(d, element) {
             commentChartData(accountsChart, d.id);
             pushNewHistoryState();
@@ -749,12 +743,6 @@ function generateDividendData() {
         types: {
             dividend: 'area'
         },
-        onmouseover : function(d) { 
-            showAllTooltips(dividendChart, d);
-        },
-        onmouseout : function(d) {
-            hideAllTooltips(dividendChart);
-        },
         onclick: function(d, element) {
             commentChartData(dividendChart, d.id);
             pushNewHistoryState();
@@ -838,12 +826,6 @@ function generateMonetarySupplyData() {
         columns: [],
         types: {
             monetarySupply: 'area'
-        },
-        onmouseover : function(d) { 
-            showAllTooltips(monetarySupplyChart, d);
-        },
-        onmouseout : function(d) {
-            hideAllTooltips(monetarySupplyChart);
         },
         onclick: function(d, element) {
             commentChartData(monetarySupplyChart, d.id);
