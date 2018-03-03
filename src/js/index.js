@@ -1669,7 +1669,7 @@ function commentChartData(chart, c3DataId) {
         var accountId = extractAccountId(c3DataId);
         var account = money.searchAccount(accountId);
         var selectedTimeStep = account.x[selectedPointIndex];
-        return commentSerie(ACCOUNT_ID_PREFIX, selectedTimeStep, account);
+        return commentSelectedPoint(ACCOUNT_ID_PREFIX, selectedTimeStep, account);
     }
     
     var selectedTimeStep;
@@ -1698,7 +1698,7 @@ function commentChartData(chart, c3DataId) {
         default:
             throw new Error("Unknown c3DataId: " + c3DataId);
     }
-    return commentSerie(c3DataId, selectedTimeStep);
+    return commentSelectedPoint(c3DataId, selectedTimeStep);
 }
 
 function getRefDisplay(referenceFrameKey) {
@@ -1722,7 +1722,7 @@ function getRefDisplay(referenceFrameKey) {
     return refDisplay;
 }
 
-function commentSerie(c3DataId, timeStep, account) {
+function commentSelectedPoint(c3DataId, timeStep, account) {
     var f = d3.format('.3d');
     
     // Process some elements which are common to several series
