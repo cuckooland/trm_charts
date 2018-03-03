@@ -167,7 +167,8 @@ ul.tabsBar li span {
 }
 
 /* Change background color of links on hover */
-ul.tabsBar li span:hover {
+ul.tabsBar li span:hover,
+ul.tabsBar li span.focused {
     background-color: #ddd;
 }
 
@@ -206,9 +207,20 @@ span.stableMonetarySupply {
 	border: 1px solid #aaaaaa;
     border-radius: 5px;
     white-space: nowrap;
+    transition: 0.3s;
 }
 
 .current:not(.nolink), .previous, .previous2 {
+    cursor: pointer;
+}
+
+span.growth,
+span.dividendTabLink,
+span.referenceTabLink,
+span.boundsTabLink,
+span.accountsTabLink,
+span.demographyTabLink {
+    transition: 0.3s;
     cursor: pointer;
 }
 

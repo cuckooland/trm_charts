@@ -113,6 +113,8 @@ window.addEventListener('popstate', function(e) {
 
 initSelectors();
 
+addTabEffectsFromHtml();
+
 generateC3Charts();
 addChartEffectsFromHtml();
 
@@ -159,6 +161,52 @@ function generateC3Charts() {
     generateHeadcountChart();
     generateMonetarySupplyChart();
     setChartTimeBounds();
+}
+
+function addTabEffectsFromHtml() {
+    var growthTabAttributes = {
+        tabId: 'GrowingRateItem',
+        referingClass: 'growth'
+    };
+    var udTabAttributes = {
+        tabId: 'UdItem',
+        referingClass: 'dividendTabLink'
+    };
+    var referenceTabAttributes = {
+        tabId: 'ReferenceItem',
+        referingClass: 'referenceTabLink'
+    };
+    var boundsTabAttributes = {
+        tabId: 'BoundsItem',
+        referingClass: 'boundsTabLink'
+    };
+    var accountsTabAttributes = {
+        tabId: 'AccountsItem',
+        referingClass: 'accountsTabLink'
+    };
+    var demogarphyTabAttributes = {
+        tabId: 'DemographyItem',
+        referingClass: 'demographyTabLink'
+    };
+    var tabAttributesList = [growthTabAttributes, udTabAttributes, referenceTabAttributes, boundsTabAttributes, accountsTabAttributes, demogarphyTabAttributes];
+    
+    tabAttributesList.forEach(function(tabAttributes) {
+        d3.selectAll('span.' + tabAttributes.referingClass)
+            .style('background-color', '#f1f1f1')
+            .on('mouseover', function () {
+                d3.selectAll('span.' + tabAttributes.referingClass).style('background-color', '#dddddd');
+                d3.select('#' + tabAttributes.tabId).classed('focused', true);
+            })
+            .on('mouseout', function () {
+                d3.selectAll('span.' + tabAttributes.referingClass).style('background-color', '#f1f1f1');
+                d3.select('#' + tabAttributes.tabId).classed('focused', false);
+            })
+            .on('click', function() {
+                d3.select('#' + tabAttributes.tabId).classed('focused', false);
+                clickTab(tabAttributes.tabId);
+            });
+    });
+    
 }
 
 function addChartEffectsFromHtml() {
@@ -341,8 +389,7 @@ function addChartEffectsFromHtml() {
     }
 
     serieAttributesList.forEach(function(serieAttributes) {
-        var serieSpan = d3.selectAll('span.' + serieAttributes.class);
-        serieSpan
+        d3.selectAll('span.' + serieAttributes.class)
             .style('color', getSerieColor(serieAttributes))
             .on('mouseover', function () {
                 mouseoverSerieSpan(d3.select(this), serieAttributes);
@@ -391,7 +438,7 @@ function initCallbacks() {
     d3.select("#ProduceUd").on("click", changeProduceUd);
     d3.select("#StartingPercentage").on("change", changeStartingPercentage);
 
-    d3.selectAll(".tablinks").on("click", clickTab);
+    d3.selectAll(".tablinks").on("click", function() { clickTab(this.id); });
 
     d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
 }
@@ -2230,9 +2277,9 @@ function changeStartingPercentage() {
     pushNewHistoryState();
 }
 
-function clickTab() {
-    openTab(this.id);
-    comment(this.id);
+function clickTab(tabItemId) {
+    openTab(tabItemId);
+    comment(tabItemId);
     pushNewHistoryState();
     
     return false;
