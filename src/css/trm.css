@@ -47,6 +47,7 @@ input[type=text] {
 
 input[type=button] {
     font-size: 0.875em;
+    padding: 0px 5px 0px 5px
 }
 
 input[disabled=disabled] {
@@ -203,7 +204,7 @@ span.headcount,
 span.monetarySupply,
 span.stableMonetarySupply {
     background-color: #dedede;    
-    padding: 1px 1px 1px 1px;
+    padding: 0px 2px 0px 2px;
 	border: 1px solid #aaaaaa;
     border-radius: 5px;
     white-space: nowrap;
@@ -220,7 +221,11 @@ span.referenceTabLink,
 span.boundsTabLink,
 span.accountsTabLink,
 span.demographyTabLink {
-    transition: 0.3s;
+    padding: 0px 2px 0px 2px;
     cursor: pointer;
+	border: 1px solid #aaaaaa;
+    border-radius: 5px;
+    white-space: nowrap;
+    transition: 0.3s;
 }
 
