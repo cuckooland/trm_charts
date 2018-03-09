@@ -698,7 +698,7 @@
 
                         </div>
                         <div class="Comment" id="BasicUDComment">
-                            <p>Dans « La TRM en Couleur - Partie 1 », la population <span class="headcount">N</span> reste constante. De plus, elle utilise la formule fondamentale <span class="dividend">DU(t)</span>&nbsp;=&nbsp;<span class="growth">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t)</span> qui, <span class="headcount">N</span> étant constant, peut aussi s'écrire <span class="dividend">DU(t)</span>&nbsp;=&nbsp;<span class="growth">c</span>*<span class="average">M/N(t-1)</span>.</p>
+                            <p>Dans « La TRM en Couleur - Partie 1 », la population <span class="headcount">N</span> reste constante et la formule fondamentale <span class="dividend">DU(t)</span>&nbsp;=&nbsp;<span class="growth">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t)</span> est utilisée.</p>
 
                             <p>Un défaut de cette formule est de très mal se comporter face à une variation brusque de la population. C'est particulièrement notable au commencement de la monnaie, où le <span class="dividend">DU</span> subit une forte baisse&nbsp;: les participants initiaux se retrouvent alors avec une part extrêmement importante de la monnaie.</p>
 
@@ -706,7 +706,7 @@
 
                         </div>
                         <div class="Comment" id="UDAComment">
-                            <p>Pour palier au défaut d'un <span class="dividend">DU</span> subissant une très forte baisse (comme observé lors de l'initialisation de la monnaie), on peut décider que le <span class="dividend">DU</span> (exprimé en unité monétaire) ne doit jamais diminuer au fil du temps, en étant au minimum égal à la valeur fondamentale <span class="growth">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t)</span>.</p>
+                            <p>Pour palier au défaut d'un <span class="dividend">DU</span> subissant une grosse baisse quand la population augmente fortement (comme celle observée lors de l'initialisation de la monnaie), on peut décider que le <span class="dividend">DU</span> (exprimé en unité monétaire) ne doit jamais diminuer au fil du temps. Autrement dit, il est calculé à partir de la formule fondamentale <span class="growth">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t)</span>, mais si le résultat est inférieur au <span class="dividend">DU</span> du temps précédent, ce dernier est de nouveau utilisé.</p>
 
                             <p>Remarque&nbsp;: en utilisant l'unité monétaire comme référence (pour cela, voir l'onglet <span class="referenceTabLink">Référentiel</span>), on constate que la courbe du dividende est soit horizontale, soit superposée à la courbe <span class="stableDividend label">DU stable</span>.</p>
 
