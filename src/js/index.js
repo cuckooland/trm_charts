@@ -1759,7 +1759,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
     var growthValue = money.getGrowth();
 
     d3.selectAll("span.dateValue").text(asDate(timeStep));
-    d3.selectAll("span.growth.value").text(commentFormat(growthValue * 100));
+    d3.selectAll("span.growth.value").text(commentFormat(growthValue * 100) + NONBREAKING_SPACE + '%');
     
     var dividendMuValue = money.dividends.values[timeStep];
     d3.selectAll("span.dividend.current.mu.value").text(commentFormat(dividendMuValue));
@@ -1886,6 +1886,11 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
             d3.selectAll("span.monetarySupply.ud.logValue").text(commentFormat(monetarySupplyUdLogValue));
             d3.selectAll("span.monetarySupply.mn.value").text(commentFormat(monetarySupplyMnValue));
             d3.selectAll("span.monetarySupply.mn.logValue").text(commentFormat(monetarySupplyMnLogValue));
+            var birthAmountsValue = monetarySupplyMuValue - previousMonetarySupplyMuValue - dividendMuValue * headcountValue;
+            if (birthAmountsValue < 0.01) {
+                birthAmountsValue = 0;
+            }
+            d3.selectAll("span.birthAmounts.value").text(commentFormat(birthAmountsValue));
             break;
         
         case STABLE_MONETARY_SUPPLY_ID: 
@@ -1926,6 +1931,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
                     var previousMuAccountValue = account.values[timeStep - 1];
                     d3.selectAll("span.account.previous.mu.value").text(commentFormat(previousMuAccountValue));
                 }
+                commentAccordingToBirth(timeStep, account)
             }
             else {
                 throw new Error("Unknown c3DataId: " + c3DataId);
@@ -1951,6 +1957,26 @@ function commentAccordingToUD(timeStep) {
     }
     else {
         d3.selectAll("div." + money.udFormulaKey).style("display", "block");
+    }
+}
+
+function commentAccordingToBirth(timeStep, account) {
+    d3.selectAll("div.AmountComment").style("display", "none");
+    var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
+    var birthStep = money.getTimeStep(account.birth, money.YEAR);
+    if (timeStep == moneyBirthStep) {
+        var previousAverageMuValue = money.getAverage(timeStep - 1);
+        d3.selectAll("span.amountAtBirth.value").text(account.StartingPercentage);
+        d3.selectAll("div.AtMoneyBirth").style("display", "block");
+    }
+    else if (timeStep == birthStep) {
+        var previousAverageMuValue = money.getAverage(timeStep - 1);
+        d3.selectAll("span.average.previous.mu.value").text(commentFormat(previousAverageMuValue));
+        d3.selectAll("span.amountAtBirth.value").text(account.StartingPercentage + NONBREAKING_SPACE + '%');
+        d3.selectAll("div.AtBirth").style("display", "block");
+    }
+    else {
+        d3.selectAll("div.AfterBirth").style("display", "block");
     }
 }
 

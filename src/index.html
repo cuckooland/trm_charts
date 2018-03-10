@@ -279,7 +279,7 @@
                             <div class="RefComment MU">
                                 <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableAverage label">DU/c</span> vaut&nbsp;: <span class="stableAverage current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                             
-                                <p>= (1&nbsp;+&nbsp;<span class="growth value">0</span>&nbsp;%)&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0</span>&nbsp;%</p>
+                                <p>= (1&nbsp;+&nbsp;<span class="growth value">0 %</span>)&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span></p>
                             </div>
                             
                             <div class="RefComment MU-log">
@@ -317,12 +317,24 @@
                         <div class="Comment" id="accountComment">
                             <p>Dans ce premier diagramme (en haut à gauche), l'évolution au fil du temps d'un ou plusieurs comptes (voir l'onglet <span class="accountsTabLink">Comptes affichés</span>) est représentée.</p>
                             
-                            <p>Par défaut, un seul compte est affiché, intitulé "Compte 1" et correspond à un co-créateur de la monnaie, comme indiqué entre parenthèses.</p>
+                            <p>Par défaut, un seul compte est affiché, intitulé "Compte 1" et correspond à un co-créateur de la monnaie, comme indiqué entre parenthèses dans la légende.</p>
                             
                             <div class="RefComment MU">
                                 <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span> est agé de <span class="account age">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                             
-                                <p>= la <span class="account previous mu">valeur au temps précédent</span> à laquelle s'est ajouté le <span class="dividend current mu">DU</span>&nbsp;: <span class="account previous mu value">0</span> + <span class="dividend current mu value">0</span></p>
+                                <div class="AmountComment AtMoneyBirth">
+                                    <p>= le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividend">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes Affichés</span>) auquel s'ajoute le <span class="dividend current mu">DU</span>&nbsp;:</p>
+                                    <p><span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span> + <span class="dividend current mu value">0</span></p>
+                                </div>
+
+                                <div class="AmountComment AtBirth">
+                                    <p>= le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="average">M/N</span>, voir l'onglet <span class="accountsTabLink">Comptes Affichés</span>) auquel s'ajoute le <span class="dividend current mu">DU</span>&nbsp;:</p>
+                                    <p><span class="amountAtBirth value">0</span>&nbsp;%&nbsp;*&nbsp;<span class="average previous mu value">0</span> + <span class="dividend current mu value">0</span></p>
+                                </div>
+
+                                <div class="AmountComment AfterBirth">
+                                    <p>= la <span class="account previous mu">valeur au temps précédent</span> à laquelle s'ajoute le <span class="dividend current mu">DU</span>&nbsp;: <span class="account previous mu value">0</span> + <span class="dividend current mu value">0</span></p>
+                                </div>
                             </div>
                             
                             <div class="RefComment MU-log">
@@ -368,13 +380,13 @@
                                 </div>
 
                                 <div class="DuComment BasicUD">
-                                    <p>= le <span class="growth">taux d'expansion "c"</span> multiplié par la <span class="monetarySupply previous mu">masse monétaire précédente</span> divisée par le <span class="headcount current">nombre d'individus</span>&nbsp;: <span class="growth value">0</span>&nbsp;%&nbsp;*&nbsp;<span class="monetarySupply previous mu value">0</span>&nbsp;/&nbsp;<span class="headcount current value">0</span></p>
+                                    <p>= le <span class="growth">taux d'expansion "c"</span> multiplié par la <span class="monetarySupply previous mu">masse monétaire précédente</span> divisée par le <span class="headcount current">nombre d'individus</span>&nbsp;: <span class="growth value">0 %</span>&nbsp;*&nbsp;<span class="monetarySupply previous mu value">0</span>&nbsp;/&nbsp;<span class="headcount current value">0</span></p>
                                 </div>
 
                                 <div class="DuComment UDA">
                                     <p>= la plus grande valeur entre :</p>
                                     <ul>
-                                        <li>le <span class="growth">taux d'expansion "c"</span> multiplié par la <span class="monetarySupply prevoius mu">masse monétaire précédente</span> divisée par le <span class="headcount current">nombre d'individus</span>&nbsp;: <span class="growth value">0</span>&nbsp;%&nbsp;*&nbsp;<span class="monetarySupply previous mu value">0</span>&nbsp;/&nbsp;<span class="headcount current value">0</span> =&nbsp;<span class="dividend basicMuValue">0</span></li>
+                                        <li>le <span class="growth">taux d'expansion "c"</span> multiplié par la <span class="monetarySupply prevoius mu">masse monétaire précédente</span> divisée par le <span class="headcount current">nombre d'individus</span>&nbsp;: <span class="growth value">0 %</span>&nbsp;*&nbsp;<span class="monetarySupply previous mu value">0</span>&nbsp;/&nbsp;<span class="headcount current value">0</span> =&nbsp;<span class="dividend basicMuValue">0</span></li>
                                         <li>le <span class="dividend previous mu">précendent DU</span>&nbsp;: <span class="dividend previous mu value">0</span></li>
                                     </ul>
                                 </div>
@@ -384,12 +396,12 @@
                                 </div>
 
                                 <div class="DuComment UDC">
-                                    <p>= la valeur moyenne entre celle obtenue avec DU<sub>basique</sub> et celle obtenue avec DUB&nbsp;: (<span class="growth value">0</span>&nbsp;%&nbsp;*&nbsp;<span class="monetarySupply previous mu value">0</span>&nbsp;/&nbsp;<span class="headcount current value">0</span>&nbsp;+&nbsp;(1&nbsp;+&nbsp;<span class="growth value">0</span>)&nbsp;%&nbsp;*&nbsp;<span class="dividend previous mu value">0</span>)&nbsp;/&nbsp;2</p>
+                                    <p>= la valeur moyenne entre celle obtenue avec DU<sub>basique</sub> et celle obtenue avec DUB&nbsp;: (<span class="growth value">0 %</span>&nbsp;*&nbsp;<span class="monetarySupply previous mu value">0</span>&nbsp;/&nbsp;<span class="headcount current value">0</span>&nbsp;+&nbsp;(1&nbsp;+&nbsp;<span class="growth value">0</span>)&nbsp;%&nbsp;*&nbsp;<span class="dividend previous mu value">0</span>)&nbsp;/&nbsp;2</p>
                                 </div>
 
                                 <div class="DuComment UDG">
                                     <p>= le <span class="dividend previous mu">précendent DU</span> auquel est ajouté le carré du <span class="growth">taux d'expansion "c"</span> multiplié par <span class="monetarySupply previous2 mu">l'antépénultième masse monétaire</span> divisée par le <span class="headcount previous">précédent nombre d'individus</span> :</p>
-                                    <p><span class="dividend previous mu value">0</span>&nbsp;+&nbsp;<span class="growth value">0</span>&nbsp;%<sup>2</sup>&nbsp;*&nbsp;<span class="monetarySupply previous2 mu value">0</span>&nbsp;/&nbsp;<span class="headcount previous value">0</span></p>
+                                    <p><span class="dividend previous mu value">0</span>&nbsp;+&nbsp;<span class="growth value">0 %</span><sup>2</sup>&nbsp;*&nbsp;<span class="monetarySupply previous2 mu value">0</span>&nbsp;/&nbsp;<span class="headcount previous value">0</span></p>
                                 </div>
 
                             </div>
@@ -434,7 +446,7 @@
                             <div class="RefComment MU">
                                 <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableDividend label">DU stable</span> vaut&nbsp;: <span class="stableDividend current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                             
-                                <p>= <span class="growth value">0</span>&nbsp;%&nbsp;/&nbsp;(1&nbsp;+&nbsp;<span class="growth value">0</span>&nbsp;%)&nbsp;*&nbsp;<span class="average current mu value">0</span></p>
+                                <p>= <span class="growth value">0 %</span>&nbsp;/&nbsp;(1&nbsp;+&nbsp;<span class="growth value">0 %</span>)&nbsp;*&nbsp;<span class="average current mu value">0</span></p>
                             </div>
                             
                             <div class="RefComment MU-log">
@@ -485,8 +497,8 @@
                             <div class="RefComment MU">
                                 <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="monetarySupply label">Masse Monétaire</span> vaut&nbsp;: <span class="monetarySupply current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                             
-                                <p>= la <span class="monetarySupply previous mu">masse monétaire précédente</span> à laquelle s'ajoute le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>&nbsp;:</p>
-                                <p><span class="monetarySupply previous mu value">0</span>&nbsp;+&nbsp;<span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span></p>
+                                <p>= la <span class="monetarySupply previous mu">masse monétaire précédente</span> à laquelle s'ajoute, d'une part le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>, d'autre part d'éventuels montants à la naissance (voir l'onglet <span class="accountsTabLink">Comptes affichés</span>) &nbsp;:</p>
+                                <p><span class="monetarySupply previous mu value">0</span>&nbsp;+&nbsp;<span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;+&nbsp;<span class="birthAmounts value">0</span></p>
                             </div>
                             
                             <div class="RefComment MU-log">
@@ -530,7 +542,7 @@
                             <div class="RefComment MU">
                                 <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="stableMonetarySupply label">Masse stable</span> vaut&nbsp;: <span class="stableMonetarySupply current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                             
-                                <p>= (1&nbsp;+&nbsp;<span class="growth value">0</span>&nbsp;%)&nbsp;*&nbsp;<span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0</span>&nbsp;%</p>
+                                <p>= (1&nbsp;+&nbsp;<span class="growth value">0 %</span>)&nbsp;*&nbsp;<span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span></p>
                             </div>
                             
                             <div class="RefComment MU-log">
