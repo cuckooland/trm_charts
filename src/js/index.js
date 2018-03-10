@@ -446,28 +446,28 @@ function initCallbacks() {
 function asEncodedURI() {
     var moneyAsJSon = money.asJSonRep();
     var guiAsJSon = {
-        'curTabId' : curTabId,
-        'curConfigId' : curConfigId,
-        'accountsChart' : {
-            'hiddenSeries' : getHiddenDataKeys(accountsChart)
+        t : curTabId,
+        c : curConfigId,
+        ac : {
+            hs : getHiddenDataKeys(accountsChart)
         },
-        'dividendChart' : {
-            'hiddenSeries' : getHiddenDataKeys(dividendChart)
+        dc : {
+            hs : getHiddenDataKeys(dividendChart)
         },
-        'headcountChart' : {
-            'hiddenSeries' : getHiddenDataKeys(headcountChart)
+        hc : {
+            hs : getHiddenDataKeys(headcountChart)
         },
-        'monetarySupplyChart' : {
-            'hiddenSeries' : getHiddenDataKeys(monetarySupplyChart)
+        sc : {
+            hs : getHiddenDataKeys(monetarySupplyChart)
         },
-        'selectedAccount' : document.getElementById("AccountSelector").selectedIndex,
-        'selectedSerie' : curSelectedDataId,
-        'selectedPointIndex' : selectedPointIndex,
-        'commentedId' : commentedId
+        a : document.getElementById("AccountSelector").selectedIndex,
+        s : curSelectedDataId,
+        i : selectedPointIndex,
+        com : commentedId
     };
     var jsonRep = {
-        'moneyAsJSon' : moneyAsJSon,
-        'guiAsJSon' : guiAsJSon
+        m : moneyAsJSon,
+        g : guiAsJSon
     };
     var stringRep = JSON.stringify(jsonRep);
     var encodedURI = LZString.compressToEncodedURIComponent(stringRep);
@@ -493,14 +493,14 @@ function applyEncodedURI(encodedURI) {
 }
 
 function applyJSonRep(jsonRep) {
-    money.applyJSonRep(jsonRep.moneyAsJSon);
+    money.applyJSonRep(jsonRep.m);
     
     fillForms();
     enableForms();
     joinAccountSelectorToData();
-    document.getElementById("AccountSelector").selectedIndex = jsonRep.guiAsJSon.selectedAccount;
+    document.getElementById("AccountSelector").selectedIndex = jsonRep.g.a;
     
-    curConfigId = jsonRep.guiAsJSon.curConfigId;
+    curConfigId = jsonRep.g.c;
     setConfigSelection();
     
     setReferenceFrameSelection(money);
@@ -510,21 +510,21 @@ function applyJSonRep(jsonRep) {
     updateAddedAccountArea();
     updateAccountYLabels();
     updateChartData();
-    openTab(jsonRep.guiAsJSon.curTabId);
+    openTab(jsonRep.g.t);
     unselectChartPoints();
-    if (jsonRep.guiAsJSon.selectedSerie) {
-        var chart = searchChartWithData(jsonRep.guiAsJSon.selectedSerie);
-        chart.select([jsonRep.guiAsJSon.selectedSerie], [jsonRep.guiAsJSon.selectedPointIndex]);
-        commentChartData(chart, jsonRep.guiAsJSon.selectedSerie);
+    if (jsonRep.g.s) {
+        var chart = searchChartWithData(jsonRep.g.s);
+        chart.select([jsonRep.g.s], [jsonRep.g.i]);
+        commentChartData(chart, jsonRep.g.s);
     }
     else {
-        comment(jsonRep.guiAsJSon.commentedId);
+        comment(jsonRep.g.com);
     }
     
-    setHiddenSeries(accountsChart, jsonRep.guiAsJSon.accountsChart.hiddenSeries);
-    setHiddenSeries(dividendChart, jsonRep.guiAsJSon.dividendChart.hiddenSeries);
-    setHiddenSeries(headcountChart, jsonRep.guiAsJSon.headcountChart.hiddenSeries);
-    setHiddenSeries(monetarySupplyChart, jsonRep.guiAsJSon.monetarySupplyChart.hiddenSeries);
+    setHiddenSeries(accountsChart, jsonRep.g.ac.hs);
+    setHiddenSeries(dividendChart, jsonRep.g.dc.hs);
+    setHiddenSeries(headcountChart, jsonRep.g.hc.hs);
+    setHiddenSeries(monetarySupplyChart, jsonRep.g.sc.hs);
 }
     
 function setHiddenSeries(chart, hiddenSeries) {

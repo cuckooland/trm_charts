@@ -1,438 +1,438 @@
 var configs1 = {
-    'none': {
+    none: {
     },
     'config1-1': {
-        "moneyAsJSon": {
-            "udFormulaKey": "BasicUD",
-            "referenceFrameKey": "monetaryUnit",
-            "referenceFrames": {
-                "monetaryUnit": {
-                    "logScale": false
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
                 },
-                "dividend": {
-                    "logScale": false
+                ud: {
+                    log: false
                 },
-                "average": {
-                    "logScale": false
+                mn: {
+                    log: false
                 }
             },
-            "lifeExpectancy": 80,
-            "dividendStart": 1000,
-            "timeLowerBoundInYears": 0,
-            "timeUpperBoundInYears": 5,
-            "calculateGrowth": false,
-            "growthTimeUnit": "YEAR",
-            "growth": 0.1,
-            "demographicProfileKey": "None",
-            "maxDemography": 10000,
-            "xMinDemography": 0,
-            "xMaxDemography": 80,
-            "xMpvDemography": 40,
-            "plateauDemography": 78,
-            "xScaleDemography": 4,
-            "accountCount": 1,
-            "account0": {
-                "id": 1,
-                "birth": 1,
-                "StartingPercentage": 0,
-                "udProducer": true
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 5,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                a0: 0,
+                p: true
             }
         },
-        "guiAsJSon": {
-            "curConfigId" : "config1-1",
-            "curTabId": "IntroItem",
-            "accountsChart": {
-                "hiddenSeries": ['average', "stableAverage"]
+        g: {
+            c: "config1-1",
+            t: "IntroItem",
+            ac: {
+                hs: ['average', "stableAverage"]
             },
-            "dividendChart": {
-                "hiddenSeries": ["stableDividend"]
+            dc: {
+                hs: ["stableDividend"]
             },
-            "headcountChart": {
-                "hiddenSeries": []
+            hc: {
+                hs: []
             },
-            "monetarySupplyChart": {
-                "hiddenSeries": ["stableMonetarySupply"]
+            sc: {
+                hs: ["stableMonetarySupply"]
             },
-            "selectedAccount": 0,
-            "commentedId": "config1-1"
+            a: 0,
+            com: "config1-1"
         }
     },
     
     'config1-2': {
-        "moneyAsJSon": {
-            "udFormulaKey": "BasicUD",
-            "referenceFrameKey": "monetaryUnit",
-            "referenceFrames": {
-                "monetaryUnit": {
-                    "logScale": false
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
                 },
-                "dividend": {
-                    "logScale": false
+                ud: {
+                    log: false
                 },
-                "average": {
-                    "logScale": false
+                mn: {
+                    log: false
                 }
             },
-            "lifeExpectancy": 80,
-            "dividendStart": 100,
-            "timeLowerBoundInYears": 0,
-            "timeUpperBoundInYears": 5,
-            "calculateGrowth": false,
-            "growthTimeUnit": "YEAR",
-            "growth": 0.1,
-            "demographicProfileKey": "None",
-            "maxDemography": 10000,
-            "xMinDemography": 0,
-            "xMaxDemography": 80,
-            "xMpvDemography": 40,
-            "plateauDemography": 78,
-            "xScaleDemography": 4,
-            "accountCount": 1,
-            "account0": {
-                "id": 1,
-                "birth": 1,
-                "StartingPercentage": 100,
-                "udProducer": true
+            le: 80,
+            ud0: 100,
+            tm: 0,
+            tM: 5,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                a0: 100,
+                p: true
             }
         },
-        "guiAsJSon": {
-            "curConfigId" : "config1-2",
-            "curTabId": "IntroItem",
-            "accountsChart": {
-                "hiddenSeries": ['average', "stableAverage"]
+        g: {
+            c: "config1-2",
+            t: "IntroItem",
+            ac: {
+                hs: ['average', "stableAverage"]
             },
-            "dividendChart": {
-                "hiddenSeries": ["stableDividend"]
+            dc: {
+                hs: ["stableDividend"]
             },
-            "headcountChart": {
-                "hiddenSeries": []
+            hc: {
+                hs: []
             },
-            "monetarySupplyChart": {
-                "hiddenSeries": ["stableMonetarySupply"]
+            sc: {
+                hs: ["stableMonetarySupply"]
             },
-            "selectedAccount": 0,
-            "commentedId": "config1-2"
+            a: 0,
+            com: "config1-2"
         }
     },
     
     'config1-3': {
-        "moneyAsJSon": {
-            "udFormulaKey": "BasicUD",
-            "referenceFrameKey": "monetaryUnit",
-            "referenceFrames": {
-                "monetaryUnit": {
-                    "logScale": false
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
                 },
-                "dividend": {
-                    "logScale": false
+                ud: {
+                    log: false
                 },
-                "average": {
-                    "logScale": false
+                mn: {
+                    log: false
                 }
             },
-            "lifeExpectancy": 80,
-            "dividendStart": 96.6,
-            "timeLowerBoundInYears": 0,
-            "timeUpperBoundInYears": 40,
-            "calculateGrowth": true,
-            "growthTimeUnit": "YEAR",
-            "growth": 0.09660822712436135,
-            "demographicProfileKey": "None",
-            "maxDemography": 10000,
-            "xMinDemography": 0,
-            "xMaxDemography": 80,
-            "xMpvDemography": 40,
-            "plateauDemography": 78,
-            "xScaleDemography": 4,
-            "accountCount": 1,
-            "account0": {
-                "id": 1,
-                "birth": 1,
-                "StartingPercentage": 100,
-                "udProducer": true
+            le: 80,
+            ud0: 96.6,
+            tm: 0,
+            tM: 40,
+            cc: true,
+            cu: "YEAR",
+            c: 0.09660822712436135,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                a0: 100,
+                p: true
             }
         },
-        "guiAsJSon": {
-            "curConfigId" : "config1-3",
-            "curTabId": "IntroItem",
-            "accountsChart": {
-                "hiddenSeries": ['average', "stableAverage"]
+        g: {
+            c: "config1-3",
+            t: "IntroItem",
+            ac: {
+                hs: ['average', "stableAverage"]
             },
-            "dividendChart": {
-                "hiddenSeries": ["stableDividend"]
+            dc: {
+                hs: ["stableDividend"]
             },
-            "headcountChart": {
-                "hiddenSeries": []
+            hc: {
+                hs: []
             },
-            "monetarySupplyChart": {
-                "hiddenSeries": ["stableMonetarySupply"]
+            sc: {
+                hs: ["stableMonetarySupply"]
             },
-            "selectedAccount": 0,
-            "commentedId": "config1-3"
+            a: 0,
+            com: "config1-3"
         }
     }
 };
 
 var configs2 = {
-    'none': {
+    none: {
     },
     'config2-1': {
-        "moneyAsJSon": {
-            "udFormulaKey": "BasicUD",
-            "referenceFrameKey": "average",
-            "referenceFrames": {
-                "monetaryUnit": {
-                    "logScale": false
+        m: {
+            f: "BasicUD",
+            r: "average",
+            rs: {
+                mu: {
+                    log: false
                 },
-                "dividend": {
-                    "logScale": false
+                ud: {
+                    log: false
                 },
-                "average": {
-                    "logScale": false
+                mn: {
+                    log: false
                 }
             },
-            "lifeExpectancy": 80,
-            "dividendStart": 1000,
-            "timeLowerBoundInYears": 0,
-            "timeUpperBoundInYears": 10,
-            "calculateGrowth": true,
-            "growthTimeUnit": "YEAR",
-            "growth": 0.09660822712436135,
-            "demographicProfileKey": "None",
-            "maxDemography": 10000,
-            "xMinDemography": 0,
-            "xMaxDemography": 80,
-            "xMpvDemography": 40,
-            "plateauDemography": 78,
-            "xScaleDemography": 4,
-            "accountCount": 2,
-            "account0": {
-                "id": 1,
-                "birth": 1,
-                "StartingPercentage": 0,
-                "udProducer": true
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 10,
+            cc: true,
+            cu: "YEAR",
+            c: 0.09660822712436135,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 2,
+            a0: {
+                id: 1,
+                b: 1,
+                a0: 0,
+                p: true
             },
-            "account1": {
-                "id": 2,
-                "birth": 3,
-                "StartingPercentage": 0,
-                "udProducer": true
+            a1: {
+                id: 2,
+                b: 3,
+                a0: 0,
+                p: true
             }
         },
-        "guiAsJSon": {
-            "curTabId": "IntroItem",
-            "curConfigId": "config2-1",
-            "accountsChart": {
-                "hiddenSeries": ["stableAverage"]
+        g: {
+            t: "IntroItem",
+            c: "config2-1",
+            ac: {
+                hs: ["stableAverage"]
             },
-            "dividendChart": {
-                "hiddenSeries": ["stableDividend"]
+            dc: {
+                hs: ["stableDividend"]
             },
-            "headcountChart": {
-                "hiddenSeries": []
+            hc: {
+                hs: []
             },
-            "monetarySupplyChart": {
-                "hiddenSeries": ["stableMonetarySupply"]
+            sc: {
+                hs: ["stableMonetarySupply"]
             },
-            "selectedAccount": 1,
-            "commentedId": "config2-1"
+            a: 1,
+            com: "config2-1"
         }
     },
     'config2-2': {
-        "moneyAsJSon": {
-            "udFormulaKey": "UDG",
-            "referenceFrameKey": "average",
-            "referenceFrames": {
-                "monetaryUnit": {
-                    "logScale": false
+        m: {
+            f: "UDG",
+            r: "average",
+            rs: {
+                mu: {
+                    log: false
                 },
-                "dividend": {
-                    "logScale": false
+                ud: {
+                    log: false
                 },
-                "average": {
-                    "logScale": false
+                mn: {
+                    log: false
                 }
             },
-            "lifeExpectancy": 80,
-            "dividendStart": 1000,
-            "timeLowerBoundInYears": 0,
-            "timeUpperBoundInYears": 80,
-            "calculateGrowth": true,
-            "growthTimeUnit": "YEAR",
-            "growth": 0.09660822712436135,
-            "demographicProfileKey": "Cauchy",
-            "maxDemography": 10000,
-            "xMinDemography": 0,
-            "xMaxDemography": 80,
-            "xMpvDemography": 40,
-            "plateauDemography": 78,
-            "xScaleDemography": 4,
-            "accountCount": 2,
-            "account0": {
-                "id": 1,
-                "birth": 1,
-                "StartingPercentage": 0,
-                "udProducer": true
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 80,
+            cc: true,
+            cu: "YEAR",
+            c: 0.09660822712436135,
+            d: "Cauchy",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 2,
+            a0: {
+                id: 1,
+                b: 1,
+                a0: 0,
+                p: true
             },
-            "account1": {
-                "id": 2,
-                "birth": 35,
-                "StartingPercentage": 0,
-                "udProducer": true
+            a1: {
+                id: 2,
+                b: 35,
+                a0: 0,
+                p: true
             }
         },
-        "guiAsJSon": {
-            "curTabId": "IntroItem",
-            "curConfigId": "config2-2",
-            "accountsChart": {
-                "hiddenSeries": ["stableAverage"]
+        g: {
+            t: "IntroItem",
+            c: "config2-2",
+            ac: {
+                hs: ["stableAverage"]
             },
-            "dividendChart": {
-                "hiddenSeries": []
+            dc: {
+                hs: []
             },
-            "headcountChart": {
-                "hiddenSeries": []
+            hc: {
+                hs: []
             },
-            "monetarySupplyChart": {
-                "hiddenSeries": []
+            sc: {
+                hs: []
             },
-            "selectedAccount": 1,
-            "commentedId": "config2-2"
+            a: 1,
+            com: "config2-2"
         }
     },
     'config2-3': {
-        "moneyAsJSon": {
-            "udFormulaKey": "UDG",
-            "referenceFrameKey": "dividend",
-            "referenceFrames": {
-                "monetaryUnit": {
-                    "logScale": false
+        m: {
+            f: "UDG",
+            r: "dividend",
+            rs: {
+                mu: {
+                    log: false
                 },
-                "dividend": {
-                    "logScale": false
+                ud: {
+                    log: false
                 },
-                "average": {
-                    "logScale": false
+                mn: {
+                    log: false
                 }
             },
-            "lifeExpectancy": 80,
-            "dividendStart": 1000,
-            "timeLowerBoundInYears": 0,
-            "timeUpperBoundInYears": 80,
-            "calculateGrowth": true,
-            "growthTimeUnit": "YEAR",
-            "growth": 0.09660822712436135,
-            "demographicProfileKey": "Cauchy",
-            "maxDemography": 10000,
-            "xMinDemography": 0,
-            "xMaxDemography": 80,
-            "xMpvDemography": 40,
-            "plateauDemography": 78,
-            "xScaleDemography": 4,
-            "accountCount": 4,
-            "account0": {
-                "id": 1,
-                "birth": 1,
-                "StartingPercentage": 0,
-                "udProducer": true
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 80,
+            cc: true,
+            cu: "YEAR",
+            c: 0.09660822712436135,
+            d: "Cauchy",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 4,
+            a0: {
+                id: 1,
+                b: 1,
+                a0: 0,
+                p: true
             },
-            "account1": {
-                "id": 2,
-                "birth": 35,
-                "StartingPercentage": 0,
-                "udProducer": true
+            a1: {
+                id: 2,
+                b: 35,
+                a0: 0,
+                p: true
             },
-            "account2": {
-                "id": 3,
-                "birth": 45,
-                "StartingPercentage": 0,
-                "udProducer": true
+            a2: {
+                id: 3,
+                b: 45,
+                a0: 0,
+                p: true
             },
-            "account3": {
-                "id": 4,
-                "birth": 25,
-                "StartingPercentage": 0,
-                "udProducer": true
+            a3: {
+                id: 4,
+                b: 25,
+                a0: 0,
+                p: true
             }
         },
-        "guiAsJSon": {
-            "curConfigId" : "config2-3",
-            "curTabId": "IntroItem",
-            "accountsChart": {
-                "hiddenSeries": []
+        g: {
+            c: "config2-3",
+            t: "IntroItem",
+            ac: {
+                hs: []
             },
-            "dividendChart": {
-                "hiddenSeries": []
+            dc: {
+                hs: []
             },
-            "headcountChart": {
-                "hiddenSeries": []
+            hc: {
+                hs: []
             },
-            "monetarySupplyChart": {
-                "hiddenSeries": []
+            sc: {
+                hs: []
             },
-            "selectedAccount": 3,
-            "commentedId": "config2-3"
+            a: 3,
+            com: "config2-3"
         }
     }
 };
 
 var configs3 = {
-    'none': {
+    none: {
     },
     'config3-1': {
-        "moneyAsJSon": {
-            "udFormulaKey": "UDG",
-            "referenceFrameKey": "dividend",
-            "referenceFrames": {
-                "monetaryUnit": {
-                    "logScale": false
+        m: {
+            f: "UDG",
+            r: "dividend",
+            rs: {
+                mu: {
+                    log: false
                 },
-                "dividend": {
-                    "logScale": true
+                ud: {
+                    log: true
                 },
-                "average": {
-                    "logScale": false
+                mn: {
+                    log: false
                 }
             },
-            "lifeExpectancy": 80,
-            "dividendStart": 1000,
-            "timeLowerBoundInYears": 5,
-            "timeUpperBoundInYears": 80,
-            "calculateGrowth": false,
-            "growthTimeUnit": "YEAR",
-            "growth": 0.1,
-            "demographicProfileKey": "Plateau",
-            "maxDemography": 10000,
-            "xMinDemography": 0,
-            "xMaxDemography": 40,
-            "xMpvDemography": 40,
-            "plateauDemography": 38,
-            "xScaleDemography": 4,
-            "accountCount": 1,
-            "account0": {
-                "id": 1,
-                "birth": 1,
-                "StartingPercentage": 0,
-                "udProducer": true
+            le: 80,
+            ud0: 1000,
+            tm: 5,
+            tM: 80,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "Plateau",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 40,
+            dxPv: 40,
+            dp: 38,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                a0: 0,
+                p: true
             }
         },
-        "guiAsJSon": {
-            "curConfigId" : "config3-1",
-            "curTabId": "IntroItem",
-            "accountsChart": {
-                "hiddenSeries": []
+        g: {
+            c: "config3-1",
+            t: "IntroItem",
+            ac: {
+                hs: []
             },
-            "dividendChart": {
-                "hiddenSeries": []
+            dc: {
+                hs: []
             },
-            "headcountChart": {
-                "hiddenSeries": []
+            hc: {
+                hs: []
             },
-            "monetarySupplyChart": {
-                "hiddenSeries": []
+            sc: {
+                hs: []
             },
-            "selectedAccount": 0,
-            "commentedId": "config3-1"
+            a: 0,
+            com: "config3-1"
         }
     }
 };

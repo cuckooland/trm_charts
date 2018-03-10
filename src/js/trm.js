@@ -317,77 +317,77 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
 
     this.asJSonRep = function() {
         var jsonRep = {
-            'udFormulaKey' : this.udFormulaKey,
-            'referenceFrameKey' : this.referenceFrameKey,
-            'referenceFrames' : {
-                'monetaryUnit': {
-                    'logScale': this.referenceFrames[this.MONETARY_UNIT_REF_KEY].logScale
+            f : this.udFormulaKey,
+            r : this.referenceFrameKey,
+            rs : {
+                mu: {
+                    log: this.referenceFrames[this.MONETARY_UNIT_REF_KEY].logScale
                 },
-                'dividend': {
-                    'logScale': this.referenceFrames[this.DIVIDEND_REF_KEY].logScale
+                ud: {
+                    log: this.referenceFrames[this.DIVIDEND_REF_KEY].logScale
                 },
-                'average': {
-                    'logScale': this.referenceFrames[this.AVERAGE_REF_KEY].logScale
+                mn: {
+                    log: this.referenceFrames[this.AVERAGE_REF_KEY].logScale
                 }
             },
-            'lifeExpectancy' : this.lifeExpectancy,
-            'dividendStart' : this.dividendStart,
-            'timeLowerBoundInYears' : this.timeLowerBoundInYears,
-            'timeUpperBoundInYears' : this.timeUpperBoundInYears,
-            'calculateGrowth' : this.calculateGrowth,
-            'growthTimeUnit' : this.growthTimeUnit,
-            'growth' : this.growth,
-            'demographicProfileKey' : this.demographicProfileKey,
-            'maxDemography' : this.maxDemography,
-            'xMinDemography' : this.xMinDemography,
-            'xMaxDemography' : this.xMaxDemography,
-            'xMpvDemography' : this.xMpvDemography,
-            'plateauDemography' : this.plateauDemography,
-            'xScaleDemography' : this.xScaleDemography,
-            'accountCount' : this.accounts.length
+            le : this.lifeExpectancy,
+            ud0 : this.dividendStart,
+            tm : this.timeLowerBoundInYears,
+            tM : this.timeUpperBoundInYears,
+            cc : this.calculateGrowth,
+            cu : this.growthTimeUnit,
+            c : this.growth,
+            d : this.demographicProfileKey,
+            dyM : this.maxDemography,
+            dxm : this.xMinDemography,
+            dxM : this.xMaxDemography,
+            dxPv : this.xMpvDemography,
+            dp : this.plateauDemography,
+            dxs : this.xScaleDemography,
+            ac : this.accounts.length
         };
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
-            jsonRep['account' + iAccount] = {
+            jsonRep['a' + iAccount] = {
                 id: this.accounts[iAccount].id,
-                birth: this.accounts[iAccount].birth,
-                StartingPercentage: this.accounts[iAccount].StartingPercentage,
-                udProducer: this.accounts[iAccount].udProducer,
+                b: this.accounts[iAccount].birth,
+                a0: this.accounts[iAccount].StartingPercentage,
+                p: this.accounts[iAccount].udProducer,
             }
         }
         return jsonRep;
     }
     
     this.applyJSonRep = function(jsonRep) {
-        this.lifeExpectancy = jsonRep.lifeExpectancy;
-        this.udFormulaKey = jsonRep.udFormulaKey;
-        this.referenceFrameKey = jsonRep.referenceFrameKey;
-        this.referenceFrames[this.MONETARY_UNIT_REF_KEY].logScale = jsonRep.referenceFrames.monetaryUnit.logScale;
-        this.referenceFrames[this.DIVIDEND_REF_KEY].logScale = jsonRep.referenceFrames.dividend.logScale;
-        this.referenceFrames[this.AVERAGE_REF_KEY].logScale = jsonRep.referenceFrames.average.logScale;
-        this.dividendStart = jsonRep.dividendStart;
-        this.timeLowerBoundInYears = jsonRep.timeLowerBoundInYears;
-        this.timeUpperBoundInYears = jsonRep.timeUpperBoundInYears;
-        this.calculateGrowth = jsonRep.calculateGrowth;
-        this.growthTimeUnit = jsonRep.growthTimeUnit;
-        this.growth = jsonRep.growth;
-        this.demographicProfileKey = jsonRep.demographicProfileKey;
-        this.maxDemography = jsonRep.maxDemography;
-        this.xMinDemography = jsonRep.xMinDemography;
-        this.xMaxDemography = jsonRep.xMaxDemography;
-        this.xMpvDemography = jsonRep.xMpvDemography;
-        this.plateauDemography = jsonRep.plateauDemography;
-        this.xScaleDemography = jsonRep.xScaleDemography;
+        this.lifeExpectancy = jsonRep.le;
+        this.udFormulaKey = jsonRep.f;
+        this.referenceFrameKey = jsonRep.r;
+        this.referenceFrames[this.MONETARY_UNIT_REF_KEY].logScale = jsonRep.rs.mu.log;
+        this.referenceFrames[this.DIVIDEND_REF_KEY].logScale = jsonRep.rs.ud.log;
+        this.referenceFrames[this.AVERAGE_REF_KEY].logScale = jsonRep.rs.mn.log;
+        this.dividendStart = jsonRep.ud0;
+        this.timeLowerBoundInYears = jsonRep.tm;
+        this.timeUpperBoundInYears = jsonRep.tM;
+        this.calculateGrowth = jsonRep.cc;
+        this.growthTimeUnit = jsonRep.cu;
+        this.growth = jsonRep.c;
+        this.demographicProfileKey = jsonRep.d;
+        this.maxDemography = jsonRep.dyM;
+        this.xMinDemography = jsonRep.dxm;
+        this.xMaxDemography = jsonRep.dxM;
+        this.xMpvDemography = jsonRep.dxPv;
+        this.plateauDemography = jsonRep.dp;
+        this.xScaleDemography = jsonRep.dxs;
         
         this.accounts = [];
-        var accountCount = jsonRep.accountCount;
+        var accountCount = jsonRep.ac;
         for (var iAccount = 0; iAccount < accountCount; iAccount++) {
-            var accountDescr = jsonRep['account' + iAccount];
+            var accountDescr = jsonRep['a' + iAccount];
             this.accounts.push({
                 id: accountDescr.id,
-                birth: accountDescr.birth,
+                birth: accountDescr.b,
                 balance: 0,
-                StartingPercentage: accountDescr.StartingPercentage,
-                udProducer: accountDescr.udProducer,
+                StartingPercentage: accountDescr.a0,
+                udProducer: accountDescr.p,
                 values: [],
                 x: [],
                 y: [],
