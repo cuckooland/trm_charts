@@ -1023,7 +1023,7 @@ function getUdFormulaLabel(udFormulaKey) {
 function getDemographicProfileLabel(demographicProfileKey) {
     switch(demographicProfileKey) {
         case money.NONE_PROFILE_KEY:
-            return "Aucun profile";
+            return "Aucun profil";
         case money.TRIANGULAR_PROFILE_KEY:
             return "Triangulaire";
         case money.PLATEAU_PROFILE_KEY:
@@ -2303,9 +2303,29 @@ function changeStartingPercentage() {
     pushNewHistoryState();
 }
 
+function getCurConfigJsonRep() {
+    if (Object.keys(configs1).indexOf(curConfigId) != -1) {
+        return configs1[curConfigId];
+    }
+    if (Object.keys(configs2).indexOf(curConfigId) != -1) {
+        return configs2[curConfigId];
+    }
+    if (Object.keys(configs3).indexOf(curConfigId) != -1) {
+        return configs3[curConfigId];
+    }
+    throw new Error("Configuration not managed: " + curConfigId);
+}
+
 function clickTab(tabItemId) {
     openTab(tabItemId);
-    comment(tabItemId);
+    if (tabItemId == "IntroItem") {
+        var jsonRep = getCurConfigJsonRep();
+        applyJSonRep(jsonRep);
+        comment(curConfigId);
+    }
+    else {
+        comment(tabItemId);
+    }
     pushNewHistoryState();
     
     return false;
