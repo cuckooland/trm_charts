@@ -21,17 +21,8 @@
  *
  * https://javascriptweblog.wordpress.com/2010/12/07/namespacing-in-javascript/
  *
- * @param lifeExpectancy {int} Members life expectancy
- * @param growthTimeUnit {String} Indicate the rythm of the dividend creation (YEAR or MONTH)
- * @param calculateGrowth {boolean} Calculate growth from life expectancy
- * @param growth {double} Monetary supply growth in percent (per year or per month, it depends of 'growthTimeUnit')
- * @param dividendStart {int} First dividend amount (at first year or first month, it depends of 'growthTimeUnit')
- * @param timeLowerBoundInYears {int} Time lower bound for plot generation
- * @param timeUpperBoundInYears {int} Time upper bound for plot generation
- * @param maxDemography {int} Order of magnitude of the maximum demography
- * @param widthDemography {int} Used to define a duration of the demography profile
  */
-var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, growth, dividendStart, timeLowerBoundInYears, timeUpperBoundInYears, maxDemography, xMinDemography, xMaxDemography, xMpvDemography, plateauDemography, xScaleDemography) {
+var libreMoneyClass = function() {
 
     this.YEAR = 'YEAR';
     this.MONTH = 'MONTH';
@@ -39,38 +30,46 @@ var libreMoneyClass = function(lifeExpectancy, growthTimeUnit, calculateGrowth, 
     this.INFINITY_FACTOR = 1.234567;
     
     // Default Values
-    const LIFE_EXPECTANCY = 80;
-    const DIVIDEND_START = 1000;
-    const TIME_LOWER_BOUND_IN_YEARS = 0;
-    const TIME_UPPER_BOUND_IN_YEARS = 5;
-    const CALCULATE_GROWTH = true;
-    const PER_YEAR_GROWTH = 20;
-    const PER_MONTH_GROWTH = 2;
-    const GROWTH_TIME_UNIT = this.YEAR;
-    const MAX_DEMOGRAPHY = 10000;
-    const XMIN_DEMOGRAPHY = 0;
-    const XMAX_DEMOGRAPHY = 80;
-    const XMPV_DEMOGRAPHY = 40;
-    const PLATEAU_DEMOGRAPHY = 78;
-    const XSCALE_DEMOGRAPHY = 4;
+    this.LIFE_EXPECTANCY = 80;
+    this.DIVIDEND_START = 1000;
+    this.TIME_LOWER_BOUND_IN_YEARS = 0;
+    this.TIME_UPPER_BOUND_IN_YEARS = 5;
+    this.CALCULATE_GROWTH = true;
+    this.PER_YEAR_GROWTH = 20;
+    this.PER_MONTH_GROWTH = 2;
+    this.GROWTH_TIME_UNIT = this.YEAR;
+    this.MAX_DEMOGRAPHY = 10000;
+    this.XMIN_DEMOGRAPHY = 0;
+    this.XMAX_DEMOGRAPHY = 80;
+    this.XMPV_DEMOGRAPHY = 40;
+    this.PLATEAU_DEMOGRAPHY = 78;
+    this.XSCALE_DEMOGRAPHY = 4;
     this.DEFAULT_MONEY_BIRTH = 1;
     this.DEFAULT_STARTING_PERCENT = 0;
    
     this.moneyBirth = -1;
-    this.lifeExpectancy = lifeExpectancy || LIFE_EXPECTANCY;
-    this.dividendStart = dividendStart || DIVIDEND_START;
-    this.timeLowerBoundInYears = timeLowerBoundInYears || TIME_LOWER_BOUND_IN_YEARS;
-    this.timeUpperBoundInYears = timeUpperBoundInYears || TIME_UPPER_BOUND_IN_YEARS;
+    // {int} Members life expectancy
+    this.lifeExpectancy = LIFE_EXPECTANCY;
+    // {int} First dividend amount (at first year or first month, it depends of 'growthTimeUnit')
+    this.dividendStart = DIVIDEND_START;
+    // {int} Time lower bound for plot generation
+    this.timeLowerBoundInYears = TIME_LOWER_BOUND_IN_YEARS;
+    // {int} Time upper bound for plot generation
+    this.timeUpperBoundInYears = TIME_UPPER_BOUND_IN_YEARS;
 
-    this.calculateGrowth = calculateGrowth || CALCULATE_GROWTH;
-    this.growthTimeUnit = growthTimeUnit || GROWTH_TIME_UNIT;
-    this.maxDemography = maxDemography || MAX_DEMOGRAPHY;
-    this.xMinDemography = xMinDemography || XMIN_DEMOGRAPHY;
-    this.xMaxDemography = xMaxDemography || XMAX_DEMOGRAPHY;
-    this.xMpvDemography = xMpvDemography || XMPV_DEMOGRAPHY;
-    this.plateauDemography = plateauDemography || PLATEAU_DEMOGRAPHY;
-    this.xScaleDemography = xScaleDemography || XSCALE_DEMOGRAPHY;
+    // {boolean} Indicate if growth has to be calculated from life expectancy
+    this.calculateGrowth = CALCULATE_GROWTH;
+    // {String} Indicate the rythm of the dividend creation (YEAR or MONTH)
+    this.growthTimeUnit = GROWTH_TIME_UNIT;
+    // {int} Order of magnitude of the maximum demography
+    this.maxDemography = MAX_DEMOGRAPHY;
+    this.xMinDemography = XMIN_DEMOGRAPHY;
+    this.xMaxDemography = XMAX_DEMOGRAPHY;
+    this.xMpvDemography = XMPV_DEMOGRAPHY;
+    this.plateauDemography = PLATEAU_DEMOGRAPHY;
+    this.xScaleDemography = XSCALE_DEMOGRAPHY;
    
+    // {double} Monetary supply growth in percent (per year or per month, it depends of 'growthTimeUnit')
     if (this.growthTimeUnit === this.MONTH) {
         this.growth = growth || PER_MONTH_GROWTH;
     }
