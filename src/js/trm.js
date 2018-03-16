@@ -22,7 +22,7 @@
  * https://javascriptweblog.wordpress.com/2010/12/07/namespacing-in-javascript/
  *
  */
-var libreMoneyClass = function() {
+var libreMoneyClass = function(lifeExpectancy) {
 
     this.YEAR = 'YEAR';
     this.MONTH = 'MONTH';
@@ -49,7 +49,7 @@ var libreMoneyClass = function() {
    
     this.moneyBirth = -1;
     // {int} Members life expectancy
-    this.lifeExpectancy = LIFE_EXPECTANCY;
+    this.lifeExpectancy = lifeExpectancy || LIFE_EXPECTANCY;
     // {int} First dividend amount (at first year or first month, it depends of 'growthTimeUnit')
     this.dividendStart = DIVIDEND_START;
     // {int} Time lower bound for plot generation
@@ -71,10 +71,10 @@ var libreMoneyClass = function() {
    
     // {double} Monetary supply growth in percent (per year or per month, it depends of 'growthTimeUnit')
     if (this.growthTimeUnit === this.MONTH) {
-        this.growth = growth || PER_MONTH_GROWTH;
+        this.growth = PER_MONTH_GROWTH;
     }
     else if (this.growthTimeUnit === this.YEAR) {
-        this.growth = growth || PER_YEAR_GROWTH;
+        this.growth = PER_YEAR_GROWTH;
     }
     else {
         throw new Error("Growth time unit not managed");
