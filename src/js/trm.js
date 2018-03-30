@@ -46,66 +46,74 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.XSCALE_DEMOGRAPHY = 4;
     this.DEFAULT_MONEY_BIRTH = 1;
     this.DEFAULT_STARTING_PERCENT = 0;
-   
+    this.DEFAULT_TRANSACTION_AMOUNT = 10;
+    
     this.moneyBirth = -1;
     // {int} Members life expectancy
-    this.lifeExpectancy = lifeExpectancy || LIFE_EXPECTANCY;
+    this.lifeExpectancy = lifeExpectancy || this.LIFE_EXPECTANCY;
     // {int} First dividend amount (at first year or first month, it depends of 'growthTimeUnit')
-    this.dividendStart = DIVIDEND_START;
+    this.dividendStart = this.DIVIDEND_START;
     // {int} Time lower bound for plot generation
-    this.timeLowerBoundInYears = TIME_LOWER_BOUND_IN_YEARS;
+    this.timeLowerBoundInYears = this.TIME_LOWER_BOUND_IN_YEARS;
     // {int} Time upper bound for plot generation
-    this.timeUpperBoundInYears = TIME_UPPER_BOUND_IN_YEARS;
+    this.timeUpperBoundInYears = this.TIME_UPPER_BOUND_IN_YEARS;
 
     // {boolean} Indicate if growth has to be calculated from life expectancy
-    this.calculateGrowth = CALCULATE_GROWTH;
+    this.calculateGrowth = this.CALCULATE_GROWTH;
     // {String} Indicate the rythm of the dividend creation (YEAR or MONTH)
-    this.growthTimeUnit = GROWTH_TIME_UNIT;
+    this.growthTimeUnit = this.GROWTH_TIME_UNIT;
     // {int} Order of magnitude of the maximum demography
-    this.maxDemography = MAX_DEMOGRAPHY;
-    this.xMinDemography = XMIN_DEMOGRAPHY;
-    this.xMaxDemography = XMAX_DEMOGRAPHY;
-    this.xMpvDemography = XMPV_DEMOGRAPHY;
-    this.plateauDemography = PLATEAU_DEMOGRAPHY;
-    this.xScaleDemography = XSCALE_DEMOGRAPHY;
+    this.maxDemography = this.MAX_DEMOGRAPHY;
+    this.xMinDemography = this.XMIN_DEMOGRAPHY;
+    this.xMaxDemography = this.XMAX_DEMOGRAPHY;
+    this.xMpvDemography = this.XMPV_DEMOGRAPHY;
+    this.plateauDemography = this.PLATEAU_DEMOGRAPHY;
+    this.xScaleDemography = this.XSCALE_DEMOGRAPHY;
    
     // {double} Monetary supply growth in percent (per year or per month, it depends of 'growthTimeUnit')
     if (this.growthTimeUnit === this.MONTH) {
-        this.growth = PER_MONTH_GROWTH;
+        this.growth = this.PER_MONTH_GROWTH;
     }
     else if (this.growthTimeUnit === this.YEAR) {
-        this.growth = PER_YEAR_GROWTH;
+        this.growth = this.PER_YEAR_GROWTH;
     }
     else {
         throw new Error("Growth time unit not managed");
     }
    
     this.accounts = [];
+    this.transactions = [];
     this.referenceFrames = {
         'monetaryUnit': {
             transform: function(money, value, timeStep) {
+                return value;
+            },
+            invTransform: function(money, value, timeStep) {
                 return value;
             },
             logScale: false
         },
         'dividend': {
             transform: function(money, value, timeStep) {
-                if (value === 0) {
-                    return 0;
-                }
                 return value / money.dividends.values[timeStep];
+            },
+            invTransform: function(money, value, timeStep) {
+                return value * money.dividends.values[timeStep];
             },
             logScale: false
         },
         'average': {
             transform: function(money, value, timeStep) {
-                if (value === 0) {
-                    return 0;
-                }
                 if (money.monetarySupplies.values[timeStep] === 0) {
                     return Infinity;
                 }
                 return value / money.monetarySupplies.values[timeStep] * money.headcounts.values[timeStep] * 100;
+            },
+            invTransform: function(money, value, timeStep) {
+                if (money.headcounts.values[timeStep] === 0) {
+                    return Infinity;
+                }
+                return value * money.monetarySupplies.values[timeStep] / money.headcounts.values[timeStep] * 100;
             },
             logScale: false
         }
@@ -343,14 +351,25 @@ var libreMoneyClass = function(lifeExpectancy) {
             dxPv : this.xMpvDemography,
             dp : this.plateauDemography,
             dxs : this.xScaleDemography,
-            ac : this.accounts.length
+            ac : this.accounts.length,
+            tc : this.transactions.length
         };
-        for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
-            jsonRep['a' + iAccount] = {
-                id: this.accounts[iAccount].id,
-                b: this.accounts[iAccount].birth,
-                a0: this.accounts[iAccount].StartingPercentage,
-                p: this.accounts[iAccount].udProducer,
+        for (var i = 0; i < this.accounts.length; i++) {
+            jsonRep['a' + i] = {
+                id: this.accounts[i].id,
+                b: this.accounts[i].birth,
+                a0: this.accounts[i].startingPercentage,
+                p: this.accounts[i].udProducer
+            }
+        }
+        for (var i = 0; i < this.transactions.length; i++) {
+            jsonRep['t' + i] = {
+                id: this.transactions[i].id,
+                f: this.transactions[i].from.id,
+                t: this.transactions[i].to.id,
+                y: this.transactions[i].year,
+                a: this.transactions[i].amount,
+                r: this.transactions[i].amountRef
             }
         }
         return jsonRep;
@@ -379,17 +398,32 @@ var libreMoneyClass = function(lifeExpectancy) {
         
         this.accounts = [];
         var accountCount = jsonRep.ac;
-        for (var iAccount = 0; iAccount < accountCount; iAccount++) {
-            var accountDescr = jsonRep['a' + iAccount];
+        for (var i = 0; i < accountCount; i++) {
+            var accountDescr = jsonRep['a' + i];
             this.accounts.push({
                 id: accountDescr.id,
                 birth: accountDescr.b,
                 balance: 0,
-                StartingPercentage: accountDescr.a0,
+                startingPercentage: accountDescr.a0,
                 udProducer: accountDescr.p,
                 values: [],
                 x: [],
-                y: [],
+                y: []
+            });
+        }
+        
+        this.transactions = [];
+        var transactionCount = jsonRep.tc;
+        for (var i = 0; i < transactionCount; i++) {
+            var transactionDescr = jsonRep['t' + i];
+            this.transactions.push({
+                id: transactionDescr.id,
+                from: this.searchAccount(transactionDescr.f),
+                to: this.searchAccount(transactionDescr.t),
+                year: transactionDescr.y,
+                amount: transactionDescr.a,
+                amountRef: transactionDescr.r,
+                actualAmount: -1
             });
         }
     }
@@ -424,40 +458,40 @@ var libreMoneyClass = function(lifeExpectancy) {
         }
 
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
-            monetarySupply += this.getAccountIncrease(iAccount, timeStep);
+            monetarySupply += this.getAccountIncrease(this.accounts[iAccount], timeStep);
         }
        
         return monetarySupply;
     };
-   
-    this.getAccountBalance = function(iAccount, timeStep) {
-        if (timeStep < this.accounts[iAccount].values.length) {
-            return this.accounts[iAccount].values[timeStep];
+
+    this.getAccountBalance = function(account, timeStep) {
+        if (timeStep < account.values.length) {
+            return account.values[timeStep];
         }
         var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
         var balance = 0;
        
         if (timeStep > 0) {
-            balance = this.getAccountBalance(iAccount, timeStep - 1);
+            balance = this.getAccountBalance(account, timeStep - 1);
         }
        
-        balance += this.getAccountIncrease(iAccount, timeStep);
-       
+        balance += this.getAccountIncrease(account, timeStep);
+        
         return balance;
     };
    
-    this.getAccountIncrease = function(iAccount, timeStep) {
+    this.getAccountIncrease = function(account, timeStep) {
         var accountIncrease = 0;
-        var birthStep = this.getTimeStep(this.accounts[iAccount].birth, this.YEAR);
-        var deathStep = this.getTimeStep(this.accounts[iAccount].birth + this.lifeExpectancy, this.YEAR);
-        if (timeStep < deathStep && timeStep >= birthStep && this.accounts[iAccount].udProducer) {
+        var birthStep = this.getTimeStep(account.birth, this.YEAR);
+        var deathStep = this.getTimeStep(account.birth + this.lifeExpectancy, this.YEAR);
+        if (timeStep < deathStep && timeStep >= birthStep && account.udProducer) {
             // Add a dividend coming from producer
             accountIncrease = this.getDividend(timeStep);
         }
 
-        var startingRatio = this.accounts[iAccount].StartingPercentage / 100;
+        var startingRatio = account.startingPercentage / 100;
         if (startingRatio != 0) {
-            // At birth, add some money according to the 'StartingPercentage' attribute
+            // At birth, add some money according to the 'startingPercentage' attribute
             var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
             if (birthStep === moneyBirthStep) {
                 if (timeStep === moneyBirthStep - 1) {
@@ -475,6 +509,37 @@ var libreMoneyClass = function(lifeExpectancy) {
         return accountIncrease;
     }
    
+    this.applyTransactions = function(timeStep) {
+        var annualTransactions = this.transactions.filter(t=>timeStep==this.getTimeStep(t.year, this.YEAR) && this.validTransactionDate(t));
+
+        // Loop over the origin of each annual transactions
+        for (var i = 0; i < annualTransactions.length; i++) {
+            var fromAccount = annualTransactions[i].from;
+            var accountIncrease = this.getAccountIncrease(fromAccount, timeStep);
+            // Compute actual balance (other transactions can have decreased it)
+            var actualBalance = fromAccount.values[timeStep] - accountIncrease;
+            var amount = annualTransactions[i].amount;
+            var muAmount = this.referenceFrames[annualTransactions[i].amountRef].invTransform(this, amount, timeStep);
+            // Apply transaction, actual amount depends on the solvency of the account
+            var actualAmount = Math.min(muAmount, actualBalance);
+            annualTransactions[i].actualAmount = actualAmount;
+            fromAccount.values[timeStep] = fromAccount.values[timeStep] - actualAmount;
+        }
+
+        // Loop over the destination of each annual transactions
+        for (var i = 0; i < annualTransactions.length; i++) {
+            var toAccount = annualTransactions[i].to;
+            toAccount.values[timeStep] = toAccount.values[timeStep] + annualTransactions[i].actualAmount;
+        }
+    }
+
+    this.validTransactionDate = function(transaction) {
+        return !(transaction.year < transaction.from.birth 
+            || transaction.year > (transaction.from.birth + this.lifeExpectancy)
+            || transaction.year < transaction.to.birth 
+            || transaction.year > (transaction.to.birth + this.lifeExpectancy));
+    }
+
     this.getAverage = function(timeStep) {
         var average = 0;
         var headcount = this.getHeadcount(timeStep);
@@ -492,12 +557,12 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.addAccount = function() {
         var id = 1;
         var birth = this.DEFAULT_MONEY_BIRTH;
-        var StartingPercentage = this.DEFAULT_STARTING_PERCENT;
+        var startingPercentage = this.DEFAULT_STARTING_PERCENT;
         var udProducer = true;
         if (this.accounts.length > 0) {
             id = this.accounts[this.accounts.length - 1].id + 1;
             birth = this.accounts[this.accounts.length - 1].birth;
-            StartingPercentage = this.accounts[this.accounts.length - 1].StartingPercentage;
+            startingPercentage = this.accounts[this.accounts.length - 1].startingPercentage;
             udProducer = this.accounts[this.accounts.length - 1].udProducer;
         }
        
@@ -505,11 +570,11 @@ var libreMoneyClass = function(lifeExpectancy) {
             id: id,
             birth: birth,
             balance: 0,
-            StartingPercentage: StartingPercentage,
+            startingPercentage: startingPercentage,
             udProducer: udProducer,
             values: [],
             x: [],
-            y: [],
+            y: []
         });
     };
 
@@ -522,6 +587,34 @@ var libreMoneyClass = function(lifeExpectancy) {
         return null;
     }
     
+    /**
+     * Add a default transaction between first and second account (or between the first account if only one exist).
+     */
+    this.addTransaction = function() {
+        var id = 1;
+        if (this.transactions.length > 0) {
+            id = this.transactions[this.transactions.length - 1].id + 1;
+        }
+        var account1 = this.accounts[0];
+        var account2 = this.accounts[0];
+        if (this.accounts.length > 1) {
+            account2 = this.accounts[1];
+        }
+        var year = account1.birth;
+        var amount = this.DEFAULT_TRANSACTION_AMOUNT;
+        var amountRef = this.MONETARY_UNIT_REF_KEY;
+    
+        this.transactions.push({
+            id: id,
+            from: account1,
+            to: account2,
+            year: year,
+            amount: amount,
+            amountRef: amountRef,
+            actualAmount: -1
+        });
+    };
+
     this.getGrowth = function(growthTimeUnit) {
         growthTimeUnit = growthTimeUnit || this.growthTimeUnit;
        
@@ -626,59 +719,42 @@ var libreMoneyClass = function(lifeExpectancy) {
             return false;
         }
         if (accountIndex > 0 && accountIndex < this.accounts.length) {
-            return this.accounts.splice(accountIndex, 1);
+            var deletedAccount = this.accounts.splice(accountIndex, 1);
+            this.deleteTransactions(deletedAccount);
+            return deletedAccount;
         }
         throw new Error(accountIndex + "is an invalid account index");
     };
    
-    this.getAccountBirth = function(accountIndex) {
+    this.getAccount = function(accountIndex) {
         if (accountIndex >= 0 && accountIndex < this.accounts.length) {
-            return this.accounts[accountIndex].birth;
-        }
-        throw new Error(accountIndex + "is an invalid account index");
-    };
-
-    this.setAccountBirth = function(accountIndex, birth) {
-        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
-            this.accounts[accountIndex].birth = birth;
-        }
-        else {
-            throw new Error(accountIndex + "is an invalid account index");
-        }
-    };
-   
-    this.isUdProducer = function(accountIndex) {
-        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
-            return this.accounts[accountIndex].udProducer;
+            return this.accounts[accountIndex];
         }
         throw new Error(accountIndex + "is an invalid account index");
     };
 
-    this.setUdProducer = function(accountIndex, newUdProducer) {
-        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
-            this.accounts[accountIndex].udProducer = newUdProducer;
-        }
-        else {
-            throw new Error(accountIndex + "is an invalid account index");
+    this.deleteTransactions = function(account) {
+        for (var i = this.transactions.length - 1; i >= 0; i--) {
+            if (this.transactions[i].from == account ||  this.transactions[i].to == account) {
+              this.transactions.splice(i, 1);
+            }
         }
     };
    
-    this.getStartingPercentage = function(accountIndex) {
-        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
-            return this.accounts[accountIndex].StartingPercentage;
+    this.deleteTransaction = function(transactionIndex) {
+        if (transactionIndex >= 0 && transactionIndex < this.transactions.length) {
+            return this.transactions.splice(transactionIndex, 1);
         }
-        throw new Error(accountIndex + "is an invalid account index");
+        throw new Error(transactionIndex + "is an invalid transaction index");
+    };
+   
+    this.getTransaction = function(transactionIndex) {
+        if (transactionIndex >= 0 && transactionIndex < this.transactions.length) {
+            return this.transactions[transactionIndex];
+        }
+        throw new Error(transactionIndex + "is an invalid transaction index");
     };
 
-    this.setStartingPercentage = function(accountIndex, newStartingPercentage) {
-        if (accountIndex >= 0 && accountIndex < this.accounts.length) {
-            this.accounts[accountIndex].StartingPercentage = newStartingPercentage;
-        }
-        else {
-            throw new Error(accountIndex + "is an invalid account index");
-        }
-    };
-   
     this.generateData = function () {
 
         if (this.calculateGrowth) {
@@ -712,8 +788,9 @@ var libreMoneyClass = function(lifeExpectancy) {
             this.dividends.values.push(this.getDividend(timeStep));
             this.monetarySupplies.values.push(this.getMonetarySupply(timeStep));
             for (iAccount = 0; iAccount < this.accounts.length; iAccount++) {
-                this.accounts[iAccount].values.push(this.getAccountBalance(iAccount, timeStep));
+                this.accounts[iAccount].values.push(this.getAccountBalance(this.accounts[iAccount], timeStep));
             }
+            this.applyTransactions(timeStep);
         }
 
         // **************
@@ -753,7 +830,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                 // if account is born...
                 if (timeStep >= birthStep) {
                     this.accounts[iAccount].x.push(timeStep);
-                    this.accounts[iAccount].y.push(this.applyPov(this.getAccountBalance(iAccount, timeStep), timeStep));
+                    this.accounts[iAccount].y.push(this.applyPov(this.getAccountBalance(this.accounts[iAccount], timeStep), timeStep));
                 }
             }
         }

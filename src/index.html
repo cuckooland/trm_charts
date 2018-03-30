@@ -26,6 +26,7 @@
                         <li><span href="#Bounds" class="tablinks" id="BoundsItem" tabContentId="Bounds">Période affichée</span></li>
                         <li><span href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes affichés</span></li>
                         <li><span href="#Demography" class="tablinks" id="DemographyItem" tabContentId="Demography">Démographie</span></li>
+                        <li><span href="#Transactions" class="tablinks" id="TransactionsItem" tabContentId="Transactions">Transactions</span></li>
                     </ul>
                     <div id="ParamsAndComments">
                         <div class="ParamPart">
@@ -161,19 +162,19 @@
                                         <div class="labelledForm">
                                             <label for="AccountBirth">Année de naissance</label>
                                             <input id="AccountBirth" type="text" name="AccountBirth" 
-                                                   title="Positionne l'année de naissance du dernier compte"/>
+                                                   title="Indique l'année de naissance du compte"/>
                                         </div>
                                         <div class="row">
                                             <div class="labelledForm">
                                                 <label for="ProduceUd">Co-créateur de la monnaie</label>
-                                                <input id="ProduceUd" type="checkbox" name="ProduceUd" value="1" checked="checked" title="Permet d'indiquer si ce compte correspond à un producteur de monnaie">
+                                                <input id="ProduceUd" type="checkbox" name="ProduceUd" value="1" checked="checked" title="Indique si ce compte correspond à un producteur de monnaie">
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="labelledForm">
                                                 <label for="StartingPercentage">Montant à la naissance en %(M/N)</label>
                                                 <input id="StartingPercentage" type="text" name="StartingPercentage"
-                                                       title="Permet d'indiquer le montant présent sur le compte au départ"/>
+                                                       title="Indique le montant présent sur le compte au départ"/>
                                             </div>
                                         </div>
                                     </div>
@@ -218,6 +219,41 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Transactions Tab Parameters -->
+                            <div id="Transactions" class="tabcontent">
+                                <div class="row">
+                                    <select id="TransactionSelector" name="TransactionSelector"></select>
+                                    <input id="AddTransaction" type="button" value="Ajouter une transaction"/>
+                                </div>
+                                <div class="ParamSection">
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="TransactionYear">Pour l'année</label>
+                                            <input id="TransactionYear" type="text" name="TransactionYear" 
+                                                   title="Indique l'année sur laquelle est appliquée cette transaction"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="TransactionSrc">De</label>
+                                            <select id="TransactionSrc" name="TransactionSrc"></select>
+                                            <label for="TransactionDest">Vers</label>
+                                            <select id="TransactionDest" name="TransactionDest"></select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label for="TransactionAmount">Montant</label>
+                                                <input id="TransactionAmount" type="text" name="TransactionAmount"
+                                                       title="Indique le montant du transfert"/>
+                                            </div>
+                                            <select id="TransactionRef" name="TransactionRef"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <input id="DeleteTransaction" type="button" value="Supprimer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -320,20 +356,50 @@
                             <p>Par défaut, un seul compte est affiché, intitulé "Compte 1" et correspond à un co-créateur de la monnaie, comme indiqué entre parenthèses dans la légende.</p>
                             
                             <div class="RefComment MU">
-                                <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span> est âgé de <span class="account age">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
-                            
-                                <div class="AmountComment AtMoneyBirth">
-                                    <p>= le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividend">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes Affichés</span>) auquel s'ajoute le <span class="dividend current mu">DU</span>&nbsp;:</p>
+                                <div class="AmountComment CoCreator AtMoneyBirth">
+                                    <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span> est âgé de <span class="account age">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
+                                
+                                    <p>= le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividend">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes Affichés</span>) auquel s'ajoute, en tant que co-créateur de la monnaie, le <span class="dividend current mu">DU</span>&nbsp;:</p>
                                     <p><span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span></p>
                                 </div>
 
-                                <div class="AmountComment AtBirth">
-                                    <p>= le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="average">M/N</span>, voir l'onglet <span class="accountsTabLink">Comptes Affichés</span>) auquel s'ajoute le <span class="dividend current mu">DU</span>&nbsp;:</p>
-                                    <p><span class="amountAtBirth value">0</span>&nbsp;%&nbsp;*&nbsp;<span class="average previous mu value">0</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span></p>
+                                <div class="AmountComment NonCreator AtMoneyBirth">
+                                    <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span> est âgé de <span class="account age">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
+                                
+                                    <p>= le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividend">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes Affichés</span>)&nbsp;:</p>
+                                    <p><span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span></p>
                                 </div>
 
-                                <div class="AmountComment AfterBirth">
-                                    <p>= la <span class="account previous mu">valeur au temps précédent</span> à laquelle s'ajoute le <span class="dividend current mu">DU</span>&nbsp;: <span class="account previous mu value">0</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span></p>
+                                <div class="AmountComment CoCreator AtBirth">
+                                    <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span> est âgé de <span class="account age">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                    <p>= le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="average">M/N</span>, voir l'onglet <span class="accountsTabLink">Comptes Affichés</span>) auquel s'ajoute, en tant que co-créateur de la monnaie, le <span class="dividend current mu">DU</span>&nbsp;:</p>
+                                    <p><span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="average previous mu value">0</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span></p>
+                                </div>
+
+                                <div class="AmountComment NonCreator AtBirth">
+                                    <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span> est âgé de <span class="account age">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                    <p>= le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="average">M/N</span>, voir l'onglet <span class="accountsTabLink">Comptes Affichés</span>)&nbsp;:</p>
+                                    <p><span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="average previous mu value">0</span></p>
+                                </div>
+
+                                <div class="AmountComment CoCreator AfterBirth">
+                                    <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span> est âgé de <span class="account age">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                    <p>= le <span class="account previous mu">montant au temps précédent</span> auquel s'ajoute, en tant que co-créateur de la monnaie, le <span class="dividend current mu">DU</span>&nbsp;: <span class="account previous mu value">0</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span></p>
+                                </div>
+
+                                <div class="AmountComment NonCreator AfterBirth">
+                                    <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span> est âgé de <span class="account age">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                    <p>= le <span class="account previous mu">montant au temps précédent</span>&nbsp;: <span class="account previous mu value">0</span></p>
+                                </div>
+
+                                <div class="AmountComment CoCreator NonCreator AfterDeath">
+                                    <p>A la date du <span class="dateValue">01-01-2001</span>, <span class="account name">compte</span>, âgé de <span class="account age">0</span>, n'est plus vivant&nbsp;; il vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
+                            
+                                    <p>= le <span class="account previous mu">montant au temps précédent</span>&nbsp;: <span class="account previous mu value">0</span></p>
                                 </div>
                             </div>
                             
@@ -801,7 +867,6 @@
 
                         </div>
                         
-                        
                         <!-- Accounts Tab Comments -->
                         <div class="Comment" id="AccountsItemComment">
                             <p>Par défaut, dans cette simulation, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps.</p>
@@ -816,13 +881,13 @@
 
                         </div>
                         <div class="Comment" id="StartingPercentageComment">
-                            <p>A chaque individu peut être attribuer un montant à la naissance&nbsp;: au démarrage de la monnaie, ce montant est exprimé en pourcentage du <span class="dividendTabLink">dividende de départ</span> divisé par le <span class="growth">taux d'expansion</span> (<span class="dividendTabLink">DU0</span>/<span class="growth">c</span>)&nbsp;; par la suite, c'est un pourcentage de <span class="average">M/N</span>. Si l'on veut reproduire le cas particulier d'une population stable comme présenter dans La TRM en Couleur (partie 1), on peut le faire en positionnant ce montant à 100&nbsp;%.</p>
+                            <p>A chaque individu peut être attribué un montant à la naissance&nbsp;: au démarrage de la monnaie, ce montant est exprimé en pourcentage du <span class="dividendTabLink">dividende de départ</span> divisé par le <span class="growth">taux d'expansion</span> (<span class="dividendTabLink">DU0</span>/<span class="growth">c</span>)&nbsp;; par la suite, c'est un pourcentage de <span class="average">M/N</span>. Si l'on veut reproduire le cas particulier d'une population stable comme présenté dans La TRM en Couleur (partie 1), on peut le faire en positionnant ce montant à 100&nbsp;%.</p>
 
                         </div>
                         
                         <!-- Demography Tab Comments -->
                         <div class="Comment" id="DemographyItemComment">
-                            <p>Dans l'onglet <span class="accountsTabLink">Comptes affichés</span>, on a pu faire varier le nombre d'individus N au fil du temps. Il s'agit désormais d'étudier différentes types de variations, plus réalistes, en jouant sur la forme et sur l'amplitude.</p>
+                            <p>Dans l'onglet <span class="accountsTabLink">Comptes affichés</span>, on a pu faire varier le nombre d'individus N au fil du temps. Il s'agit désormais d'étudier différents types de variations, plus réalistes, en jouant sur la forme et sur l'amplitude.</p>
 
                         </div>
                         <div class="Comment" id="MaxDemographyComment">
@@ -855,7 +920,7 @@
 
                         </div>
                         
-                        <!-- Demography Tab Comments -->
+                        <!-- Demography Laws Comments -->
                         <div class="Comment" id="NoneComment">
                             <p>Il peut être utile de n'attribuer aucun profil démographique. Dans ce cas, la courbe affichant les variations de N est uniquement déduite des comptes qui sont définis dans l'onglet <span class="accountsTabLink">Comptes affichés</span>.</p>
 
@@ -874,7 +939,22 @@
                         </div>
                         <div class="Comment" id="DampedWaveComment">
                             <p>Ce profil permet de simuler une croissance suivie d'une phase de fluctuations tendant vers une population stable.</p>
-                                                    
+                        </div>
+                        
+                        <!-- Transactions Tab Comments -->
+                        <div class="Comment" id="TransactionsItemComment">
+                            <p>Cet onglet permet de simuler des transferts de monnaie d'un compte à un autre, ce qui peut aider à mettre les comptes dans des états intéressants à étudier.</p>
+
+                        </div>
+                        <div class="Comment" id="TransactionYearComment">
+                            <p>Ce champ permet d'indiquer l'année à laquelle la transaction couramment sélectionnée doit être réalisée.</p>
+
+                        </div>
+                        <div class="Comment" id="TransactionAmountComment">
+                            <p>Ce champ permet d'indiquer le montant de la transaction couramment sélectionnée. L'unité de ce montant est par défaut l'unité monétaire mais elle peut être modifiée grâce à la liste déroulante qui suit ce champ.</p>
+
+                            <p>A noter que si la transaction ne peut être effectuée, par exemple parce que l'un des comptes est non existant à la date donnée, la transaction est simplement ignorée. Par contre, si la date est valide pour les deux comptes mais que le compte à débiter n'est solvable, la transaction sera partiellement réalisé, de façon à ammener le compte à débiter à zéro - un "zéro" très temporaire si le compte correspond à un co-créateur de monnaie.</p>
+                                                        
                         </div>
                         
                     </div>

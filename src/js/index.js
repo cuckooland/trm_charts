@@ -84,6 +84,8 @@ var CO_CREATOR_LABEL = 'Co-créateur';
 
 var NON_CREATOR_LABEL = 'Non-créateur';
 
+var TRANSACTION_LABEL_PREFIX = 'Transaction';
+
 // Add a 'format' function to String
 String.prototype.format = function() {
     var args = arguments;
@@ -184,11 +186,15 @@ function addTabEffectsFromHtml() {
         tabId: 'AccountsItem',
         referingClass: 'accountsTabLink'
     };
-    var demogarphyTabAttributes = {
+    var demographyTabAttributes = {
         tabId: 'DemographyItem',
         referingClass: 'demographyTabLink'
     };
-    var tabAttributesList = [growthTabAttributes, udTabAttributes, referenceTabAttributes, boundsTabAttributes, accountsTabAttributes, demogarphyTabAttributes];
+    var transactionsTabAttributes = {
+        tabId: 'TransactionsItem',
+        referingClass: 'transactionsTabLink'
+    };
+    var tabAttributesList = [growthTabAttributes, udTabAttributes, referenceTabAttributes, boundsTabAttributes, accountsTabAttributes, demographyTabAttributes, transactionsTabAttributes];
     
     tabAttributesList.forEach(function(tabAttributes) {
         d3.selectAll('span.' + tabAttributes.referingClass)
@@ -412,12 +418,19 @@ function initCallbacks() {
     d3.select("#UdFormulaSelector").on("change", changeUdFormula);
     d3.select("#DemographySelector").on("change", changeDemographicProfile);
     d3.select("#AccountSelector").on("change", changeAccountSelection);
-
+    d3.select("#TransactionSelector").on("change", changeTransactionSelection);
+    d3.select("#TransactionSrc").on("change", changeTransactionSrcSelection);
+    d3.select("#TransactionDest").on("change", changeTransactionDestSelection);
+    d3.select("#TransactionRef").on("change", changeTransactionRefSelection);
+    
     d3.selectAll(".rythm").on("change", changeRythm);
     d3.selectAll(".firstDividend").on("change", changeRythm);
 
     d3.select("#AddAccount").on("click", clickAddAccount);
     d3.select("#DeleteAccount").on("click", clickDeleteAccount);
+
+    d3.select("#AddTransaction").on("click", clickAddTransaction);
+    d3.select("#DeleteTransaction").on("click", clickDeleteTransaction);
 
     d3.select("#LifeExpectancy").on("change", changeLifeExpectancy);
     d3.select("#AnnualGrowth").on("change", changeAnnualGrowth);
@@ -437,7 +450,9 @@ function initCallbacks() {
     d3.select("#AccountBirth").on("change", changeAccountBirth);
     d3.select("#ProduceUd").on("click", changeProduceUd);
     d3.select("#StartingPercentage").on("change", changeStartingPercentage);
-
+    d3.select("#TransactionYear").on("change", changeTransactionYear);
+    d3.select("#TransactionAmount").on("change", changeTransactionAmount);
+    
     d3.selectAll(".tablinks").on("click", function() { clickTab(this.id); });
 
     d3.selectAll("input[type=\"text\"]").on("click", function() { comment(this.id); });
@@ -461,6 +476,7 @@ function asEncodedURI() {
             hs : getHiddenDataKeys(monetarySupplyChart)
         },
         a : document.getElementById("AccountSelector").selectedIndex,
+        tr : document.getElementById("TransactionSelector").selectedIndex,
         s : curSelectedDataId,
         i : selectedPointIndex,
         com : commentedId
@@ -497,9 +513,13 @@ function applyJSonRep(jsonRep) {
     
     fillForms();
     enableForms();
-    joinAccountSelectorToData();
+
+    joinAccountSelectorsToData();
     document.getElementById("AccountSelector").selectedIndex = jsonRep.g.a;
     
+    joinTransactionSelectorToData();
+    document.getElementById("TransactionSelector").selectedIndex = jsonRep.g.tr;
+
     curConfigId = jsonRep.g.c;
     setConfigSelection();
     
@@ -509,6 +529,7 @@ function applyJSonRep(jsonRep) {
     
     updateAddedAccountArea();
     updateAccountYLabels();
+    updateTransactionArea();
     updateChartData();
     openTab(jsonRep.g.t);
     unselectChartPoints();
@@ -546,7 +567,7 @@ function initSelectors() {
     feedConfigSelector('ConfigSelector1', configs1);
     feedConfigSelector('ConfigSelector2', configs2);
     feedConfigSelector('ConfigSelector3', configs3);
-    feedReferenceFrameSelector(money);
+    feedReferenceFrameSelectors(money);
     feedUdFormulaSelector(money);
     feedDemographySelector(money);
 }
@@ -585,9 +606,14 @@ function setConfigSelection() {
     throw new Error("Configuration not managed: " + curConfigId);
 };
 
-// Create reference frame selector
-function feedReferenceFrameSelector(money) {
-    d3.select('#ReferenceFrameSelector').selectAll("option")
+// Create reference frame selectors
+function feedReferenceFrameSelectors(money) {
+    feedReferenceFrameSelector(money, 'ReferenceFrameSelector');
+    feedReferenceFrameSelector(money, 'TransactionRef');
+};
+
+function feedReferenceFrameSelector(money, selectorId) {
+    d3.select('#' + selectorId).selectAll("option")
         .data(Object.keys(money.referenceFrames))
       .enter().append("option")
         .text(function(d) { return getRefLabel(d); })
@@ -636,15 +662,35 @@ function setDemographySelection(money) {
     document.getElementById("DemographySelector").selectedIndex = selectedIndex;
 };
 
-// Join (via D3) account selector to 'money.accounts'
-function joinAccountSelectorToData() {
-    var options = d3.select('#AccountSelector').selectAll("option")
+// Join (via D3) account selectors to 'money.accounts'
+function joinAccountSelectorsToData() {
+    joinAccountSelectorToData('AccountSelector', accountName2);
+    joinAccountSelectorToData('TransactionSrc', accountName1);
+    joinAccountSelectorToData('TransactionDest', accountName1);
+};
+
+function joinAccountSelectorToData(accountSelectorId, nameFunc) {
+    var options = d3.select('#' + accountSelectorId).selectAll("option")
         .data(money.accounts, function(d) { return d.id; });
             
-    options.text(function(d) { return accountName2(d); });
+    options.text(nameFunc);
     
     options.enter().append("option")
-        .text(function(d) { return accountName2(d); })
+        .text(nameFunc)
+        .attr('value', function(d) { return d.id; })
+        
+    options.exit().remove();
+};
+
+// Join (via D3) transaction selector to 'money.transactions'
+function joinTransactionSelectorToData() {
+    var options = d3.select('#TransactionSelector').selectAll("option")
+        .data(money.transactions, function(d) { return d.id; });
+            
+    options.text(function(d) { return transactionName(d); });
+    
+    options.enter().append("option")
+        .text(function(d) { return transactionName(d); })
         .attr('value', function(d) { return d.id; })
         
     options.exit().remove();
@@ -1429,22 +1475,21 @@ function searchChartWithData(c3DataId) {
  */
 function deleteAccount() {
     var selectedAccountIndex = getSelectedAccountIndex();
-    var account = money.deleteAccount(selectedAccountIndex);
+    var accounts = money.deleteAccount(selectedAccountIndex);
     // If account deleted...
-    if (account != false && account.length > 0) {
-        // Update remaining data
+    if (accounts != false && accounts.length > 0) {
         updateChartData();
-        joinAccountSelectorToData(selectedAccountIndex - 1);
+        joinAccountSelectorsToData();
         document.getElementById("AccountSelector").selectedIndex = selectedAccountIndex - 1;
         updateAddedAccountArea();
     }
 }
 
 function updateAddedAccountArea() {
-    var selectedAccountIndex = getSelectedAccountIndex();
-    d3.select('#AccountBirth').property("value", money.getAccountBirth(getSelectedAccountIndex()));
-    d3.select('#ProduceUd').property("checked", money.isUdProducer(selectedAccountIndex));
-    d3.select('#StartingPercentage').property("value", money.getStartingPercentage(selectedAccountIndex));
+    var selectedAccount = money.getAccount(getSelectedAccountIndex());
+    d3.select('#AccountBirth').property("value", selectedAccount.birth);
+    d3.select('#ProduceUd').property("checked", selectedAccount.udProducer);
+    d3.select('#StartingPercentage').property("value", selectedAccount.startingPercentage);
     enableAddedAccountArea();
 }
 
@@ -1460,7 +1505,7 @@ function addAccount() {
     money.addAccount();
     
     updateChartData();
-    joinAccountSelectorToData();
+    joinAccountSelectorsToData();
     document.getElementById("AccountSelector").selectedIndex = money.accounts.length - 1;
     updateAddedAccountArea();
 }
@@ -1480,10 +1525,10 @@ function accountName2(account) {
 
 function accountName3(account) {
     if (account.udProducer) {
-        return "${p0} (${p1}, ${p2})".format(accountName1(account), CO_CREATOR_LABEL, account.StartingPercentage);
+        return "${p0} (${p1}, ${p2})".format(accountName1(account), CO_CREATOR_LABEL, account.startingPercentage);
     }
     else {
-        return "${p0} (${p1}, ${p2})".format(accountName1(account), NON_CREATOR_LABEL, account.StartingPercentage);
+        return "${p0} (${p1}, ${p2})".format(accountName1(account), NON_CREATOR_LABEL, account.startingPercentage);
     }
 }
 
@@ -1531,6 +1576,77 @@ function accountAgeLabel(account, timeStep, timeUnit) {
             return "${p0} an et ${p1} mois".format(year, month);
         }
         return "${p0} ans et ${p1} mois".format(year, month);
+    }
+}
+
+/**
+ * Delete current transaction
+ */
+function deleteTransaction() {
+    var selectedTransactionIndex = getSelectedTransactionIndex();
+    var transactions = money.deleteTransaction(selectedTransactionIndex);
+    // If transaction deleted...
+    if (transactions != false && transactions.length > 0) {
+        updateChartData();
+        joinTransactionSelectorToData();
+        if (selectedTransactionIndex > 0) {
+            document.getElementById("TransactionSelector").selectedIndex = selectedTransactionIndex - 1;
+        }
+        else if (money.transactions.length > 0) {
+            document.getElementById("TransactionSelector").selectedIndex = 0;
+        }
+        updateTransactionArea();
+    }
+}
+
+function updateTransactionArea() {
+    if (money.transactions.length > 0) {
+        var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
+        d3.select('#TransactionYear').property("value", selectedTransaction.year);
+        document.getElementById("TransactionSrc").selectedIndex = money.accounts.indexOf(selectedTransaction.from);
+        document.getElementById("TransactionDest").selectedIndex = money.accounts.indexOf(selectedTransaction.to);
+        d3.select('#TransactionAmount').property("value", selectedTransaction.amount);
+        document.getElementById("TransactionRef").selectedIndex = Object.keys(money.referenceFrames).indexOf(selectedTransaction.amountRef);
+    }
+    enableTransactionArea();
+}
+
+function getSelectedTransactionIndex() {
+    var sel = document.getElementById('TransactionSelector');
+    return sel.selectedIndex;
+}
+
+function getTransactionSrcIndex() {
+    var sel = document.getElementById('TransactionSrc');
+    return sel.selectedIndex;
+}
+
+function getTransactionDestIndex() {
+    var sel = document.getElementById('TransactionDest');
+    return sel.selectedIndex;
+}
+
+/**
+ * add a transaction 
+ */
+function addTransaction() {
+    money.addTransaction();
+    updateChartData();
+    joinTransactionSelectorToData();
+    document.getElementById("TransactionSelector").selectedIndex = money.transactions.length - 1;
+    updateTransactionArea();
+}
+
+function transactionName(transaction) {
+    return "${p0} ${p1}".format(TRANSACTION_LABEL_PREFIX, transaction.id);
+}
+
+function enableTransactionArea() {
+    if (money.transactions.length > 0) {
+        d3.select("#Transactions>.ParamSection").style("display", "block");
+    }
+    else {
+        d3.select("#Transactions>.ParamSection").style("display", "none");
     }
 }
 
@@ -1931,7 +2047,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
                     var previousMuAccountValue = account.values[timeStep - 1];
                     d3.selectAll("span.account.previous.mu.value").text(commentFormat(previousMuAccountValue));
                 }
-                commentAccordingToBirth(timeStep, account)
+                commentAccordingToAccount(timeStep, account)
             }
             else {
                 throw new Error("Unknown c3DataId: " + c3DataId);
@@ -1960,23 +2076,28 @@ function commentAccordingToUD(timeStep) {
     }
 }
 
-function commentAccordingToBirth(timeStep, account) {
+function commentAccordingToAccount(timeStep, account) {
     d3.selectAll("div.AmountComment").style("display", "none");
     var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
     var birthStep = money.getTimeStep(account.birth, money.YEAR);
+    var deathStep = money.getTimeStep(account.birth + money.lifeExpectancy, money.YEAR);
+    var udProductorClass = account.udProducer ? 'CoCreator' : 'NonCreator';
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(timeStep - 1);
-        d3.selectAll("span.amountAtBirth.value").text(account.StartingPercentage);
-        d3.selectAll("div.AtMoneyBirth").style("display", "block");
+        d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage);
+        d3.selectAll("div.AtMoneyBirth." + udProductorClass).style("display", "block");
     }
     else if (timeStep == birthStep) {
         var previousAverageMuValue = money.getAverage(timeStep - 1);
         d3.selectAll("span.average.previous.mu.value").text(commentFormat(previousAverageMuValue));
-        d3.selectAll("span.amountAtBirth.value").text(account.StartingPercentage + NONBREAKING_SPACE + '%');
-        d3.selectAll("div.AtBirth").style("display", "block");
+        d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
+        d3.selectAll("div.AtBirth." + udProductorClass).style("display", "block");
+    }
+    else if (timeStep >= deathStep) {
+        d3.selectAll("div.AfterDeath." + udProductorClass).style("display", "block");
     }
     else {
-        d3.selectAll("div.AfterBirth").style("display", "block");
+        d3.selectAll("div.AfterBirth." + udProductorClass).style("display", "block");
     }
 }
 
@@ -2022,6 +2143,68 @@ function clickAddAccount() {
 
 function clickDeleteAccount() {
     deleteAccount();
+    pushNewHistoryState();
+}
+
+function changeTransactionSelection() {
+    updateTransactionArea();
+    pushNewHistoryState();
+}
+
+function changeTransactionSrcSelection() {
+    var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
+    selectedTransaction.from = money.accounts[getTransactionSrcIndex()];
+    updateChartData();
+    pushNewHistoryState();
+}
+
+function changeTransactionDestSelection() {
+    var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
+    selectedTransaction.to = money.accounts[getTransactionDestIndex()];
+    updateChartData();
+    pushNewHistoryState();
+}
+
+function changeTransactionYear() {
+    var transactionYear = parseInt(this.value);
+    var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
+    if (transactionYear >= 0 && transactionYear < 200) {
+        selectedTransaction.year = transactionYear;
+        updateChartData();
+    }
+    else {
+        d3.select('#TransactionYear').property("value", selectedTransaction.year);
+    }
+    pushNewHistoryState();
+}
+
+function changeTransactionAmount() {
+    var transactionAmount = parseFloat(this.value);
+    var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
+    if (transactionAmount >= 0) {
+        selectedTransaction.amount = transactionAmount;
+        updateChartData();
+    }
+    else {
+        d3.select('#TransactionAmount').property("value", selectedTransaction.amount);
+    }
+    pushNewHistoryState();
+}
+
+function changeTransactionRefSelection() {
+    var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
+    selectedTransaction.amountRef = this.options[this.selectedIndex].value;
+    updateChartData();
+    pushNewHistoryState();
+}
+
+function clickAddTransaction() {
+    addTransaction();
+    pushNewHistoryState();
+}
+
+function clickDeleteTransaction() {
+    deleteTransaction();
     pushNewHistoryState();
 }
 
@@ -2270,21 +2453,22 @@ function changeXScaleDemography() {
 
 function changeAccountBirth() {
     var birth = parseInt(this.value);
+    var selectedAccount = money.getAccount(getSelectedAccountIndex());
     if (birth >= 0 && birth < 200) {
-        money.setAccountBirth(getSelectedAccountIndex(), birth);
+        selectedAccount.birth = birth;
         updateChartData();
     }
     else {
-        d3.select('#AccountBirth').property("value", money.getAccountBirth(getSelectedAccountIndex()));
+        d3.select('#AccountBirth').property("value", selectedAccount.birth);
     }
     pushNewHistoryState();
 }
 
 function changeProduceUd() {
-    var selectedAccountIndex = getSelectedAccountIndex();
-    money.setUdProducer(selectedAccountIndex, this.checked);
+    var selectedAccount = money.getAccount(getSelectedAccountIndex());
+    selectedAccount.udProducer = this.checked;
     
-    joinAccountSelectorToData();
+    joinAccountSelectorsToData();
     updateChartData();
     
     comment(this.id);
@@ -2293,12 +2477,13 @@ function changeProduceUd() {
 
 function changeStartingPercentage() {
     var startingPercentage = parseFloat(this.value);
+    var selectedAccount = money.getAccount(getSelectedAccountIndex());
     if (startingPercentage >= 0) {
-        money.setStartingPercentage(getSelectedAccountIndex(), startingPercentage);
+        selectedAccount.startingPercentage = startingPercentage;
         updateChartData();
     }
     else {
-        d3.select('#StartingPercentage').property("value", money.getStartingPercentage(getSelectedAccountIndex()));
+        d3.select('#StartingPercentage').property("value", selectedAccount.startingPercentage);
     }
     pushNewHistoryState();
 }
