@@ -2077,7 +2077,7 @@ function commentAccordingToUD(timeStep) {
 }
 
 function commentAccordingToAccount(timeStep, account) {
-    d3.selectAll("div.AmountComment").style("display", "none");
+    d3.selectAll(".AmountComment").style("display", "none");
     var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
     var birthStep = money.getTimeStep(account.birth, money.YEAR);
     var deathStep = money.getTimeStep(account.birth + money.lifeExpectancy, money.YEAR);
@@ -2085,19 +2085,39 @@ function commentAccordingToAccount(timeStep, account) {
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(timeStep - 1);
         d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage);
-        d3.selectAll("div.AtMoneyBirth." + udProductorClass).style("display", "block");
+        d3.selectAll("span.AtMoneyBirth." + udProductorClass).style("display", "inline");
     }
     else if (timeStep == birthStep) {
         var previousAverageMuValue = money.getAverage(timeStep - 1);
         d3.selectAll("span.average.previous.mu.value").text(commentFormat(previousAverageMuValue));
         d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
-        d3.selectAll("div.AtBirth." + udProductorClass).style("display", "block");
+        d3.selectAll("span.AtBirth." + udProductorClass).style("display", "inline");
     }
     else if (timeStep >= deathStep) {
-        d3.selectAll("div.AfterDeath." + udProductorClass).style("display", "block");
+        d3.selectAll("span.AfterDeath." + udProductorClass).style("display", "inline");
     }
     else {
-        d3.selectAll("div.AfterBirth." + udProductorClass).style("display", "block");
+        d3.selectAll("span.WhenAlive." + udProductorClass).style("display", "inline");
+    }
+
+    var fromTransactions = money.searchTransactionsFrom(account, timeStep);
+    if (fromTransactions.length > 0) {
+        d3.selectAll("span.WithNegTr").style("display", "inline");
+        d3.selectAll("span.NegTrs").text(fromTransactions.map(t=>transactionName(t)).join(', '));
+        d3.selectAll("span.NegTrsValues").text(fromTransactions.map(t=>money.muTransactionAmount(t, tickFormat)).join(' - '));
+    }
+    else {
+        d3.selectAll("span.WithNegTr").style("display", "none");
+    }
+
+    var toTransactions = money.searchTransactionsTo(account, timeStep);
+    if (toTransactions.length > 0) {
+        d3.selectAll("span.WithPosTr").style("display", "inline");
+        d3.selectAll("span.PosTrs").text(toTransactions.map(t=>transactionName(t)).join(', '));
+        d3.selectAll("span.PosTrsValues").text(toTransactions.map(t=>money.muTransactionAmount(t, tickFormat)).join(' + '));
+    }
+    else {
+        d3.selectAll("span.WithPosTr").style("display", "none");
     }
 }
 

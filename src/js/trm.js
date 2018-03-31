@@ -509,6 +509,18 @@ var libreMoneyClass = function(lifeExpectancy) {
         return accountIncrease;
     }
    
+    this.searchTransactionsFrom = function(account, timeStep) {
+        return this.transactions.filter(t=>timeStep==this.getTimeStep(t.year, this.YEAR) && t.from == account);
+    }
+
+    this.searchTransactionsTo = function(account, timeStep) {
+        return this.transactions.filter(t=>timeStep==this.getTimeStep(t.year, this.YEAR) && t.to == account);
+    }
+
+    this.muTransactionAmount = function(transaction, timeStep) {
+        return this.referenceFrames[transaction.amountRef].invTransform(this, transaction.amount, timeStep);
+    }
+
     this.applyTransactions = function(timeStep) {
         var annualTransactions = this.transactions.filter(t=>timeStep==this.getTimeStep(t.year, this.YEAR) && this.validTransactionDate(t));
 
@@ -518,8 +530,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             var accountIncrease = this.getAccountIncrease(fromAccount, timeStep);
             // Compute actual balance (other transactions can have decreased it)
             var actualBalance = fromAccount.values[timeStep] - accountIncrease;
-            var amount = annualTransactions[i].amount;
-            var muAmount = this.referenceFrames[annualTransactions[i].amountRef].invTransform(this, amount, timeStep);
+            var muAmount = this.muTransactionAmount(annualTransactions[i], timeStep);
             // Apply transaction, actual amount depends on the solvency of the account
             var actualAmount = Math.min(muAmount, actualBalance);
             annualTransactions[i].actualAmount = actualAmount;
