@@ -448,6 +448,7 @@ function initCallbacks() {
     d3.select("#plateauDemography").on("change", changePlateauDemography);
     d3.select("#xScaleDemography").on("change", changeXScaleDemography);
     d3.select("#AccountBirth").on("change", changeAccountBirth);
+    d3.select("#AccountDuration").on("change", changeAccountDuration);
     d3.select("#ProduceUd").on("click", changeProduceUd);
     d3.select("#StartingPercentage").on("change", changeStartingPercentage);
     d3.select("#TransactionYear").on("change", changeTransactionYear);
@@ -1488,6 +1489,7 @@ function deleteAccount() {
 function updateAddedAccountArea() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
     d3.select('#AccountBirth').property("value", selectedAccount.birth);
+    d3.select('#AccountDuration').property("value", selectedAccount.duration);
     d3.select('#ProduceUd').property("checked", selectedAccount.udProducer);
     d3.select('#StartingPercentage').property("value", selectedAccount.startingPercentage);
     enableAddedAccountArea();
@@ -2480,6 +2482,19 @@ function changeAccountBirth() {
     }
     else {
         d3.select('#AccountBirth').property("value", selectedAccount.birth);
+    }
+    pushNewHistoryState();
+}
+
+function changeAccountDuration() {
+    var duration = parseInt(this.value);
+    var selectedAccount = money.getAccount(getSelectedAccountIndex());
+    if (duration > 0 && duration <= 120) {
+        selectedAccount.duration = duration;
+        updateChartData();
+    }
+    else {
+        d3.select('#AccountDuration').property("value", selectedAccount.duration);
     }
     pushNewHistoryState();
 }

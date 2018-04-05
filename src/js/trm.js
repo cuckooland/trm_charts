@@ -310,7 +310,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
 
             var birthStep = this.getTimeStep(this.accounts[iAccount].birth, this.YEAR);
-            var deathStep = this.getTimeStep(this.accounts[iAccount].birth + this.lifeExpectancy, this.YEAR);
+            var deathStep = this.getTimeStep(this.accounts[iAccount].birth + this.accounts[iAccount].duration, this.YEAR);
             // if account is alive...
             if (timeStep >= birthStep && timeStep < deathStep) {
                 // increment people count
@@ -358,6 +358,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             jsonRep['a' + i] = {
                 id: this.accounts[i].id,
                 b: this.accounts[i].birth,
+                d: this.accounts[i].duration,
                 a0: this.accounts[i].startingPercentage,
                 p: this.accounts[i].udProducer
             }
@@ -403,6 +404,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             this.accounts.push({
                 id: accountDescr.id,
                 birth: accountDescr.b,
+                duration: accountDescr.d,
                 balance: 0,
                 startingPercentage: accountDescr.a0,
                 udProducer: accountDescr.p,
@@ -483,7 +485,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.getAccountIncrease = function(account, timeStep) {
         var accountIncrease = 0;
         var birthStep = this.getTimeStep(account.birth, this.YEAR);
-        var deathStep = this.getTimeStep(account.birth + this.lifeExpectancy, this.YEAR);
+        var deathStep = this.getTimeStep(account.birth + account.duration, this.YEAR);
         if (timeStep < deathStep && timeStep >= birthStep && account.udProducer) {
             // Add a dividend coming from producer
             accountIncrease = this.getDividend(timeStep);
@@ -546,9 +548,9 @@ var libreMoneyClass = function(lifeExpectancy) {
 
     this.validTransactionDate = function(transaction) {
         return !(transaction.year < transaction.from.birth 
-            || transaction.year > (transaction.from.birth + this.lifeExpectancy)
+            || transaction.year > (transaction.from.birth + transaction.from.duration)
             || transaction.year < transaction.to.birth 
-            || transaction.year > (transaction.to.birth + this.lifeExpectancy));
+            || transaction.year > (transaction.to.birth + transaction.to.duration));
     }
 
     this.getAverage = function(timeStep) {
@@ -580,6 +582,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         this.accounts.push({
             id: id,
             birth: birth,
+            duration: this.lifeExpectancy,
             balance: 0,
             startingPercentage: startingPercentage,
             udProducer: udProducer,

@@ -34,6 +34,7 @@ var configs1 = {
             a0: {
                 id: 1,
                 b: 1,
+                d: 80,
                 a0: 0,
                 p: true
             }
@@ -91,6 +92,7 @@ var configs1 = {
             a0: {
                 id: 1,
                 b: 1,
+                d: 80,
                 a0: 100,
                 p: true
             }
@@ -148,6 +150,7 @@ var configs1 = {
             a0: {
                 id: 1,
                 b: 1,
+                d: 80,
                 a0: 100,
                 p: true
             }
@@ -209,12 +212,14 @@ var configs2 = {
             a0: {
                 id: 1,
                 b: 1,
+                d: 80,
                 a0: 0,
                 p: true
             },
             a1: {
                 id: 2,
                 b: 3,
+                d: 80,
                 a0: 0,
                 p: true
             }
@@ -271,12 +276,14 @@ var configs2 = {
             a0: {
                 id: 1,
                 b: 1,
+                d: 80,
                 a0: 0,
                 p: true
             },
             a1: {
                 id: 2,
                 b: 35,
+                d: 80,
                 a0: 0,
                 p: true
             }
@@ -333,24 +340,28 @@ var configs2 = {
             a0: {
                 id: 1,
                 b: 1,
+                d: 80,
                 a0: 0,
                 p: true
             },
             a1: {
                 id: 2,
                 b: 35,
+                d: 80,
                 a0: 0,
                 p: true
             },
             a2: {
                 id: 3,
                 b: 45,
+                d: 80,
                 a0: 0,
                 p: true
             },
             a3: {
                 id: 4,
                 b: 25,
+                d: 80,
                 a0: 0,
                 p: true
             }
@@ -412,6 +423,7 @@ var configs3 = {
             a0: {
                 id: 1,
                 b: 1,
+                d: 80,
                 a0: 0,
                 p: true
             }
