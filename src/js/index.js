@@ -133,20 +133,28 @@ function fillForms() {
     d3.select('#LifeExpectancy').property("value", money.lifeExpectancy);
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
     d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
-    d3.select('#TimeLowerBound').property("value", money.timeLowerBoundInYears);
-    d3.select('#TimeUpperBound').property("value", money.timeUpperBoundInYears);
+    d3.select('#TimeLowerBound').property("value", toYearRep(money.timeLowerBoundInYears));
+    d3.select('#TimeUpperBound').property("value", toYearRep(money.timeUpperBoundInYears));
     d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
     d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
     d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
     d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
     d3.select('#MaxDemography').property("value", money.maxDemography);
-    d3.select('#xMinDemography').property("value", money.xMinDemography);
-    d3.select('#xMaxDemography').property("value", money.xMaxDemography);
-    d3.select('#xMpvDemography').property("value", money.xMpvDemography);
+    d3.select('#xMinDemography').property("value", toYearRep(money.xMinDemography));
+    d3.select('#xMaxDemography').property("value", toYearRep(money.xMaxDemography));
+    d3.select('#xMpvDemography').property("value", toYearRep(money.xMpvDemography));
     d3.select('#plateauDemography').property("value", money.plateauDemography);
     d3.select('#xScaleDemography').property("value", money.xScaleDemography);
     d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
     d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
+}
+
+function toYearRep(value) {
+    return 2000 + value;
+}
+
+function fromYearRep(value) {
+    return value - 2000;
 }
 
 function enableForms() {
@@ -1488,7 +1496,7 @@ function deleteAccount() {
 
 function updateAddedAccountArea() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
-    d3.select('#AccountBirth').property("value", selectedAccount.birth);
+    d3.select('#AccountBirth').property("value", toYearRep(selectedAccount.birth));
     d3.select('#AccountDuration').property("value", selectedAccount.duration);
     d3.select('#ProduceUd').property("checked", selectedAccount.udProducer);
     d3.select('#StartingPercentage').property("value", selectedAccount.startingPercentage);
@@ -1604,7 +1612,7 @@ function deleteTransaction() {
 function updateTransactionArea() {
     if (money.transactions.length > 0) {
         var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
-        d3.select('#TransactionYear').property("value", selectedTransaction.year);
+        d3.select('#TransactionYear').property("value", toYearRep(selectedTransaction.year));
         document.getElementById("TransactionSrc").selectedIndex = money.accounts.indexOf(selectedTransaction.from);
         document.getElementById("TransactionDest").selectedIndex = money.accounts.indexOf(selectedTransaction.to);
         d3.select('#TransactionAmount').property("value", selectedTransaction.amount);
@@ -2188,14 +2196,14 @@ function changeTransactionDestSelection() {
 }
 
 function changeTransactionYear() {
-    var transactionYear = parseInt(this.value);
+    var transactionYear = fromYearRep(parseInt(this.value));
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     if (transactionYear >= 0 && transactionYear < 200) {
         selectedTransaction.year = transactionYear;
         updateChartData();
     }
     else {
-        d3.select('#TransactionYear').property("value", selectedTransaction.year);
+        d3.select('#TransactionYear').property("value", toYearRep(selectedTransaction.year));
     }
     pushNewHistoryState();
 }
@@ -2376,27 +2384,27 @@ function changeLogScale() {
 }
 
 function changeTimeLowerBound() {
-    var timeLowerBound = parseInt(this.value);
+    var timeLowerBound = fromYearRep(parseInt(this.value));
     if (timeLowerBound >= 0 && timeLowerBound < 200) {
         money.setTimeLowerBound(timeLowerBound); 
         updateChartData();
-        d3.select('#TimeUpperBound').property("value", money.getTimeUpperBound(money.YEAR));
+        d3.select('#TimeUpperBound').property("value", toYearRep(money.getTimeUpperBound(money.YEAR)));
     }
     else {
-        d3.select('#TimeLowerBound').property("value", money.getTimeLowerBound(money.YEAR));
+        d3.select('#TimeLowerBound').property("value", toYearRep(money.getTimeLowerBound(money.YEAR)));
     }
     pushNewHistoryState();
 }
 
 function changeTimeUpperBound() {
-    var timeUpperBound = parseInt(this.value);
+    var timeUpperBound = fromYearRep(parseInt(this.value));
     if (timeUpperBound > 0 && timeUpperBound <= 200) {
         money.setTimeUpperBound(timeUpperBound); 
         updateChartData();
-        d3.select('#TimeLowerBound').property("value", money.getTimeLowerBound(money.YEAR));
+        d3.select('#TimeLowerBound').property("value", toYearRep(money.getTimeLowerBound(money.YEAR)));
     }
     else {
-        d3.select('#TimeUpperBound').property("value", money.getTimeUpperBound(money.YEAR));
+        d3.select('#TimeUpperBound').property("value", toYearRep(money.getTimeUpperBound(money.YEAR)));
     }
     pushNewHistoryState();
 }
@@ -2414,37 +2422,37 @@ function changeMaxDemography() {
 }
 
 function changeXMinDemography() {
-    var xMinDemography = parseInt(this.value);
+    var xMinDemography = fromYearRep(parseInt(this.value));
     if (xMinDemography >= 0 && xMinDemography < 200) {
         money.xMinDemography = xMinDemography;
         updateChartData();
     }
     else {
-        d3.select('#xMinDemography').property("value", money.xMinDemography);
+        d3.select('#xMinDemography').property("value", toYearRep(money.xMinDemography));
     }
     pushNewHistoryState();
 }
 
 function changeXMaxDemography() {
-    var xMaxDemography = parseInt(this.value);
+    var xMaxDemography = fromYearRep(parseInt(this.value));
     if (xMaxDemography >= 1 && xMaxDemography < 199) {
         money.xMaxDemography = xMaxDemography;
         updateChartData();
     }
     else {
-        d3.select('#xMaxDemography').property("value", money.xMaxDemography);
+        d3.select('#xMaxDemography').property("value", toYearRep(money.xMaxDemography));
     }
     pushNewHistoryState();
 }
 
 function changeXMpvDemography() {
-    var xMpvDemography = parseInt(this.value);
+    var xMpvDemography = fromYearRep(parseInt(this.value));
     if (xMpvDemography >= 1 && xMpvDemography < 199) {
         money.xMpvDemography = xMpvDemography;
         updateChartData();
     }
     else {
-        d3.select('#xMpvDemography').property("value", money.xMpvDemography);
+        d3.select('#xMpvDemography').property("value", toYearRep(money.xMpvDemography));
     }
     pushNewHistoryState();
 }
@@ -2474,14 +2482,14 @@ function changeXScaleDemography() {
 }
 
 function changeAccountBirth() {
-    var birth = parseInt(this.value);
+    var birth = fromYearRep(parseInt(this.value));
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
     if (birth >= 0 && birth < 200) {
         selectedAccount.birth = birth;
         updateChartData();
     }
     else {
-        d3.select('#AccountBirth').property("value", selectedAccount.birth);
+        d3.select('#AccountBirth').property("value", toYearRep(selectedAccount.birth));
     }
     pushNewHistoryState();
 }
