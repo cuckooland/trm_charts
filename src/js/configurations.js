@@ -41,7 +41,7 @@ var configs1 = {
         },
         g: {
             c: "config1-1",
-            t: "IntroItem",
+            t: "WorkshopsItem",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -99,7 +99,7 @@ var configs1 = {
         },
         g: {
             c: "config1-2",
-            t: "IntroItem",
+            t: "WorkshopsItem",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -157,7 +157,7 @@ var configs1 = {
         },
         g: {
             c: "config1-3",
-            t: "IntroItem",
+            t: "WorkshopsItem",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -225,7 +225,7 @@ var configs2 = {
             }
         },
         g: {
-            t: "IntroItem",
+            t: "WorkshopsItem",
             c: "config2-1",
             ac: {
                 hs: ["stableAverage"]
@@ -289,7 +289,7 @@ var configs2 = {
             }
         },
         g: {
-            t: "IntroItem",
+            t: "WorkshopsItem",
             c: "config2-2",
             ac: {
                 hs: ["stableAverage"]
@@ -368,7 +368,7 @@ var configs2 = {
         },
         g: {
             c: "config2-3",
-            t: "IntroItem",
+            t: "WorkshopsItem",
             ac: {
                 hs: []
             },
@@ -430,7 +430,7 @@ var configs3 = {
         },
         g: {
             c: "config3-1",
-            t: "IntroItem",
+            t: "WorkshopsItem",
             ac: {
                 hs: []
             },

@@ -19,247 +19,16 @@
             <div id="TrmAppli">
                 <div id="ParamsCommentsAndTabs">
                     <ul class="tabsBar">
-                        <li><span class="tablinks" id="IntroItem" tabContentId="Intro">Ateliers</span></li>
-                        <li><span href="#GrowingRate" class="tablinks" id="GrowingRateItem" tabContentId="GrowingRate">Taux d'expansion</span></li>
-                        <li><span href="#UniversalDividend" class="tablinks" id="UdItem" tabContentId="UniversalDividend">Dividende Universel</span></li>
-                        <li><span href="#Reference" class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</span></li>
-                        <li><span href="#Bounds" class="tablinks" id="BoundsItem" tabContentId="Bounds">Période affichée</span></li>
-                        <li><span href="#Accounts" class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes affichés</span></li>
-                        <li><span href="#Demography" class="tablinks" id="DemographyItem" tabContentId="Demography">Démographie</span></li>
-                        <li><span href="#Transactions" class="tablinks" id="TransactionsItem" tabContentId="Transactions">Transactions</span></li>
+                        <li><span class="tablinks" id="IntroItem" tabContentId="Intro">Intro</span></li>
+                        <li><span class="tablinks" id="WorkshopsItem" tabContentId="Workshops">Ateliers</span></li>
+                        <li><span class="tablinks" id="GrowingRateItem" tabContentId="GrowingRate">Taux d'expansion</span></li>
+                        <li><span class="tablinks" id="UdItem" tabContentId="UniversalDividend">Dividende Universel</span></li>
+                        <li><span class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</span></li>
+                        <li><span class="tablinks" id="BoundsItem" tabContentId="Bounds">Période affichée</span></li>
+                        <li><span class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes affichés</span></li>
+                        <li><span class="tablinks" id="DemographyItem" tabContentId="Demography">Démographie</span></li>
+                        <li><span class="tablinks" id="TransactionsItem" tabContentId="Transactions">Transactions</span></li>
                     </ul>
-                    <div id="ParamsAndComments">
-                        <div class="ParamPart">
-                            <!-- Intro Tab Parameters -->
-                            <div id="Intro" class="tabcontent">
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="ConfigSelector1">Thème 1</label><select id="ConfigSelector1" name="ConfigSelector1"></select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="ConfigSelector2">Thème 2</label><select id="ConfigSelector2" name="ConfigSelector2"></select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="ConfigSelector3">Thème 3</label><select id="ConfigSelector3" name="ConfigSelector3"></select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Money Tab Parameters -->
-                            <div id="GrowingRate" class="tabcontent">
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="LifeExpectancy">Espérance de vie (en année)</label>
-                                        <input id="LifeExpectancy" type="text" name="LifeExpectancy"
-                                               title="Espérance de vie des individus"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label>Croissance "c"</label>
-                                </div>
-                                <div class="ParamSection">
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label for="CalculateGrowth">Déduite de l'espérence de vie</label>
-                                            <input id="CalculateGrowth" type="checkbox" name="CalculateGrowth" value="1" checked="checked" title="Calcule la croissance (c) à partir de l'espérance de vie (ev) : c = (ev/2)^(1/(ev/2))&nbsp;*&nbsp;100">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byYear" checked> Co-création annuelle (en %)</label>
-                                            <input id="AnnualGrowth" type="text" name="AnnualGrowth"
-                                                   title="Croissance annuelle de la masse monétaire moyenne"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byMonth"> Co-création mensuelle (en %)</label>
-                                            <input id="MonthlyGrowth" type="text" name="MonthlyGrowth"
-                                                   title="Croissance mensuelle de la masse monétaire moyenne"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Universal Divividend Tab Parameters -->
-                            <div id="UniversalDividend" class="tabcontent">
-                                <div class="row">
-                                    <label>Dividende de départ "DU0" (en unités monétaires)</label>
-                                </div>
-                                <div class="ParamSection">
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byYear" checked>Co-création annuelle</label>
-                                            <input id="AnnualDividendStart" type="text" name="AnnualDividendStart"
-                                                   title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byMonth" checked>Co-création mensuelle</label>
-                                            <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"
-                                                   title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Reference Tab Parameters -->
-                            <div id="Reference" class="tabcontent">
-                                <div class="row">
-                                    <div class="labelledForm">
-                                        <label for="ReferenceFrameSelector">Référentiel</label><select id="ReferenceFrameSelector" name="ReferenceFrameSelector"></select>
-                                    </div>
-                                    <div class="ParamSection">
-                                        <div class="labelledForm">
-                                            <label for="LogScale">Echelle logarithmique</label>
-                                            <input id="LogScale" type="checkbox" name="LogScale" value="1">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Bounds Tab Parameters -->
-                            <div id="Bounds" class="tabcontent">
-                                <div class="row">
-                                    <label>Période affichée (en année)</label>
-                                </div>
-                                <div class="ParamSection">
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label for="TimeLowerBound">Borne min</label>
-                                            <input id="TimeLowerBound" type="text" name="TimeLowerBound"
-                                                   title="Borne inférieure de l'axe des X (en année)"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label for="TimeUpperBound">Borne max</label>
-                                            <input id="TimeUpperBound" type="text" name="TimeUpperBound"
-                                                   title="Borne supérieure de l'axe des X (en année)"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Accounts Tab Parameters -->
-                            <div id="Accounts" class="tabcontent">
-                                <div class="row">
-                                    <select id="AccountSelector" name="AccountSelector"></select>
-                                    <input id="AddAccount" type="button" value="Ajouter un compte"/>
-                                </div>
-                                <div class="ParamSection">
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label for="AccountBirth">Année d'entrée</label>
-                                            <input id="AccountBirth" type="text" name="AccountBirth" 
-                                                   title="Indique l'année de naissance du compte"/>
-                                            <label for="AccountDuration">Durée</label>
-                                            <input id="AccountDuration" type="text" name="AccountDuration" 
-                                                   title="Indique la longévité du compte"/>
-                                        </div>
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label for="ProduceUd">Co-créateur de la monnaie</label>
-                                                <input id="ProduceUd" type="checkbox" name="ProduceUd" value="1" checked="checked" title="Indique si ce compte correspond à un producteur de monnaie">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label for="StartingPercentage">Montant à la naissance en %(M/N)</label>
-                                                <input id="StartingPercentage" type="text" name="StartingPercentage"
-                                                       title="Indique le montant présent sur le compte au départ"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <input id="DeleteAccount" type="button" value="Supprimer"/>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Demography Tab Parameters -->
-                            <div id="Demography" class="tabcontent">
-                                <div class="row">
-                                    <label for="DemographySelector">Profil</label><select id="DemographySelector" name="DemographySelector"></select>
-                                </div>
-                                <div class="ParamSection" id="DemographyParamSection">
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label for="MaxDemography">Sommet (en Unité Monétaire)</label>
-                                            <input id="MaxDemography" type="text" name="MaxDemography"
-                                                   title="Ordre de grandeur de la démographie maximum"/>
-                                        </div>
-                                        <div class="labelledForm">
-                                            <label for="xMinDemography">Début (en année)</label>
-                                            <input id="xMinDemography" type="text" name="xMinDemography"/>
-                                        </div>
-                                        <div class="labelledForm">
-                                            <label for="xMaxDemography">Fin (en année)</label>
-                                            <input id="xMaxDemography" type="text" name="xMaxDemography"/>
-                                        </div>
-                                        <div class="labelledForm">
-                                            <label for="xMpvDemography">Sommet (en année)</label>
-                                            <input id="xMpvDemography" type="text" name="xMpvDemography"/>
-                                        </div>
-                                        <div class="labelledForm">
-                                            <label for="plateauDemography">Durée (en année)</label>
-                                            <input id="plateauDemography" type="text" name="plateauDemography"/>
-                                        </div>
-                                        <div class="labelledForm">
-                                            <label for="xScaleDemography">Paramètre d'échelle</label>
-                                            <input id="xScaleDemography" type="text" name="xScaleDemography"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Transactions Tab Parameters -->
-                            <div id="Transactions" class="tabcontent">
-                                <div class="row">
-                                    <select id="TransactionSelector" name="TransactionSelector"></select>
-                                    <input id="AddTransaction" type="button" value="Ajouter une transaction"/>
-                                </div>
-                                <div class="ParamSection">
-                                    <div class="row">
-                                        <div class="labelledForm">
-                                            <label for="TransactionYear">Pour l'année</label>
-                                            <input id="TransactionYear" type="text" name="TransactionYear" 
-                                                   title="Indique l'année sur laquelle est appliquée cette transaction"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="TransactionSrc">De</label>
-                                            <select id="TransactionSrc" name="TransactionSrc"></select>
-                                            <label for="TransactionDest">Vers</label>
-                                            <select id="TransactionDest" name="TransactionDest"></select>
-                                        </div>
-                                        <div class="row">
-                                            <div class="labelledForm">
-                                                <label for="TransactionAmount">Montant</label>
-                                                <input id="TransactionAmount" type="text" name="TransactionAmount"
-                                                       title="Indique le montant du transfert"/>
-                                            </div>
-                                            <select id="TransactionRef" name="TransactionRef"></select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <input id="DeleteTransaction" type="button" value="Supprimer"/>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
-
                     <div class="CommentPart">
                         <!-- Charts Comments -->
                         <div class="Comment" id="averageComment">
@@ -677,11 +446,21 @@
 
                         <!-- Intro Tab Comments -->
                         <div class="Comment" id="IntroItemComment">
+                            <p>"La TRM en Couleur", publié il y a quelques années, se voulait une introduction à la Théorie Relative de la Monnaie de Stéphane Laborde. Cette deuxième partie prolonge cette introduction et tente de garder son souci d'accéssibilité au plus grand nombre, tout en abordant des questions plus avancées.</p>
+                            
+                            <p>L'utilisateur, en positionnant différents attributs, pourra étudier certaines situations grâce aux quatre graphes situés dans la partie inférieure de l'application. Les attributs sont regroupés par thématique dans des onglets : <span class="growth">Taux d'expansion</span>, <span class="dividendTabLink">Dividende Universel</span>, <span class="referenceTabLink">Référentiel</span>, <span class="boundsTabLink">Période affichée</span>, <span class="accountsTabLink">Comptes affichés</span>, <span class="demographyTabLink">Démographie</span>, <span class="transactionsTabLink">Transactions</span>.</p>
+                            
+                            <p>Pour commencer, l'utilisateur peut étudier les différentes configurations proposées dans l'onglet <span class="workshopsTabLink">Ateliers</span>, ce qui lui permettra par la même occasion de découvrir progressivement les différentes possibilités de cette application.</p>
+                            
+                        </div>
+
+                        <!-- Workshops Tab Comments -->
+                        <div class="Comment" id="WorkshopsItemComment">
                             <p>Ce simulateur a une configuration par défaut. Cet onglet permet de mettre en avant d'autres configurations.</p>
                             
                         </div>
                         <div class="Comment" id="config1-1Comment">
-                            <p>Dans cette configuration, le système monétaire est constitué d'un seul individu, comme nous le confirme la <span class="headcount">courbe du nombre d'individu</span> (voir le graphe en bas à gauche). Le compte de cet individu est représenté par une courbe dans le graphe en haut à gauche.</p>
+                            <p>Dans cette configuration, le système monétaire est constitué d'un seul individu, comme nous le confirme la <span class="headcount">courbe du nombre d'individu</span> (voir le graphe en bas à gauche). Le compte de cet individu est représenté par une <span class="account">courbe</span> dans le graphe en haut à gauche.</p>
                             
                             <p><strong>Note</strong>&nbsp;: chaque point des courbes peut être cliqué, la façon dont il est calculé sera alors indiquée.</p>
                             
@@ -990,6 +769,240 @@
                         </div>
                         
                     </div>
+
+                    <div id="ParamsAndComments">
+                        <div class="ParamPart">
+                            <!-- Intro Tab Parameters -->
+                            <div id="Intro" class="tabcontent">
+                            </div>
+                            
+                            <!-- Workshops Tab Parameters -->
+                            <div id="Workshops" class="tabcontent">
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="ConfigSelector1">Thème 1</label><select id="ConfigSelector1" name="ConfigSelector1"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="ConfigSelector2">Thème 2</label><select id="ConfigSelector2" name="ConfigSelector2"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="ConfigSelector3">Thème 3</label><select id="ConfigSelector3" name="ConfigSelector3"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Money Tab Parameters -->
+                            <div id="GrowingRate" class="tabcontent">
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="LifeExpectancy">Espérance de vie (en année)</label>
+                                        <input id="LifeExpectancy" type="text" name="LifeExpectancy"
+                                               title="Espérance de vie des individus"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="CalculateGrowth">Croissance "c" déduite de l'espérence de vie</label>
+                                        <input id="CalculateGrowth" type="checkbox" name="CalculateGrowth" value="1" checked="checked" title="Calcule la croissance (c) à partir de l'espérance de vie (ev) : c = (ev/2)^(1/(ev/2))&nbsp;*&nbsp;100">
+                                    </div>
+                                </div>
+                                <div class="ParamSection">
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byYear" checked> Croissance annuelle (en %)</label>
+                                            <input id="AnnualGrowth" type="text" name="AnnualGrowth"
+                                                   title="Croissance annuelle de la masse monétaire moyenne"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label class="leftComp"><input class="rythm" type="radio" name="rythm" value="byMonth"> Croissance mensuelle (en %)</label>
+                                            <input id="MonthlyGrowth" type="text" name="MonthlyGrowth"
+                                                   title="Croissance mensuelle de la masse monétaire moyenne"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Universal Divividend Tab Parameters -->
+                            <div id="UniversalDividend" class="tabcontent">
+                                <div class="row">
+                                    <label>Dividende de départ "DU0" (en unités monétaires)</label>
+                                </div>
+                                <div class="ParamSection">
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byYear" checked>Co-création annuelle</label>
+                                            <input id="AnnualDividendStart" type="text" name="AnnualDividendStart"
+                                                   title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byMonth" checked>Co-création mensuelle</label>
+                                            <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"
+                                                   title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Reference Tab Parameters -->
+                            <div id="Reference" class="tabcontent">
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <label for="ReferenceFrameSelector">Référentiel</label><select id="ReferenceFrameSelector" name="ReferenceFrameSelector"></select>
+                                    </div>
+                                    <div class="ParamSection">
+                                        <div class="labelledForm">
+                                            <label for="LogScale">Echelle logarithmique</label>
+                                            <input id="LogScale" type="checkbox" name="LogScale" value="1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bounds Tab Parameters -->
+                            <div id="Bounds" class="tabcontent">
+                                <div class="row">
+                                    <label>Période affichée (en année)</label>
+                                </div>
+                                <div class="ParamSection">
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="TimeLowerBound">Borne min</label>
+                                            <input id="TimeLowerBound" type="text" name="TimeLowerBound"
+                                                   title="Borne inférieure de l'axe des X (en année)"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="TimeUpperBound">Borne max</label>
+                                            <input id="TimeUpperBound" type="text" name="TimeUpperBound"
+                                                   title="Borne supérieure de l'axe des X (en année)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Accounts Tab Parameters -->
+                            <div id="Accounts" class="tabcontent">
+                                <div class="row">
+                                    <select id="AccountSelector" name="AccountSelector"></select>
+                                    <input id="AddAccount" type="button" value="Ajouter un compte"/>
+                                </div>
+                                <div class="ParamSection">
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="AccountBirth">Année d'entrée</label>
+                                            <input id="AccountBirth" type="text" name="AccountBirth" 
+                                                   title="Indique l'année de naissance du compte"/>
+                                            <label for="AccountDuration">Durée</label>
+                                            <input id="AccountDuration" type="text" name="AccountDuration" 
+                                                   title="Indique la longévité du compte"/>
+                                        </div>
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label for="ProduceUd">Co-créateur de la monnaie</label>
+                                                <input id="ProduceUd" type="checkbox" name="ProduceUd" value="1" checked="checked" title="Indique si ce compte correspond à un producteur de monnaie">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label for="StartingPercentage">Montant à la naissance en %(M/N)</label>
+                                                <input id="StartingPercentage" type="text" name="StartingPercentage"
+                                                       title="Indique le montant présent sur le compte au départ"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <input id="DeleteAccount" type="button" value="Supprimer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Demography Tab Parameters -->
+                            <div id="Demography" class="tabcontent">
+                                <div class="row">
+                                    <label for="DemographySelector">Profil</label><select id="DemographySelector" name="DemographySelector"></select>
+                                </div>
+                                <div class="ParamSection" id="DemographyParamSection">
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="MaxDemography">Sommet (en Unité Monétaire)</label>
+                                            <input id="MaxDemography" type="text" name="MaxDemography"
+                                                   title="Ordre de grandeur de la démographie maximum"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="xMinDemography">Début (en année)</label>
+                                            <input id="xMinDemography" type="text" name="xMinDemography"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="xMaxDemography">Fin (en année)</label>
+                                            <input id="xMaxDemography" type="text" name="xMaxDemography"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="xMpvDemography">Sommet (en année)</label>
+                                            <input id="xMpvDemography" type="text" name="xMpvDemography"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="plateauDemography">Durée (en année)</label>
+                                            <input id="plateauDemography" type="text" name="plateauDemography"/>
+                                        </div>
+                                        <div class="labelledForm">
+                                            <label for="xScaleDemography">Paramètre d'échelle</label>
+                                            <input id="xScaleDemography" type="text" name="xScaleDemography"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Transactions Tab Parameters -->
+                            <div id="Transactions" class="tabcontent">
+                                <div class="row">
+                                    <select id="TransactionSelector" name="TransactionSelector"></select>
+                                    <input id="AddTransaction" type="button" value="Ajouter une transaction"/>
+                                </div>
+                                <div class="ParamSection">
+                                    <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="TransactionYear">Pour l'année</label>
+                                            <input id="TransactionYear" type="text" name="TransactionYear" 
+                                                   title="Indique l'année sur laquelle est appliquée cette transaction"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="TransactionSrc">De</label>
+                                            <select id="TransactionSrc" name="TransactionSrc"></select>
+                                            <label for="TransactionDest">Vers</label>
+                                            <select id="TransactionDest" name="TransactionDest"></select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="labelledForm">
+                                                <label for="TransactionAmount">Montant</label>
+                                                <input id="TransactionAmount" type="text" name="TransactionAmount"
+                                                       title="Indique le montant du transfert"/>
+                                            </div>
+                                            <select id="TransactionRef" name="TransactionRef"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <input id="DeleteTransaction" type="button" value="Supprimer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
                 </div>
                 
                 <div id="ChartsPart">

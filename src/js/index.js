@@ -122,6 +122,8 @@ addChartEffectsFromHtml();
 
 if (!applyEncodedURIFromLocation()) {
     applyJSonRep(configs1['config1-1']);
+    openTab('IntroItem');
+    comment('Intro');
     var encodedURI = asEncodedURI();
     window.history.replaceState(encodedURI, '', '?' + encodedURI);
 }
@@ -174,6 +176,10 @@ function generateC3Charts() {
 }
 
 function addTabEffectsFromHtml() {
+    var workshopsTabAttributes = {
+        tabId: 'WorkshopsItem',
+        referingClass: 'workshopsTabLink'
+    };
     var growthTabAttributes = {
         tabId: 'GrowingRateItem',
         referingClass: 'growth'
@@ -202,7 +208,7 @@ function addTabEffectsFromHtml() {
         tabId: 'TransactionsItem',
         referingClass: 'transactionsTabLink'
     };
-    var tabAttributesList = [growthTabAttributes, udTabAttributes, referenceTabAttributes, boundsTabAttributes, accountsTabAttributes, demographyTabAttributes, transactionsTabAttributes];
+    var tabAttributesList = [workshopsTabAttributes, growthTabAttributes, udTabAttributes, referenceTabAttributes, boundsTabAttributes, accountsTabAttributes, demographyTabAttributes, transactionsTabAttributes];
     
     tabAttributesList.forEach(function(tabAttributes) {
         d3.selectAll('span.' + tabAttributes.referingClass)
@@ -349,9 +355,14 @@ function addChartEffectsFromHtml() {
 
     function getTargetedSerieId(serieAttributes) {
         var serieClass = serieAttributes.class;
-        if (serieClass == ACCOUNT_ID_PREFIX && curSelectedDataId.startsWith(ACCOUNT_ID_PREFIX)) {
-            // For now, if an account serie is targeted, it necessarly corresponds to the current selected serie
-            return curSelectedDataId;
+        if (serieClass == ACCOUNT_ID_PREFIX) {
+            // For now, if an account serie is targeted, it necessarly corresponds to the current selected serie (else we use the first one)
+            if (curSelectedDataId.startsWith(ACCOUNT_ID_PREFIX)) {
+                return curSelectedDataId;
+            }
+            else {
+                return getC3AccountId(1);
+            }
         }
         return serieClass;
     }
@@ -2156,7 +2167,7 @@ function changeConfiguration(selectElement, configs) {
         comment(curConfigId);
     }
     else {
-        comment("IntroItem");
+        comment("WorkshopsItem");
     }
     pushNewHistoryState();
 }
@@ -2546,7 +2557,7 @@ function getCurConfigJsonRep() {
 
 function clickTab(tabItemId) {
     openTab(tabItemId);
-    if (tabItemId == "IntroItem") {
+    if (tabItemId == "WorkshopsItem") {
         var jsonRep = getCurConfigJsonRep();
         applyJSonRep(jsonRep);
         comment(curConfigId);
