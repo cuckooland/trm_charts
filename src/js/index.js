@@ -123,7 +123,7 @@ addChartEffectsFromHtml();
 if (!applyEncodedURIFromLocation()) {
     applyJSonRep(configs1['config1-1']);
     openTab('IntroItem');
-    comment('Intro');
+    comment('IntroItem');
     var encodedURI = asEncodedURI();
     window.history.replaceState(encodedURI, '', '?' + encodedURI);
 }
@@ -471,6 +471,7 @@ function initCallbacks() {
     d3.select("#ProduceUd").on("click", changeProduceUd);
     d3.select("#StartingPercentage").on("change", changeStartingPercentage);
     d3.select("#TransactionYear").on("change", changeTransactionYear);
+    d3.select("#TransactionRep").on("change", changeTransactionRep);
     d3.select("#TransactionAmount").on("change", changeTransactionAmount);
     
     d3.selectAll(".tablinks").on("click", function() { clickTab(this.id); });
@@ -1624,6 +1625,7 @@ function updateTransactionArea() {
     if (money.transactions.length > 0) {
         var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
         d3.select('#TransactionYear').property("value", toYearRep(selectedTransaction.year));
+        d3.select('#TransactionRep').property("value", selectedTransaction.repetitionCount);
         document.getElementById("TransactionSrc").selectedIndex = money.accounts.indexOf(selectedTransaction.from);
         document.getElementById("TransactionDest").selectedIndex = money.accounts.indexOf(selectedTransaction.to);
         d3.select('#TransactionAmount').property("value", selectedTransaction.amount);
@@ -2215,6 +2217,19 @@ function changeTransactionYear() {
     }
     else {
         d3.select('#TransactionYear').property("value", toYearRep(selectedTransaction.year));
+    }
+    pushNewHistoryState();
+}
+
+function changeTransactionRep() {
+    var transactionRep = parseInt(this.value);
+    var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
+    if (transactionRep >= 0 && transactionRep < 200) {
+        selectedTransaction.repetitionCount = transactionRep;
+        updateChartData();
+    }
+    else {
+        d3.select('#TransactionYear').property("value", selectedTransaction.repetitionCount);
     }
     pushNewHistoryState();
 }

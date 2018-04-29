@@ -370,7 +370,8 @@ var libreMoneyClass = function(lifeExpectancy) {
                 t: this.transactions[i].to.id,
                 y: this.transactions[i].year,
                 a: this.transactions[i].amount,
-                r: this.transactions[i].amountRef
+                r: this.transactions[i].amountRef,
+                rc: this.transactions[i].repetitionCount,
             }
         }
         return jsonRep;
@@ -425,6 +426,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                 year: transactionDescr.y,
                 amount: transactionDescr.a,
                 amountRef: transactionDescr.r,
+                repetitionCount: transactionDescr.rc,
                 actualAmount: -1
             });
         }
@@ -524,7 +526,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
 
     this.applyTransactions = function(timeStep) {
-        var annualTransactions = this.transactions.filter(t=>timeStep==this.getTimeStep(t.year, this.YEAR) && this.validTransactionDate(t));
+        var annualTransactions = this.transactions.filter(t=>this.validTransactionDate(t, timeStep));
 
         // Loop over the origin of each annual transactions
         for (var i = 0; i < annualTransactions.length; i++) {
@@ -546,8 +548,12 @@ var libreMoneyClass = function(lifeExpectancy) {
         }
     }
 
-    this.validTransactionDate = function(transaction) {
-        return !(transaction.year < transaction.from.birth 
+    this.validTransactionDate = function(transaction, timeStep) {
+        var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
+        var lastTransStep = this.getTimeStep(transaction.year + transaction.repetitionCount, this.YEAR);
+        return !(timeStep < firstTransStep
+            || timeStep > lastTransStep 
+            || transaction.year < transaction.from.birth 
             || transaction.year > (transaction.from.birth + transaction.from.duration)
             || transaction.year < transaction.to.birth 
             || transaction.year > (transaction.to.birth + transaction.to.duration));
@@ -615,16 +621,15 @@ var libreMoneyClass = function(lifeExpectancy) {
             account2 = this.accounts[1];
         }
         var year = account1.birth;
-        var amount = this.DEFAULT_TRANSACTION_AMOUNT;
-        var amountRef = this.MONETARY_UNIT_REF_KEY;
-    
+        
         this.transactions.push({
             id: id,
             from: account1,
             to: account2,
             year: year,
-            amount: amount,
-            amountRef: amountRef,
+            amount: this.DEFAULT_TRANSACTION_AMOUNT,
+            amountRef: this.MONETARY_UNIT_REF_KEY,
+            repetitionCount: 0,
             actualAmount: -1
         });
     };
