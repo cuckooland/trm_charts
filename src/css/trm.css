@@ -34,14 +34,14 @@ h1
 
 select {
     text-align: left;
-    margin:0.3em;
-    margin-left: 1em;
+    margin:0.1em 0.3em 0.1em 0.3em;
     font-size: 0.875em;
 }
 
 input[type=text] {
     text-align: right;
-    margin-left: 0.5em;
+    margin-left: 0.3em;
+    margin-right: 0.3em;
     width: 4em;
 }
 
@@ -62,13 +62,14 @@ input[disabled=disabled] {
 
 .labelledForm {
     display: inline-block;
-    margin: 0.1em 1em 0.1em 0em;
+    margin: 0em 0.5em 0em 0em;
 }
 
 .ParamSection {
     padding-left: 0.6em;
     padding-top: 0.1em;
     padding-bottom: 0.1em;
+    margin-top: 0.1em;
     margin-left: 0.8em;
     background-color: #d1d1d1;
 }
@@ -106,6 +107,12 @@ input[disabled=disabled] {
 
 label {
     color: darkslateblue;
+}
+
+.wsTitle {
+    margin-left: 0.5em;
+    font-style: italic;
+    color: #4a866a;
 }
 
 .chart {

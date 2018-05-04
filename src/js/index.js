@@ -99,6 +99,24 @@ var money = {};
 // Create instance of class in context with constructor parameters
 libreMoneyClass.call(money);
 
+var workshops = [
+    {
+        jsonRep: configs1,
+        selectorId: 'ConfigSelector1'
+    }, 
+    {
+        jsonRep: configs2,
+        selectorId: 'ConfigSelector2'
+    }, 
+    {
+        jsonRep: configs3,
+        selectorId: 'ConfigSelector3'
+    }, 
+    {
+        jsonRep: configs4,
+        selectorId: 'ConfigSelector4'
+    }];
+
 var curConfigId = "";
 var curTabId = "";
 var curSelectedDataId = "";
@@ -430,9 +448,10 @@ function addChartEffectsFromHtml() {
 }
 
 function initCallbacks() {
-    d3.select("#ConfigSelector1").on("change", function() { changeConfiguration(this, configs1); });
-    d3.select("#ConfigSelector2").on("change", function() { changeConfiguration(this, configs2); });
-    d3.select("#ConfigSelector3").on("change", function() { changeConfiguration(this, configs3); });
+    for (var i = 0; i < workshops.length; i++) {
+        const workshopJSonRep = workshops[i].jsonRep;
+        d3.select('#' + workshops[i].selectorId).on("change", function() { changeConfiguration(this, workshopJSonRep); });
+    }
     d3.select("#ReferenceFrameSelector").on("change", changeReferenceFrame);
     d3.select("#UdFormulaSelector").on("change", changeUdFormula);
     d3.select("#DemographySelector").on("change", changeDemographicProfile);
@@ -585,44 +604,35 @@ function setHiddenSeries(chart, hiddenSeries) {
 
 // Init the different selectors
 function initSelectors() {
-    feedConfigSelector('ConfigSelector1', configs1);
-    feedConfigSelector('ConfigSelector2', configs2);
-    feedConfigSelector('ConfigSelector3', configs3);
+    for (var i = 0; i < workshops.length; i++) {
+        feedConfigSelector(workshops[i]);
+    }
     feedReferenceFrameSelectors(money);
     feedUdFormulaSelector(money);
     feedDemographySelector(money);
 }
 
 // Create configuration selector
-function feedConfigSelector(configSelectorId, configs) {
-    d3.select('#' + configSelectorId).selectAll("option")
-        .data(Object.keys(configs))
+function feedConfigSelector(workshop) {
+    d3.select('#' + workshop.selectorId).selectAll("option")
+        .data(Object.keys(workshop.jsonRep))
       .enter().append("option")
         .text(function(d) { return getConfigLabel(d); })
         .attr('value', function(d) { return d; });
 }
 
 function setConfigSelection() {
-    var selectedIndex = Object.keys(configs1).indexOf(curConfigId);
-    if (selectedIndex != -1) {
-        document.getElementById("ConfigSelector1").selectedIndex = selectedIndex;
-        document.getElementById("ConfigSelector2").selectedIndex = 0;
-        document.getElementById("ConfigSelector3").selectedIndex = 0;
-        return;
-    }
-    var selectedIndex = Object.keys(configs2).indexOf(curConfigId);
-    if (selectedIndex != -1) {
-        document.getElementById("ConfigSelector2").selectedIndex = selectedIndex;
-        document.getElementById("ConfigSelector1").selectedIndex = 0;
-        document.getElementById("ConfigSelector3").selectedIndex = 0;
-        return;
-    }
-    var selectedIndex = Object.keys(configs3).indexOf(curConfigId);
-    if (selectedIndex != -1) {
-        document.getElementById("ConfigSelector3").selectedIndex = selectedIndex;
-        document.getElementById("ConfigSelector1").selectedIndex = 0;
-        document.getElementById("ConfigSelector2").selectedIndex = 0;
-        return;
+    for (var i = 0; i < workshops.length; i++) {
+        var selectedIndex = Object.keys(workshops[i].jsonRep).indexOf(curConfigId);
+        if (selectedIndex != -1) {
+            document.getElementById(workshops[i].selectorId).selectedIndex = selectedIndex;
+            for (var j = 0; j < workshops.length; j++) {
+                if (i != j) {
+                    document.getElementById(workshops[j].selectorId).selectedIndex = 0;
+                }
+            }
+            return;
+        }
     }
     throw new Error("Configuration not managed: " + curConfigId);
 };
@@ -989,25 +999,34 @@ function getConfigLabel(configKey) {
             configLabel = "";
             break;
         case 'config1-1':
-            configLabel = "Configuration 1";
+            configLabel = "Départ à 0";
             break;
         case 'config1-2': 
-            configLabel = "Configuration 2";
+            configLabel = "Départ à DU0/c";
             break;
         case 'config1-3': 
-            configLabel = "Configuration 3";
+            configLabel = "Vue sur 40 ans";
             break;
         case 'config2-1': 
-            configLabel = "Configuration 1";
+            configLabel = "2nd co-créateur";
             break;
         case 'config2-2': 
-            configLabel = "Configuration 2";
+            configLabel = "Profil de Cauchy";
             break;
         case 'config2-3': 
-            configLabel = "Configuration 3";
+            configLabel = "4 dates d'entrée";
             break;
         case 'config3-1': 
-            configLabel = "Configuration 1";
+            configLabel = "Prêt en UM (V1)";
+            break;
+        case 'config3-2': 
+            configLabel = "Prêt en UM (V2)";
+            break;
+        case 'config3-3': 
+            configLabel = "Prêt en DU";
+            break;
+        case 'config4-1': 
+            configLabel = "Ecroulement de N";
             break;
         default:
             throw new Error("Unknown configuration: " + configKey);
@@ -2127,7 +2146,7 @@ function commentAccordingToAccount(timeStep, account) {
     if (fromTransactions.length > 0) {
         d3.selectAll("span.WithNegTr").style("display", "inline");
         d3.selectAll("span.NegTrs").text(fromTransactions.map(t=>transactionName(t)).join(', '));
-        d3.selectAll("span.NegTrsValues").text(fromTransactions.map(t=>money.muTransactionAmount(t, tickFormat)).join(' - '));
+        d3.selectAll("span.NegTrsValues").text(fromTransactions.map(t=>commentFormat(money.muTransactionAmount(t, timeStep))).join(' - '));
     }
     else {
         d3.selectAll("span.WithNegTr").style("display", "none");
@@ -2137,7 +2156,7 @@ function commentAccordingToAccount(timeStep, account) {
     if (toTransactions.length > 0) {
         d3.selectAll("span.WithPosTr").style("display", "inline");
         d3.selectAll("span.PosTrs").text(toTransactions.map(t=>transactionName(t)).join(', '));
-        d3.selectAll("span.PosTrsValues").text(toTransactions.map(t=>money.muTransactionAmount(t, tickFormat)).join(' + '));
+        d3.selectAll("span.PosTrsValues").text(toTransactions.map(t=>commentFormat(money.muTransactionAmount(t, timeStep))).join(' + '));
     }
     else {
         d3.selectAll("span.WithPosTr").style("display", "none");
@@ -2558,14 +2577,10 @@ function changeStartingPercentage() {
 }
 
 function getCurConfigJsonRep() {
-    if (Object.keys(configs1).indexOf(curConfigId) != -1) {
-        return configs1[curConfigId];
-    }
-    if (Object.keys(configs2).indexOf(curConfigId) != -1) {
-        return configs2[curConfigId];
-    }
-    if (Object.keys(configs3).indexOf(curConfigId) != -1) {
-        return configs3[curConfigId];
+    for (var i = 0; i < workshops.length; i++) {
+        if (Object.keys(workshops[i].jsonRep).indexOf(curConfigId) != -1) {
+            return workshops[i].jsonRep[curConfigId];
+        }
     }
     throw new Error("Configuration not managed: " + curConfigId);
 }

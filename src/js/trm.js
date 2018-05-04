@@ -514,11 +514,27 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
    
     this.searchTransactionsFrom = function(account, timeStep) {
-        return this.transactions.filter(t=>timeStep==this.getTimeStep(t.year, this.YEAR) && t.from == account);
+        return this.transactions.filter(t=>this.isTransactionFrom(account, t, timeStep));
     }
 
     this.searchTransactionsTo = function(account, timeStep) {
-        return this.transactions.filter(t=>timeStep==this.getTimeStep(t.year, this.YEAR) && t.to == account);
+        return this.transactions.filter(t=>this.isTransactionTo(account, t, timeStep));
+    }
+
+    this.isTransactionFrom = function(account, transaction, timeStep) {
+        var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
+        var lastTransStep = this.getTimeStep(transaction.year + transaction.repetitionCount, this.YEAR);
+        return timeStep >= firstTransStep
+            && timeStep <= lastTransStep 
+            && transaction.from == account;
+    }
+
+    this.isTransactionTo = function(account, transaction, timeStep) {
+        var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
+        var lastTransStep = this.getTimeStep(transaction.year + transaction.repetitionCount, this.YEAR);
+        return timeStep >= firstTransStep
+            && timeStep <= lastTransStep 
+            && transaction.to == account;
     }
 
     this.muTransactionAmount = function(transaction, timeStep) {

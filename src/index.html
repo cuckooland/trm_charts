@@ -516,10 +516,28 @@
                             
                         </div>
                         <div class="Comment" id="config3-1Comment">
-                            <p>Commentaires de la config 3.1</p>
+                            <p>Seules deux comptes sont repérsentés dans cette configuration, Compte 2 et Compte 3 qui ne sont pas co-créateurs de la monnaie. Ici, l'unité monétaire est l'unité utilisée pour les axes verticaux des graphes. Au cours de l'année 2004, un transfert de 5000 unités monétaires à lieu du Compte 2 vers le Compte 3&nbsp;; puis, chaque année durant les dix suivantes, un transfert de 1000 unités monétaires est réalisé du Compte 3 vers le Compte 2.</p>
+                            
+                            <p>Au bout de 11 ans, les deux comptes se retrouvent au même montant. Cette configuration pourrait rappeler un prêt suivi d'un rembourcement en 10 échéances, sans intérêt.</p>
                             
                         </div>
-                        
+                        <div class="Comment" id="config3-2Comment">
+                            <p>Cette configuration est très similaire à la précédente. Cette fois, les deux comptes sont co-créateurs de la monnaie. De plus, le DU est l'unité utilisée pour les axes verticaux des graphes.</p>
+                            
+                            <p>Visuellement, par rapport à la configuration précédente, la partie "Remboursement" apparaît courbée. Dans ce référentiel, les premiers remboursements semblent plus élevés que les derniers.</p>
+                            
+                        </div>
+                        <div class="Comment" id="config3-3Comment">
+                            <p>La différence dans cette configuration par rapport à la précédente est dans l'unité utilisée pour les transactions. Au cours de l'année 2004, un transfert de 5 DU (au lieu des 5000 unités monétaires précédemment) à lieu du Compte 2 vers le Compte 3&nbsp;; puis, chaque année durant les dix suivantes, un transfert de 0.5 DU (au lieu des 1000 unités monétaires précédemment) est réalisé du Compte 3 vers le Compte 2.</p>
+                            
+                            <p>Cette fois, au bout de 11 ans, les deux comptes ne se retrouvent pas au même montant, le compte "prêteur" finit au dessus du compte "emprunteur". On dit communément que "les additions fonctionnent mal quand on compte en DU". Là encore, cette configuration pourrait rappeler un prêt suivi d'un rembourcement en 10 échéances, mais cette fois avec intérêts.</p>
+                            
+                        </div>
+                        <div class="Comment" id="config4-1Comment">
+                            <p>Juste une configuration illustrant un écroulement (peu réaliste car trop marqué) de N. Ce qui offre aussi l'occasion d'introduire l'utilisation sur les axes verticaux de l'échelle "log" (attribut décrit et positionnable dans l'onglet <span class="referenceTabLink">Référentiel</span>).</p>
+                            
+                        </div>
+                            
                         <!-- Growing Rate Tab Comments -->
                         <div class="Comment" id="GrowingRateItemComment">
                             <p>Dans la Théorie Relative de la Monnaie, de nouvelles unités monétaires sont créées régulièrement et sont partagées équitablement entre les <span class="headcount">N</span> individus de la communauté. C'est ce que l'on appelle la co-création de la monnaie.</p>
@@ -784,20 +802,25 @@
                             <div id="Workshops" class="tabcontent">
                                 <div class="row">
                                     <div class="labelledForm">
-                                        <label for="ConfigSelector1">Thème 1</label><select id="ConfigSelector1" name="ConfigSelector1"></select>
+                                        <label for="ConfigSelector1">Thème 1</label><select id="ConfigSelector1" name="ConfigSelector1"></select><span class="wsTitle">Un seul co-créateur</span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="labelledForm">
-                                        <label for="ConfigSelector2">Thème 2</label><select id="ConfigSelector2" name="ConfigSelector2"></select>
+                                        <label for="ConfigSelector2">Thème 2</label><select id="ConfigSelector2" name="ConfigSelector2"></select><span class="wsTitle">Sur l'ordre d'entrée</span>
                                     </div>
                                 </div>
                                 <div class="row">
+                                        <div class="labelledForm">
+                                            <label for="ConfigSelector3">Thème 3</label><select id="ConfigSelector3" name="ConfigSelector3"></select><span class="wsTitle">Prêt et calcul en DU</span>
+                                        </div>
+                                    </div>
+                                <div class="row">
                                     <div class="labelledForm">
-                                        <label for="ConfigSelector3">Thème 3</label><select id="ConfigSelector3" name="ConfigSelector3"></select>
+                                        <label for="ConfigSelector4">Thème 4</label><select id="ConfigSelector4" name="ConfigSelector4"></select><span class="wsTitle">Cas extrêmes</span>
                                     </div>
                                 </div>
-                            </div>
+                                </div>
                             
                             <!-- Money Tab Parameters -->
                             <div id="GrowingRate" class="tabcontent">

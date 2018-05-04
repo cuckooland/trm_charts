@@ -392,6 +392,320 @@ var configs3 = {
     },
     'config3-1': {
         m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 20,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 3,
+            tc: 2,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: true
+            },
+            a1: {
+                id: 2,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: false
+            },
+            a2: {
+                id: 3,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: false
+            },
+            t0: {
+                id: 1,
+                f: 2,
+                t: 3,
+                y: 5,
+                a: 5000,
+                r: "monetaryUnit",
+                rc: 0
+            },
+            t1: {
+                id: 2,
+                f: 3,
+                t: 2,
+                y: 6,
+                a: 500,
+                r: "monetaryUnit",
+                rc: 9
+            }
+        },
+        g: {
+            t: "WorkshopsItem",
+            c: "config3-1",
+            ac: {
+                hs: [
+                    "average",
+                    "stableAverage",
+                    "account1"
+                ]
+            },
+            dc: {
+                hs: [
+                    "stableDividend"
+                ]
+            },
+            hc: {
+                hs: [
+
+                ]
+            },
+            sc: {
+                hs: [
+                    "stableMonetarySupply"
+                ]
+            },
+            a: 2,
+            tr: 1,
+            s: "",
+            i: -1,
+            com: "config3-1"
+        }
+    },
+    'config3-2': {
+        m: {
+            f: "BasicUD",
+            r: "dividend",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 20,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 3,
+            tc: 2,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: true
+            },
+            a1: {
+                id: 2,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: true
+            },
+            a2: {
+                id: 3,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: true
+            },
+            t0: {
+                id: 1,
+                f: 2,
+                t: 3,
+                y: 5,
+                a: 5000,
+                r: "monetaryUnit",
+                rc: 0
+            },
+            t1: {
+                id: 2,
+                f: 3,
+                t: 2,
+                y: 6,
+                a: 500,
+                r: "monetaryUnit",
+                rc: 9
+            }
+        },
+        g: {
+            t: "WorkshopsItem",
+            c: "config3-2",
+            ac: {
+                hs: [
+                    "average",
+                    "stableAverage",
+                    "account1"
+                ]
+            },
+            dc: {
+                hs: [
+                    "stableDividend"
+                ]
+            },
+            hc: {
+                hs: [
+
+                ]
+            },
+            sc: {
+                hs: [
+                    "stableMonetarySupply"
+                ]
+            },
+            a: 2,
+            tr: 1,
+            s: "",
+            i: -1,
+            com: "config3-2"
+        }
+    },
+    'config3-3': {
+        m: {
+            f: "BasicUD",
+            r: "dividend",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 20,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 3,
+            tc: 2,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: true
+            },
+            a1: {
+                id: 2,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: true
+            },
+            a2: {
+                id: 3,
+                b: 1,
+                d: 80,
+                a0: 100,
+                p: true
+            },
+            t0: {
+                id: 1,
+                f: 2,
+                t: 3,
+                y: 5,
+                a: 5,
+                r: "dividend",
+                rc: 0
+            },
+            t1: {
+                id: 2,
+                f: 3,
+                t: 2,
+                y: 6,
+                a: 0.5,
+                r: "dividend",
+                rc: 9
+            }
+        },
+        g: {
+            t: "WorkshopsItem",
+            c: "config3-3",
+            ac: {
+                hs: [
+                    "average",
+                    "stableAverage",
+                    "account1"
+                ]
+            },
+            dc: {
+                hs: [
+                    "stableDividend"
+                ]
+            },
+            hc: {
+                hs: [
+
+                ]
+            },
+            sc: {
+                hs: [
+                    "stableMonetarySupply"
+                ]
+            },
+            a: 2,
+            tr: 1,
+            s: "",
+            i: -1,
+            com: "config3-3"
+        }
+    }
+};
+
+var configs4 = {
+    none: {
+    },
+    'config4-1': {
+        m: {
             f: "UDG",
             r: "dividend",
             rs: {
@@ -429,7 +743,7 @@ var configs3 = {
             }
         },
         g: {
-            c: "config3-1",
+            c: "config4-1",
             t: "WorkshopsItem",
             ac: {
                 hs: []
@@ -444,8 +758,7 @@ var configs3 = {
                 hs: []
             },
             a: 0,
-            com: "config3-1"
+            com: "config4-1"
         }
     }
 };
-
