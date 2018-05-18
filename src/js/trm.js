@@ -47,6 +47,10 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.DEFAULT_MONEY_BIRTH = 1;
     this.DEFAULT_STARTING_PERCENT = 0;
     this.DEFAULT_TRANSACTION_AMOUNT = 10;
+
+    this.ALL_ACCOUNT = {
+        id: -1
+    };
     
     this.moneyBirth = -1;
     // {int} Members life expectancy
@@ -85,35 +89,44 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.transactions = [];
     this.referenceFrames = {
         'monetaryUnit': {
-            transform: function(money, value, timeStep) {
+            transform: function(money, value, timeStep, amountRef) {
                 return value;
             },
-            invTransform: function(money, value, timeStep) {
+            invTransform: function(money, value, timeStep, amountRef) {
                 return value;
             },
             logScale: false
         },
         'dividend': {
-            transform: function(money, value, timeStep) {
+            transform: function(money, value, timeStep, amountRef) {
                 return value / money.dividends.values[timeStep];
             },
-            invTransform: function(money, value, timeStep) {
+            invTransform: function(money, value, timeStep, amountRef) {
                 return value * money.dividends.values[timeStep];
             },
             logScale: false
         },
         'average': {
-            transform: function(money, value, timeStep) {
+            transform: function(money, value, timeStep, amountRef) {
                 if (money.monetarySupplies.values[timeStep] === 0) {
                     return Infinity;
                 }
                 return value / money.monetarySupplies.values[timeStep] * money.headcounts.values[timeStep] * 100;
             },
-            invTransform: function(money, value, timeStep) {
+            invTransform: function(money, value, timeStep, amountRef) {
                 if (money.headcounts.values[timeStep] === 0) {
                     return Infinity;
                 }
                 return value * money.monetarySupplies.values[timeStep] / money.headcounts.values[timeStep] * 100;
+            },
+            logScale: false
+        },
+        'account': {
+            transform: function(money, value, timeStep, amountRef) {
+                return value / amountRef * 100;
+            },
+            invTransform: function(money, value, timeStep, amountRef) {
+                return value * amountRef / 100;
             },
             logScale: false
         }
@@ -254,6 +267,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.MONETARY_UNIT_REF_KEY = Object.keys(this.referenceFrames)[0];
     this.DIVIDEND_REF_KEY = Object.keys(this.referenceFrames)[1];
     this.AVERAGE_REF_KEY = Object.keys(this.referenceFrames)[2];
+    this.ACCOUNT_REF_KEY = Object.keys(this.referenceFrames)[3];
     this.referenceFrameKey = this.MONETARY_UNIT_REF_KEY;
 
     this.BASIC_UD_KEY = Object.keys(this.udFormulas)[0];
@@ -426,8 +440,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                 year: transactionDescr.y,
                 amount: transactionDescr.a,
                 amountRef: transactionDescr.r,
-                repetitionCount: transactionDescr.rc,
-                actualAmount: -1
+                repetitionCount: transactionDescr.rc
             });
         }
     }
@@ -468,11 +481,10 @@ var libreMoneyClass = function(lifeExpectancy) {
         return monetarySupply;
     };
 
-    this.getAccountBalance = function(account, timeStep) {
-        if (timeStep < account.values.length) {
+    this.getAccountBalance = function(account, timeStep, dontUseCache) {
+        if (!dontUseCache && timeStep < account.values.length) {
             return account.values[timeStep];
         }
-        var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
         var balance = 0;
        
         if (timeStep > 0) {
@@ -513,66 +525,86 @@ var libreMoneyClass = function(lifeExpectancy) {
         return accountIncrease;
     }
    
-    this.searchTransactionsFrom = function(account, timeStep) {
-        return this.transactions.filter(t=>this.isTransactionFrom(account, t, timeStep));
-    }
+    this.applyTransactions = function(timeStep, accountToComment) {
+        var initializedAccounts = [];
+        function initBalance(timeStep, initializedAccounts, account, money) {
+            if (initializedAccounts.indexOf(account) == -1) {
+                account.values[timeStep] = money.getAccountBalance(account, timeStep, true);
+                initializedAccounts.push(account);
+            }
+        }
 
-    this.searchTransactionsTo = function(account, timeStep) {
-        return this.transactions.filter(t=>this.isTransactionTo(account, t, timeStep));
-    }
-
-    this.isTransactionFrom = function(account, transaction, timeStep) {
-        var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
-        var lastTransStep = this.getTimeStep(transaction.year + transaction.repetitionCount, this.YEAR);
-        return timeStep >= firstTransStep
-            && timeStep <= lastTransStep 
-            && transaction.from == account;
-    }
-
-    this.isTransactionTo = function(account, transaction, timeStep) {
-        var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
-        var lastTransStep = this.getTimeStep(transaction.year + transaction.repetitionCount, this.YEAR);
-        return timeStep >= firstTransStep
-            && timeStep <= lastTransStep 
-            && transaction.to == account;
-    }
-
-    this.muTransactionAmount = function(transaction, timeStep) {
-        return this.referenceFrames[transaction.amountRef].invTransform(this, transaction.amount, timeStep);
-    }
-
-    this.applyTransactions = function(timeStep) {
+        // commentsMap : transaction->(account->actualAmount) 
+        var commentsMap = new Map();
+        function addComment(commentsMap, transaction, account, actualAmount) {
+            var actualAmountMap = commentsMap.get(transaction);
+            if (!actualAmountMap) {
+                actualAmountMap = new Map();
+                commentsMap.set(transaction, actualAmountMap);
+            }
+            actualAmountMap.set(account, actualAmount);
+        }
+                
         var annualTransactions = this.transactions.filter(t=>this.validTransactionDate(t, timeStep));
-
-        // Loop over the origin of each annual transactions
         for (var i = 0; i < annualTransactions.length; i++) {
-            var fromAccount = annualTransactions[i].from;
-            var accountIncrease = this.getAccountIncrease(fromAccount, timeStep);
-            // Compute actual balance (other transactions can have decreased it)
-            var actualBalance = fromAccount.values[timeStep] - accountIncrease;
-            var muAmount = this.muTransactionAmount(annualTransactions[i], timeStep);
-            // Apply transaction, actual amount depends on the solvency of the account
-            var actualAmount = Math.min(muAmount, actualBalance);
-            annualTransactions[i].actualAmount = actualAmount;
-            fromAccount.values[timeStep] = fromAccount.values[timeStep] - actualAmount;
-        }
+            var fromAccounts = this.searchFromAccounts(annualTransactions[i], timeStep);
+            var toAccounts = this.searchToAccounts(annualTransactions[i], timeStep);
+            if (fromAccounts.length > 0 && toAccounts.length > 0) {
+                // Loop over the origin of each annual transactions
+                fromAccounts.forEach(function(fromAccount) {
+                    initBalance(timeStep, initializedAccounts, fromAccount, this);
+                    // Compute actual balance (other transactions can have decreased it)
+                    var actualBalance = fromAccount.values[timeStep] - this.getAccountIncrease(fromAccount, timeStep);
+                    var muAmount = this.referenceFrames[annualTransactions[i].amountRef].invTransform(this, annualTransactions[i].amount, timeStep, actualBalance);
+                    // Apply transaction, actual amount depends on the solvency of the account
+                    var actualAmount = Math.min(muAmount, actualBalance);
+                    fromAccount.values[timeStep] = fromAccount.values[timeStep] - actualAmount;
 
-        // Loop over the destination of each annual transactions
-        for (var i = 0; i < annualTransactions.length; i++) {
-            var toAccount = annualTransactions[i].to;
-            toAccount.values[timeStep] = toAccount.values[timeStep] + annualTransactions[i].actualAmount;
+                    // Loop over the destination of each annual transactions
+                    toAccounts.forEach(function(toAccount) {
+                        initBalance(timeStep, initializedAccounts, toAccount, this);
+                        toAccount.values[timeStep] = toAccount.values[timeStep] + actualAmount / toAccounts.length;
+                        if (accountToComment == toAccount) {
+                            addComment(commentsMap, annualTransactions[i], fromAccount, actualAmount / toAccounts.length);
+                        }
+                        else if (accountToComment == fromAccount) {
+                            addComment(commentsMap, annualTransactions[i], toAccount, -actualAmount / toAccounts.length);
+                        }
+                    }, this);
+                }, this);
+            }
         }
+        return commentsMap;
+    }
+
+    this.searchFromAccounts = function(transaction, timeStep) {
+        var accounts;
+        if (transaction.from.id == -1) {
+            accounts = this.accounts.filter(a=>a.id != transaction.to.id);
+        }
+        else {
+            accounts = [transaction.from];
+        }
+        accounts.filter(a=>(transaction.year >= a.birth) && (transaction.year <= (a.birth + a.duration)));
+        return accounts;
+    }
+
+    this.searchToAccounts = function(transaction) {
+        var accounts;
+        if (transaction.to.id == -1) {
+            accounts = this.accounts.filter(a=>a.id != transaction.from.id);
+        }
+        else {
+            accounts = [transaction.to];
+        }
+        accounts.filter(a=>(transaction.year >= a.birth) && (transaction.year <= (a.birth + a.duration)));
+        return accounts;
     }
 
     this.validTransactionDate = function(transaction, timeStep) {
         var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
         var lastTransStep = this.getTimeStep(transaction.year + transaction.repetitionCount, this.YEAR);
-        return !(timeStep < firstTransStep
-            || timeStep > lastTransStep 
-            || transaction.year < transaction.from.birth 
-            || transaction.year > (transaction.from.birth + transaction.from.duration)
-            || transaction.year < transaction.to.birth 
-            || transaction.year > (transaction.to.birth + transaction.to.duration));
+        return timeStep >= firstTransStep && timeStep <= lastTransStep;
     }
 
     this.getAverage = function(timeStep) {
@@ -615,6 +647,9 @@ var libreMoneyClass = function(lifeExpectancy) {
     };
 
     this.searchAccount = function(accountId) {
+        if (accountId == -1) {
+            return this.ALL_ACCOUNT;
+        }
         for (var i = 0; i < this.accounts.length; i++) {
             if (this.accounts[i].id == accountId) {
                 return this.accounts[i];
@@ -628,25 +663,36 @@ var libreMoneyClass = function(lifeExpectancy) {
      */
     this.addTransaction = function() {
         var id = 1;
-        if (this.transactions.length > 0) {
-            id = this.transactions[this.transactions.length - 1].id + 1;
-        }
         var account1 = this.accounts[0];
         var account2 = this.accounts[0];
         if (this.accounts.length > 1) {
             account2 = this.accounts[1];
         }
         var year = account1.birth;
+        var amount = this.DEFAULT_TRANSACTION_AMOUNT;
+        var amountRef = this.MONETARY_UNIT_REF_KEY;
+        var repetitionCount = 0;
+
+        // If other transactions exist, init from last transaction
+        if (this.transactions.length > 0) {
+            var lastTransaction = this.transactions[this.transactions.length - 1];
+            id = lastTransaction.id + 1;
+            account1 = lastTransaction.from;
+            account2 = lastTransaction.to;
+            year = lastTransaction.year;
+            amount = lastTransaction.amount;
+            amountRef = lastTransaction.amountRef;
+            repetitionCount = lastTransaction.repetitionCount;
+        }
         
         this.transactions.push({
             id: id,
             from: account1,
             to: account2,
             year: year,
-            amount: this.DEFAULT_TRANSACTION_AMOUNT,
-            amountRef: this.MONETARY_UNIT_REF_KEY,
-            repetitionCount: 0,
-            actualAmount: -1
+            amount: amount,
+            amountRef: amountRef,
+            repetitionCount: repetitionCount
         });
     };
 

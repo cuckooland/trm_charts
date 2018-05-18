@@ -86,6 +86,8 @@ var NON_CREATOR_LABEL = 'Non-créateur';
 
 var TRANSACTION_LABEL_PREFIX = 'Transaction';
 
+var ALL_ACCOUNTS_LABEL = 'Tous';
+
 // Add a 'format' function to String
 String.prototype.format = function() {
     var args = arguments;
@@ -639,13 +641,14 @@ function setConfigSelection() {
 
 // Create reference frame selectors
 function feedReferenceFrameSelectors(money) {
-    feedReferenceFrameSelector(money, 'ReferenceFrameSelector');
-    feedReferenceFrameSelector(money, 'TransactionRef');
+    var referenceKeys = Object.keys(money.referenceFrames);
+    feedReferenceFrameSelector(referenceKeys.slice(0, referenceKeys.length - 1), 'ReferenceFrameSelector');
+    feedReferenceFrameSelector(referenceKeys, 'TransactionRef');
 };
 
-function feedReferenceFrameSelector(money, selectorId) {
+function feedReferenceFrameSelector(referenceKeys, selectorId) {
     d3.select('#' + selectorId).selectAll("option")
-        .data(Object.keys(money.referenceFrames))
+        .data(referenceKeys)
       .enter().append("option")
         .text(function(d) { return getRefLabel(d); })
         .attr('value', function(d) { return d; });
@@ -695,14 +698,17 @@ function setDemographySelection(money) {
 
 // Join (via D3) account selectors to 'money.accounts'
 function joinAccountSelectorsToData() {
-    joinAccountSelectorToData('AccountSelector', accountName2);
-    joinAccountSelectorToData('TransactionSrc', accountName1);
-    joinAccountSelectorToData('TransactionDest', accountName1);
+    joinAccountSelectorToData('AccountSelector', money.accounts, accountName2);
+    joinAccountSelectorToData('TransactionSrc', money.accounts, accountName1);
+    joinAccountSelectorToData('TransactionDest', money.accounts, accountName1);
+    // Add 'ALL_ACCOUNT' to the end of the transaction selectors
+    joinAccountSelectorToData('TransactionSrc', getTransAccounts(), accountName1);
+    joinAccountSelectorToData('TransactionDest', getTransAccounts(), accountName1);
 };
 
-function joinAccountSelectorToData(accountSelectorId, nameFunc) {
+function joinAccountSelectorToData(accountSelectorId, accounts, nameFunc) {
     var options = d3.select('#' + accountSelectorId).selectAll("option")
-        .data(money.accounts, function(d) { return d.id; });
+        .data(accounts, function(d) { return d.id; });
             
     options.text(nameFunc);
     
@@ -718,10 +724,10 @@ function joinTransactionSelectorToData() {
     var options = d3.select('#TransactionSelector').selectAll("option")
         .data(money.transactions, function(d) { return d.id; });
             
-    options.text(function(d) { return transactionName(d); });
+    options.text(function(d) { return transactionName1(d); });
     
     options.enter().append("option")
-        .text(function(d) { return transactionName(d); })
+        .text(function(d) { return transactionName1(d); })
         .attr('value', function(d) { return d.id; })
         
     options.exit().remove();
@@ -1045,6 +1051,9 @@ function getRefLabel(referenceFrameKey, withoutLog) {
             break;
         case money.AVERAGE_REF_KEY:
             refLabel = "% (M/N)";
+            break;
+        case money.ACCOUNT_REF_KEY:
+            refLabel = "% Compte";
             break;
         default:
             throw new Error("Reference frame not managed: " + referenceFrameKey);
@@ -1552,6 +1561,9 @@ function addAccount() {
 }
 
 function accountName1(account) {
+    if (account === money.ALL_ACCOUNT) {
+        return ALL_ACCOUNTS_LABEL;
+    }
     return "${p0} ${p1}".format(ACCOUNT_LABEL_PREFIX, account.id);
 }
 
@@ -1645,14 +1657,18 @@ function updateTransactionArea() {
         var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
         d3.select('#TransactionYear').property("value", toYearRep(selectedTransaction.year));
         d3.select('#TransactionRep').property("value", selectedTransaction.repetitionCount);
-        document.getElementById("TransactionSrc").selectedIndex = money.accounts.indexOf(selectedTransaction.from);
-        document.getElementById("TransactionDest").selectedIndex = money.accounts.indexOf(selectedTransaction.to);
+        document.getElementById("TransactionSrc").selectedIndex = getTransAccounts().indexOf(selectedTransaction.from);
+        document.getElementById("TransactionDest").selectedIndex = getTransAccounts().indexOf(selectedTransaction.to);
         d3.select('#TransactionAmount').property("value", selectedTransaction.amount);
         document.getElementById("TransactionRef").selectedIndex = Object.keys(money.referenceFrames).indexOf(selectedTransaction.amountRef);
     }
     enableTransactionArea();
 }
 
+function getTransAccounts() {
+    return money.accounts.concat(money.ALL_ACCOUNT);
+}
+    
 function getSelectedTransactionIndex() {
     var sel = document.getElementById('TransactionSelector');
     return sel.selectedIndex;
@@ -1679,8 +1695,12 @@ function addTransaction() {
     updateTransactionArea();
 }
 
-function transactionName(transaction) {
+function transactionName1(transaction) {
     return "${p0} ${p1}".format(TRANSACTION_LABEL_PREFIX, transaction.id);
+}
+
+function transactionName2(transaction) {
+    return "${p0} ${p1} (${p2} vers ${p3}, ${p4} ${p5})".format(TRANSACTION_LABEL_PREFIX, transaction.id, accountName1(transaction.from), accountName1(transaction.to), transaction.amount, getRefLabel(transaction.amountRef));
 }
 
 function enableTransactionArea() {
@@ -1781,12 +1801,10 @@ function enableDemographyFields() {
 function enableAddedAccountArea() {
     if (getSelectedAccountIndex() != 0) {
         d3.select('#AccountBirth').attr('disabled', null);
-        d3.select('#ProduceUd').attr('disabled', null);
         d3.select('#DeleteAccount').attr('disabled', null);
     }
     else {
         d3.select('#AccountBirth').attr('disabled', 'disabled');
-        d3.select('#ProduceUd').attr('disabled', 'disabled');
         d3.select('#DeleteAccount').attr('disabled', 'disabled');
     }
 }
@@ -2126,7 +2144,7 @@ function commentAccordingToAccount(timeStep, account) {
     var udProductorClass = account.udProducer ? 'CoCreator' : 'NonCreator';
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(timeStep - 1);
-        d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage);
+        d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
         d3.selectAll("span.AtMoneyBirth." + udProductorClass).style("display", "inline");
     }
     else if (timeStep == birthStep) {
@@ -2142,24 +2160,33 @@ function commentAccordingToAccount(timeStep, account) {
         d3.selectAll("span.WhenAlive." + udProductorClass).style("display", "inline");
     }
 
-    var fromTransactions = money.searchTransactionsFrom(account, timeStep);
-    if (fromTransactions.length > 0) {
-        d3.selectAll("span.WithNegTr").style("display", "inline");
-        d3.selectAll("span.NegTrs").text(fromTransactions.map(t=>transactionName(t)).join(', '));
-        d3.selectAll("span.NegTrsValues").text(fromTransactions.map(t=>commentFormat(money.muTransactionAmount(t, timeStep))).join(' - '));
+    var commentsMap = money.applyTransactions(timeStep, account);
+    if (commentsMap.size > 0) {
+        d3.selectAll("span.TransactionsDesc").style("display", "inline");
+        d3.selectAll("span.TransactionsValuesDesc").style("display", "inline");
+        d3.selectAll("span.TransactionsDesc").text(Array.from(commentsMap.entries()).map(e=>transactionsDesc(e[0], e[1])).join(' '));
+        d3.selectAll("span.TransactionsValuesDesc").text(Array.from(commentsMap.entries()).map(e=>transactionsValuesDesc(e[0], e[1])).join(' '));
     }
     else {
-        d3.selectAll("span.WithNegTr").style("display", "none");
+        d3.selectAll("span.TransactionsDesc").style("display", "none");
+        d3.selectAll("span.TransactionsValuesDesc").style("display", "none");
     }
+}
 
-    var toTransactions = money.searchTransactionsTo(account, timeStep);
-    if (toTransactions.length > 0) {
-        d3.selectAll("span.WithPosTr").style("display", "inline");
-        d3.selectAll("span.PosTrs").text(toTransactions.map(t=>transactionName(t)).join(', '));
-        d3.selectAll("span.PosTrsValues").text(toTransactions.map(t=>commentFormat(money.muTransactionAmount(t, timeStep))).join(' + '));
+function transactionsDesc(transaction, actualAmountMap) {
+    var firstActualAmount = actualAmountMap.entries().next().value[1];
+    var direction = (firstActualAmount<0) ? '- ' : '+ ';
+    return direction + transactionName2(transaction);
+}
+
+function transactionsValuesDesc(transaction, actualAmountMap) {
+    var firstActualAmount = actualAmountMap.entries().next().value[1];
+    var direction = (firstActualAmount<0) ? '- ' : '+ ';
+    if (actualAmountMap.size > 1) {
+        return direction + '(' + Array.from(actualAmountMap.values()).map(a=>Math.abs(a)).join('+') + ')';
     }
     else {
-        d3.selectAll("span.WithPosTr").style("display", "none");
+        return direction + Math.abs(firstActualAmount);
     }
 }
 
@@ -2215,14 +2242,14 @@ function changeTransactionSelection() {
 
 function changeTransactionSrcSelection() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
-    selectedTransaction.from = money.accounts[getTransactionSrcIndex()];
+    selectedTransaction.from = getTransAccounts()[getTransactionSrcIndex()];
     updateChartData();
     pushNewHistoryState();
 }
 
 function changeTransactionDestSelection() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
-    selectedTransaction.to = money.accounts[getTransactionDestIndex()];
+    selectedTransaction.to = getTransAccounts()[getTransactionDestIndex()];
     updateChartData();
     pushNewHistoryState();
 }
