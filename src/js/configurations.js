@@ -36,7 +36,7 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             }
         },
         g: {
@@ -94,7 +94,7 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             }
         },
         g: {
@@ -152,7 +152,7 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             }
         },
         g: {
@@ -214,14 +214,14 @@ var configs2 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             },
             a1: {
                 id: 2,
                 b: 3,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             }
         },
         g: {
@@ -278,14 +278,14 @@ var configs2 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             },
             a1: {
                 id: 2,
                 b: 35,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             }
         },
         g: {
@@ -342,28 +342,28 @@ var configs2 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             },
             a1: {
                 id: 2,
                 b: 35,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             },
             a2: {
                 id: 3,
                 b: 45,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             },
             a3: {
                 id: 4,
                 b: 25,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             }
         },
         g: {
@@ -426,21 +426,21 @@ var configs3 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: false
+                t: 'NC'
             },
             a2: {
                 id: 3,
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: false
+                t: 'NC'
             },
             t0: {
                 id: 1,
@@ -529,21 +529,21 @@ var configs3 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             },
             a2: {
                 id: 3,
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             },
             t0: {
                 id: 1,
@@ -632,21 +632,21 @@ var configs3 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             },
             a2: {
                 id: 3,
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             },
             t0: {
                 id: 1,
@@ -740,21 +740,21 @@ var configs4 = {
                 b: 1,
                 d: 80,
                 a0: 50,
-                p: true
+                t: 'CC'
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 150,
-                p: true
+                t: 'CC'
             },
             a2: {
                 id: 3,
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: true
+                t: 'CC'
             }
         },
         g: {
@@ -815,28 +815,28 @@ var configs4 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                p: false
+                t: 'NC'
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 50,
-                p: false
+                t: 'NC'
             },
             a2: {
                 id: 3,
                 b: 1,
                 d: 80,
                 a0: 150,
-                p: false
+                t: 'NC'
             },
             a3: {
                 id: 4,
                 b: 1,
                 d: 80,
                 a0: 100,
-                p: false
+                t: 'NC'
             },
             t0: {
                 id: 1,
@@ -919,7 +919,7 @@ var configs5 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                p: true
+                t: 'CC'
             }
         },
         g: {

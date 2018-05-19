@@ -84,6 +84,8 @@ var CO_CREATOR_LABEL = 'Co-créateur';
 
 var NON_CREATOR_LABEL = 'Non-créateur';
 
+var COMMUNITY_LABEL = 'Commun';
+
 var TRANSACTION_LABEL_PREFIX = 'Transaction';
 
 var ALL_ACCOUNTS_LABEL = 'Tous';
@@ -1548,7 +1550,7 @@ function updateAddedAccountArea() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
     d3.select('#AccountBirth').property("value", toYearRep(selectedAccount.birth));
     d3.select('#AccountDuration').property("value", selectedAccount.duration);
-    d3.select('#ProduceUd').property("checked", selectedAccount.udProducer);
+    d3.select('#ProduceUd').property("checked", money.isCoCreator(selectedAccount));
     d3.select('#StartingPercentage').property("value", selectedAccount.startingPercentage);
     enableAddedAccountArea();
 }
@@ -1578,20 +1580,25 @@ function accountName1(account) {
 }
 
 function accountName2(account) {
-    if (account.udProducer) {
-        return "${p0} (${p1})".format(accountName1(account), CO_CREATOR_LABEL);
-    }
-    else {
-        return "${p0} (${p1})".format(accountName1(account), NON_CREATOR_LABEL);
-    }
+    return "${p0} (${p1})".format(accountName1(account), accountTypeLabel(account));
 }
 
 function accountName3(account) {
-    if (account.udProducer) {
-        return "${p0} (${p1}, ${p2})".format(accountName1(account), CO_CREATOR_LABEL, account.startingPercentage);
+    return "${p0} (${p1}, ${p2})".format(accountName1(account), accountTypeLabel(account), account.startingPercentage);
+}
+
+function accountTypeLabel(account) {
+    if (money.isCoCreator(account)) {
+        return CO_CREATOR_LABEL;
+    }
+    else if (money.isNonCreator(account)) {
+        return NON_CREATOR_LABEL;
+    }
+    else if (money.isCommunity(account)) {
+        return COMMUNITY_LABEL;
     }
     else {
-        return "${p0} (${p1}, ${p2})".format(accountName1(account), NON_CREATOR_LABEL, account.startingPercentage);
+        throw new Error("Unknown account type: " + account.type);
     }
 }
 
@@ -2151,7 +2158,7 @@ function commentAccordingToAccount(timeStep, account) {
     var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
     var birthStep = money.getTimeStep(account.birth, money.YEAR);
     var deathStep = money.getTimeStep(account.birth + money.lifeExpectancy, money.YEAR);
-    var udProductorClass = account.udProducer ? 'CoCreator' : 'NonCreator';
+    var udProductorClass = money.isCoCreator(account) ? 'CoCreator' : 'NonCreator';
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(timeStep - 1);
         d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
@@ -2591,7 +2598,12 @@ function changeAccountDuration() {
 
 function changeProduceUd() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
-    selectedAccount.udProducer = this.checked;
+    if (this.checked) {
+        selectedAccount.type = money.CO_CREATOR;
+    }
+    else {
+        selectedAccount.type = money.NON_CREATOR;
+    }
     
     joinAccountSelectorsToData();
     updateChartData();

@@ -27,6 +27,10 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.YEAR = 'YEAR';
     this.MONTH = 'MONTH';
    
+    this.CO_CREATOR = 'CC';
+    this.NON_CREATOR = 'NC';
+    this.COMMUNITY = 'COM';
+
     this.INFINITY_FACTOR = 1.234567;
     
     // Default Values
@@ -374,7 +378,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                 b: this.accounts[i].birth,
                 d: this.accounts[i].duration,
                 a0: this.accounts[i].startingPercentage,
-                p: this.accounts[i].udProducer
+                t: this.accounts[i].type
             }
         }
         for (var i = 0; i < this.transactions.length; i++) {
@@ -422,7 +426,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                 duration: accountDescr.d,
                 balance: 0,
                 startingPercentage: accountDescr.a0,
-                udProducer: accountDescr.p,
+                type: accountDescr.t,
                 values: [],
                 x: [],
                 y: []
@@ -500,7 +504,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         var accountIncrease = 0;
         var birthStep = this.getTimeStep(account.birth, this.YEAR);
         var deathStep = this.getTimeStep(account.birth + account.duration, this.YEAR);
-        if (timeStep < deathStep && timeStep >= birthStep && account.udProducer) {
+        if (timeStep < deathStep && timeStep >= birthStep && this.isCoCreator(account)) {
             // Add a dividend coming from producer
             accountIncrease = this.getDividend(timeStep);
         }
@@ -625,12 +629,12 @@ var libreMoneyClass = function(lifeExpectancy) {
         var id = 1;
         var birth = this.DEFAULT_MONEY_BIRTH;
         var startingPercentage = this.DEFAULT_STARTING_PERCENT;
-        var udProducer = true;
+        var type = this.CO_CREATOR;
         if (this.accounts.length > 0) {
             id = this.accounts[this.accounts.length - 1].id + 1;
             birth = this.accounts[this.accounts.length - 1].birth;
             startingPercentage = this.accounts[this.accounts.length - 1].startingPercentage;
-            udProducer = this.accounts[this.accounts.length - 1].udProducer;
+            type = this.accounts[this.accounts.length - 1].type;
         }
        
         this.accounts.push({
@@ -639,7 +643,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             duration: this.lifeExpectancy,
             balance: 0,
             startingPercentage: startingPercentage,
-            udProducer: udProducer,
+            type: type,
             values: [],
             x: [],
             y: []
@@ -658,6 +662,18 @@ var libreMoneyClass = function(lifeExpectancy) {
         return null;
     }
     
+    this.isCoCreator = function(account) {
+        return account.type == this.CO_CREATOR;
+    }
+
+    this.isNonCreator = function(account) {
+        return account.type == this.NON_CREATOR;
+    }
+
+    this.isCommunity = function(account) {
+        return account.type == this.COMMUNITY;
+    }
+
     /**
      * Add a default transaction between first and second account (or between the first account if only one exist).
      */
