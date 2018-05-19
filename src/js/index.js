@@ -117,6 +117,10 @@ var workshops = [
     {
         jsonRep: configs4,
         selectorId: 'ConfigSelector4'
+    }, 
+    {
+        jsonRep: configs5,
+        selectorId: 'ConfigSelector5'
     }];
 
 var curConfigId = "";
@@ -1032,6 +1036,12 @@ function getConfigLabel(configKey) {
             configLabel = "Prêt en DU";
             break;
         case 'config4-1': 
+            configLabel = "3 co-créateurs";
+            break;
+        case 'config4-2': 
+            configLabel = "RdB via une taxe";
+            break;
+        case 'config5-1': 
             configLabel = "Ecroulement de N";
             break;
         default:

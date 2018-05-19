@@ -228,7 +228,8 @@ span.dividendTabLink,
 span.referenceTabLink,
 span.boundsTabLink,
 span.accountsTabLink,
-span.demographyTabLink {
+span.demographyTabLink,
+span.transactionsTabLink {
     padding: 0px 2px 0px 2px;
     cursor: pointer;
 	border: 1px solid #aaaaaa;
