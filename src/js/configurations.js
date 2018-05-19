@@ -419,14 +419,14 @@ var configs3 = {
             dxPv: 40,
             dp: 78,
             dxs: 4,
-            ac: 3,
+            ac: 2,
             tc: 2,
             a0: {
                 id: 1,
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: 'NC'
             },
             a1: {
                 id: 2,
@@ -435,17 +435,10 @@ var configs3 = {
                 a0: 100,
                 t: 'NC'
             },
-            a2: {
-                id: 3,
-                b: 1,
-                d: 80,
-                a0: 100,
-                t: 'NC'
-            },
             t0: {
                 id: 1,
-                f: 2,
-                t: 3,
+                f: 1,
+                t: 2,
                 y: 5,
                 a: 5000,
                 r: "monetaryUnit",
@@ -453,8 +446,8 @@ var configs3 = {
             },
             t1: {
                 id: 2,
-                f: 3,
-                t: 2,
+                f: 2,
+                t: 1,
                 y: 6,
                 a: 500,
                 r: "monetaryUnit",
@@ -467,8 +460,7 @@ var configs3 = {
             ac: {
                 hs: [
                     "average",
-                    "stableAverage",
-                    "account1"
+                    "stableAverage"
                 ]
             },
             dc: {
@@ -486,7 +478,7 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
-            a: 2,
+            a: 1,
             tr: 1,
             s: "",
             i: -1,
@@ -522,7 +514,7 @@ var configs3 = {
             dxPv: 40,
             dp: 78,
             dxs: 4,
-            ac: 3,
+            ac: 2,
             tc: 2,
             a0: {
                 id: 1,
@@ -538,17 +530,10 @@ var configs3 = {
                 a0: 100,
                 t: 'CC'
             },
-            a2: {
-                id: 3,
-                b: 1,
-                d: 80,
-                a0: 100,
-                t: 'CC'
-            },
             t0: {
                 id: 1,
-                f: 2,
-                t: 3,
+                f: 1,
+                t: 2,
                 y: 5,
                 a: 5000,
                 r: "monetaryUnit",
@@ -556,8 +541,8 @@ var configs3 = {
             },
             t1: {
                 id: 2,
-                f: 3,
-                t: 2,
+                f: 2,
+                t: 1,
                 y: 6,
                 a: 500,
                 r: "monetaryUnit",
@@ -570,8 +555,7 @@ var configs3 = {
             ac: {
                 hs: [
                     "average",
-                    "stableAverage",
-                    "account1"
+                    "stableAverage"
                 ]
             },
             dc: {
@@ -589,7 +573,7 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
-            a: 2,
+            a: 1,
             tr: 1,
             s: "",
             i: -1,
@@ -625,7 +609,7 @@ var configs3 = {
             dxPv: 40,
             dp: 78,
             dxs: 4,
-            ac: 3,
+            ac: 2,
             tc: 2,
             a0: {
                 id: 1,
@@ -641,17 +625,10 @@ var configs3 = {
                 a0: 100,
                 t: 'CC'
             },
-            a2: {
-                id: 3,
-                b: 1,
-                d: 80,
-                a0: 100,
-                t: 'CC'
-            },
             t0: {
                 id: 1,
-                f: 2,
-                t: 3,
+                f: 1,
+                t: 2,
                 y: 5,
                 a: 5,
                 r: "dividend",
@@ -659,8 +636,8 @@ var configs3 = {
             },
             t1: {
                 id: 2,
-                f: 3,
-                t: 2,
+                f: 2,
+                t: 1,
                 y: 6,
                 a: 0.5,
                 r: "dividend",
@@ -673,8 +650,7 @@ var configs3 = {
             ac: {
                 hs: [
                     "average",
-                    "stableAverage",
-                    "account1"
+                    "stableAverage"
                 ]
             },
             dc: {
@@ -692,7 +668,7 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
-            a: 2,
+            a: 1,
             tr: 1,
             s: "",
             i: -1,
