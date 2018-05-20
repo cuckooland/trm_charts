@@ -719,8 +719,8 @@
                             <p>Ce champ permet d'indiquer la date de création du compte couramment sélectionné. On peut voir cette valeur comme la date de naissance de l'individu possédant ce compte.</p>
 
                         </div>
-                        <div class="Comment" id="ProduceUdComment">
-                            <p>Cette case à cocher permet d'indiquer si le couramment sélectionné correspond à un co-producteur de la monnaie.</p>
+                        <div class="Comment" id="TypeSelectorComment">
+                            <p>Cette liste déroulante permet de choisir entre trois possibilités pour que le compte couramment sélectionné corresponde&nbsp;: soit à un co-producteur de la monnaie&nbsp;; soit un non-producteur de la monnaie&nbsp;; soit un compte qui ne sera pas à comptabiliser lors du calcule de <span class="headcount">N</span> (par exemple parce qu'il représente une caisse commune).</p>
 
                         </div>
                         <div class="Comment" id="StartingPercentageComment">
@@ -958,8 +958,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="labelledForm">
-                                                <label for="ProduceUd">Co-créateur de la monnaie</label>
-                                                <input id="ProduceUd" type="checkbox" name="ProduceUd" value="1" checked="checked" title="Indique si ce compte correspond à un producteur de monnaie">
+                                                <label for="TypeSelector">Type</label>
+                                                <select id="TypeSelector" name="TypeSelector"></select>
                                             </div>
                                         </div>
                                         <div class="row">

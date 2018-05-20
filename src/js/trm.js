@@ -30,6 +30,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.CO_CREATOR = 'CC';
     this.NON_CREATOR = 'NC';
     this.COMMUNITY = 'COM';
+    this.ACCOUNT_TYPES = [this.CO_CREATOR, this.NON_CREATOR, this.COMMUNITY];
 
     this.INFINITY_FACTOR = 1.234567;
     
@@ -324,14 +325,8 @@ var libreMoneyClass = function(lifeExpectancy) {
         }
         var headcount = 0;
 
-        // for each account...
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
-
-            var birthStep = this.getTimeStep(this.accounts[iAccount].birth, this.YEAR);
-            var deathStep = this.getTimeStep(this.accounts[iAccount].birth + this.accounts[iAccount].duration, this.YEAR);
-            // if account is alive...
-            if (timeStep >= birthStep && timeStep < deathStep) {
-                // increment people count
+            if (this.isAlive(this.accounts[iAccount], timeStep) && !this.isCommunity(this.accounts[iAccount])) {
                 headcount++;
             }
         }
@@ -503,8 +498,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.getAccountIncrease = function(account, timeStep) {
         var accountIncrease = 0;
         var birthStep = this.getTimeStep(account.birth, this.YEAR);
-        var deathStep = this.getTimeStep(account.birth + account.duration, this.YEAR);
-        if (timeStep < deathStep && timeStep >= birthStep && this.isCoCreator(account)) {
+        if (this.isAlive(account, timeStep) && this.isCoCreator(account)) {
             // Add a dividend coming from producer
             accountIncrease = this.getDividend(timeStep);
         }
@@ -589,11 +583,10 @@ var libreMoneyClass = function(lifeExpectancy) {
         else {
             accounts = [transaction.from];
         }
-        accounts.filter(a=>(transaction.year >= a.birth) && (transaction.year <= (a.birth + a.duration)));
-        return accounts;
+        return accounts.filter(a=>this.isAlive(a, timeStep));
     }
 
-    this.searchToAccounts = function(transaction) {
+    this.searchToAccounts = function(transaction, timeStep) {
         var accounts;
         if (transaction.to.id == -1) {
             accounts = this.accounts.filter(a=>a.id != transaction.from.id);
@@ -601,8 +594,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         else {
             accounts = [transaction.to];
         }
-        accounts.filter(a=>(transaction.year >= a.birth) && (transaction.year <= (a.birth + a.duration)));
-        return accounts;
+        return accounts.filter(a=>this.isAlive(a, timeStep));
     }
 
     this.validTransactionDate = function(transaction, timeStep) {
@@ -661,7 +653,13 @@ var libreMoneyClass = function(lifeExpectancy) {
         };
         return null;
     }
-    
+
+    this.isAlive = function(account, timeStep) {
+        var birthStep = this.getTimeStep(account.birth, this.YEAR);
+        var deathStep = this.getTimeStep(account.birth + account.duration, this.YEAR);
+        return timeStep >= birthStep && timeStep < deathStep;
+    }
+        
     this.isCoCreator = function(account) {
         return account.type == this.CO_CREATOR;
     }

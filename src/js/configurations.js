@@ -789,9 +789,9 @@ var configs4 = {
             a0: {
                 id: 1,
                 b: 1,
-                d: 80,
+                d: 200,
                 a0: 0,
-                t: 'NC'
+                t: 'COM'
             },
             a1: {
                 id: 2,
@@ -821,7 +821,7 @@ var configs4 = {
                 y: 2,
                 a: 10,
                 r: "account",
-                rc: 79
+                rc: 200
             },
             t1: {
                 id: 2,
@@ -830,7 +830,7 @@ var configs4 = {
                 y: 2,
                 a: 100,
                 r: "account",
-                rc: 79
+                rc: 200 
             }
         },
         g: {

@@ -495,7 +495,7 @@ function initCallbacks() {
     d3.select("#xScaleDemography").on("change", changeXScaleDemography);
     d3.select("#AccountBirth").on("change", changeAccountBirth);
     d3.select("#AccountDuration").on("change", changeAccountDuration);
-    d3.select("#ProduceUd").on("click", changeProduceUd);
+    d3.select("#TypeSelector").on("change", changeAccountType);
     d3.select("#StartingPercentage").on("change", changeStartingPercentage);
     d3.select("#TransactionYear").on("change", changeTransactionYear);
     d3.select("#TransactionRep").on("change", changeTransactionRep);
@@ -617,6 +617,7 @@ function initSelectors() {
     }
     feedReferenceFrameSelectors(money);
     feedUdFormulaSelector(money);
+    feedAccountTypeSelector();
     feedDemographySelector(money);
 }
 
@@ -683,6 +684,15 @@ function setUdFormulaSelection(money) {
         throw new Error("Reference frame not managed: " + money.udFormulaKey);
     }
     document.getElementById("UdFormulaSelector").selectedIndex = selectedIndex;
+};
+
+// Create account type selector
+function feedAccountTypeSelector() {
+    d3.select('#TypeSelector').selectAll("option")
+        .data(money.ACCOUNT_TYPES)
+      .enter().append("option")
+        .text(function(d) { return getAccountTypeLabel(d); })
+        .attr('value', function(d) { return d; });
 };
 
 // Create demographic profile selector
@@ -1127,6 +1137,19 @@ function getUdFormulaLabel(udFormulaKey) {
     }
 }
 
+function getAccountTypeLabel(type) {
+    switch(type) {
+        case money.CO_CREATOR:
+            return CO_CREATOR_LABEL;
+        case money.NON_CREATOR:
+            return NON_CREATOR_LABEL;
+        case money.COMMUNITY:
+            return COMMUNITY_LABEL;
+        default:
+            throw new Error("Account type not managed: " + type);
+    }
+}
+
 function getDemographicProfileLabel(demographicProfileKey) {
     switch(demographicProfileKey) {
         case money.NONE_PROFILE_KEY:
@@ -1550,7 +1573,7 @@ function updateAddedAccountArea() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
     d3.select('#AccountBirth').property("value", toYearRep(selectedAccount.birth));
     d3.select('#AccountDuration').property("value", selectedAccount.duration);
-    d3.select('#ProduceUd').property("checked", money.isCoCreator(selectedAccount));
+    document.getElementById("TypeSelector").selectedIndex = money.ACCOUNT_TYPES.indexOf(selectedAccount.type);
     d3.select('#StartingPercentage').property("value", selectedAccount.startingPercentage);
     enableAddedAccountArea();
 }
@@ -2596,14 +2619,9 @@ function changeAccountDuration() {
     pushNewHistoryState();
 }
 
-function changeProduceUd() {
+function changeAccountType() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
-    if (this.checked) {
-        selectedAccount.type = money.CO_CREATOR;
-    }
-    else {
-        selectedAccount.type = money.NON_CREATOR;
-    }
+    selectedAccount.type = this.options[this.selectedIndex].value;
     
     joinAccountSelectorsToData();
     updateChartData();
