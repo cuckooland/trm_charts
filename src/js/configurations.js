@@ -854,6 +854,195 @@ var configs4 = {
             i: -1,
             com: "config4-2"
         }
+    },
+    'config4-3': {
+        m: {
+            f: "BasicUD",
+            r: "average",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 40,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 4,
+            tc: 0,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 50,
+                t: "CC"
+            },
+            a1: {
+                id: 2,
+                b: 1,
+                d: 80,
+                a0: 150,
+                t: "CC"
+            },
+            a2: {
+                id: 3,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: "CC"
+            },
+            a3: {
+                id: 4,
+                b: 10,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            }
+        },
+        g: {
+            t: "WorkshopsItem",
+            c: "config4-3",
+            ac: {
+                hs: ["average", "stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            a: 3,
+            tr: -1,
+            s: "",
+            i: -1,
+            com: "config4-3"
+        }
+    },
+    'config4-4': {
+        m: {
+            f: "BasicUD",
+            r: "average",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 40,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 5,
+            tc: 2,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 0,
+                t: "COM"
+            },
+            a1: {
+                id: 2,
+                b: 1,
+                d: 80,
+                a0: 50,
+                t: "NC"
+            },
+            a2: {
+                id: 3,
+                b: 1,
+                d: 80,
+                a0: 150,
+                t: "NC"
+            },
+            a3: {
+                id: 4,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: "NC"
+            },
+            a4: {
+                id: 5,
+                b: 10,
+                d: 80,
+                a0: 0,
+                t: "NC"
+            },
+            t0: {
+                id: 1,
+                f: -1,
+                t: 1,
+                y: 2,
+                a: 10,
+                r: "account",
+                rc: 79
+            },
+            t1: {
+                id: 2,
+                f: 1,
+                t: -1,
+                y: 2,
+                a: 100,
+                r: "account",
+                rc: 79
+            }
+        },
+        g: {
+            t: "WorkshopsItem",
+            c: "config4-4",
+            ac: {
+                hs: ["average", "stableAverage", "account1"]
+            },
+            dc: {
+                hs: []
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            a: 4,
+            tr: 0,
+            s: "",
+            i: -1,
+            com: "config4-4"
+        }
     }
 };
 
