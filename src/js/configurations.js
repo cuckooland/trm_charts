@@ -709,24 +709,31 @@ var configs4 = {
             dxPv: 40,
             dp: 78,
             dxs: 4,
-            ac: 3,
+            ac: 4,
             tc: 0,
             a0: {
                 id: 1,
                 b: 1,
-                d: 80,
-                a0: 50,
-                t: 'CC'
+                d: 200,
+                a0: 0,
+                t: 'COM'
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
-                a0: 150,
+                a0: 50,
                 t: 'CC'
             },
             a2: {
                 id: 3,
+                b: 1,
+                d: 80,
+                a0: 150,
+                t: 'CC'
+            },
+            a3: {
+                id: 4,
                 b: 1,
                 d: 80,
                 a0: 100,
@@ -737,7 +744,7 @@ var configs4 = {
             c: "config4-1",
             t: "WorkshopsItem",
             ac: {
-                hs: ["average", "stableAverage"]
+                hs: ["average", "stableAverage", "account1"]
             },
             dc: {
                 hs: ["stableDividend"]
@@ -884,31 +891,38 @@ var configs4 = {
             dxPv: 40,
             dp: 78,
             dxs: 4,
-            ac: 4,
+            ac: 5,
             tc: 0,
             a0: {
                 id: 1,
                 b: 1,
                 d: 80,
-                a0: 50,
-                t: "CC"
+                a0: 0,
+                t: "COM"
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
-                a0: 150,
+                a0: 50,
                 t: "CC"
             },
             a2: {
                 id: 3,
                 b: 1,
                 d: 80,
-                a0: 100,
+                a0: 150,
                 t: "CC"
             },
             a3: {
                 id: 4,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: "CC"
+            },
+            a4: {
+                id: 5,
                 b: 10,
                 d: 80,
                 a0: 0,
@@ -919,7 +933,7 @@ var configs4 = {
             t: "WorkshopsItem",
             c: "config4-3",
             ac: {
-                hs: ["average", "stableAverage"]
+                hs: ["average", "stableAverage", "account1"]
             },
             dc: {
                 hs: ["stableDividend"]
