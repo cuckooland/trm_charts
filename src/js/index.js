@@ -1054,10 +1054,10 @@ function getConfigLabel(configKey) {
             configLabel = "RdB via une taxe";
             break;
         case 'config4-3': 
-            configLabel = "Nouvel entrant (RdB)";
+            configLabel = "Nouvel entrant (DU)";
             break;
         case 'config4-4': 
-            configLabel = "Nouvel entrant (DU)";
+            configLabel = "Nouvel entrant (RdB)";
             break;
         case 'config5-1': 
             configLabel = "Ecroulement de N";
