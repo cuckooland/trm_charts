@@ -122,7 +122,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                 if (money.headcounts.values[timeStep] === 0) {
                     return Infinity;
                 }
-                return value * money.monetarySupplies.values[timeStep] / money.headcounts.values[timeStep] * 100;
+                return value * money.monetarySupplies.values[timeStep] / money.headcounts.values[timeStep] / 100;
             },
             logScale: false
         },
