@@ -576,6 +576,7 @@ function applyJSonRep(jsonRep) {
     setDemographySelection(money);
     
     updateAddedAccountArea();
+    updateTimeXLabels();
     updateAccountYLabels();
     updateTransactionArea();
     updateChartData();
@@ -2379,6 +2380,21 @@ function updateAccountYLabels() {
     });
 }
 
+function updateTimeXLabels() {
+    accountsChart.axis.labels({
+        x: timeLabel()
+    });
+    dividendChart.axis.labels({
+        x: timeLabel()
+    });
+    headcountChart.axis.labels({
+        x: timeLabel()
+    });
+    monetarySupplyChart.axis.labels({
+        x: timeLabel()
+    });
+}
+
 function changeUdFormula() {
     money.udFormulaKey = this.options[this.selectedIndex].value;
     updateChartData();
@@ -2409,19 +2425,7 @@ function changeRythm() {
     d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
     d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
         
-    // Axes
-    accountsChart.axis.labels({
-        x: timeLabel()
-    });
-    dividendChart.axis.labels({
-        x: timeLabel()
-    });
-    headcountChart.axis.labels({
-        x: timeLabel()
-    });
-    monetarySupplyChart.axis.labels({
-        x: timeLabel()
-    });
+    updateTimeXLabels();
     
     enableGrowthForms(money.calculateGrowth);
     enableUD0Forms();
