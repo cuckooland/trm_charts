@@ -1060,6 +1060,12 @@ function getConfigLabel(configKey) {
         case 'config4-4': 
             configLabel = "Nouvel entrant (RdB)";
             break;
+        case 'config4-5': 
+            configLabel = "Nouvel entrant (DU/mois)";
+            break;
+        case 'config4-6': 
+            configLabel = "Nouvel entrant (RdB/mois)";
+            break;
         case 'config5-1': 
             configLabel = "Ecroulement de N";
             break;

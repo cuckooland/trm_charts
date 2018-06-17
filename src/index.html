@@ -249,7 +249,7 @@
                                 </div>
 
                                 <div class="DuComment UDA">
-                                    <p>= la plus grande valeur entre :</p>
+                                    <p>= la plus grande valeur entre&nbsp;:</p>
                                     <ul>
                                         <li>le <span class="growth">taux d'expansion "c"</span> multiplié par la <span class="monetarySupply prevoius mu">masse monétaire précédente</span> divisée par le <span class="headcount current">nombre d'individus</span>&nbsp;: <span class="growth value">0 %</span>&nbsp;*&nbsp;<span class="monetarySupply previous mu value">0</span>&nbsp;/&nbsp;<span class="headcount current value">0</span> =&nbsp;<span class="dividend basicMuValue">0</span></li>
                                         <li>le <span class="dividend previous mu">précédent DU</span>&nbsp;: <span class="dividend previous mu value">0</span></li>
@@ -446,7 +446,7 @@
                         <div class="Comment" id="IntroItemComment">
                             <p>"La TRM en Couleur", publié il y a quelques années, se voulait une introduction à la Théorie Relative de la Monnaie de Stéphane Laborde. Cette deuxième partie prolonge cette introduction et tente de garder son souci d'accéssibilité au plus grand nombre, tout en abordant des questions plus avancées.</p>
                             
-                            <p>L'utilisateur, en positionnant différents attributs, pourra étudier certaines situations grâce aux quatre graphes placés dans la partie inférieure de l'application. Les attributs sont rangés par thématique dans des onglets : <span class="growth">Taux d'expansion</span>, <span class="dividendTabLink">Dividende Universel</span>, <span class="referenceTabLink">Référentiel</span>, <span class="boundsTabLink">Période affichée</span>, <span class="accountsTabLink">Comptes affichés</span>, <span class="demographyTabLink">Démographie</span>, <span class="transactionsTabLink">Transactions</span>.</p>
+                            <p>L'utilisateur, en positionnant différents attributs, pourra étudier certaines situations grâce aux quatre graphes placés dans la partie inférieure de l'application. Les attributs sont rangés par thématique dans des onglets&nbsp;: <span class="growth">Taux d'expansion</span>, <span class="dividendTabLink">Dividende Universel</span>, <span class="referenceTabLink">Référentiel</span>, <span class="boundsTabLink">Période affichée</span>, <span class="accountsTabLink">Comptes affichés</span>, <span class="demographyTabLink">Démographie</span>, <span class="transactionsTabLink">Transactions</span>.</p>
                             
                             <p>L'utilisateur pourra également étudier les configurations proposées dans l'onglet <span class="workshopsTabLink">Ateliers</span>, ce qui lui permettra par la même occasion de découvrir progressivement les différentes possibilités de cette application.</p>
                             
@@ -550,17 +550,33 @@
                             
                         </div>
                         <div class="Comment" id="config4-3Comment">
-                            <p>Cette configuration est sensiblement la même que précédemment : trois non-créateurs de la monnaies, une caisse et deux transactions permettant de réaliser un Revenu de Base via une taxe.</p>
-                        
-                            <p>Mais un nouveau compte fait son apparition au bout de quelques années. Vu que <span class="headcount">N</span> varie, le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux a changé et devient "%(M/N)".</p>
-                            
-                            </div>
-                        <div class="Comment" id="config4-4Comment">
-                            <p>Cette configuration est sensiblement la même que la première : trois co-créateurs de la monnaies, et un compte sans utililité permettant de faciliter la comparaison avec le cas "Revenu de Base via une taxe".</p>
+                            <p>Cette configuration est sensiblement la même que la première&nbsp;: trois co-créateurs de la monnaies, et un compte sans utililité permettant de faciliter la comparaison avec le cas "Revenu de Base via une taxe".</p>
 
-                            <p>Comme précédement, un nouveau compte fait son apparition au bout de quelques années et le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux est "%(M/N)".</p>
+                            <p>Mais un nouveau compte fait son apparition au bout de quelques années. Le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux devient "%(M/N)", afin de faciliter la comparaison avec la configuration suivante.</p>
+                            
+                        </div>
+                        <div class="Comment" id="config4-4Comment">
+                            <p>Cette configuration est sensiblement la même que la deuxième&nbsp;: trois non-créateurs de la monnaies, une caisse et deux transactions permettant de réaliser un Revenu de Base via une taxe.</p>
+                        
+                            <p>Comme précédemment, un nouveau compte fait son apparition au bout de quelques années. Vu que <span class="headcount">N</span> varie, le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux est "%(M/N)" (plus adapté pour comparer cette configuration avec la précédente).</p>
                             
                             <p>Là encore, graphiquement, cette configuration ressemble étrangement à la précédente.</p>
+                            
+                        </div>
+                        <div class="Comment" id="config4-5Comment">
+                            <p>Cette configuration est sensiblement la même que la troisème&nbsp;: trois co-créateurs de la monnaies, et un compte sans utililité facilitant la comparaison avec le cas "Revenu de Base via une taxe"&nbsp;; puis un nouveau compte fait son apparition au bout de quelques années.</p>
+                        
+                            <p>La différence ici est que l'émission des Dividendes devient mensuelle, passant à 0,797&nbsp;% par mois au lieu de 10&nbsp;% par an.</p>
+                            
+                            <p>La formule de base est utilisée pour le DU&nbsp;; or, la configuration suivante (la cinquième) permettra de mettre en évidence une équivalence avec celle-ci&nbsp;; mais il sera intéressant de tester d'autres formules pour le DU et de remarquer que l'équivalence est alors moins grande&nbsp;; ce qui parait logique, car contrairement aux formules alternatives du DU, le "RdB via une taxe" présenté ici n'est pas prévu pour lisser les variations de N.</p>
+                            
+                        </div>
+                        <div class="Comment" id="config4-6Comment">
+                            <p>Cette configuration est sensiblement la même que la quatrième&nbsp;: trois non-créateurs de la monnaies, une caisse et deux transactions permettant de réaliser un Revenu de Base via une taxe&nbsp;; puis un nouveau compte fait son apparition au bout de quelques années.</p>
+                        
+                            <p>La différence ici est que les transactions sont répétées tous les mois, avec un prélèvement qui passe à 0,797&nbsp;% par mois au lieu de 10&nbsp;% par an.</p>
+                            
+                            <p>En utilisant une émission annuelle, on voyait déjà combien les deux configurations "DU" et "RdB par taxe" étaient semblables. Avec une émission mensuelle, c'est encore plus criant. Dis autrement&nbsp;: l'émission du DU et du RdB se fait par à-coups, mais plus le rythme est rapide pour s'approcher d'un processus continu, plus les deux configurations  "DU" et "RdB par taxe" sont équivalentes.</p>
                             
                         </div>
                         <div class="Comment" id="config5-1Comment">
@@ -590,11 +606,11 @@
 
                         </div>
                         <div class="Comment" id="byYearComment">
-                            <p>Avec cette case à cocher, on choisit un mode de co-création monétaire dont la fréquence est l'année. Il est intéressant de comparer avec d'autres fréquences, c'est pourquoi le mois est également disponible.</p>
+                            <p>Avec ce radio-bouton, on choisit un mode de co-création monétaire dont la fréquence est l'année. Il est intéressant de comparer avec d'autres fréquences, c'est pourquoi le mois est également disponible.</p>
 
                         </div>
                         <div class="Comment" id="byMonthComment">
-                            <p>Avec cette case à cocher, on choisit un mode de co-création monétaire dont la fréquence est le mois.</p>
+                            <p>Avec ce radio-bouton, on choisit un mode de co-création monétaire dont la fréquence est le mois.</p>
 
                             <p>En utilisant la formule de base du Dividende Universel, notez par exemple combien cette formulation favorise les premiers entrants (au démarrage de la monnaie) par rapport à des entrants plus tardifs. L'effet est encore plus criant quand l'émission est mensuelle.</p>
 
@@ -657,17 +673,17 @@
 
                         </div>
                         <div class="Comment" id="UDCComment">
-                            <p>La formule DUB ne faisant pas intervenir <span class="headcount">N</span>, le <span class="dividend">DU</span> ne dépend pas des variations de <span class="headcount">N</span>. Ce manque de réactivité peut être considéré comme un problème. Pour y pallier, une possibilité est de faire intervenir <span class="headcount">N</span> en mixant la formule du DU<sub>basique</sub> avec celle de DUB. On obtient alors la formule :</p>
+                            <p>La formule DUB ne faisant pas intervenir <span class="headcount">N</span>, le <span class="dividend">DU</span> ne dépend pas des variations de <span class="headcount">N</span>. Ce manque de réactivité peut être considéré comme un problème. Pour y pallier, une possibilité est de faire intervenir <span class="headcount">N</span> en mixant la formule du DU<sub>basique</sub> avec celle de DUB. On obtient alors la formule&nbsp;:</p>
 
                             <p>DUC = 1/2 [DU<sub>basique</sub>&nbsp;+&nbsp;DUB]</p>
 
-                            <p>Soit :</p>
+                            <p>Soit&nbsp;:</p>
 
                             <p><span class="dividend">DU(t)</span> = 1/2 [<span class="growth">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t)</span>&nbsp;+&nbsp;(1+<span class="growth">c</span>)*<span class="dividend">DU(t-1)</span>]</p>
 
                         </div>
                         <div class="Comment" id="UDGComment">
-                            <p>Précédemment, on a vu DUC qui était construite en mixant DU<sub>basique</sub> et DUB. DUĞ peut être vue comme une autre façon de les mixer :</p>
+                            <p>Précédemment, on a vu DUC qui était construite en mixant DU<sub>basique</sub> et DUB. DUĞ peut être vue comme une autre façon de les mixer&nbsp;:</p>
 
                             <p>Avec DUB, on a <span class="dividend">DU(t)</span> = (1+<span class="growth">c</span>)*<span class="dividend">DU(t-1)</span> ou dit autrement <span class="dividend">DU(t)</span> = <span class="dividend">DU(t-1)</span>&nbsp;+&nbsp;<span class="growth">c</span>*<span class="dividend">DU(t-1)</span></p>
                             
@@ -736,7 +752,13 @@
 
                         </div>
                         <div class="Comment" id="TypeSelectorComment">
-                            <p>Cette liste déroulante permet de choisir entre trois possibilités pour que le compte couramment sélectionné corresponde&nbsp;: soit à un co-producteur de la monnaie&nbsp;; soit un non-producteur de la monnaie&nbsp;; soit un compte qui ne sera pas à comptabiliser lors du calcule de <span class="headcount">N</span> (par exemple parce qu'il représente une caisse commune).</p>
+                            <p>Cette liste déroulante permet de choisir entre trois possibilités pour que le compte couramment sélectionné corresponde à &nbsp;: 
+                            <ul>
+                                <li>soit un co-producteur de la monnaie&nbsp;;</li>
+                                <li>soit un non-producteur de la monnaie qui est à comptabiliser lors du calcul de <span class="headcount">N</span> (utile par exemple pour des configurations étudiants des solutions "à masse monétaire constante"&nbsp;;</li>
+                                <li>soit un non-producteur de la monnaie qui n'est pas à comptabiliser lors du calcul de <span class="headcount">N</span> (par exemple parce qu'il représente une caisse commune).</li>
+                            </ul>
+                            </p>
 
                         </div>
                         <div class="Comment" id="StartingPercentageComment">
