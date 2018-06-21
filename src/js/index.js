@@ -1027,9 +1027,12 @@ function getConfigLabel(configKey) {
             configLabel = "Départ à 0";
             break;
         case 'config1-2': 
-            configLabel = "Départ à DU0/c";
+            configLabel = "En escalier";
             break;
         case 'config1-3': 
+            configLabel = "Départ à DU0/c";
+            break;
+        case 'config1-4': 
             configLabel = "Vue sur 40 ans";
             break;
         case 'config2-1': 

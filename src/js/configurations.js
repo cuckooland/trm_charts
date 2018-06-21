@@ -76,10 +76,10 @@ var configs1 = {
                 }
             },
             le: 80,
-            ud0: 100,
+            ud0: 1000,
             tm: 0,
             tM: 5,
-            tR: "YEAR",
+            tR: "MONTH",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -95,7 +95,7 @@ var configs1 = {
                 id: 1,
                 b: 1,
                 d: 80,
-                a0: 100,
+                a0: 0,
                 t: 'CC'
             }
         },
@@ -135,13 +135,13 @@ var configs1 = {
                 }
             },
             le: 80,
-            ud0: 96.6,
+            ud0: 100,
             tm: 0,
-            tM: 40,
+            tM: 5,
             tR: "YEAR",
-            cc: true,
+            cc: false,
             cu: "YEAR",
-            c: 0.09660822712436135,
+            c: 0.1,
             d: "None",
             dyM: 10000,
             dxm: 0,
@@ -175,6 +175,65 @@ var configs1 = {
             },
             a: 0,
             com: "config1-3"
+        }
+    },
+    
+    'config1-4': {
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 96.6,
+            tm: 0,
+            tM: 40,
+            tR: "YEAR",
+            cc: true,
+            cu: "YEAR",
+            c: 0.09660822712436135,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: 'CC'
+            }
+        },
+        g: {
+            c: "config1-4",
+            t: "WorkshopsItem",
+            ac: {
+                hs: ['average', "stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            a: 0,
+            com: "config1-4"
         }
     }
 };
