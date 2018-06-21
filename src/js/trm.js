@@ -354,7 +354,14 @@ var libreMoneyClass = function(lifeExpectancy) {
                 headcount++;
             }
         }
-        headcount = headcount + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
+        
+        var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
+        if (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH && (timeStep - moneyBirthStep) % 12 != 0) {
+            headcount = this.headcounts.values[timeStep - 1];
+        }
+        else {
+            headcount = headcount + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
+        }
 
         return headcount;
     };
