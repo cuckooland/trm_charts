@@ -1180,6 +1180,8 @@ function getDemographicProfileLabel(demographicProfileKey) {
             return "Cauchy";
         case money.DAMPEDWAVE_PROFILE_KEY:
             return "Ondulation Amortie";
+        case money.SIGMOID_PROFILE_KEY:
+            return "Sigmoïde";
         default:
             throw new Error("Demographic profile not managed: " + demographicProfileKey);
     }
@@ -1847,6 +1849,10 @@ function enableDemographyFields() {
             document.getElementById("xScaleDemography").parentNode.style.display='block';
             break;
         case money.DAMPEDWAVE_PROFILE_KEY:
+            document.getElementById("MaxDemography").parentNode.style.display='block';
+            document.getElementById("xScaleDemography").parentNode.style.display='block';
+            break;
+        case money.SIGMOID_PROFILE_KEY:
             document.getElementById("MaxDemography").parentNode.style.display='block';
             document.getElementById("xScaleDemography").parentNode.style.display='block';
             break;

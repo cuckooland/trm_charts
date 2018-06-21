@@ -290,6 +290,12 @@ var libreMoneyClass = function(lifeExpectancy) {
                
                 return Math.trunc(money.maxDemography * (1 - Math.cos(2*x) / (1 + x * x)));
             }
+        },
+        'Sigmoid': {
+            calculate: function (money, year) {
+                var s = money.xScaleDemography;
+                return Math.trunc(money.maxDemography * (1 / (1 + s * 100 * Math.exp(-0.6 * year / s))));
+            }
         }
     };
 
@@ -311,6 +317,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.PLATEAU_PROFILE_KEY = Object.keys(this.demographicProfiles)[2];
     this.CAUCHY_PROFILE_KEY = Object.keys(this.demographicProfiles)[3];
     this.DAMPEDWAVE_PROFILE_KEY = Object.keys(this.demographicProfiles)[4];
+    this.SIGMOID_PROFILE_KEY = Object.keys(this.demographicProfiles)[5];
     this.demographicProfileKey = this.NONE_PROFILE_KEY;
 
     this.resetAccounts = function () {
