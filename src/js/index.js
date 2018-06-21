@@ -165,6 +165,7 @@ function fillForms() {
     d3.select('#TimeUpperBound').property("value", toYearRep(money.timeUpperBoundInYears));
     d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
     d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
+    d3.select('#MonthRes').property("checked", money.timeResolution === money.MONTH);
     d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
     d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
     d3.select('#MaxDemography').property("value", money.maxDemography);
@@ -485,6 +486,7 @@ function initCallbacks() {
     d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
     d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
     d3.select("#LogScale").on("click", changeLogScale);
+    d3.select("#MonthRes").on("click", changeMonthRes);
     d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
     d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
     d3.select("#MaxDemography").on("change", changeMaxDemography);
@@ -1638,27 +1640,26 @@ function accountTypeLabel(account) {
     }
 }
 
-function accountAgeLabel(account, timeStep, timeUnit) {
-    timeUnit = timeUnit || money.growthTimeUnit;
-    
+function accountAgeLabel(account, timeStep) {
     var year = 0;
     var month = 0;
-    if (timeUnit === money.MONTH) {
+    var timeResolution = money.getTimeResolution();
+    if (timeResolution === money.MONTH) {
         year = Math.trunc(timeStep / 12)  - account.birth;
         month = timeStep % 12;
     }
-    else if (timeUnit === money.YEAR) {
+    else if (timeResolution === money.YEAR) {
         year = timeStep - account.birth;
         month = 0;
     }
     else {
-        throw new Error("Time unit not managed: " + timeUnit);
+        throw new Error("Time resolution not managed: " + timeResolution);
     }
     if (year == 0 && month == 0) {
-        if (timeUnit === money.MONTH) {
+        if (timeResolution === money.MONTH) {
             return "0 mois";
         }
-        else if (timeUnit === money.YEAR) {
+        else if (timeResolution === money.YEAR) {
             return "0 année";
         }
     }
@@ -1766,7 +1767,7 @@ function enableTransactionArea() {
 }
 
 function asDate(timeStep, timeUnit) {
-    timeUnit = timeUnit || money.growthTimeUnit;
+    timeUnit = timeUnit || money.getTimeResolution();
     
     var format = d3.time.format(DATE_PATTERN);
     if (timeUnit === money.MONTH) {
@@ -2505,6 +2506,19 @@ function changeLogScale() {
     money.referenceFrames[money.referenceFrameKey].logScale = !money.referenceFrames[money.referenceFrameKey].logScale
     
     updateAccountYLabels();
+    
+    updateChartData();
+    comment(this.id);
+    pushNewHistoryState();
+}
+
+function changeMonthRes() {
+    if (this.checked) {
+        money.timeResolution = money.MONTH;
+    }
+    else {
+        money.timeResolution = money.YEAR;
+    }
     
     updateChartData();
     comment(this.id);

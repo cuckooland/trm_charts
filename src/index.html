@@ -742,6 +742,13 @@
 
                         </div>
                         
+                        <div class="Comment" id="MonthResComment">
+                            <p>En utilisant cette case à cocher, les axes horizontaux des graphes (qui représentent des temps) auront une granularité en mois. L'utilisation de cette coche n'est pertinente que dans le cas où la co-création monétaire est annuelle.</p>
+                            
+                            <p>Quand la co-création monétaire est annuelle, des points sont calculés pour chaque année ; en traçant des lignes reliant ces points, cela forme des courbes. Seulement, ces segments qui relient tous ces points peuvent être trompeurs. Par exemple, ces segments peuvent laissés penser qu'au bout d'un mois, un compte (exprimé en unité monétaire) a changé. En cochant cette case, on se rend compte que ce n'est pas le cas.</p>
+                            
+                        </div>
+
                         <!-- Accounts Tab Comments -->
                         <div class="Comment" id="AccountsItemComment">
                             <p>Par défaut, dans cette simulation, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps.</p>
@@ -974,6 +981,12 @@
                                             <input id="TimeUpperBound" type="text" name="TimeUpperBound"
                                                    title="Borne supérieure de l'axe des X (en année)"/>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="ParamSection">
+                                    <div class="labelledForm">
+                                        <label for="MonthRes">Discrétisation au mois</label>
+                                        <input id="MonthRes" type="checkbox" name="MonthRes" value="1">
                                     </div>
                                 </div>
                             </div>
