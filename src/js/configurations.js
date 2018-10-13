@@ -508,7 +508,7 @@ var configs3 = {
                 y: 5,
                 a: 5000,
                 r: "monetaryUnit",
-                rc: 0
+                rc: 1
             },
             t1: {
                 id: 2,
@@ -517,7 +517,7 @@ var configs3 = {
                 y: 6,
                 a: 500,
                 r: "monetaryUnit",
-                rc: 9
+                rc: 10
             }
         },
         g: {
@@ -604,7 +604,7 @@ var configs3 = {
                 y: 5,
                 a: 5000,
                 r: "monetaryUnit",
-                rc: 0
+                rc: 1
             },
             t1: {
                 id: 2,
@@ -613,7 +613,7 @@ var configs3 = {
                 y: 6,
                 a: 500,
                 r: "monetaryUnit",
-                rc: 9
+                rc: 10
             }
         },
         g: {
@@ -700,7 +700,7 @@ var configs3 = {
                 y: 5,
                 a: 5,
                 r: "dividend",
-                rc: 0
+                rc: 1
             },
             t1: {
                 id: 2,
@@ -709,7 +709,7 @@ var configs3 = {
                 y: 6,
                 a: 0.5,
                 r: "dividend",
-                rc: 9
+                rc: 10
             }
         },
         g: {
@@ -1096,7 +1096,7 @@ var configs4 = {
                 y: 1,
                 a: 10,
                 r: "account",
-                rc: 79
+                rc: 80
             },
             t1: {
                 id: 2,
@@ -1105,7 +1105,7 @@ var configs4 = {
                 y: 1,
                 a: 100,
                 r: "account",
-                rc: 79
+                rc: 80
             }
         },
         g: {
@@ -1294,7 +1294,7 @@ var configs4 = {
                 y: 1,
                 a: 0.797,
                 r: "account",
-                rc: 79
+                rc: 960
             },
             t1: {
                 id: 2,
@@ -1303,7 +1303,7 @@ var configs4 = {
                 y: 1,
                 a: 100,
                 r: "account",
-                rc: 79
+                rc: 960
             }
         },
         g: {

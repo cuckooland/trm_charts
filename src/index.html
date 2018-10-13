@@ -838,12 +838,16 @@
                         </div>
                         
                         <div class="Comment" id="SigmoidComment">
-                            <p>Ce profil permet de simuler une croissance ers un maximm qui se divise en deux phases&nbsp;: dans la première, la croissance est de plus en plus grande, puis dans la seconde, la croissance est de moins en moins grande et tend vers une population stable.</p>
+                            <p>Ce profil permet de simuler une croissance vers un maximum qui se divise en deux phases&nbsp;: dans la première, la croissance est de plus en plus grande, puis dans la seconde, la croissance est de moins en moins grande et tend vers une population stable.</p>
                         </div>
                         
                         <!-- Transactions Tab Comments -->
                         <div class="Comment" id="TransactionsItemComment">
-                            <p>Cet onglet permet de simuler des transferts de monnaie d'un compte à un autre, ce qui peut aider à mettre les comptes dans des états intéressants à étudier.</p>
+                            <p>Cet onglet permet de simuler des transferts de monnaie d'un compte à un autre. Cela peut aider à mettre les comptes dans des états intéressants à étudier, mais des utilisations plus avancée peuvent être faites.</p>
+
+                            <p><strong>Note</strong>&nbsp;: les transactions sont effectuées dans l'ordre de leur numéro, cela peut avoir son importance.</p>
+
+                            <p><strong>Note</strong>&nbsp;: une transaction possède une origine et une destination. Première possibilité, origine et destination correspondent chacune à un unique compte. Deuxième possibilité, l'origine est égale à "Tous, la transaction est alors multiple"&nbsp;: elle a lieu vers un unique compte destinataire, mais depuis tous les autres comptes. Troisième possibilité, la destination est égale à "Tous", la transaction est là aussi multiple&nbsp;: elle a lieu depuis un unique compte source vers tous les autres comptes. A noter que le montant indiqué par l'utilisateur pour la transaction est alors divisé à parts égales entre chaque destinataire.</p>
 
                         </div>
                         <div class="Comment" id="TransactionYearComment">
@@ -851,13 +855,13 @@
 
                         </div>
                         <div class="Comment" id="TransactionRepComment">
-                            <p>Ce champ permet de répéter la transaction plusieurs années de suite. La valeur "0" indique qu'elle ne sera pas répétée&nbsp;; la valeur "1" indique qu'elle sera répétée une fois l'année suivante&nbsp;; etc.</p>
+                            <p>Ce champ permet de répéter la transaction plusieurs pas de temps de suite (pas de temps qui correspond au rythme choisi pour l'émission du DU).</p>
 
                         </div>
                         <div class="Comment" id="TransactionAmountComment">
                             <p>Ce champ permet d'indiquer le montant de la transaction couramment sélectionnée. L'unité de ce montant est par défaut l'unité monétaire mais elle peut être modifiée grâce à la liste déroulante qui suit ce champ.</p>
 
-                            <p>A noter que si la transaction ne peut être effectuée, par exemple parce que l'un des comptes est non existant à la date donnée, la transaction est simplement ignorée. Par contre, si la date est valide pour les deux comptes mais que le compte à débiter n'est solvable, la transaction sera partiellement réalisé, de façon à ammener le compte à débiter à zéro - un "zéro" très temporaire si le compte correspond à un co-créateur de monnaie.</p>
+                            <p>A noter que si la transaction ne peut être effectuée, par exemple parce que l'un des comptes est non existant à la date donnée, la transaction est simplement ignorée. Par contre, si la date est valide pour les deux comptes mais que le compte à débiter n'est pas solvable, la transaction sera partiellement réalisée, de façon à ammener le compte à débiter à zéro (un "zéro" très temporaire si le compte correspond à un co-créateur de monnaie).</p>
                                                         
                         </div>
                         
@@ -1087,15 +1091,15 @@
                                             <label for="TransactionYear">En</label>
                                             <input id="TransactionYear" type="text" name="TransactionYear" 
                                                     title="Indique l'année sur laquelle est appliquée cette transaction"/>
-                                            <label for="TransactionRep">Répétée</label>
+                                            <label for="TransactionRep">faite</label>
                                             <input id="TransactionRep" type="text" name="TransactionRep" 
                                                    title="Indique le nombre d'années suivantes où est appliquée cette transaction"/>
-                                            <label>année(s)</label>
+                                            <label>fois</label>
                                         </div>
                                         <div class="row">
                                             <label for="TransactionSrc">De</label>
                                             <select id="TransactionSrc" name="TransactionSrc"></select>
-                                            <label for="TransactionDest">Vers</label>
+                                            <label for="TransactionDest">vers</label>
                                             <select id="TransactionDest" name="TransactionDest"></select>
                                         </div>
                                         <div class="row">

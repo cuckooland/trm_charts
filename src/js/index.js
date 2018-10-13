@@ -2337,12 +2337,12 @@ function changeTransactionYear() {
 function changeTransactionRep() {
     var transactionRep = parseInt(this.value);
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
-    if (transactionRep >= 0 && transactionRep < 200) {
+    if (transactionRep > 0 && transactionRep < money.getTimeStep(200, money.YEAR)) {
         selectedTransaction.repetitionCount = transactionRep;
         updateChartData();
     }
     else {
-        d3.select('#TransactionYear').property("value", selectedTransaction.repetitionCount);
+        d3.select('#TransactionRep').property("value", selectedTransaction.repetitionCount);
     }
     pushNewHistoryState();
 }

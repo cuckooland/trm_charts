@@ -659,7 +659,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             || (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH && (timeStep - moneyBirthStep) % 12 == 0)) {
 
             var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
-            var lastTransStep = this.getTimeStep(transaction.year + transaction.repetitionCount, this.YEAR);
+            var lastTransStep = this.getTimeStep(transaction.year, this.YEAR) + this.getTimeStep(transaction.repetitionCount - 1, this.growthTimeUnit);
             return timeStep >= firstTransStep && timeStep <= lastTransStep;
         }
         return false;
@@ -747,7 +747,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         var year = account1.birth;
         var amount = this.DEFAULT_TRANSACTION_AMOUNT;
         var amountRef = this.MONETARY_UNIT_REF_KEY;
-        var repetitionCount = 0;
+        var repetitionCount = 1;
 
         // If other transactions exist, init from last transaction
         if (this.transactions.length > 0) {
