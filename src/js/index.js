@@ -98,6 +98,33 @@ String.prototype.format = function() {
     });
 };
 
+extendD3();
+
+function extendD3() {
+    d3.selection.prototype.after = function (tagName) {
+        var elements = [];
+
+        this.each(function () {
+            var element = document.createElement(tagName);
+            this.parentNode.insertBefore(element, this.nextSibling);
+            elements.push(element);
+        });
+
+        return d3.selectAll(elements);
+    }
+    d3.selection.prototype.before = function (tagName) {
+        var elements = [];
+
+        this.each(function () {
+            var element = document.createElement(tagName);
+            this.parentNode.insertBefore(element, this);
+            elements.push(element);
+        });
+
+        return d3.selectAll(elements);
+    }
+}
+
 // Create instance context
 var money = {};
 // Create instance of class in context with constructor parameters
@@ -155,6 +182,37 @@ if (!applyEncodedURIFromLocation()) {
 }
 
 initCallbacks();
+
+// Add date value buttons
+d3.selectAll('.dateValue').after('span')
+    .attr('class', 'increaseDate')
+    .text('+')
+    .on('mousedown', function() {
+        d3.event.preventDefault();
+        changeTimeStep(1);
+    });
+
+d3.selectAll('.dateValue').before('span')
+    .attr('class', 'decreaseDate')
+    .text('-')
+    .on('mousedown', function() {
+        d3.event.preventDefault();
+        changeTimeStep(-1);
+    });
+
+function changeTimeStep(offset) {
+    var toSelectIndex = selectedPointIndex + offset;
+    if (toSelectIndex >= 0) {
+        var curChart = searchChartWithData(curSelectedDataId);
+        var upperBound = curChart.data(curSelectedDataId)[0].values.length;
+        if (toSelectIndex < upperBound) {
+            curChart.unselect([curSelectedDataId], [selectedPointIndex]);
+            curChart.select([curSelectedDataId], [toSelectIndex]);
+            commentChartData(curChart, curSelectedDataId);
+            pushNewHistoryState();
+        }
+    }
+}
 
 // Fill the forms
 function fillForms() {
@@ -343,7 +401,6 @@ function addChartEffectsFromHtml() {
     }
 
     function getReferenceFrameKey(serieSpan) {
-        var toSelectIndex = selectedPointIndex;
         if (serieSpan.classed('mu')) {
             return money.MONETARY_UNIT_REF_KEY;
         }

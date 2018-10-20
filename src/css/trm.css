@@ -198,6 +198,29 @@ ul.tabsBar li span:focus, .active {
   stroke-width: 1.5px;
 }
 
+span.increaseDate,
+span.decreaseDate {
+    font-family: monospace;
+    background-color: #ddd;
+    color: #555;
+	border: 1px solid #aaaaaa;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+span.decreaseDate {
+    margin-right: 0.2em;
+}
+
+span.increaseDate {
+    margin-left: 0.2em;
+}
+
+span.increaseDate:hover,
+span.decreaseDate:hover {
+    background-color: #bbb;
+}
+
 #AccountsChart .c3-line-scaled-dividend, #DividendChart .c3-line-scaled-average, #MonetarySupplyChart .c3-line-cruising-monetary-supply {
   stroke-width: .5px;
 }
