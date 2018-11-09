@@ -445,7 +445,7 @@ function addChartEffectsFromHtml() {
                 return curSelectedDataId;
             }
             else {
-                return getC3AccountId(1);
+                return c3IdFromAccountId(1);
             }
         }
         return serieClass;
@@ -455,7 +455,7 @@ function addChartEffectsFromHtml() {
         var serieColor = serieAttributes.color;
         if (serieAttributes.class == ACCOUNT_ID_PREFIX && curSelectedDataId.startsWith(ACCOUNT_ID_PREFIX)) {
             // For now, if an account serie is targeted, it necessarly corresponds to the current selected serie
-            var accountId = extractAccountId(curSelectedDataId);
+            var accountId = idFromC3AccountId(curSelectedDataId);
             return ACCOUNT_COLORS[accountId];
         }
         return serieColor;
@@ -520,7 +520,7 @@ function addChartEffectsFromHtml() {
         })
         .on('click', function() {
             d3.select('#AccountsItem').classed('focused', false);
-            clickTab('AccountsItem');
+            clickTab('AccountsItem', idFromAccountName(d3.select(this).text()) - 1);
         });
 }
 
@@ -811,10 +811,10 @@ function joinTransactionSelectorToData() {
     var options = d3.select('#TransactionSelector').selectAll("option")
         .data(money.transactions, function(d) { return d.id; });
             
-    options.text(function(d) { return transactionName1(d); });
+    options.text(function(d) { return transactionName(d); });
     
     options.enter().append("option")
-        .text(function(d) { return transactionName1(d); })
+        .text(function(d) { return transactionName(d); })
         .attr('value', function(d) { return d.id; })
         
     options.exit().remove();
@@ -849,7 +849,7 @@ function generateAccountsData() {
     // For each account...
 	for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
 		// add axis mapping
-		var c3Id = getC3AccountId(money.accounts[iAccount].id);
+		var c3Id = c3IdFromAccountId(money.accounts[iAccount].id);
 		accountsData.xs[c3Id] = 'x_' + c3Id;
         accountsData.names[c3Id] = accountName3(money.accounts[iAccount]);
 	}
@@ -875,7 +875,7 @@ function generateAccountsData() {
     var toUnload = [];
     // for each account...
     for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
-  		var c3Id = getC3AccountId(money.accounts[iAccount].id);
+  		var c3Id = c3IdFromAccountId(money.accounts[iAccount].id);
         // add data to columns
         if (money.accounts[iAccount].x.length > 1) {
             
@@ -1074,11 +1074,11 @@ function generateMonetarySupplyData() {
 	return monetarySupplyData;
 };
 
-function getC3AccountId(accountId) {
+function c3IdFromAccountId(accountId) {
     return ACCOUNT_ID_PREFIX + accountId;
 }
 
-function extractAccountId(c3AccountId) {
+function idFromC3AccountId(c3AccountId) {
     if (c3AccountId.substr(0, ACCOUNT_ID_PREFIX.length) === ACCOUNT_ID_PREFIX) {
         return c3AccountId.substring(ACCOUNT_ID_PREFIX.length);
     }
@@ -1698,6 +1698,13 @@ function accountName3(account) {
     return "${p0} (${p1}, ${p2})".format(accountName1(account), accountTypeLabel(account), account.startingPercentage);
 }
 
+function idFromAccountName(accountName) {
+    if (accountName.substr(0, ACCOUNT_LABEL_PREFIX.length) === ACCOUNT_LABEL_PREFIX) {
+        return accountName.substring(ACCOUNT_LABEL_PREFIX.length);
+    }
+    throw new Error(accountName + " doesn't start with the expected prefix: " + ACCOUNT_LABEL_PREFIX);
+}
+
 function accountTypeLabel(account) {
     if (money.isCoCreator(account)) {
         return CO_CREATOR_LABEL;
@@ -1822,12 +1829,15 @@ function addTransaction() {
     updateTransactionArea();
 }
 
-function transactionName1(transaction) {
+function transactionName(transaction) {
     return "${p0} ${p1}".format(TRANSACTION_LABEL_PREFIX, transaction.id);
 }
 
-function transactionName2(transaction) {
-    return "${p0} ${p1} (${p2} vers ${p3}, ${p4} ${p5})".format(TRANSACTION_LABEL_PREFIX, transaction.id, accountName1(transaction.from), accountName1(transaction.to), transaction.amount, getRefLabel(transaction.amountRef));
+function idFromTransactionName(transactionName) {
+    if (transactionName.substr(0, TRANSACTION_LABEL_PREFIX.length) === TRANSACTION_LABEL_PREFIX) {
+        return transactionName.substring(TRANSACTION_LABEL_PREFIX.length);
+    }
+    throw new Error(transactionName + " doesn't start with the expected prefix: " + TRANSACTION_LABEL_PREFIX);
 }
 
 function enableTransactionArea() {
@@ -2002,7 +2012,7 @@ function commentChartData(chart, c3DataId) {
     var selectedPoint = chart.selected()[0];
     selectedPointIndex = selectedPoint.index;
     if (c3DataId.startsWith(ACCOUNT_ID_PREFIX)) {
-        var accountId = extractAccountId(c3DataId);
+        var accountId = idFromC3AccountId(c3DataId);
         var account = money.searchAccount(accountId);
         var selectedTimeStep = account.x[selectedPointIndex];
         return commentSelectedPoint(ACCOUNT_ID_PREFIX, selectedTimeStep, account);
@@ -2299,8 +2309,25 @@ function commentAccordingToAccount(timeStep, account) {
     if (commentsMap.size > 0) {
         d3.selectAll("span.TransactionsDesc").style("display", "inline");
         d3.selectAll("span.TransactionsValuesDesc").style("display", "inline");
-        d3.selectAll("span.TransactionsDesc").text(Array.from(commentsMap.entries()).map(e=>transactionsDesc(e[0], e[1])).join(' '));
+        d3.selectAll("span.TransactionsDesc").html(Array.from(commentsMap.entries()).map(e=>transactionsDesc(e[0], e[1])).join(' '));
         d3.selectAll("span.TransactionsValuesDesc").text(Array.from(commentsMap.entries()).map(e=>transactionsValuesDesc(e[0], e[1])).join(' '));
+
+        d3.selectAll('span.transactionName')
+        .style('background-color', '#f1f1f1')
+        .on('mouseover', function () {
+            d3.selectAll('span.transactionsTabLink').style('background-color', '#dddddd');
+            d3.selectAll('span.transactionName').style('background-color', '#dddddd');
+            d3.select('#TransactionsItem').classed('focused', true);
+        })
+        .on('mouseout', function () {
+            d3.selectAll('span.transactionsTabLink').style('background-color', '#f1f1f1');
+            d3.selectAll('span.transactionName').style('background-color', '#f1f1f1');
+            d3.select('#TransactionsItem').classed('focused', false);
+        })
+        .on('click', function() {
+            d3.select('#TransactionsItem').classed('focused', false);
+            clickTab('TransactionsItem', idFromTransactionName(d3.select(this).text()) - 1);
+        });
     }
     else {
         d3.selectAll("span.TransactionsDesc").style("display", "none");
@@ -2311,7 +2338,14 @@ function commentAccordingToAccount(timeStep, account) {
 function transactionsDesc(transaction, actualAmountMap) {
     var firstActualAmount = actualAmountMap.entries().next().value[1];
     var direction = (firstActualAmount<0) ? '- ' : '+ ';
-    return direction + transactionName2(transaction);
+    return direction + '<span class="transactionName">${p0} ${p1}</span> (${p2} vers ${p3}, ${p4} ${p5})'
+        .format(TRANSACTION_LABEL_PREFIX, 
+            transaction.id, 
+            accountName1(transaction.from), 
+            accountName1(transaction.to), 
+            transaction.amount, 
+            getRefLabel(transaction.amountRef));
+
 }
 
 function transactionsValuesDesc(transaction, actualAmountMap) {
@@ -2763,7 +2797,7 @@ function getCurConfigJsonRep() {
     throw new Error("Configuration not managed: " + curConfigId);
 }
 
-function clickTab(tabItemId) {
+function clickTab(tabItemId, otherRef) {
     openTab(tabItemId);
     if (tabItemId == "WorkshopsItem") {
         var jsonRep = getCurConfigJsonRep();
@@ -2771,9 +2805,13 @@ function clickTab(tabItemId) {
         comment(curConfigId);
     }
     else {
-        if (tabItemId == "AccountsItem" && curSelectedDataId.startsWith(ACCOUNT_ID_PREFIX)) {
-            document.getElementById("AccountSelector").selectedIndex = extractAccountId(curSelectedDataId) - 1;
+        if (tabItemId == "AccountsItem") {
+            document.getElementById("AccountSelector").selectedIndex = otherRef;
             updateAddedAccountArea();
+        }
+        else if (tabItemId == "TransactionsItem") {
+            document.getElementById("TransactionSelector").selectedIndex = otherRef;
+            updateTransactionArea();
         }
         comment(tabItemId);
     }
