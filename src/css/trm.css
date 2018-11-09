@@ -233,7 +233,7 @@ span.stableDividend,
 span.headcount,
 span.monetarySupply,
 span.stableMonetarySupply {
-    background-color: #dedede;    
+    background-color: #dedede;
     padding: 0px 2px 0px 2px;
 	border: 1px solid #aaaaaa;
     border-radius: 5px;
@@ -241,10 +241,23 @@ span.stableMonetarySupply {
     transition: 0.3s;
 }
 
+span.account:hover, 
+span.average:hover, 
+span.stableAverage:hover,
+span.dividend:hover,
+span.stableDividend:hover,
+span.headcount:hover,
+span.monetarySupply:hover,
+span.stableMonetarySupply:hover {
+    background-color: #c9c9c9;
+    transition: 0.3s;
+}
+
 .current:not(.nolink), .previous, .previous2 {
     cursor: pointer;
 }
 
+span.accountName,
 span.workshopsTabLink,
 span.growth,
 span.dividendTabLink,

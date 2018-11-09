@@ -466,9 +466,6 @@ function addChartEffectsFromHtml() {
         // Highlight specified targets and fade out the others.
         serieAttributes.chart.focus(targetedSerieId);
 
-        // Highlight background of the span.
-        serieSpan.style('background-color', '#c9c9c9');
-
         if (isLinkedValue(serieSpan)) {
             var toSelectIndex = getIndexToSelect(serieSpan, targetedSerieId);
             if (toSelectIndex >= 0) {
@@ -480,9 +477,6 @@ function addChartEffectsFromHtml() {
     function mouseoutSerieSpan(serieSpan, serieAttributes) {
         // Revert highlighted and faded out targets
         serieAttributes.chart.revert();
-
-        // Restore common background of the span.
-        serieSpan.style('background-color', '#dedede');
 
         if (isLinkedValue(serieSpan)) {
             var targetedSerieId = getTargetedSerieId(serieAttributes);
@@ -511,6 +505,23 @@ function addChartEffectsFromHtml() {
     d3.selectAll('span.current:not(.nolink), span.previous, span.previous2').on('click', function() {
         clickValue(d3.select(this));
     });
+
+    d3.selectAll('span.accountName')
+        .style('background-color', '#f1f1f1')
+        .on('mouseover', function () {
+            d3.selectAll('span.accountsTabLink').style('background-color', '#dddddd');
+            d3.selectAll('span.accountName').style('background-color', '#dddddd');
+            d3.select('#AccountsItem').classed('focused', true);
+        })
+        .on('mouseout', function () {
+            d3.selectAll('span.accountsTabLink').style('background-color', '#f1f1f1');
+            d3.selectAll('span.accountName').style('background-color', '#f1f1f1');
+            d3.select('#AccountsItem').classed('focused', false);
+        })
+        .on('click', function() {
+            d3.select('#AccountsItem').classed('focused', false);
+            clickTab('AccountsItem');
+        });
 }
 
 function initCallbacks() {
@@ -2218,8 +2229,8 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
                 var accountUdLogValue = Math.log(accountUdValue) / Math.log(10);
                 var accountMnValue = 100 * accountMuValue / averageMuValue;
                 var accountMnLogValue = Math.log(accountMnValue) / Math.log(10);
-                d3.selectAll("span.account.name").text(accountName1(account));
-                d3.selectAll("span.account.age").text(accountAgeLabel(account, timeStep));
+                d3.selectAll("span.accountName").text(accountName1(account));
+                d3.selectAll("span.accountAge").text(accountAgeLabel(account, timeStep));
                 d3.selectAll("span.account.current.mu.value").text(commentFormat(accountMuValue));
                 d3.selectAll("span.account.mu.logValue").text(commentFormat(accountMuLogValue));
                 d3.selectAll("span.account.ud.value").text(commentFormat(accountUdValue));
@@ -2760,6 +2771,10 @@ function clickTab(tabItemId) {
         comment(curConfigId);
     }
     else {
+        if (tabItemId == "AccountsItem" && curSelectedDataId.startsWith(ACCOUNT_ID_PREFIX)) {
+            document.getElementById("AccountSelector").selectedIndex = extractAccountId(curSelectedDataId) - 1;
+            updateAddedAccountArea();
+        }
         comment(tabItemId);
     }
     pushNewHistoryState();
