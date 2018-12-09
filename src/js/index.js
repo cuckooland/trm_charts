@@ -45,7 +45,7 @@ var MONETARY_SUPPLY_ID = "monetarySupply";
 
 var STABLE_MONETARY_SUPPLY_ID = "stableMonetarySupply";
 
-var ACCOUNT_COLORS = d3.range(20).map(d3.scale.category20b());
+var ACCOUNT_COLORS = d3.schemeCategory20b;
 
 var AVERAGE_COLOR = '#e6550d';
 
@@ -204,11 +204,9 @@ function changeTimeStep(offset) {
     var toSelectIndex = selectedPointIndex + offset;
     if (toSelectIndex >= 0) {
         var curChart = searchChartWithData(curSelectedDataId);
-        var upperBound = curChart.data(curSelectedDataId)[0].values.length;
+        var upperBound = curChart.getData(curSelectedDataId)[0].points.length;
         if (toSelectIndex < upperBound) {
-            curChart.unselect([curSelectedDataId], [selectedPointIndex]);
-            curChart.select([curSelectedDataId], [toSelectIndex]);
-            commentChartData(curChart, curSelectedDataId);
+            commentChartData(curChart, curSelectedDataId, toSelectIndex);
             pushNewHistoryState();
         }
     }
@@ -369,10 +367,10 @@ function addChartEffectsFromHtml() {
 
         // Depending on the targeted serie, an offset must be applied (especially for 'account' series)
         if (targetedSerieId != curSelectedDataId) {
-            var curSelectedData = searchChartWithData(curSelectedDataId).data(curSelectedDataId)[0];
-            var targetedData = searchChartWithData(targetedSerieId).data(targetedSerieId)[0];
-            for (j = 0; j < targetedData.values.length; j++) {
-                if (targetedData.values[j].x.getTime() == curSelectedData.values[selectedPointIndex].x.getTime()) {
+            var curSelectedData = searchChartWithData(curSelectedDataId).getData(curSelectedDataId)[0];
+            var targetedData = searchChartWithData(targetedSerieId).getData(targetedSerieId)[0];
+            for (j = 0; j < targetedData.points.length; j++) {
+                if (targetedData.points[j][0].getTime() == curSelectedData.points[selectedPointIndex][0].getTime()) {
                     indexToSelect = j;
                     break;
                 }
@@ -429,11 +427,7 @@ function addChartEffectsFromHtml() {
         updateAccountYLabels();
         updateChartData();
 
-        if (curSelectedDataId != clickedSerieId || selectedPointIndex != toSelectIndex) {
-            searchChartWithData(curSelectedDataId).unselect([curSelectedDataId], [selectedPointIndex]);
-        }
-        clickedSerieAttributes.chart.select([clickedSerieId], [toSelectIndex]);
-        commentChartData(clickedSerieAttributes.chart, clickedSerieId);
+        commentChartData(clickedSerieAttributes.chart, clickedSerieId, toSelectIndex);
         pushNewHistoryState();
     }
 
@@ -469,7 +463,7 @@ function addChartEffectsFromHtml() {
         if (isLinkedValue(serieSpan)) {
             var toSelectIndex = getIndexToSelect(serieSpan, targetedSerieId);
             if (toSelectIndex >= 0) {
-                serieAttributes.chart.select([targetedSerieId], [toSelectIndex]);
+                serieAttributes.chart.reference(targetedSerieId, toSelectIndex);
             }
         }
     }
@@ -477,18 +471,8 @@ function addChartEffectsFromHtml() {
     function mouseoutSerieSpan(serieSpan, serieAttributes) {
         // Revert highlighted and faded out targets
         serieAttributes.chart.revert();
-
-        if (isLinkedValue(serieSpan)) {
-            var targetedSerieId = getTargetedSerieId(serieAttributes);
-            var toSelectIndex = getIndexToSelect(serieSpan,targetedSerieId);
-            if (curSelectedDataId != targetedSerieId || selectedPointIndex != toSelectIndex) {
-                serieAttributes.chart.unselect([targetedSerieId], [toSelectIndex]);
-            }
-            else {
-                // Select current selected point (probably useless)
-                serieAttributes.chart.select([targetedSerieId], [toSelectIndex]);
-            }
-        }
+        // Remove point reference
+        serieAttributes.chart.unreference();
     }
 
     serieAttributesList.forEach(function(serieAttributes) {
@@ -582,16 +566,16 @@ function asEncodedURI() {
         t : curTabId,
         c : curConfigId,
         ac : {
-            hs : getHiddenDataKeys(accountsChart)
+            hs : accountsChart.getHiddenSerieIds()
         },
         dc : {
-            hs : getHiddenDataKeys(dividendChart)
+            hs : dividendChart.getHiddenSerieIds()
         },
         hc : {
-            hs : getHiddenDataKeys(headcountChart)
+            hs : headcountChart.getHiddenSerieIds()
         },
         sc : {
-            hs : getHiddenDataKeys(monetarySupplyChart)
+            hs : monetarySupplyChart.getHiddenSerieIds()
         },
         a : document.getElementById("AccountSelector").selectedIndex,
         tr : document.getElementById("TransactionSelector").selectedIndex,
@@ -629,6 +613,7 @@ function applyEncodedURI(encodedURI) {
 function applyJSonRep(jsonRep) {
     money.applyJSonRep(jsonRep.m);
     
+    unselectChartPoints();
     fillForms();
     enableForms();
 
@@ -651,36 +636,20 @@ function applyJSonRep(jsonRep) {
     updateTransactionArea();
     updateChartData();
     openTab(jsonRep.g.t);
-    unselectChartPoints();
     if (jsonRep.g.s) {
         var chart = searchChartWithData(jsonRep.g.s);
-        chart.select([jsonRep.g.s], [jsonRep.g.i]);
-        commentChartData(chart, jsonRep.g.s);
+        commentChartData(chart, jsonRep.g.s, jsonRep.g.i);
     }
     else {
         comment(jsonRep.g.com);
     }
     
-    setHiddenSeries(accountsChart, jsonRep.g.ac.hs);
-    setHiddenSeries(dividendChart, jsonRep.g.dc.hs);
-    setHiddenSeries(headcountChart, jsonRep.g.hc.hs);
-    setHiddenSeries(monetarySupplyChart, jsonRep.g.sc.hs);
+    accountsChart.hide(jsonRep.g.ac.hs, true);
+    dividendChart.hide(jsonRep.g.dc.hs, true);
+    headcountChart.hide(jsonRep.g.hc.hs, true);
+    monetarySupplyChart.hide(jsonRep.g.sc.hs, true);
 }
     
-function setHiddenSeries(chart, hiddenSeries) {
-    chart.hide(hiddenSeries);
-    
-    var data = chart.data();
-    var shownDataKeys = [];
-    for (var i = 0; i < data.length; i++) {
-        if (hiddenSeries.indexOf(data[i].id) < 0) {
-            shownDataKeys.push(data[i].id);
-        }
-    }
-    
-    chart.show(shownDataKeys);
-}
-
 // Init the different selectors
 function initSelectors() {
     for (var i = 0; i < workshops.length; i++) {
@@ -835,14 +804,10 @@ function generateAccountsData() {
         types: {
             average: 'area'
         },
-        onclick: function(d, element) {
-            commentChartData(accountsChart, d.id);
+        onclick: function(d, i) {
+            commentChartData(accountsChart, d.id, i);
             pushNewHistoryState();
-        },
-        selection: {
-            enabled: true,
-            multiple: false
-        }        
+        }
     };
     
     var iAccount, i;
@@ -914,11 +879,11 @@ function showAllTooltips(chart, d) {
 }
 
 function showTooltip(chart, d) {
-    var shownDataList = chart.data.shown();
+    var shownDataList = chart.shownData();
     for (i = 0; i < shownDataList.length; i++) {
-        for (j = 0; j < shownDataList[i].values.length; j++) {
-            if (shownDataList[i].values[j].x.getTime() == d.x.getTime()) {
-                chart.tooltip.show({ data: {x: d.x, value: shownDataList[i].values[j].value, id: shownDataList[i].id} });
+        for (j = 0; j < shownDataList[i].points.length; j++) {
+            if (shownDataList[i].points[j][0].getTime() == d.x.getTime()) {
+                chart.tooltip.show({ data: {x: d.x, value: shownDataList[i].point[j][1], id: shownDataList[i].id} });
                 return;
             }
         }
@@ -934,14 +899,12 @@ function hideAllTooltips(chart) {
     });
 }
 
-function unselectChartPoints(chart) {
+function unselectChartPoints() {
     curSelectedDataId = "";
     selectedPointIndex = -1;
     var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
     charts.forEach(function(c) {
-        if (c != chart) {
-            c.unselect();
-        }
+        c.unselect();
     });
 }
 
@@ -960,13 +923,9 @@ function generateDividendData() {
         types: {
             dividend: 'area'
         },
-        onclick: function(d, element) {
-            commentChartData(dividendChart, d.id);
+        onclick: function(d, i) {
+            commentChartData(dividendChart, d.id, i);
             pushNewHistoryState();
-        },
-        selection: {
-            enabled: true,
-            multiple: false
         }
     };
     
@@ -1007,13 +966,9 @@ function generateHeadcountData() {
         onmouseout : function(d) {
             hideAllTooltips(headcountChart);
         },
-        onclick: function(d, element) {
-            commentChartData(headcountChart, d.id);
+        onclick: function(d, i) {
+            commentChartData(headcountChart, d.id, i);
             pushNewHistoryState();
-        },
-        selection: {
-            enabled: true,
-            multiple: false
         }
     };
     
@@ -1044,13 +999,9 @@ function generateMonetarySupplyData() {
         types: {
             monetarySupply: 'area'
         },
-        onclick: function(d, element) {
-            commentChartData(monetarySupplyChart, d.id);
+        onclick: function(d, i) {
+            commentChartData(monetarySupplyChart, d.id, i);
             pushNewHistoryState();
-        },
-        selection: {
-            enabled: true,
-            multiple: false
         }
     };
 
@@ -1257,15 +1208,15 @@ function getDemographicProfileLabel(demographicProfileKey) {
 
 // create and display chart from money.accounts
 function generateAccountsChart() {
-    accountsChart = c3.generate({
+    accountsChart = myc3.generate({
         bindto: '#AccountsChart',
         padding: {
-            left: 100,
-            right: 25
+            left: 70,
+            right: 30
         },
         size: {
-            height: 300,
-            width: 480
+            height: 320,
+            width: 500
         },
         axis: {
             x: {
@@ -1326,15 +1277,15 @@ function generateAccountsChart() {
 
 // create and display chart from money.dividend
 function generateDividendChart() {
-    dividendChart = c3.generate({
+    dividendChart = myc3.generate({
         bindto: '#DividendChart',
         padding: {
-            left: 100,
-            right: 25
+            left: 70,
+            right: 30
         },
         size: {
-            height: 300,
-            width: 480
+            height: 320,
+            width: 500
         },
         axis: {
             x: {
@@ -1396,15 +1347,15 @@ function generateDividendChart() {
 
 // create and display chart from money.headcount
 function generateHeadcountChart() {
-    headcountChart = c3.generate({
+    headcountChart = myc3.generate({
         bindto: '#HeadcountChart',
         padding: {
-            left: 100,
-            right: 25,
+            left: 70,
+            right: 30,
         },
         size: {
-            height: 300,
-            width: 480
+            height: 320,
+            width: 500
         },
         axis: {
             x: {
@@ -1420,7 +1371,7 @@ function generateHeadcountChart() {
             },
             y: {
                 label: {
-                    text: "Nombre d\individus",
+                    text: "Nombre d\'individus",
                     position: 'outer-middle'
                 },
                 position: 'outer-top',
@@ -1467,15 +1418,15 @@ function generateHeadcountChart() {
 
 // create and display chart from money.monetarySupply
 function generateMonetarySupplyChart() {
-    monetarySupplyChart = c3.generate({
+    monetarySupplyChart = myc3.generate({
         bindto: '#MonetarySupplyChart',
         padding: {
-            left: 100,
-            right: 25
+            left: 70,
+            right: 30
         },
         size: {
-            height: 300,
-            width: 480
+            height: 320,
+            width: 500
         },
         axis: {
             x: {
@@ -1604,7 +1555,7 @@ function updateChartData() {
 }
 
 function updateToUnload(chart, newData) {
-    var oldData = chart.data();
+    var oldData = chart.getData();
     var newDataKeys = Object.keys(newData.xs);
     // on cherche les oldData[i].id qui ne sont pas présents dans Object.keys(newData.xs)
     var toUnload = newData.unload;
@@ -1619,23 +1570,10 @@ function updateToUnload(chart, newData) {
     newData.unload = toUnload;
 }
 
-function getHiddenDataKeys(chart) {
-    var data = chart.data();
-    var shownDataKeys = chart.data.shown().map(function(d) { return d.id; });
-    var hiddenDataKeys = [];
-    for (var i = 0; i < data.length; i++) {
-        if (shownDataKeys.indexOf(data[i].id) < 0) {
-            hiddenDataKeys.push(data[i].id);
-        }
-    }
-    
-    return hiddenDataKeys;
-}
-
 function searchChartWithData(c3DataId) {
     var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
     for (var i = 0; i < charts.length; i++) {
-        if (charts[i].data(c3DataId).length != 0) {
+        if (charts[i].getData(c3DataId).length != 0) {
             return charts[i];
         }
     };    
@@ -1852,7 +1790,7 @@ function enableTransactionArea() {
 function asDate(timeStep, timeUnit) {
     timeUnit = timeUnit || money.getTimeResolution();
     
-    var format = d3.time.format(DATE_PATTERN);
+    var format = d3.timeFormat(DATE_PATTERN);
     if (timeUnit === money.MONTH) {
         return format(new Date(2000 + Math.trunc(timeStep / 12), timeStep % 12, 1));
     }
@@ -2005,12 +1943,12 @@ function comment(id) {
     return comment0(id);
 }
 
-function commentChartData(chart, c3DataId) {
-    unselectChartPoints(chart);
+function commentChartData(chart, c3DataId, pointIndex) {
+    unselectChartPoints();
+    chart.doSelect(c3DataId, pointIndex);
     curSelectedDataId = c3DataId;
-    
-    var selectedPoint = chart.selected()[0];
-    selectedPointIndex = selectedPoint.index;
+    selectedPointIndex = pointIndex;
+
     if (c3DataId.startsWith(ACCOUNT_ID_PREFIX)) {
         var accountId = idFromC3AccountId(c3DataId);
         var account = money.searchAccount(accountId);

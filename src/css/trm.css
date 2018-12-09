@@ -117,9 +117,7 @@ label {
 
 .chart {
     display: inline-block;
-    width: 46%;
-    margin: 5px;
-    padding: 5px;
+    width: 49%;
 }
 
 #ChartsPart {
@@ -198,6 +196,11 @@ ul.tabsBar li span:focus, .active {
   stroke-width: 1.5px;
 }
 
+svg {
+    font-family: sans-serif;
+    font-size: 10px;    
+}
+
 span.increaseDate,
 span.decreaseDate {
     font-family: monospace;
@@ -273,6 +276,20 @@ span.transactionsTabLink {
     border-radius: 5px;
     white-space: nowrap;
     transition: 0.3s;
+}
+
+.xMouseLine {
+    stroke-width: 0.2;
+    stroke: #000;
+}
+
+.legend-item, 
+.serieGroup>.line  {
+    cursor: pointer;
+}
+
+.serieGroup>circle  {
+    fill: #dedede;
 }
 
 .bouncy {
