@@ -792,15 +792,11 @@ function joinTransactionSelectorToData() {
 function generateAccountsData() {
 	var accountsData = {
         xFormat: DATE_PATTERN,
-        xs: {
-            'average': 'x_' + AVERAGE_ID,
-            'stableAverage': 'x_' + STABLE_AVERAGE_ID
-        },
         names: {
             'average': AVERAGE_LABEL,
             'stableAverage': STABLE_AVERAGE_LABEL
         },
-        columns: [],
+        series: [],
         types: {
             average: 'area'
         },
@@ -809,57 +805,37 @@ function generateAccountsData() {
             pushNewHistoryState();
         }
     };
+
+    var averageSerie = {};
+    averageSerie.id = AVERAGE_ID;
+    averageSerie.points = [];
+	for (var i = 0; i < money.averages.x.length; i++) {
+	    averageSerie.points.push([asDate(money.averages.x[i]), money.averages.y[i]]);
+    }
+    accountsData.series.push(averageSerie);
     
-    var iAccount, i;
-    // For each account...
-	for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
-		// add axis mapping
-		var c3Id = c3IdFromAccountId(money.accounts[iAccount].id);
-		accountsData.xs[c3Id] = 'x_' + c3Id;
-        accountsData.names[c3Id] = accountName3(money.accounts[iAccount]);
+    var stableAverageSerie = {};
+    stableAverageSerie.id = STABLE_AVERAGE_ID;
+    stableAverageSerie.points = [];
+	for (var i = 0; i < money.stableAverages.x.length; i++) {
+	    stableAverageSerie.points.push([asDate(money.stableAverages.x[i]), money.stableAverages.y[i]]);
 	}
-	
-    // add data to columns and add axis header 
-	var xAverage = ['x_' + AVERAGE_ID];
-	for (i = 0; i < money.averages.x.length; i++) {
-	    xAverage.push(asDate(money.averages.x[i]));
-	}
-    accountsData.columns.push(xAverage);
-    accountsData.columns.push(money.averages.y);
-    accountsData.columns[accountsData.columns.length - 1].unshift(AVERAGE_ID);
-
-	var xStableAverages = ['x_' + STABLE_AVERAGE_ID];
-	for (i = 0; i < money.dividends.x.length; i++) {
-	    xStableAverages.push(asDate(money.dividends.x[i]));
-	}
-    accountsData.columns.push(xStableAverages);
-    accountsData.columns.push(money.stableAverages.y);
-    accountsData.columns[accountsData.columns.length - 1].unshift(STABLE_AVERAGE_ID);
-
-    // Depending on X axis bounds, some accounts are not visible => use 'unload' flag
-    var toUnload = [];
-    // for each account...
-    for (iAccount = 0; iAccount < money.accounts.length; iAccount++) {
-  		var c3Id = c3IdFromAccountId(money.accounts[iAccount].id);
-        // add data to columns
+    accountsData.series.push(stableAverageSerie);
+    
+    // Depending on X axis bounds, some accounts are not visible
+    for (var iAccount = 0; iAccount < money.accounts.length; iAccount++) {
+        var accountSerie = {};
+        accountSerie.id = c3IdFromAccountId(money.accounts[iAccount].id);
+        accountSerie.points = [];
         if (money.accounts[iAccount].x.length > 1) {
-            
-        	var xAccount = [accountsData.xs[c3Id]];
-        	for (i = 0; i < money.accounts[iAccount].x.length; i++) {
-        	    xAccount.push(asDate(money.accounts[iAccount].x[i]));
-        	}
-            accountsData.columns.push(xAccount);
-            
-            accountsData.columns.push(money.accounts[iAccount].y);
-            accountsData.columns[accountsData.columns.length - 1].unshift(c3Id);
-        }
-        else {
-            toUnload.push(c3Id);
+            for (var i = 0; i < money.accounts[iAccount].x.length; i++) {
+                accountSerie.points.push([asDate(money.accounts[iAccount].x[i]), money.accounts[iAccount].y[i]]);
+            }
+            accountsData.series.push(accountSerie);
+            accountsData.names[accountSerie.id] = accountName3(money.accounts[iAccount]);
         }
     }
-    if (toUnload.length > 0) {
-        accountsData.unload = toUnload;
-    }
+
     return accountsData;
 }
 
@@ -911,15 +887,11 @@ function unselectChartPoints() {
 function generateDividendData() {
     var dividendData = {
         xFormat: DATE_PATTERN,
-        xs: {
-            'dividend' : 'x_' + DIVIDEND_ID,
-            'stableDividend': 'x_' + STABLE_DIVIDEND_ID
-        },
         names: {
             'dividend': "${p0} (${p1})".format(DIVIDEND_LABEL, universalDividendName()),
             'stableDividend': STABLE_DIVIDEND_LABEL
         },
-        columns: [],
+        series: [],
         types: {
             dividend: 'area'
         },
@@ -928,23 +900,22 @@ function generateDividendData() {
             pushNewHistoryState();
         }
     };
+
+    var dividendSerie = {};
+    dividendSerie.id = DIVIDEND_ID;
+    dividendSerie.points = [];
+	for (var i = 0; i < money.dividends.x.length; i++) {
+	    dividendSerie.points.push([asDate(money.dividends.x[i]), money.dividends.y[i]]);
+    }
+    dividendData.series.push(dividendSerie);
     
-    // add data to columns and add axis header 
-	var xDividends = ['x_' + DIVIDEND_ID];
-	for (i = 0; i < money.dividends.x.length; i++) {
-	    xDividends.push(asDate(money.dividends.x[i]));
-	}
-    dividendData.columns.push(xDividends);
-    dividendData.columns.push(money.dividends.y);
-    dividendData.columns[dividendData.columns.length - 1].unshift(DIVIDEND_ID);
-    
-	var xStableDividends = ['x_' + STABLE_DIVIDEND_ID];
-	for (i = 0; i < money.averages.x.length; i++) {
-	    xStableDividends.push(asDate(money.averages.x[i]));
-	}
-    dividendData.columns.push(xStableDividends);
-    dividendData.columns.push(money.stableDividends.y);
-    dividendData.columns[dividendData.columns.length - 1].unshift(STABLE_DIVIDEND_ID);
+    var stableDividendSerie = {};
+    stableDividendSerie.id = STABLE_DIVIDEND_ID;
+    stableDividendSerie.points = [];
+	for (var i = 0; i < money.stableDividends.x.length; i++) {
+	    stableDividendSerie.points.push([asDate(money.stableDividends.x[i]), money.stableDividends.y[i]]);
+    }
+    dividendData.series.push(stableDividendSerie);
     
     return dividendData;
 }
@@ -952,11 +923,10 @@ function generateDividendData() {
 function generateHeadcountData() {
     var headcountData = {
         xFormat: DATE_PATTERN,
-        x: 'x_' + HEADCOUNT_ID,
         names: {
             'headcount': HEADCOUNT_LABEL + ' (' + getDemographicProfileLabel(money.demographicProfileKey) + ')'
         },
-        columns: [],
+        series: [],
         types: {
             headcount: 'area'
         },
@@ -971,15 +941,14 @@ function generateHeadcountData() {
             pushNewHistoryState();
         }
     };
-    
-    // add data to columns and add axis header 
-	var xHeadcount = ['x_' + HEADCOUNT_ID];
-	for (i = 0; i < money.headcounts.x.length; i++) {
-	    xHeadcount.push(asDate(money.headcounts.x[i]));
-	}
-    headcountData.columns.push(xHeadcount);
-    headcountData.columns.push(money.headcounts.y);
-    headcountData.columns[headcountData.columns.length - 1].unshift(HEADCOUNT_ID);
+
+    var headcountSerie = {};
+    headcountSerie.id = HEADCOUNT_ID;
+    headcountSerie.points = [];
+	for (var i = 0; i < money.headcounts.x.length; i++) {
+	    headcountSerie.points.push([asDate(money.headcounts.x[i]), money.headcounts.y[i]]);
+    }
+    headcountData.series.push(headcountSerie);
     
     return headcountData;
 }
@@ -987,15 +956,11 @@ function generateHeadcountData() {
 function generateMonetarySupplyData() {
     var monetarySupplyData = {
         xFormat: DATE_PATTERN,
-        xs: {
-            'monetarySupply' : 'x_' + MONETARY_SUPPLY_ID,
-            'stableMonetarySupply': 'x_' + STABLE_MONETARY_SUPPLY_ID
-        },
         names: {
             'monetarySupply': MONETARY_SUPPLY_LABEL,
             'stableMonetarySupply': STABLE_MONETARY_SUPPLY_LABEL
         },
-        columns: [],
+        series: [],
         types: {
             monetarySupply: 'area'
         },
@@ -1005,22 +970,21 @@ function generateMonetarySupplyData() {
         }
     };
 
-    // add data to columns and add axis header 
-	var xMonetarySupply = ['x_' + MONETARY_SUPPLY_ID];
-	for (i = 0; i < money.monetarySupplies.x.length; i++) {
-	    xMonetarySupply.push(asDate(money.monetarySupplies.x[i]));
-	}
-    monetarySupplyData.columns.push(xMonetarySupply);
-    monetarySupplyData.columns.push(money.monetarySupplies.y);
-    monetarySupplyData.columns[monetarySupplyData.columns.length - 1].unshift(MONETARY_SUPPLY_ID);
+    var monetarySupplySerie = {};
+    monetarySupplySerie.id = MONETARY_SUPPLY_ID;
+    monetarySupplySerie.points = [];
+	for (var i = 0; i < money.monetarySupplies.x.length; i++) {
+	    monetarySupplySerie.points.push([asDate(money.monetarySupplies.x[i]), money.monetarySupplies.y[i]]);
+    }
+    monetarySupplyData.series.push(monetarySupplySerie);
     
-	var xStableMonetarySupply = ['x_' + STABLE_MONETARY_SUPPLY_ID];
-	for (i = 0; i < money.stableMonetarySupplies.x.length; i++) {
-	    xStableMonetarySupply.push(asDate(money.stableMonetarySupplies.x[i]));
-	}
-    monetarySupplyData.columns.push(xStableMonetarySupply);
-    monetarySupplyData.columns.push(money.stableMonetarySupplies.y);
-    monetarySupplyData.columns[monetarySupplyData.columns.length - 1].unshift(STABLE_MONETARY_SUPPLY_ID);
+    var stableMonetarySupplySerie = {};
+    stableMonetarySupplySerie.id = STABLE_MONETARY_SUPPLY_ID;
+    stableMonetarySupplySerie.points = [];
+	for (var i = 0; i < money.stableMonetarySupplies.x.length; i++) {
+	    stableMonetarySupplySerie.points.push([asDate(money.stableMonetarySupplies.x[i]), money.stableMonetarySupplies.y[i]]);
+    }
+    monetarySupplyData.series.push(stableMonetarySupplySerie);
     
 	return monetarySupplyData;
 };
@@ -1543,8 +1507,6 @@ function updateChartData() {
     var headcountData = generateHeadcountData();
     var monetarySupplyData = generateMonetarySupplyData();
 
-    updateToUnload(accountsChart, accountsData);
-    
     // reload data in chart
     accountsChart.load(accountsData);
     dividendChart.load(dividendData);
@@ -1552,22 +1514,6 @@ function updateChartData() {
     monetarySupplyChart.load(monetarySupplyData);
     
     setChartTimeBounds();
-}
-
-function updateToUnload(chart, newData) {
-    var oldData = chart.getData();
-    var newDataKeys = Object.keys(newData.xs);
-    // on cherche les oldData[i].id qui ne sont pas présents dans Object.keys(newData.xs)
-    var toUnload = newData.unload;
-    if (!toUnload) {
-        toUnload = [];
-    }
-    for (var i = 0; i < oldData.length; i++) {
-        if (newDataKeys.indexOf(oldData[i].id) < 0) {
-            toUnload.push(oldData[i].id);
-        }
-    }
-    newData.unload = toUnload;
 }
 
 function searchChartWithData(c3DataId) {
@@ -1790,16 +1736,19 @@ function enableTransactionArea() {
 function asDate(timeStep, timeUnit) {
     timeUnit = timeUnit || money.getTimeResolution();
     
-    var format = d3.timeFormat(DATE_PATTERN);
     if (timeUnit === money.MONTH) {
-        return format(new Date(2000 + Math.trunc(timeStep / 12), timeStep % 12, 1));
+        return new Date(2000 + Math.trunc(timeStep / 12), timeStep % 12, 1);
     }
     else if (timeUnit === money.YEAR) {
-        return format(new Date(2000 + timeStep, 0, 1));
+        return new Date(2000 + timeStep, 0, 1);
     }
     else {
         throw new Error("Time unit not managed: " + timeUnit);
     }
+}
+
+function asFormattedDate(timeStep, timeUnit) {
+    return d3.timeFormat(DATE_PATTERN)(asDate(timeStep, timeUnit));
 }
 
 function enableGrowthForms(calculateGrowth) {
@@ -1889,8 +1838,8 @@ function enableAddedAccountArea() {
 }
 
 function setChartTimeBounds() {
-    var lowerBoundDate = asDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
-    var upperBoundDate = asDate(money.getTimeUpperBound(money.YEAR), money.YEAR);
+    var lowerBoundDate = asFormattedDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
+    var upperBoundDate = asFormattedDate(money.getTimeUpperBound(money.YEAR), money.YEAR);
     accountsChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
     dividendChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
     headcountChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
@@ -2013,7 +1962,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
     
     var growthValue = money.getGrowth();
 
-    d3.selectAll("span.dateValue").text(asDate(timeStep));
+    d3.selectAll("span.dateValue").text(asFormattedDate(timeStep));
     var pTimeStep = money.previousTimeStep(timeStep);
     var ppTimeStep = money.previousTimeStep(pTimeStep);
 

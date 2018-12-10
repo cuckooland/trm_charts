@@ -111,11 +111,11 @@ var myc3 = (function() {
             if (!chart.axis.rangeVal) chart.axis.rangeVal = {};
     
             if (!chart.axis.rangeVal.min) chart.axis.rangeVal.min = {};
-            if (range.min.x) chart.axis.rangeVal.min.x = d3.timeParse(DATE_PATTERN)(range.min.x);
+            if (range.min.x) chart.axis.rangeVal.min.x = d3.timeParse(chart.theData.xFormat)(range.min.x);
             if (range.min.y) chart.axis.rangeVal.min.y = range.min.y;
     
             if (!chart.axis.rangeVal.max) chart.axis.rangeVal.max = {};
-            if (range.max.x) chart.axis.rangeVal.max.x = d3.timeParse(DATE_PATTERN)(range.max.x);
+            if (range.max.x) chart.axis.rangeVal.max.x = d3.timeParse(chart.theData.xFormat)(range.max.x);
             if (range.max.y) chart.axis.rangeVal.max.y = range.max.y;
     
             chart.draw();
@@ -149,8 +149,7 @@ var myc3 = (function() {
         chart.load = function(data) {
             chart.theData = data;
     
-            var xKeys = chart.theData.xs ? Object.values(chart.theData.xs) : [chart.theData.x];
-            var ySerieIds = new Set(chart.theData.columns.filter(c => xKeys.indexOf(c[0]) < 0).map(s=>s[0]));
+            var ySerieIds = new Set(chart.theData.series.map(s=>s.id));
             var intersection = new Set();
             for (var elem of ySerieIds) {
                 if (hiddenSerieIds.has(elem)) {
@@ -163,15 +162,7 @@ var myc3 = (function() {
         }
     
         chart.draw = function() {
-            var xKeys = chart.theData.xs ? Object.values(chart.theData.xs) : [chart.theData.x];
-            var ySeries = chart.theData.columns.filter(c => xKeys.indexOf(c[0]) < 0);
-            var series = ySeries.map(function(ySerie) {
-                var serieId = ySerie[0];
-                ySerie = ySerie.slice(1);
-                var xSerie = chart.theData.columns.find(c => c[0] == 'x_' + serieId).slice(1).map(d3.timeParse(DATE_PATTERN));
-                var points = xSerie.map(function(x,i) { return [x, ySerie[i]] })
-                return {id: serieId, points: points};
-            });
+            var series = chart.theData.series;
             var visibleSeries = series.filter(s=>!hiddenSerieIds.has(s.id));
             
             if (!chart.axis.rangeVal) chart.axis.rangeVal = {};
