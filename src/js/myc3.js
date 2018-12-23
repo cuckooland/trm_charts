@@ -1,8 +1,7 @@
 var myc3 = (function() {
     function generate(args) {
-        var hiddenSerieIds = new Set();
-        var selectedPoint;
-        var referencedPoint;
+        var chart = {};
+        chart.hiddenSerieIds = new Set();
         
         args.size.width = !args.size.width ? 0 : args.size.width;
         args.size.height = !args.size.height ? 0 : args.size.height;
@@ -31,9 +30,9 @@ var myc3 = (function() {
             legendHeight = args.padding.bottom - legendPadding.t - legendPadding.b,
             legendWidth = args.size.width - legendPadding.l - legendPadding.r;
     
-        var xScale = d3.scaleTime()
+        chart.xScale = d3.scaleTime()
             .range([0, args.size.width - args.padding.left - args.padding.right]);
-        var yScale = d3.scaleLinear()
+        chart.yScale = d3.scaleLinear()
             .range([args.size.height - args.padding.bottom - args.padding.top, 0]);
         var bisectDate = d3.bisector(function(d) { return d[0]; }).left
     
@@ -56,7 +55,7 @@ var myc3 = (function() {
             .style("display", "none");
     
         // Add the X Axis
-        var xAxis = d3.axisBottom(xScale)
+        var xAxis = d3.axisBottom(chart.xScale)
             .ticks(5)
             .tickFormat(d3.timeFormat(args.axis.x.tick.format));
         plotGroup.append("g")
@@ -72,7 +71,7 @@ var myc3 = (function() {
             .text(args.axis.x.label.text);
     
         // Add the Y Axis
-        var yAxis = d3.axisLeft(yScale)
+        var yAxis = d3.axisLeft(chart.yScale)
             .tickFormat(args.axis.y.tick.format);
         plotGroup.append("g")
             .attr("class", "y axis")
@@ -86,7 +85,6 @@ var myc3 = (function() {
             .text(args.axis.y.label.text);
     
         // TODO: replace 'chart' by 'args'?
-        var chart = {};
         chart.bindto = args.bindto;
         chart.axis = {};
     
@@ -152,127 +150,34 @@ var myc3 = (function() {
             var ySerieIds = new Set(chart.theData.series.map(s=>s.id));
             var intersection = new Set();
             for (var elem of ySerieIds) {
-                if (hiddenSerieIds.has(elem)) {
+                if (chart.hiddenSerieIds.has(elem)) {
                     intersection.add(elem);
                 }
             }
-            hiddenSerieIds = intersection;
+            chart.hiddenSerieIds = intersection;
     
             chart.draw();
         }
     
         chart.draw = function() {
             var series = chart.theData.series;
-            var visibleSeries = series.filter(s=>!hiddenSerieIds.has(s.id));
-            
-            if (!chart.axis.rangeVal) chart.axis.rangeVal = {};
-            if (!chart.axis.rangeVal.min) chart.axis.rangeVal.min = {};
-            if (!chart.axis.rangeVal.max) chart.axis.rangeVal.max = {};
-            if (!chart.axis.rangeVal.min.x) {
-                chart.axis.rangeVal.min.x = d3.min(series, function (d) { 
-                    return d.points.length == 0 ? 0 : d3.min(d.points, function (p) { 
-                        return p[0];
-                    });
-                });
-            }
-            if (!chart.axis.rangeVal.max.x) {
-                chart.axis.rangeVal.max.x = d3.max(series, function (d) { 
-                    return d.points.length == 0 ? 1 : d3.max(d.points, function (p) { 
-                        return p[0];
-                    });
-                });
-            }
-            if (visibleSeries.length != 0) {
-                chart.axis.rangeVal.min.y = d3.min(visibleSeries, function (d) { 
-                    return d.points.length == 0 ? 1 : d3.min(d.points, function (p) { 
-                        return p[1];
-                    });
-                });
-                chart.axis.rangeVal.min.y = Math.min(chart.axis.rangeVal.min.y, 0);
-                chart.axis.rangeVal.max.y = d3.max(visibleSeries, function (d) { 
-                    return d.points.length == 0 ? 1 : d3.max(d.points, function (p) { 
-                        return p[1];
-                    });
-                });
-            }
-            xScale.domain([chart.axis.rangeVal.min.x, chart.axis.rangeVal.max.x]).nice();
-            yScale.domain([chart.axis.rangeVal.min.y, chart.axis.rangeVal.max.y]).nice();
-        
-            // Draw lines representing each serie
-            var lineGenerator = d3.line()
-                .x(function(d) { 
-                    return xScale(d[0]);
-                })
-                .y(function(d) { 
-                    return yScale(d[1]);
-                });
-        
-            var areaGenerator = d3.area()
-                .x(function(d) { 
-                    return xScale(d[0]);
-                })
-                .y0(args.size.height - args.padding.bottom - args.padding.top)
-                .y1(function(d) { 
-                    return yScale(d[1]);
-                });
-        
-            // Selection Update
+            chart.updateXYScalesDomain();
+
+            // Draw lines and areas representing each serie
             var serieGroup = seriesGroup.selectAll('.serieGroup').data(series, function(d) { return d.id; });
     
-            serieGroup.select('path.area')
-                .attr('d', function(d) { return areaGenerator(d.points); })
-                .style("opacity", function(d) { return hiddenSerieIds.has(d.id) ? 0 : 1; });
-            serieGroup.select('path.line')
-                .attr('d', function(d) { return lineGenerator(d.points); })
-                .style("opacity", function(d) { return hiddenSerieIds.has(d.id) ? 0 : 1; });
-            serieGroup.select('circle.selection')
-                .attr('cx', function(d) {
-                    if (selectedPoint && d.id == selectedPoint.serieId && d.points.length != 0) {
-                        return xScale(d.points[selectedPoint.pointIndex][0]);
-                    }
-                    return 0;
-                })
-                .attr('cy', function(d) {
-                    if (selectedPoint && d.id == selectedPoint.serieId && d.points.length != 0) {
-                        return yScale(d.points[selectedPoint.pointIndex][1]);
-                    }
-                    return 0;
-                })
-                .style('opacity', function(d) {
-                    return (selectedPoint && d.id == selectedPoint.serieId) ? 1 : 0; 
-                });
-            serieGroup.select('circle.reference')
-                .attr('cx', function(d) {
-                    if (referencedPoint && d.id == referencedPoint.serieId && d.points.length != 0) {
-                        return xScale(d.points[referencedPoint.pointIndex][0]);
-                    }
-                    return 0; 
-                })
-                .attr('cy', function(d) {
-                    if (referencedPoint && d.id == referencedPoint.serieId && d.points.length != 0) {
-                        return yScale(d.points[referencedPoint.pointIndex][1]);
-                    }
-                    return 0; 
-                })
-                .style('opacity', function(d) {
-                    return (referencedPoint && d.id == referencedPoint.serieId) ? 1 : 0; 
-                });
-    
-            // Selection Enter
             var serieGroupEnter = serieGroup.enter()
                 .append('g')
                 .attr('class', 'serieGroup');
             serieGroupEnter.filter(d=>chart.theData.types && chart.theData.types[d.id] == 'area')
                 .append('path')
                 .attr('class', 'area')
-                .attr('d', function(d) { return areaGenerator(d.points); })
                 .style('fill', (d, i) => color(i))
                 .style('stroke', 'none')
                 .style('fill-opacity', 0.2);
             serieGroupEnter
                 .append('path')
                 .attr('class', 'line')
-                .attr('d', function(d) { return lineGenerator(d.points); })
                 .style('stroke', (d, i) => color(i))
                 .style('fill', 'none')
                 .style('stroke-width', 2)
@@ -280,59 +185,32 @@ var myc3 = (function() {
                 .on("mouseout", function(d) { chart.revert(); })
                 .on("mousemove", function() { d3.event.stopPropagation(); })
                 .on('click', function(d) {
-                    var clickedDate = xScale.invert(d3.mouse(this)[0]),
+                    var clickedDate = chart.xScale.invert(d3.mouse(this)[0]),
                         i = bisectDate(d.points, clickedDate, 1),
                         p0 = d.points[i - 1],
                         p1 = d.points[i],
                         iNearest = clickedDate - p0[0] > p1[0] - clickedDate ? i : i - 1;
                     args.data.onclick(d, iNearest);
                 });
+
+            chart.updateCurves();
                 
+            // Draw circles representing a selection and a reference for each serie
             serieGroupEnter
                 .append('circle')
                 .attr('class', 'selection')
                 .attr('r', 3)
-                .attr('cx', function(d) {
-                    if (selectedPoint && d.id == selectedPoint.serieId && d.points.length != 0) {
-                        return xScale(d.points[selectedPoint.pointIndex][0]);
-                    }
-                    return 0; 
-                })
-                .attr('cy', function(d) {
-                    if (selectedPoint && d.id == selectedPoint.serieId && d.points.length != 0) {
-                        return yScale(d.points[selectedPoint.pointIndex][1]);
-                    }
-                    return 0; 
-                })
-                .style('stroke', (d, i) => color(i))
-                .style('stroke-width', 2)
-                .style('opacity', function(d) {
-                    return (selectedPoint && d.id == selectedPoint.serieId) ? 1 : 0; 
-                });
+                .style('stroke-width', 2);
             
             serieGroupEnter
                 .append('circle')
                 .attr('class', 'reference')
                 .attr('r', 2)
-                .attr('cx', function(d) {
-                    if (referencedPoint && d.id == referencedPoint.serieId && d.points.length != 0) {
-                        return xScale(d.points[referencedPoint.pointIndex][0]);
-                    }
-                    return 0; 
-                })
-                .attr('cy', function(d) {
-                    if (referencedPoint && d.id == referencedPoint.serieId && d.points.length != 0) {
-                        return yScale(d.points[referencedPoint.pointIndex][1]);
-                    }
-                    return 0; 
-                })
-                .style('stroke', (d, i) => color(i))
-                .style('stroke-width', 2)
-                .style('opacity', function(d) {
-                    return (referencedPoint && d.id == referencedPoint.serieId) ? 1 : 0; 
-                });
+                .style('stroke-width', 2);
             
-            // Selection Remove
+            chart.updateSelectionCircle();
+            chart.updateReferencedCircle();
+
             serieGroup.exit().remove();
     
             // Draw axes
@@ -354,7 +232,7 @@ var myc3 = (function() {
                 .append('g')
                 .attr('class', 'legend-item')
                 .attr('transform', function(d, i) { return 'translate(' + 0 + ',' + (args.size.height - args.padding.top - 50 + i*15) + ')'; })
-                .style("opacity", function(d) { return hiddenSerieIds.has(d.id) ? 0.3 : 1; })
+                .style("opacity", function(d) { return chart.hiddenSerieIds.has(d.id) ? 0.3 : 1; })
                 .on("mouseover", function(d) { chart.focus(d.id); })
                 .on("mouseout", function(d) { chart.revert(); })
                 .on('click', function(d) { chart.legend.item.onclick(d.id); });
@@ -437,87 +315,195 @@ var myc3 = (function() {
                 return totalLengthList;
             }
         };
+
+        chart.updateXYScalesDomain = function() {
+            var series = chart.theData.series;
+            var visibleSeries = series.filter(s=>!chart.hiddenSerieIds.has(s.id));
+            
+            if (!chart.axis.rangeVal) chart.axis.rangeVal = {};
+            if (!chart.axis.rangeVal.min) chart.axis.rangeVal.min = {};
+            if (!chart.axis.rangeVal.max) chart.axis.rangeVal.max = {};
+            if (!chart.axis.rangeVal.min.x) {
+                chart.axis.rangeVal.min.x = d3.min(series, function (d) { 
+                    return d.points.length == 0 ? 0 : d3.min(d.points, function (p) { 
+                        return p[0];
+                    });
+                });
+            }
+            if (!chart.axis.rangeVal.max.x) {
+                chart.axis.rangeVal.max.x = d3.max(series, function (d) { 
+                    return d.points.length == 0 ? 1 : d3.max(d.points, function (p) { 
+                        return p[0];
+                    });
+                });
+            }
+            if (visibleSeries.length != 0) {
+                chart.axis.rangeVal.min.y = d3.min(visibleSeries, function (d) { 
+                    return d.points.length == 0 ? 1 : d3.min(d.points, function (p) { 
+                        return p[1];
+                    });
+                });
+                chart.axis.rangeVal.min.y = Math.min(chart.axis.rangeVal.min.y, 0);
+                chart.axis.rangeVal.max.y = d3.max(visibleSeries, function (d) { 
+                    return d.points.length == 0 ? 1 : d3.max(d.points, function (p) { 
+                        return p[1];
+                    });
+                });
+            }
+            chart.xScale.domain([chart.axis.rangeVal.min.x, chart.axis.rangeVal.max.x]).nice();
+            chart.yScale.domain([chart.axis.rangeVal.min.y, chart.axis.rangeVal.max.y]).nice();
+        }
+
+        chart.updateCurves = function() {
+            var lineGenerator = d3.line()
+                .x(function(d) { 
+                    return chart.xScale(d[0]);
+                })
+                .y(function(d) { 
+                    return chart.yScale(d[1]);
+                });
+        
+            var areaGenerator = d3.area()
+                .x(function(d) { 
+                    return chart.xScale(d[0]);
+                })
+                .y0(args.size.height - args.padding.bottom - args.padding.top)
+                .y1(function(d) { 
+                    return chart.yScale(d[1]);
+                });
+        
+            var serieGroup = d3.select(args.bindto).selectAll('.serieGroup');
+    
+            serieGroup.select('path.area')
+                .attr('d', function(d) { return areaGenerator(d.points); })
+                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; });
+            serieGroup.select('path.line')
+                .attr('d', function(d) { return lineGenerator(d.points); })
+                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; });
+        }
+    
+        chart.updateSelectionCircle = function() {
+            d3.select(args.bindto).selectAll('.serieGroup').select('circle.selection')
+                .attr('cx', function(d) {
+                    if (chart.selectedPoint && d.id == chart.selectedPoint.serieId && d.points.length != 0) {
+                        return chart.xScale(d.points[chart.selectedPoint.pointIndex][0]);
+                    }
+                    return 0;
+                })
+                .attr('cy', function(d) {
+                    if (chart.selectedPoint && d.id == chart.selectedPoint.serieId && d.points.length != 0) {
+                        return chart.yScale(d.points[chart.selectedPoint.pointIndex][1]);
+                    }
+                    return 0;
+                })
+                .style('stroke', (d, i) => color(i))
+                .style('display', function(d) {
+                    return (chart.selectedPoint && d.id == chart.selectedPoint.serieId) ? null : 'none'; 
+                });
+        }
+    
+        chart.updateReferencedCircle = function() {
+            d3.select(args.bindto).selectAll('.serieGroup').select('circle.reference')
+                .attr('cx', function(d) {
+                    if (chart.referencedPoint && d.id == chart.referencedPoint.serieId && d.points.length != 0) {
+                        return chart.xScale(d.points[chart.referencedPoint.pointIndex][0]);
+                    }
+                    return 0;
+                })
+                .attr('cy', function(d) {
+                    if (chart.referencedPoint && d.id == chart.referencedPoint.serieId && d.points.length != 0) {
+                        return chart.yScale(d.points[chart.referencedPoint.pointIndex][1]);
+                    }
+                    return 0;
+                })
+                .style('stroke', (d, i) => color(i))
+                .style('display', function(d) {
+                    return (chart.referencedPoint && d.id == chart.referencedPoint.serieId) ? null : 'none'; 
+                });
+        }
     
         // ************************************
         // Change data point state to selected.
         // ************************************
         chart.doSelect = function(serieId, index) {
-            selectedPoint = {serieId:serieId, pointIndex:index};
-            chart.draw();
+            chart.selectedPoint = {serieId:serieId, pointIndex:index};
+            chart.updateSelectionCircle();
         };
     
         // **************************************
         // Change data point state to unselected.
         // **************************************
         chart.unselect = function() {
-            selectedPoint = null;
-            chart.draw();
+            chart.selectedPoint = null;
+            chart.updateSelectionCircle();
         };
-    
+
         // **************************************
         // Change data point state to referenced.
         // **************************************
         chart.reference = function(serieId, index) {
-            referencedPoint = {serieId:serieId, pointIndex:index};
-            chart.draw();
+            chart.referencedPoint = {serieId:serieId, pointIndex:index};
+            chart.updateReferencedCircle();
         };
     
         // ****************************************
         // Change data point state to unreferenced.
         // ****************************************
         chart.unreference = function() {
-            referencedPoint = null;
-            chart.draw();
+            chart.referencedPoint = null;
+            chart.updateReferencedCircle();
         };
     
         // *********************************
         // This API hides specified targets.
         // *********************************
         chart.hide = function(serieIds, resetOthers) {
-            if (resetOthers) hiddenSerieIds.clear();
-            serieIds.forEach(function(serieId) {hiddenSerieIds.add(serieId); });
-            chart.draw();
+            if (resetOthers) chart.hiddenSerieIds.clear();
+            serieIds.forEach(function(serieId) {chart.hiddenSerieIds.add(serieId); });
+            chart.updateXYScalesDomain();
+            chart.updateCurves();
         };
     
         // ****************************************************
         // This API toggles (shows or hides) specified targets.
         // ****************************************************
         chart.toggle = function(serieId) {
-            if (hiddenSerieIds.has(serieId)) {
-                hiddenSerieIds.delete(serieId);
+            if (chart.hiddenSerieIds.has(serieId)) {
+                chart.hiddenSerieIds.delete(serieId);
             }
             else {
-                hiddenSerieIds.add(serieId);
+                chart.hiddenSerieIds.add(serieId);
             }
-            chart.draw();
+            chart.updateXYScalesDomain();
+            chart.updateCurves();
         };
     
         // ****************************
         // Get data shown in the chart.
         // ****************************
         chart.shownData = function() {
-            return chart.getData().filter(d=>hiddenSerieIds.has(d.id));
+            return chart.getData().filter(d=>chart.hiddenSerieIds.has(d.id));
         };
     
         // ****************************
         // Get data hidden in the chart.
         // ****************************
         chart.getHiddenSerieIds = function() {
-            return [...hiddenSerieIds];
+            return [...chart.hiddenSerieIds];
         };
     
         // **************************************************************
         // This API highlights specified targets and fade out the others.
         // **************************************************************
         chart.focus = function(serieId) {
-            if (hiddenSerieIds.has(serieId)) return;
+            if (chart.hiddenSerieIds.has(serieId)) return;
     
-            legendGroup.selectAll('.legend-item').filter(d => (d.id != serieId) && !hiddenSerieIds.has(d.id))
+            legendGroup.selectAll('.legend-item').filter(d => (d.id != serieId) && !chart.hiddenSerieIds.has(d.id))
                 .style("opacity", 0.3);
     
-            seriesGroup.selectAll('.serieGroup').filter(d => (d.id != serieId) && !hiddenSerieIds.has(d.id))
+            seriesGroup.selectAll('.serieGroup').filter(d => (d.id != serieId) && !chart.hiddenSerieIds.has(d.id))
                 .style("opacity", 0.3);
-            seriesGroup.selectAll('.serieGroup>path.line').filter(d => (d.id == serieId) && !hiddenSerieIds.has(d.id))
+            seriesGroup.selectAll('.serieGroup>path.line').filter(d => (d.id == serieId) && !chart.hiddenSerieIds.has(d.id))
                 .style('stroke-width', 3);
         };
     
@@ -525,12 +511,12 @@ var myc3 = (function() {
         // This API reverts specified targets.
         // ***********************************
         chart.revert = function() {
-            legendGroup.selectAll('.legend-item').filter(d=>!hiddenSerieIds.has(d.id))
+            legendGroup.selectAll('.legend-item').filter(d=>!chart.hiddenSerieIds.has(d.id))
                 .style("opacity", 1);
     
-            seriesGroup.selectAll('.serieGroup').filter(d=>!hiddenSerieIds.has(d.id))
+            seriesGroup.selectAll('.serieGroup').filter(d=>!chart.hiddenSerieIds.has(d.id))
                 .style("opacity", 1);
-            seriesGroup.selectAll('.serieGroup>path.line').filter(d=>!hiddenSerieIds.has(d.id))
+            seriesGroup.selectAll('.serieGroup>path.line').filter(d=>!chart.hiddenSerieIds.has(d.id))
                 .style('stroke-width', 2);
         };
     
