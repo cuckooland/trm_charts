@@ -55,13 +55,13 @@ var myc3 = (function() {
             .style("display", "none");
     
         // Add the X Axis
-        var xAxis = d3.axisBottom(chart.xScale)
+        chart.xAxis = d3.axisBottom(chart.xScale)
             .ticks(5)
             .tickFormat(d3.timeFormat(args.axis.x.tick.format));
         plotGroup.append("g")
             .attr("transform", "translate(0," + (args.size.height - args.padding.bottom - args.padding.top) + ")")
             .attr("class", "x axis")
-            .call(xAxis);
+            .call(chart.xAxis);
         plotGroup.append("text")
             .attr("class", "x title")
             .attr("fill", "#000")
@@ -71,11 +71,11 @@ var myc3 = (function() {
             .text(args.axis.x.label.text);
     
         // Add the Y Axis
-        var yAxis = d3.axisLeft(chart.yScale)
+        chart.yAxis = d3.axisLeft(chart.yScale)
             .tickFormat(args.axis.y.tick.format);
         plotGroup.append("g")
             .attr("class", "y axis")
-            .call(yAxis);
+            .call(chart.yAxis);
         plotGroup.append("text")
             .attr("class", "y title")
             .attr("fill", "#000")
@@ -166,18 +166,23 @@ var myc3 = (function() {
             // Draw lines and areas representing each serie
             var serieGroup = seriesGroup.selectAll('.serieGroup').data(series, function(d) { return d.id; });
     
+            var lineGenerator0 = chart.lineGenerator0();
+            var areaGenerator0 = chart.areaGenerator0();
+
             var serieGroupEnter = serieGroup.enter()
                 .append('g')
                 .attr('class', 'serieGroup');
             serieGroupEnter.filter(d=>chart.theData.types && chart.theData.types[d.id] == 'area')
                 .append('path')
                 .attr('class', 'area')
+                .attr('d', function(d) { return areaGenerator0(d.points); })
                 .style('fill', (d, i) => color(i))
                 .style('stroke', 'none')
                 .style('fill-opacity', 0.2);
             serieGroupEnter
                 .append('path')
                 .attr('class', 'line')
+                .attr('d', function(d) { return lineGenerator0(d.points); })
                 .style('stroke', (d, i) => color(i))
                 .style('fill', 'none')
                 .style('stroke-width', 2)
@@ -211,17 +216,27 @@ var myc3 = (function() {
             chart.updateSelectionCircle();
             chart.updateReferencedCircle();
 
-            serieGroup.exit().remove();
-    
+            var t = d3.transition().duration(args.transition.duration);
+            var serieGroupExit = serieGroup.exit();
+            serieGroupExit.select('path.area')
+                .transition(t)
+                .attr('d', function(d) { return areaGenerator0(d.points); });
+            serieGroupExit.select('path.line')
+                .transition(t)
+                .attr('d', function(d) { return lineGenerator0(d.points); });
+            serieGroupExit
+                .transition(t)
+                .remove();
+
             // Draw axes
             if (series.length > 0 && series[0].id == HEADCOUNT_ID && chart.axis.rangeVal.max.y < 10) {
-                yAxis.ticks(chart.axis.rangeVal.max.y);
+                chart.yAxis.ticks(chart.axis.rangeVal.max.y);
             }
             else {
-                yAxis.ticks(10);
+                chart.yAxis.ticks(10);
             }
-            plotGroup.select('.x.axis').call(xAxis);
-            plotGroup.select('.y.axis').call(yAxis);
+            plotGroup.select('.x.axis').call(chart.xAxis);
+            plotGroup.select('.y.axis').call(chart.yAxis);
     
             plotGroup.select('.x.title').text(chart.axis.x.label.text);
             plotGroup.select('.y.title').text(chart.axis.y.label.text);
@@ -354,16 +369,18 @@ var myc3 = (function() {
             chart.yScale.domain([chart.axis.rangeVal.min.y, chart.axis.rangeVal.max.y]).nice();
         }
 
-        chart.updateCurves = function() {
-            var lineGenerator = d3.line()
+        chart.lineGenerator = function() {
+            return d3.line()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
                 })
                 .y(function(d) { 
                     return chart.yScale(d[1]);
                 });
+        }
         
-            var areaGenerator = d3.area()
+        chart.areaGenerator = function() {
+            return d3.area()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
                 })
@@ -371,19 +388,61 @@ var myc3 = (function() {
                 .y1(function(d) { 
                     return chart.yScale(d[1]);
                 });
+        }
+        
+        chart.lineGenerator0 = function() {
+            return d3.line()
+                .x(function(d) { 
+                    return chart.xScale(d[0]);
+                })
+                .y(function(d) { 
+                    return chart.yScale(0);
+                });
+        }
+        
+        chart.areaGenerator0 = function() {
+            return d3.area()
+                .x(function(d) { 
+                    return chart.xScale(d[0]);
+                })
+                .y0(args.size.height - args.padding.bottom - args.padding.top)
+                .y1(function(d) { 
+                    return chart.yScale(0);
+                });
+        }
+        
+        chart.updateCurves = function() {
+            var lineGenerator = chart.lineGenerator();
+            var areaGenerator = chart.areaGenerator();
         
             var serieGroup = d3.select(args.bindto).selectAll('.serieGroup');
+            var t = d3.transition().duration(args.transition.duration);
     
             serieGroup.select('path.area')
-                .attr('d', function(d) { return areaGenerator(d.points); })
-                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; });
+                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
+                .transition(t)
+                .attr('d', function(d) { return areaGenerator(d.points); });
             serieGroup.select('path.line')
-                .attr('d', function(d) { return lineGenerator(d.points); })
-                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; });
+                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
+                .transition(t)
+                .attr('d', function(d) { return lineGenerator(d.points); });
+
+            plotGroup.select('.x.axis')
+                .transition(t)
+                .call(chart.xAxis);
+            plotGroup.select('.y.axis')
+                .transition(t)
+                .call(chart.yAxis);
         }
-    
+            
         chart.updateSelectionCircle = function() {
+            var t = d3.transition().duration(args.transition.duration);
             d3.select(args.bindto).selectAll('.serieGroup').select('circle.selection')
+                .style('stroke', (d, i) => color(i))
+                .style('display', function(d) {
+                    return (chart.selectedPoint && d.id == chart.selectedPoint.serieId) ? null : 'none'; 
+                })
+                .transition(t)
                 .attr('cx', function(d) {
                     if (chart.selectedPoint && d.id == chart.selectedPoint.serieId && d.points.length != 0) {
                         return chart.xScale(d.points[chart.selectedPoint.pointIndex][0]);
@@ -395,10 +454,6 @@ var myc3 = (function() {
                         return chart.yScale(d.points[chart.selectedPoint.pointIndex][1]);
                     }
                     return 0;
-                })
-                .style('stroke', (d, i) => color(i))
-                .style('display', function(d) {
-                    return (chart.selectedPoint && d.id == chart.selectedPoint.serieId) ? null : 'none'; 
                 });
         }
     
