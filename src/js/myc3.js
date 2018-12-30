@@ -175,14 +175,14 @@ var myc3 = (function() {
             serieGroupEnter.filter(d=>chart.theData.types && chart.theData.types[d.id] == 'area')
                 .append('path')
                 .attr('class', 'area')
-                .attr('d', function(d) { return areaGenerator0(d.points); })
+                .attr('d', function(d) { return chart.areaGenerator0(chart.theData.types[d.id])(d.points); })
                 .style('fill', (d, i) => color(i))
                 .style('stroke', 'none')
                 .style('fill-opacity', 0.2);
             serieGroupEnter
                 .append('path')
                 .attr('class', 'line')
-                .attr('d', function(d) { return lineGenerator0(d.points); })
+                .attr('d', function(d) { return chart.lineGenerator0(chart.theData.types[d.id])(d.points); })
                 .style('stroke', (d, i) => color(i))
                 .style('fill', 'none')
                 .style('stroke-width', 2)
@@ -220,10 +220,10 @@ var myc3 = (function() {
             var serieGroupExit = serieGroup.exit();
             serieGroupExit.select('path.area')
                 .transition(t)
-                .attr('d', function(d) { return areaGenerator0(d.points); });
+                .attr('d', function(d) { return chart.areaGenerator0(chart.theData.types[d.id])(d.points); });
             serieGroupExit.select('path.line')
                 .transition(t)
-                .attr('d', function(d) { return lineGenerator0(d.points); });
+                .attr('d', function(d) { return chart.lineGenerator0(chart.theData.types[d.id])(d.points); });
             serieGroupExit
                 .transition(t)
                 .remove();
@@ -369,17 +369,36 @@ var myc3 = (function() {
             chart.yScale.domain([chart.axis.rangeVal.min.y, chart.axis.rangeVal.max.y]).nice();
         }
 
-        chart.lineGenerator = function() {
+        chart.lineCurveFactory = function(curveType) {
+            if (!curveType) {
+                return d3.curveLinear;
+            }
+            switch (curveType) {
+                case 'line' :
+                case 'area':
+                    return d3.curveLinear;
+                
+                case 'area_step_after':
+                case 'step_after':
+                    return d3.curveStepAfter
+            
+                default:
+                    throw new Error(curveType + " is an unknown curve type");
+            }
+        }
+        
+        chart.lineGenerator = function(curveType) {
             return d3.line()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
                 })
                 .y(function(d) { 
                     return chart.yScale(d[1]);
-                });
+                })
+                .curve(chart.lineCurveFactory(curveType));
         }
-        
-        chart.areaGenerator = function() {
+
+        chart.areaGenerator = function(curveType) {
             return d3.area()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
@@ -387,20 +406,22 @@ var myc3 = (function() {
                 .y0(args.size.height - args.padding.bottom - args.padding.top)
                 .y1(function(d) { 
                     return chart.yScale(d[1]);
-                });
+                })
+                .curve(chart.lineCurveFactory(curveType));
         }
         
-        chart.lineGenerator0 = function() {
+        chart.lineGenerator0 = function(curveType) {
             return d3.line()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
                 })
                 .y(function(d) { 
                     return chart.yScale(0);
-                });
+                })
+                .curve(chart.lineCurveFactory(curveType));
         }
         
-        chart.areaGenerator0 = function() {
+        chart.areaGenerator0 = function(curveType) {
             return d3.area()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
@@ -408,24 +429,22 @@ var myc3 = (function() {
                 .y0(args.size.height - args.padding.bottom - args.padding.top)
                 .y1(function(d) { 
                     return chart.yScale(0);
-                });
+                })
+                .curve(chart.lineCurveFactory(curveType));
         }
         
         chart.updateCurves = function() {
-            var lineGenerator = chart.lineGenerator();
-            var areaGenerator = chart.areaGenerator();
-        
             var serieGroup = d3.select(args.bindto).selectAll('.serieGroup');
             var t = d3.transition().duration(args.transition.duration);
     
             serieGroup.select('path.area')
                 .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .transition(t)
-                .attr('d', function(d) { return areaGenerator(d.points); });
+                .attr('d', function(d) { return chart.areaGenerator(chart.theData.types[d.id])(d.points); });
             serieGroup.select('path.line')
                 .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .transition(t)
-                .attr('d', function(d) { return lineGenerator(d.points); });
+                .attr('d', function(d) { return chart.lineGenerator(chart.theData.types[d.id])(d.points); });
 
             plotGroup.select('.x.axis')
                 .transition(t)

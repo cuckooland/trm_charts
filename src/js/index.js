@@ -27,6 +27,10 @@ var NONBREAKING_SPACE = String.fromCharCode(0xA0);
 
 var DATE_PATTERN = "%d-%m-%Y";
 
+var LINEAR_CURVE = 'L';
+
+var STEP_AFTER_CURVE = 'SA';
+
 var LOG_UNIT_SUFFIX = " [log]";
 
 var AVERAGE_ID = "average";
@@ -157,6 +161,7 @@ var curTabId = "";
 var curSelectedDataId = "";
 var selectedPointIndex = -1;
 var commentedId = "";
+var curveType = LINEAR_CURVE;
 
 window.addEventListener('popstate', function(e) {
     var encodedURI = e.state;
@@ -221,7 +226,7 @@ function fillForms() {
     d3.select('#TimeUpperBound').property("value", toYearRep(money.timeUpperBoundInYears));
     d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
     d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
-    d3.select('#MonthRes').property("checked", money.timeResolution === money.MONTH);
+    d3.select('#StepCurves').property("checked", curveType == STEP_AFTER_CURVE);
     d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
     d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
     d3.select('#MaxDemography').property("value", money.maxDemography);
@@ -255,7 +260,7 @@ function generateC3Charts() {
     generateDividendChart();
     generateHeadcountChart();
     generateMonetarySupplyChart();
-    setChartTimeBounds();
+    updateChartAttibutes();
 }
 
 function addTabEffectsFromHtml() {
@@ -538,7 +543,7 @@ function initCallbacks() {
     d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
     d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
     d3.select("#LogScale").on("click", changeLogScale);
-    d3.select("#MonthRes").on("click", changeMonthRes);
+    d3.select("#StepCurves").on("click", changeStepCurves);
     d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
     d3.select("#TimeUpperBound").on("change", changeTimeUpperBound);
     d3.select("#MaxDemography").on("change", changeMaxDemography);
@@ -577,6 +582,7 @@ function asEncodedURI() {
         sc : {
             hs : monetarySupplyChart.getHiddenSerieIds()
         },
+        ct: curveType,
         a : document.getElementById("AccountSelector").selectedIndex,
         tr : document.getElementById("TransactionSelector").selectedIndex,
         s : curSelectedDataId,
@@ -611,6 +617,7 @@ function applyEncodedURI(encodedURI) {
 }
 
 function applyJSonRep(jsonRep) {
+    curveType = jsonRep.g.ct;
     money.applyJSonRep(jsonRep.m);
     
     unselectChartPoints();
@@ -789,6 +796,14 @@ function joinTransactionSelectorToData() {
     options.exit().remove();
 };
 
+function lineCurveType() {
+    return (curveType == LINEAR_CURVE) ? 'line' : 'step_after';
+}
+
+function areaCurveType() {
+    return (curveType == LINEAR_CURVE) ? 'area' : 'area_step_after';
+}
+
 function generateAccountsData() {
 	var accountsData = {
         xFormat: DATE_PATTERN,
@@ -798,7 +813,8 @@ function generateAccountsData() {
         },
         series: [],
         types: {
-            average: 'area'
+            average: areaCurveType(),
+            stableAverage: lineCurveType()
         },
         onclick: function(d, i) {
             commentChartData(accountsChart, d.id, i);
@@ -833,6 +849,7 @@ function generateAccountsData() {
             }
             accountsData.series.push(accountSerie);
             accountsData.names[accountSerie.id] = accountName3(money.accounts[iAccount]);
+            accountsData.types[accountSerie.id] = lineCurveType();
         }
     }
 
@@ -893,7 +910,8 @@ function generateDividendData() {
         },
         series: [],
         types: {
-            dividend: 'area'
+            dividend: areaCurveType(),
+            stableDividend: lineCurveType()
         },
         onclick: function(d, i) {
             commentChartData(dividendChart, d.id, i);
@@ -928,7 +946,7 @@ function generateHeadcountData() {
         },
         series: [],
         types: {
-            headcount: 'area'
+            headcount: areaCurveType()
         },
         onmouseover : function(d) { 
             showAllTooltips(headcountChart, d);
@@ -962,7 +980,8 @@ function generateMonetarySupplyData() {
         },
         series: [],
         types: {
-            monetarySupply: 'area'
+            monetarySupply: areaCurveType(),
+            stableMonetarySupply: lineCurveType()
         },
         onclick: function(d, i) {
             commentChartData(monetarySupplyChart, d.id, i);
@@ -1513,7 +1532,7 @@ function updateChartData() {
     headcountChart.load(headcountData);
     monetarySupplyChart.load(monetarySupplyData);
     
-    setChartTimeBounds();
+    updateChartAttibutes();
 }
 
 function searchChartWithData(c3DataId) {
@@ -1607,23 +1626,22 @@ function accountTypeLabel(account) {
 function accountAgeLabel(account, timeStep) {
     var year = 0;
     var month = 0;
-    var timeResolution = money.getTimeResolution();
-    if (timeResolution === money.MONTH) {
+    if (money.growthTimeUnit === money.MONTH) {
         year = Math.trunc(timeStep / 12)  - account.birth;
         month = timeStep % 12;
     }
-    else if (timeResolution === money.YEAR) {
+    else if (money.growthTimeUnit === money.YEAR) {
         year = timeStep - account.birth;
         month = 0;
     }
     else {
-        throw new Error("Time resolution not managed: " + timeResolution);
+        throw new Error("Time resolution not managed: " + money.growthTimeUnit);
     }
     if (year == 0 && month == 0) {
-        if (timeResolution === money.MONTH) {
+        if (money.growthTimeUnit === money.MONTH) {
             return "0 mois";
         }
-        else if (timeResolution === money.YEAR) {
+        else if (money.growthTimeUnit === money.YEAR) {
             return "0 année";
         }
     }
@@ -1734,7 +1752,7 @@ function enableTransactionArea() {
 }
 
 function asDate(timeStep, timeUnit) {
-    timeUnit = timeUnit || money.getTimeResolution();
+    timeUnit = timeUnit || money.growthTimeUnit;
     
     if (timeUnit === money.MONTH) {
         return new Date(2000 + Math.trunc(timeStep / 12), timeStep % 12, 1);
@@ -1837,7 +1855,7 @@ function enableAddedAccountArea() {
     }
 }
 
-function setChartTimeBounds() {
+function updateChartAttibutes() {
     var lowerBoundDate = asFormattedDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
     var upperBoundDate = asFormattedDate(money.getTimeUpperBound(money.YEAR), money.YEAR);
     accountsChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
@@ -2514,12 +2532,12 @@ function changeLogScale() {
     pushNewHistoryState();
 }
 
-function changeMonthRes() {
+function changeStepCurves() {
     if (this.checked) {
-        money.timeResolution = money.MONTH;
+        curveType = STEP_AFTER_CURVE;
     }
     else {
-        money.timeResolution = money.YEAR;
+        curveType = LINEAR_CURVE;
     }
     
     updateChartData();

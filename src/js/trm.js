@@ -70,8 +70,6 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.calculateGrowth = this.CALCULATE_GROWTH;
     // {String} Indicate the rythm of the dividend creation (YEAR or MONTH)
     this.growthTimeUnit = this.YEAR;
-    // {String} Indicate the time interval between two points (YEAR or MONTH)
-    this.timeResolution = this.growthTimeUnit;
     // {int} Order of magnitude of the maximum demography
     this.maxDemography = this.MAX_DEMOGRAPHY;
     this.xMinDemography = this.XMIN_DEMOGRAPHY;
@@ -218,20 +216,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     };
    
     this.previousTimeStep = function(timeStep) {
-        if (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH) {
-            return timeStep - 12;
-        }
         return timeStep - 1;
-    }
-    
-    this.getTimeResolution = function() {
-        if (this.growthTimeUnit === this.MONTH || (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH)) {
-            return this.MONTH;
-        }
-        if (this.growthTimeUnit === this.YEAR) {
-            return this.YEAR;
-        }
-        throw new Error("Time unit not managed: " + this.growthTimeUnit);
     }
     
     // population variation profiles
@@ -362,15 +347,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             }
         }
         
-        var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
-        if (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH && (timeStep - moneyBirthStep) % 12 != 0) {
-            headcount = this.headcounts.values[timeStep - 1];
-        }
-        else {
-            headcount = headcount + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
-        }
-
-        return headcount;
+        return headcount + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
     };
 
     this.asJSonRep = function() {
@@ -392,7 +369,6 @@ var libreMoneyClass = function(lifeExpectancy) {
             ud0 : this.dividendStart,
             tm : this.timeLowerBoundInYears,
             tM : this.timeUpperBoundInYears,
-            tR : this.timeResolution,
             cc : this.calculateGrowth,
             cu : this.growthTimeUnit,
             c : this.growth,
@@ -439,7 +415,6 @@ var libreMoneyClass = function(lifeExpectancy) {
         this.dividendStart = jsonRep.ud0;
         this.timeLowerBoundInYears = jsonRep.tm;
         this.timeUpperBoundInYears = jsonRep.tM;
-        this.timeResolution = jsonRep.tR;
         this.calculateGrowth = jsonRep.cc;
         this.growthTimeUnit = jsonRep.cu;
         this.growth = jsonRep.c;
@@ -494,13 +469,8 @@ var libreMoneyClass = function(lifeExpectancy) {
             dividend = this.getDividendStart();
         }
         else if (timeStep > moneyBirthStep) {
-            if (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH && (timeStep - moneyBirthStep) % 12 != 0) {
-                dividend = this.dividends.values[timeStep - 1];
-            }
-            else {
-              // After first issuance, calculate next dividend depending on formula...
-                dividend = this.udFormulas[this.udFormulaKey].calculate(this, timeStep);
-            }
+            // After first issuance, calculate next dividend depending on formula...
+            dividend = this.udFormulas[this.udFormulaKey].calculate(this, timeStep);
         }
         return dividend;
     };
@@ -516,11 +486,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             var currentDividend = this.getDividend(timeStep);
             var currentDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
             monetarySupply = this.getMonetarySupply(timeStep - 1);
-            if (this.growthTimeUnit === this.MONTH 
-                || (this.growthTimeUnit === this.YEAR && this.timeResolution === this.YEAR)
-                || (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH && (timeStep - moneyBirthStep) % 12 == 0)) {
-                monetarySupply += currentDemography * currentDividend;
-            }
+            monetarySupply += currentDemography * currentDividend;
         }
 
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
@@ -550,12 +516,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         var birthStep = this.getTimeStep(account.birth, this.YEAR);
         if (this.isAlive(account, timeStep) && this.isCoCreator(account)) {
             // Add a dividend coming from producer
-            var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
-            if (this.growthTimeUnit === this.MONTH 
-                || (this.growthTimeUnit === this.YEAR && this.timeResolution === this.YEAR)
-                || (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH && (timeStep - moneyBirthStep) % 12 == 0)) {
-                accountIncrease = this.getDividend(timeStep);
-            }
+            accountIncrease = this.getDividend(timeStep);
         }
 
         var startingRatio = account.startingPercentage / 100;
@@ -653,16 +614,9 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
 
     this.validTransactionDate = function(transaction, timeStep) {
-        var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
-        if (this.growthTimeUnit === this.MONTH 
-            || (this.growthTimeUnit === this.YEAR && this.timeResolution === this.YEAR)
-            || (this.growthTimeUnit === this.YEAR && this.timeResolution === this.MONTH && (timeStep - moneyBirthStep) % 12 == 0)) {
-
-            var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
-            var lastTransStep = this.getTimeStep(transaction.year, this.YEAR) + this.getTimeStep(transaction.repetitionCount - 1, this.growthTimeUnit);
-            return timeStep >= firstTransStep && timeStep <= lastTransStep;
-        }
-        return false;
+        var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
+        var lastTransStep = this.getTimeStep(transaction.year, this.YEAR) + this.getTimeStep(transaction.repetitionCount - 1, this.growthTimeUnit);
+        return timeStep >= firstTransStep && timeStep <= lastTransStep;
     }
 
     this.getAverage = function(timeStep) {
@@ -788,7 +742,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
        
     this.getTimeUpperBound = function(timeUnit) {
-        timeUnit = timeUnit || this.getTimeResolution();
+        timeUnit = timeUnit || this.growthTimeUnit;
         if (timeUnit === this.MONTH) {
             return 12 * this.timeUpperBoundInYears;
         }
@@ -806,7 +760,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
     
     this.getTimeLowerBound = function(timeUnit) {
-        timeUnit = timeUnit || this.getTimeResolution();
+        timeUnit = timeUnit || this.growthTimeUnit;
         if (timeUnit === this.MONTH) {
             return 12 * this.timeLowerBoundInYears;
         }
@@ -824,8 +778,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
     
     this.getTimeStep = function(timeValue, timeUnit) {
-        var timeResolution = this.getTimeResolution();
-        if (timeUnit === timeResolution) {
+        if (timeUnit === this.growthTimeUnit) {
             return timeValue;
         }
         if (timeUnit === this.MONTH) {
@@ -838,8 +791,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
    
     this.getTimeValue = function(timeStep, timeUnit) {
-        var timeResolution = this.getTimeResolution();
-        if (timeUnit === timeResolution) {
+        if (timeUnit === this.growthTimeUnit) {
             return timeStep;
         }
         if (timeUnit === this.YEAR) {

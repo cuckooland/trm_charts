@@ -55,6 +55,7 @@ var configs1 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 0,
             com: "config1-1"
         }
@@ -114,6 +115,7 @@ var configs1 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "SA",
             a: 0,
             com: "config1-2"
         }
@@ -173,6 +175,7 @@ var configs1 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 0,
             com: "config1-3"
         }
@@ -232,6 +235,7 @@ var configs1 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 0,
             com: "config1-4"
         }
@@ -302,6 +306,7 @@ var configs2 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 1,
             com: "config2-1"
         }
@@ -367,6 +372,7 @@ var configs2 = {
             sc: {
                 hs: []
             },
+            ct: "L",
             a: 1,
             com: "config2-2"
         }
@@ -446,6 +452,7 @@ var configs2 = {
             sc: {
                 hs: []
             },
+            ct: "L",
             a: 3,
             com: "config2-3"
         }
@@ -544,6 +551,7 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
+            ct: "L",
             a: 1,
             tr: 1,
             s: "",
@@ -640,6 +648,7 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
+            ct: "L",
             a: 1,
             tr: 1,
             s: "",
@@ -736,6 +745,7 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
+            ct: "L",
             a: 1,
             tr: 1,
             s: "",
@@ -824,6 +834,7 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 2,
             tr: -1,
             s: "",
@@ -925,6 +936,7 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 3,
             tr: 0,
             s: "",
@@ -1015,6 +1027,7 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 3,
             tr: -1,
             s: "",
@@ -1123,6 +1136,7 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 4,
             tr: 0,
             s: "",
@@ -1213,6 +1227,7 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 3,
             tr: -1,
             s: "",
@@ -1321,6 +1336,7 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
+            ct: "L",
             a: 4,
             tr: 0,
             s: "",
@@ -1387,6 +1403,7 @@ var configs5 = {
             sc: {
                 hs: []
             },
+            ct: "L",
             a: 0,
             com: "config4-1"
         }
