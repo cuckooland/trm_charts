@@ -134,6 +134,11 @@ var money = {};
 // Create instance of class in context with constructor parameters
 libreMoneyClass.call(money);
 
+var accountsChart;
+var dividendChart;
+var headcountChart;
+var monetarySupplyChart;
+
 var workshops = [
     {
         jsonRep: configs1,
@@ -176,7 +181,6 @@ initSelectors();
 addTabEffectsFromHtml();
 
 generateC3Charts();
-addChartEffectsFromHtml();
 
 if (!applyEncodedURIFromLocation()) {
     applyJSonRep(configs1['config1-1']);
@@ -186,6 +190,7 @@ if (!applyEncodedURIFromLocation()) {
     window.history.replaceState(encodedURI, '', '?' + encodedURI);
 }
 
+addChartEffectsFromHtml();
 initCallbacks();
 
 // Add date value buttons
@@ -260,7 +265,6 @@ function generateC3Charts() {
     generateDividendChart();
     generateHeadcountChart();
     generateMonetarySupplyChart();
-    updateChartAttibutes();
 }
 
 function addTabEffectsFromHtml() {
@@ -430,7 +434,7 @@ function addChartEffectsFromHtml() {
             setReferenceFrameSelection(money);
         }
         updateAccountYLabels();
-        updateChartData();
+        redrawCharts();
 
         commentChartData(clickedSerieAttributes.chart, clickedSerieId, toSelectIndex);
         pushNewHistoryState();
@@ -641,7 +645,7 @@ function applyJSonRep(jsonRep) {
     updateTimeXLabels();
     updateAccountYLabels();
     updateTransactionArea();
-    updateChartData();
+    redrawCharts();
     openTab(jsonRep.g.t);
     if (jsonRep.g.s) {
         var chart = searchChartWithData(jsonRep.g.s);
@@ -1211,7 +1215,9 @@ function generateAccountsChart() {
                 tick: {
                     format: DATE_PATTERN,
                     count: 2
-                }
+                },
+                min: asDate(money.getTimeLowerBound(money.YEAR), money.YEAR),
+                max: asDate(money.getTimeUpperBound(money.YEAR), money.YEAR)
             },
             y: {
                 label: {
@@ -1280,7 +1286,9 @@ function generateDividendChart() {
                 tick: {
                     format: DATE_PATTERN,
                     count: 2 
-                }
+                },
+                min: asDate(money.getTimeLowerBound(money.YEAR), money.YEAR),
+                max: asDate(money.getTimeUpperBound(money.YEAR), money.YEAR)
             },
             y: {
                 label: {
@@ -1350,7 +1358,9 @@ function generateHeadcountChart() {
                 tick: {
                     format: DATE_PATTERN,
                     count: 2
-                }
+                },
+                min: asDate(money.getTimeLowerBound(money.YEAR), money.YEAR),
+                max: asDate(money.getTimeUpperBound(money.YEAR), money.YEAR)
             },
             y: {
                 label: {
@@ -1421,7 +1431,9 @@ function generateMonetarySupplyChart() {
                 tick: {
                     format: DATE_PATTERN,
                     count: 2
-                }
+                },
+                min: asDate(money.getTimeLowerBound(money.YEAR), money.YEAR),
+                max: asDate(money.getTimeUpperBound(money.YEAR), money.YEAR)
             },
             y: {
                 label: {
@@ -1515,9 +1527,9 @@ function withExp(siValue) {
 }
 
 /**
- * Update chart data
+ * Update chart data ans redraw
  */
-function updateChartData() {
+function redrawCharts() {
 
     // calculate C3 data
     money.generateData();
@@ -1532,7 +1544,17 @@ function updateChartData() {
     headcountChart.load(headcountData);
     monetarySupplyChart.load(monetarySupplyData);
     
-    updateChartAttibutes();
+    var lowerBoundDate = asDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
+    var upperBoundDate = asDate(money.getTimeUpperBound(money.YEAR), money.YEAR);
+    accountsChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    dividendChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    headcountChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    monetarySupplyChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+
+    accountsChart.draw();
+    dividendChart.draw();
+    headcountChart.draw();
+    monetarySupplyChart.draw();
 }
 
 function searchChartWithData(c3DataId) {
@@ -1553,7 +1575,7 @@ function deleteAccount() {
     var accounts = money.deleteAccount(selectedAccountIndex);
     // If account deleted...
     if (accounts != false && accounts.length > 0) {
-        updateChartData();
+        redrawCharts();
         joinAccountSelectorsToData();
         document.getElementById("AccountSelector").selectedIndex = selectedAccountIndex - 1;
         updateAddedAccountArea();
@@ -1580,7 +1602,7 @@ function getSelectedAccountIndex() {
 function addAccount() {
     money.addAccount();
     
-    updateChartData();
+    redrawCharts();
     joinAccountSelectorsToData();
     document.getElementById("AccountSelector").selectedIndex = money.accounts.length - 1;
     updateAddedAccountArea();
@@ -1676,7 +1698,7 @@ function deleteTransaction() {
     var transactions = money.deleteTransaction(selectedTransactionIndex);
     // If transaction deleted...
     if (transactions != false && transactions.length > 0) {
-        updateChartData();
+        redrawCharts();
         joinTransactionSelectorToData();
         if (selectedTransactionIndex > 0) {
             document.getElementById("TransactionSelector").selectedIndex = selectedTransactionIndex - 1;
@@ -1725,7 +1747,7 @@ function getTransactionDestIndex() {
  */
 function addTransaction() {
     money.addTransaction();
-    updateChartData();
+    redrawCharts();
     joinTransactionSelectorToData();
     document.getElementById("TransactionSelector").selectedIndex = money.transactions.length - 1;
     updateTransactionArea();
@@ -1853,15 +1875,6 @@ function enableAddedAccountArea() {
         d3.select('#AccountBirth').attr('disabled', 'disabled');
         d3.select('#DeleteAccount').attr('disabled', 'disabled');
     }
-}
-
-function updateChartAttibutes() {
-    var lowerBoundDate = asFormattedDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
-    var upperBoundDate = asFormattedDate(money.getTimeUpperBound(money.YEAR), money.YEAR);
-    accountsChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
-    dividendChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
-    headcountChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
-    monetarySupplyChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
 }
 
 function accountYLabel() {
@@ -2317,14 +2330,14 @@ function changeTransactionSelection() {
 function changeTransactionSrcSelection() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     selectedTransaction.from = getTransAccounts()[getTransactionSrcIndex()];
-    updateChartData();
+    redrawCharts();
     pushNewHistoryState();
 }
 
 function changeTransactionDestSelection() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     selectedTransaction.to = getTransAccounts()[getTransactionDestIndex()];
-    updateChartData();
+    redrawCharts();
     pushNewHistoryState();
 }
 
@@ -2333,7 +2346,7 @@ function changeTransactionYear() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     if (transactionYear >= 0 && transactionYear < 200) {
         selectedTransaction.year = transactionYear;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#TransactionYear').property("value", toYearRep(selectedTransaction.year));
@@ -2346,7 +2359,7 @@ function changeTransactionRep() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     if (transactionRep > 0 && transactionRep < money.getTimeStep(200, money.YEAR)) {
         selectedTransaction.repetitionCount = transactionRep;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#TransactionRep').property("value", selectedTransaction.repetitionCount);
@@ -2359,7 +2372,7 @@ function changeTransactionAmount() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     if (transactionAmount >= 0) {
         selectedTransaction.amount = transactionAmount;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#TransactionAmount').property("value", selectedTransaction.amount);
@@ -2370,7 +2383,7 @@ function changeTransactionAmount() {
 function changeTransactionRefSelection() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     selectedTransaction.amountRef = this.options[this.selectedIndex].value;
-    updateChartData();
+    redrawCharts();
     pushNewHistoryState();
 }
 
@@ -2390,7 +2403,7 @@ function changeReferenceFrame() {
         
     updateAccountYLabels();
     
-    updateChartData();
+    redrawCharts();
     comment(money.referenceFrameKey + 'Ref');
     pushNewHistoryState();
 }
@@ -2424,7 +2437,7 @@ function updateTimeXLabels() {
 
 function changeUdFormula() {
     money.udFormulaKey = this.options[this.selectedIndex].value;
-    updateChartData();
+    redrawCharts();
     comment(money.udFormulaKey);
     pushNewHistoryState();
 }
@@ -2432,7 +2445,7 @@ function changeUdFormula() {
 function changeDemographicProfile() {
     money.demographicProfileKey = this.options[this.selectedIndex].value;
     enableDemographyFields();
-    updateChartData();
+    redrawCharts();
     comment(money.demographicProfileKey);
     pushNewHistoryState();
 }
@@ -2456,21 +2469,21 @@ function changeRythm() {
     
     enableGrowthForms(money.calculateGrowth);
     enableUD0Forms();
-    updateChartData();
+    redrawCharts();
     comment(this.value);
     pushNewHistoryState();
 }
 
 function changeLifeExpectancy() {
     money.lifeExpectancy = parseInt(this.value);
-    updateChartData();
+    redrawCharts();
     updateCalculateGrowth();
     pushNewHistoryState();
 }
 
 function changeAnnualGrowth() {
 	money.growth = parseFloat(this.value) / 100;
-    updateChartData();
+    redrawCharts();
     d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
     d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
     pushNewHistoryState();
@@ -2478,7 +2491,7 @@ function changeAnnualGrowth() {
 
 function changeMonthlyGrowth() {
 	money.growth = parseFloat(this.value) / 100;
-    updateChartData();
+    redrawCharts();
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
     d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
     pushNewHistoryState();
@@ -2488,7 +2501,7 @@ function changeCalculateGrowth() {
     money.calculateGrowth = this.checked;
     
     enableGrowthForms(money.calculateGrowth);
-    updateChartData();
+    redrawCharts();
     updateCalculateGrowth();
     comment(this.id);
     pushNewHistoryState();
@@ -2510,14 +2523,14 @@ function updateCalculateGrowth() {
 
 function changeAnnualDividendStart() {
     money.dividendStart = parseFloat(this.value);
-    updateChartData();
+    redrawCharts();
     d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
     pushNewHistoryState();
 }
 
 function changeMonthlyDividendStart() {
     money.dividendStart = parseFloat(this.value);
-    updateChartData();
+    redrawCharts();
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
     pushNewHistoryState();
 }
@@ -2527,7 +2540,7 @@ function changeLogScale() {
     
     updateAccountYLabels();
     
-    updateChartData();
+    redrawCharts();
     comment(this.id);
     pushNewHistoryState();
 }
@@ -2540,7 +2553,7 @@ function changeStepCurves() {
         curveType = LINEAR_CURVE;
     }
     
-    updateChartData();
+    redrawCharts();
     comment(this.id);
     pushNewHistoryState();
 }
@@ -2549,7 +2562,7 @@ function changeTimeLowerBound() {
     var timeLowerBound = fromYearRep(parseInt(this.value));
     if (timeLowerBound >= 0 && timeLowerBound < 200) {
         money.setTimeLowerBound(timeLowerBound); 
-        updateChartData();
+        redrawCharts();
         d3.select('#TimeUpperBound').property("value", toYearRep(money.getTimeUpperBound(money.YEAR)));
     }
     else {
@@ -2562,7 +2575,7 @@ function changeTimeUpperBound() {
     var timeUpperBound = fromYearRep(parseInt(this.value));
     if (timeUpperBound > 0 && timeUpperBound <= 200) {
         money.setTimeUpperBound(timeUpperBound); 
-        updateChartData();
+        redrawCharts();
         d3.select('#TimeLowerBound').property("value", toYearRep(money.getTimeLowerBound(money.YEAR)));
     }
     else {
@@ -2575,7 +2588,7 @@ function changeMaxDemography() {
     var maxDemography = parseInt(this.value);
     if (maxDemography >= 0 && maxDemography < 1000000) {
         money.maxDemography = maxDemography;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#MaxDemography').property("value", money.maxDemography);
@@ -2587,7 +2600,7 @@ function changeXMinDemography() {
     var xMinDemography = fromYearRep(parseInt(this.value));
     if (xMinDemography >= 0 && xMinDemography < 200) {
         money.xMinDemography = xMinDemography;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#xMinDemography').property("value", toYearRep(money.xMinDemography));
@@ -2599,7 +2612,7 @@ function changeXMaxDemography() {
     var xMaxDemography = fromYearRep(parseInt(this.value));
     if (xMaxDemography >= 1 && xMaxDemography < 199) {
         money.xMaxDemography = xMaxDemography;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#xMaxDemography').property("value", toYearRep(money.xMaxDemography));
@@ -2611,7 +2624,7 @@ function changeXMpvDemography() {
     var xMpvDemography = fromYearRep(parseInt(this.value));
     if (xMpvDemography >= 1 && xMpvDemography < 199) {
         money.xMpvDemography = xMpvDemography;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#xMpvDemography').property("value", toYearRep(money.xMpvDemography));
@@ -2623,7 +2636,7 @@ function changePlateauDemography() {
     var plateauDemography = parseInt(this.value);
     if (plateauDemography >= 0 && plateauDemography < 199) {
         money.plateauDemography = plateauDemography;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#plateauDemography').property("value", money.plateauDemography);
@@ -2635,7 +2648,7 @@ function changeXScaleDemography() {
     var xScaleDemography = parseFloat(this.value);
     if (xScaleDemography > 0) {
         money.xScaleDemography = xScaleDemography;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#xScaleDemography').property("value", money.xScaleDemography);
@@ -2648,7 +2661,7 @@ function changeAccountBirth() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
     if (birth >= 0 && birth < 200) {
         selectedAccount.birth = birth;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#AccountBirth').property("value", toYearRep(selectedAccount.birth));
@@ -2661,7 +2674,7 @@ function changeAccountDuration() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
     if (duration > 0 && duration <= 120) {
         selectedAccount.duration = duration;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#AccountDuration').property("value", selectedAccount.duration);
@@ -2674,7 +2687,7 @@ function changeAccountType() {
     selectedAccount.type = this.options[this.selectedIndex].value;
     
     joinAccountSelectorsToData();
-    updateChartData();
+    redrawCharts();
     
     comment(this.id);
     pushNewHistoryState();
@@ -2685,7 +2698,7 @@ function changeStartingPercentage() {
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
     if (startingPercentage >= 0) {
         selectedAccount.startingPercentage = startingPercentage;
-        updateChartData();
+        redrawCharts();
     }
     else {
         d3.select('#StartingPercentage').property("value", selectedAccount.startingPercentage);

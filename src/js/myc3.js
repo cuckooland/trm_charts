@@ -100,23 +100,21 @@ var myc3 = (function() {
         chart.legend.item = {};
         chart.legend.item.onclick = args.legend.item.onclick;
     
-        // ********************************************
-        // Get and set axis min and max value. => redraw 
-        // *********************************************
+        // ***********************************
+        // Get and set axis min and max value.
+        // ***********************************
         chart.axis.range = function(range) {
             if (!range) return chart.axis.rangeVal;
     
             if (!chart.axis.rangeVal) chart.axis.rangeVal = {};
     
             if (!chart.axis.rangeVal.min) chart.axis.rangeVal.min = {};
-            if (range.min.x) chart.axis.rangeVal.min.x = d3.timeParse(chart.theData.xFormat)(range.min.x);
+            if (range.min.x) chart.axis.rangeVal.min.x = range.min.x;
             if (range.min.y) chart.axis.rangeVal.min.y = range.min.y;
     
             if (!chart.axis.rangeVal.max) chart.axis.rangeVal.max = {};
-            if (range.max.x) chart.axis.rangeVal.max.x = d3.timeParse(chart.theData.xFormat)(range.max.x);
+            if (range.max.x) chart.axis.rangeVal.max.x = range.max.x;
             if (range.max.y) chart.axis.rangeVal.max.y = range.max.y;
-    
-            chart.draw();
         };
     
         // ************************
@@ -155,8 +153,6 @@ var myc3 = (function() {
                 }
             }
             chart.hiddenSerieIds = intersection;
-    
-            chart.draw();
         }
     
         chart.draw = function() {
@@ -166,9 +162,6 @@ var myc3 = (function() {
             // Draw lines and areas representing each serie
             var serieGroup = seriesGroup.selectAll('.serieGroup').data(series, function(d) { return d.id; });
     
-            var lineGenerator0 = chart.lineGenerator0();
-            var areaGenerator0 = chart.areaGenerator0();
-
             var serieGroupEnter = serieGroup.enter()
                 .append('g')
                 .attr('class', 'serieGroup');
@@ -205,7 +198,7 @@ var myc3 = (function() {
                 .append('circle')
                 .attr('class', 'selection')
                 .attr('r', 3)
-                .style('stroke-width', 2);
+                .style('stroke-width', 1);
             
             serieGroupEnter
                 .append('circle')
@@ -454,8 +447,8 @@ var myc3 = (function() {
                 .call(chart.yAxis);
         }
             
-        chart.updateSelectionCircle = function() {
-            var t = d3.transition().duration(args.transition.duration);
+        chart.updateSelectionCircle = function(noTransition) {
+            var t = d3.transition().duration(noTransition ? 0 : args.transition.duration);
             d3.select(args.bindto).selectAll('.serieGroup').select('circle.selection')
                 .style('stroke', (d, i) => color(i))
                 .style('display', function(d) {
@@ -501,7 +494,7 @@ var myc3 = (function() {
         // ************************************
         chart.doSelect = function(serieId, index) {
             chart.selectedPoint = {serieId:serieId, pointIndex:index};
-            chart.updateSelectionCircle();
+            chart.updateSelectionCircle(true);
         };
     
         // **************************************
@@ -509,7 +502,7 @@ var myc3 = (function() {
         // **************************************
         chart.unselect = function() {
             chart.selectedPoint = null;
-            chart.updateSelectionCircle();
+            chart.updateSelectionCircle(true);
         };
 
         // **************************************
@@ -531,11 +524,10 @@ var myc3 = (function() {
         // *********************************
         // This API hides specified targets.
         // *********************************
-        chart.hide = function(serieIds, resetOthers) {
-            if (resetOthers) chart.hiddenSerieIds.clear();
+        chart.hide = function(serieIds) {
+            chart.hiddenSerieIds.clear();
             serieIds.forEach(function(serieId) {chart.hiddenSerieIds.add(serieId); });
-            chart.updateXYScalesDomain();
-            chart.updateCurves();
+            chart.applyHiddenSeries();
         };
     
         // ****************************************************
@@ -548,8 +540,15 @@ var myc3 = (function() {
             else {
                 chart.hiddenSerieIds.add(serieId);
             }
+            chart.applyHiddenSeries();
+        };
+    
+        chart.applyHiddenSeries = function() {
+            legendGroup.selectAll('.legend-item')
+                .style("opacity", function(d) { return chart.hiddenSerieIds.has(d.id) ? 0.3 : 1; })
             chart.updateXYScalesDomain();
             chart.updateCurves();
+            chart.updateSelectionCircle();
         };
     
         // ****************************
@@ -595,6 +594,7 @@ var myc3 = (function() {
         };
     
         chart.load(args.data);
+        chart.draw();
     
         return chart;
     }
