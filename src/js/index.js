@@ -655,10 +655,10 @@ function applyJSonRep(jsonRep) {
         comment(jsonRep.g.com);
     }
     
-    accountsChart.hide(jsonRep.g.ac.hs, true);
-    dividendChart.hide(jsonRep.g.dc.hs, true);
-    headcountChart.hide(jsonRep.g.hc.hs, true);
-    monetarySupplyChart.hide(jsonRep.g.sc.hs, true);
+    accountsChart.hide(jsonRep.g.ac.hs);
+    dividendChart.hide(jsonRep.g.dc.hs);
+    headcountChart.hide(jsonRep.g.hc.hs);
+    monetarySupplyChart.hide(jsonRep.g.sc.hs);
 }
     
 // Init the different selectors
