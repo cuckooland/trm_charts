@@ -11,18 +11,11 @@ var myc3 = (function() {
         args.padding.bottom = !args.padding.bottom ? 80 : args.padding.bottom;
     
         var color = d3.scaleOrdinal(args.color.pattern);
-    
+
         var svg = d3.select(args.bindto).append("svg")
             .attr("width", args.size.width)
-            .attr("height", args.size.height)
-            .on("mouseover", function() { d3.selectAll('.xMouseLine').style("display", null); })
-            .on("mouseout", function() {
-                d3.selectAll('.xMouseLine').style("display", "none");
-            })
-            .on("mousemove", function() {
-                d3.selectAll('.xMouseLine').attr("transform", "translate(" + d3.mouse(this)[0] + ",0)");
-            });
-    
+            .attr("height", args.size.height);
+        
         var plotGroup = svg.append("g")
             .attr("transform", "translate(" + args.padding.left + "," + args.padding.top + ")");
     
@@ -34,25 +27,10 @@ var myc3 = (function() {
             .range([0, args.size.width - args.padding.left - args.padding.right]);
         chart.yScale = d3.scaleLinear()
             .range([args.size.height - args.padding.bottom - args.padding.top, 0]);
-        var bisectDate = d3.bisector(function(d) { return d[0]; }).left
-    
-        // plotGroup.append("rect")
-        //     .attr("class", "overlay")
-        //     .attr("width", args.size.width - args.padding.left - args.padding.right)
-        //     .attr("height", args.size.height - args.padding.bottom - args.padding.top)
-        //     .style("visibility", "hidden");
     
         var seriesGroup = plotGroup.append('g');
         var legendGroup = plotGroup.append('g')
             .attr('transform', "translate(" + (legendPadding.l - args.padding.left) +"," + (legendPadding.t + args.size.height - args.padding.bottom - args.padding.top) + ")");
-    
-        svg.append('line')
-            .attr("class", "xMouseLine")
-            .attr("x1", 0)
-            .attr("y1", args.padding.top)
-            .attr("x2", 0)
-            .attr("y2", args.size.height - args.padding.bottom)
-            .style("display", "none");
     
         // Add the X Axis
         chart.xAxis = d3.axisBottom(chart.xScale)
@@ -84,6 +62,71 @@ var myc3 = (function() {
             .attr("text-anchor", "middle")
             .text(args.axis.y.label.text);
     
+        // Add location supports
+        var distLine = plotGroup.append("line")
+            .attr('class', 'distLine')
+            .style("stroke-dasharray", "3,3")
+            .style("display", "none");
+
+        var distCircle = plotGroup.append("circle")
+            .attr("r", 3)
+            .attr('class', 'distCircle')
+            .style("display", "none");
+
+        plotGroup.append('line')
+            .attr("class", "xMouseLine")
+            .style("stroke-dasharray", "4,2,2,2")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 0)
+            .attr("y2", args.size.height - args.padding.bottom - args.padding.top)
+            .style("display", "none");
+    
+        plotGroup.append('line')
+            .attr("class", "yMouseLine")
+            .style("stroke-dasharray", "4,2,2,2")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", args.size.width - args.padding.left - args.padding.right)
+            .attr("y2", 0)
+            .style("display", "none");
+    
+        plotGroup.append("rect")
+            .attr("class", "overlay")
+            .attr("width", args.size.width - args.padding.left - args.padding.right)
+            .attr("height", args.size.height - args.padding.bottom - args.padding.top)
+            .style("opacity", 0)
+            .on("mouseover", function() {
+                d3.selectAll('.xMouseLine').style("display", null);
+                svg.selectAll('.yMouseLine').style("display", null);
+                distLine.style("display", null);
+                distCircle.style("display", null);
+            })
+            .on("mouseout", function() {
+                d3.selectAll('.xMouseLine').style("display", "none");
+                svg.selectAll('.yMouseLine').style("display", "none");
+                distLine.style("display", "none");
+                distCircle.style("display", "none");
+            })
+            .on("mousemove", function() {
+                var mouse = d3.mouse(this);
+                var series = svg.selectAll('path.line');
+                var best = chart.closestPoint(series, mouse);
+                var p = best.serie.points[best.index].slice();
+                p[0] = chart.xScale(p[0]);
+                p[1] = chart.yScale(p[1]);
+                distLine.attr("x1", p[0]).attr("y1", p[1]).attr("x2", mouse[0]).attr("y2", mouse[1]);
+                distCircle.attr("cx", p[0]).attr("cy", p[1]);
+                d3.selectAll('.xMouseLine').attr("transform", "translate(" + p[0] + ",0)");
+                svg.selectAll('.yMouseLine').attr("transform", "translate(0," + p[1] + ")");
+            })
+            .on('click', function() {
+                var mouse = d3.mouse(this);
+                var series = svg.selectAll('path.line');
+                var best = chart.closestPoint(series, mouse);
+                args.data.onclick(best.serie, best.index);
+            });
+
         // TODO: replace 'chart' by 'args'?
         chart.bindto = args.bindto;
         chart.axis = {};
@@ -178,18 +221,7 @@ var myc3 = (function() {
                 .attr('d', function(d) { return chart.lineGenerator0(chart.theData.types[d.id])(d.points); })
                 .style('stroke', (d, i) => color(i))
                 .style('fill', 'none')
-                .style('stroke-width', 2)
-                .on("mouseover", function(d) { chart.focus(d.id); })
-                .on("mouseout", function(d) { chart.revert(); })
-                .on("mousemove", function() { d3.event.stopPropagation(); })
-                .on('click', function(d) {
-                    var clickedDate = chart.xScale.invert(d3.mouse(this)[0]),
-                        i = bisectDate(d.points, clickedDate, 1),
-                        p0 = d.points[i - 1],
-                        p1 = d.points[i],
-                        iNearest = clickedDate - p0[0] > p1[0] - clickedDate ? i : i - 1;
-                    args.data.onclick(d, iNearest);
-                });
+                .style('stroke-width', 2);
 
             chart.updateCurves();
                 
@@ -197,7 +229,7 @@ var myc3 = (function() {
             serieGroupEnter
                 .append('circle')
                 .attr('class', 'selection')
-                .attr('r', 3)
+                .attr('r', 3.5)
                 .style('stroke-width', 1);
             
             serieGroupEnter
@@ -593,6 +625,36 @@ var myc3 = (function() {
                 .style('stroke-width', 2);
         };
     
+        // *********************************************
+        // Search the closest point among all the series
+        // *********************************************
+        chart.closestPoint = function(series, point) {
+            function sqrDistance(p) {
+                var dx = p[0] - point[0],
+                    dy = p[1] - point[1];
+                return dx * dx + dy * dy;
+            }
+            var bestList = [];
+            series.filter(s=>!chart.hiddenSerieIds.has(s.id)).each(function(serie) {
+                var pathPoints = serie.points.map(p=>[chart.xScale(p[0]), chart.yScale(p[1])]);
+                var best = {};
+                best.serie = serie;
+                best.index = -1;
+                best.distance2 = Infinity;
+    
+                pathPoints.forEach(function(pathPoint, i) {
+                    var distance2 = sqrDistance(pathPoint);
+                    if (distance2 < best.distance2) {
+                        best.distance2 = distance2;
+                        best.index = i;
+                    }
+                })
+    
+                bestList.push(best);
+            });
+            return bestList[d3.scan(bestList, (a, b) => a.distance2 - b.distance2)];
+        }
+
         chart.load(args.data);
         chart.draw();
     

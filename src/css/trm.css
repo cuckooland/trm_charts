@@ -278,13 +278,24 @@ span.transactionsTabLink {
     transition: 0.3s;
 }
 
-.xMouseLine {
+.xMouseLine,
+.yMouseLine {
     stroke-width: 0.2;
     stroke: #000;
 }
 
+.distLine {
+    fill: none;
+    stroke: red;
+    stroke-width: 1.5px;
+}
+  
+.distCircle {
+    fill: red;
+}
+
 .legend-item, 
-.serieGroup>.line  {
+.overlay  {
     cursor: pointer;
 }
 
