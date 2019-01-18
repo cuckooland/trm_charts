@@ -71,7 +71,6 @@ input[disabled=disabled] {
     padding-bottom: 0.1em;
     margin-top: 0.1em;
     margin-left: 0.8em;
-    background-color: #d1d1d1;
 }
 
 .row {
@@ -85,8 +84,6 @@ input[disabled=disabled] {
 
 .CommentPart {
     width: 63%;
-	border: 1px solid #aaaaaa;
-    border-radius: 5px;
     float: left;
     height:11.5em;
     margin: 5px 5px 5px 10px;
