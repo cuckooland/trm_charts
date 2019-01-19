@@ -498,23 +498,6 @@ function addChartEffectsFromHtml() {
     d3.selectAll('span.current:not(.nolink), span.previous, span.previous2').on('click', function() {
         clickValue(d3.select(this));
     });
-
-    d3.selectAll('span.accountName')
-        .style('background-color', '#f1f1f1')
-        .on('mouseover', function () {
-            d3.selectAll('span.accountsTabLink').style('background-color', '#dddddd');
-            d3.selectAll('span.accountName').style('background-color', '#dddddd');
-            d3.select('#AccountsItem').classed('focused', true);
-        })
-        .on('mouseout', function () {
-            d3.selectAll('span.accountsTabLink').style('background-color', '#f1f1f1');
-            d3.selectAll('span.accountName').style('background-color', '#f1f1f1');
-            d3.select('#AccountsItem').classed('focused', false);
-        })
-        .on('click', function() {
-            d3.select('#AccountsItem').classed('focused', false);
-            clickTab('AccountsItem', idFromAccountName(d3.select(this).text()) - 1);
-        });
 }
 
 function initCallbacks() {
@@ -2157,7 +2140,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
                 var accountUdLogValue = Math.log(accountUdValue) / Math.log(10);
                 var accountMnValue = 100 * accountMuValue / averageMuValue;
                 var accountMnLogValue = Math.log(accountMnValue) / Math.log(10);
-                d3.selectAll("span.accountName").text(accountName1(account));
+                d3.selectAll("span.account.name").text(accountName1(account));
                 d3.selectAll("span.accountAge").text(accountAgeLabel(account, timeStep));
                 d3.selectAll("span.account.current.mu.value").text(commentFormat(accountMuValue));
                 d3.selectAll("span.account.mu.logValue").text(commentFormat(accountMuLogValue));
