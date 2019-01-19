@@ -484,7 +484,7 @@ var myc3 = (function() {
             d3.select(args.bindto).selectAll('.serieGroup').select('circle.selection')
                 .style('stroke', (d, i) => color(i))
                 .style('display', function(d) {
-                    return (chart.selectedPoint && d.id == chart.selectedPoint.serieId) ? null : 'none'; 
+                    return (chart.selectedPoint && d.id == chart.selectedPoint.serieId && !chart.hiddenSerieIds.has(d.id)) ? null : 'none'; 
                 })
                 .transition(t)
                 .attr('cx', function(d) {
