@@ -1,4 +1,9 @@
 var myc3 = (function() {
+    var LINE = 'line';
+    var AREA = 'area';
+    var LINEAR_CURVE = 'L';
+    var STEP_AFTER_CURVE = 'SA';
+        
     function generate(args) {
         var chart = {};
         chart.hiddenSerieIds = new Set();
@@ -50,7 +55,8 @@ var myc3 = (function() {
     
         // Add the Y Axis
         chart.yAxis = d3.axisLeft(chart.yScale)
-            .tickFormat(args.axis.y.tick.format);
+            .tickFormat(args.axis.y.tick.format)
+            .ticks(1); // Initial transition looks better if there is only one tick
         plotGroup.append("g")
             .attr("class", "y axis")
             .call(chart.yAxis);
@@ -207,30 +213,31 @@ var myc3 = (function() {
     
         chart.draw = function() {
             var series = chart.theData.series;
+            var oldSeries = seriesGroup.selectAll('.serieGroup').data();
+            var oldYDomain = chart.yScale.domain();
             chart.updateXYScalesDomain();
 
-            // Draw lines and areas representing each serie
             var serieGroup = seriesGroup.selectAll('.serieGroup').data(series, function(d) { return d.id; });
     
             var serieGroupEnter = serieGroup.enter()
                 .append('g')
                 .attr('class', 'serieGroup');
-            serieGroupEnter.filter(d=>chart.theData.types && chart.theData.types[d.id] == 'area')
+            serieGroupEnter.filter(d=>chart.theData.repTypes && chart.theData.repTypes[d.id] == AREA)
                 .append('path')
                 .attr('class', 'area')
-                .attr('d', function(d) { return chart.areaGenerator0(chart.theData.types[d.id])(d.points); })
+                .attr('d', function(d) { return chart.areaGenerator0(d.linkType)(d.points); })
                 .style('fill', (d, i) => color(i))
                 .style('stroke', 'none')
                 .style('fill-opacity', 0.2);
             serieGroupEnter
                 .append('path')
                 .attr('class', 'line')
-                .attr('d', function(d) { return chart.lineGenerator0(chart.theData.types[d.id])(d.points); })
+                .attr('d', function(d) { return chart.lineGenerator0(d.linkType)(d.points); })
                 .style('stroke', (d, i) => color(i))
                 .style('fill', 'none')
                 .style('stroke-width', 2);
 
-            chart.updateCurves();
+            chart.updateCurves(oldSeries, oldYDomain);
                 
             // Draw circles representing a selection and a reference for each serie
             serieGroupEnter
@@ -252,10 +259,10 @@ var myc3 = (function() {
             var serieGroupExit = serieGroup.exit();
             serieGroupExit.select('path.area')
                 .transition(t)
-                .attr('d', function(d) { return chart.areaGenerator0(chart.theData.types[d.id])(d.points); });
+                .attr('d', function(d) { return chart.areaGenerator0(d.linkType)(d.points); });
             serieGroupExit.select('path.line')
                 .transition(t)
-                .attr('d', function(d) { return chart.lineGenerator0(chart.theData.types[d.id])(d.points); });
+                .attr('d', function(d) { return chart.lineGenerator0(d.linkType)(d.points); });
             serieGroupExit
                 .transition(t)
                 .remove();
@@ -267,8 +274,12 @@ var myc3 = (function() {
             else {
                 chart.yAxis.ticks(10);
             }
-            plotGroup.select('.x.axis').call(chart.xAxis);
-            plotGroup.select('.y.axis').call(chart.yAxis);
+            plotGroup.select('.x.axis')
+                .transition(t)
+                .call(chart.xAxis);
+            plotGroup.select('.y.axis')
+                .transition(t)
+                .call(chart.yAxis);
     
             plotGroup.select('.x.title').text(chart.axis.x.label.text);
             plotGroup.select('.y.title').text(chart.axis.y.label.text);
@@ -401,25 +412,17 @@ var myc3 = (function() {
             chart.yScale.domain([chart.axis.rangeVal.min.y, chart.axis.rangeVal.max.y]).nice();
         }
 
-        chart.lineCurveFactory = function(curveType) {
-            if (!curveType) {
+        chart.lineCurveFactory = function(linkType) {
+            if (!linkType || linkType == LINEAR_CURVE) {
                 return d3.curveLinear;
             }
-            switch (curveType) {
-                case 'line' :
-                case 'area':
-                    return d3.curveLinear;
-                
-                case 'area_step_after':
-                case 'step_after':
-                    return d3.curveStepAfter
-            
-                default:
-                    throw new Error(curveType + " is an unknown curve type");
+            if (linkType == STEP_AFTER_CURVE) {
+                return d3.curveStepAfter;
             }
+            throw new Error(linkType + " is an unknown link type");
         }
         
-        chart.lineGenerator = function(curveType) {
+        chart.lineGenerator = function(linkType) {
             return d3.line()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
@@ -427,10 +430,10 @@ var myc3 = (function() {
                 .y(function(d) { 
                     return chart.yScale(d[1]);
                 })
-                .curve(chart.lineCurveFactory(curveType));
+                .curve(chart.lineCurveFactory(linkType));
         }
 
-        chart.areaGenerator = function(curveType) {
+        chart.areaGenerator = function(linkType) {
             return d3.area()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
@@ -439,10 +442,10 @@ var myc3 = (function() {
                 .y1(function(d) { 
                     return chart.yScale(d[1]);
                 })
-                .curve(chart.lineCurveFactory(curveType));
+                .curve(chart.lineCurveFactory(linkType));
         }
         
-        chart.lineGenerator0 = function(curveType) {
+        chart.lineGenerator0 = function(linkType) {
             return d3.line()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
@@ -450,10 +453,10 @@ var myc3 = (function() {
                 .y(function(d) { 
                     return chart.yScale(0);
                 })
-                .curve(chart.lineCurveFactory(curveType));
+                .curve(chart.lineCurveFactory(linkType));
         }
         
-        chart.areaGenerator0 = function(curveType) {
+        chart.areaGenerator0 = function(linkType) {
             return d3.area()
                 .x(function(d) { 
                     return chart.xScale(d[0]);
@@ -462,21 +465,117 @@ var myc3 = (function() {
                 .y1(function(d) { 
                     return chart.yScale(0);
                 })
-                .curve(chart.lineCurveFactory(curveType));
+                .curve(chart.lineCurveFactory(linkType));
         }
         
-        chart.updateCurves = function() {
+        chart.updateCurves = function(oldSeries, oldYDomain) {
+            var serieGroup = d3.select(args.bindto).selectAll('.serieGroup');
+            var trans = d3.transition().duration(args.transition.duration);
+    
+            serieGroup.select('path.area')
+                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
+                .transition(trans)
+                .attrTween('d', function(d) { return lineTween.call(this, d); });
+            serieGroup.select('path.line')
+                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
+                .transition(trans)
+                .attrTween("d", function(d) { return lineTween.call(this, d); });
+            
+            function lineTween(newSerie) {
+                var areaRep = d3.select(this).classed('area');
+                // Build 'oldPoints' and 'newpoints', adding some interpolated points to have same X values
+                var oldSerie = oldSeries.filter(s => (s.id == newSerie.id))[0];
+                var noOldSerie = (oldSerie == null);
+                if (noOldSerie) {
+                    oldSerie = newSerie;
+                    oldYDomain = chart.yScale.domain();
+                }
+
+                var xSet = new Set(oldSerie.points.map(p=>p[0].getTime()));
+                newSerie.points.forEach(p=>xSet.add(p[0].getTime()));
+                var xArray = [...xSet].sort((a, b) => a - b);
+
+                function addingScale(serie) {
+                    return (serie.linkType == STEP_AFTER_CURVE)
+                    ? function(x) {
+                        return serie.points[d3.bisectRight(serie.points.map(p=>p[0].getTime()), x) - 1][1];
+                    }
+                    : d3.scaleLinear()
+                        .domain(serie.points.map(p=>p[0].getTime()))
+                        .range(serie.points.map(p=>p[1]));
+                }
+
+                var addingOldScale = addingScale(oldSerie);
+                var oldYArray = xArray.map(x=>addingOldScale(x));
+
+                var addingNewScale = addingScale(newSerie);
+                var newYArray = xArray.map(x=>addingNewScale(x));
+                
+                // Build oldPoints and newPoints with pixel values
+                var oldYScale = d3.scaleLinear()
+                    .range(chart.yScale.range())
+                    .domain(oldYDomain);
+
+                var oldPoints = xArray.map((x,i)=>[chart.xScale(new Date(x)), oldYScale(noOldSerie ? 0 : oldYArray[i])]);
+                var newPoints = xArray.map((x,i)=>[chart.xScale(new Date(x)), chart.yScale(newYArray[i])]);
+
+                // If needed, duplicate points to manage 'step_after' style
+                if (oldSerie.linkType == STEP_AFTER_CURVE || newSerie.linkType == STEP_AFTER_CURVE) {
+                    function duplicate(points, linkType) {
+                        return points.reduce(function(accu, p, i) {
+                            if (i == 0) {
+                                accu.push(p);
+                            }
+                            else {
+                                var duplicatedPoint = (linkType == STEP_AFTER_CURVE) ? [p[0], points[i - 1][1]] : p;
+                                accu.push(duplicatedPoint, p);
+                            }
+                            return accu;
+                        }, []);
+                    }
+                    oldPoints = duplicate(oldPoints, oldSerie.linkType);
+                    newPoints = duplicate(newPoints, newSerie.linkType);
+                }
+
+                // Build interpolator between oldPoints and newPoints
+                var interpolate = d3.interpolate(oldPoints, newPoints);
+                // Build svg path generator 
+                var generateSvgPath = areaRep
+                    ? d3.area()
+                        .x(function(d) { return d[0]; })
+                        .y0(args.size.height - args.padding.bottom - args.padding.top)
+                        .y1(function(d) { return d[1]; })
+                        .curve(chart.lineCurveFactory(LINEAR_CURVE))
+                    : d3.line()
+                        .x(function(d) { return d[0]; })
+                        .y(function(d) { return d[1]; })
+                        .curve(chart.lineCurveFactory(LINEAR_CURVE));
+                
+                return function(t) {
+                    if (t < 1) {
+                        return generateSvgPath(interpolate(t));
+                    }
+                    else {
+                        return areaRep
+                            ? chart.areaGenerator(newSerie.linkType)(newSerie.points)
+                            : chart.lineGenerator(newSerie.linkType)(newSerie.points);
+                    }
+                };
+            }
+        }
+            
+        chart.updateHiddenCurves = function() {
             var serieGroup = d3.select(args.bindto).selectAll('.serieGroup');
             var t = d3.transition().duration(args.transition.duration);
     
             serieGroup.select('path.area')
                 .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .transition(t)
-                .attr('d', function(d) { return chart.areaGenerator(chart.theData.types[d.id])(d.points); });
+                .attr('d', function(d) { return chart.areaGenerator(d.linkType)(d.points); });
             serieGroup.select('path.line')
                 .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .transition(t)
-                .attr('d', function(d) { return chart.lineGenerator(chart.theData.types[d.id])(d.points); });
+                .attr('d', function(d) { return chart.lineGenerator(d.linkType)(d.points); });
 
             plotGroup.select('.x.axis')
                 .transition(t)
@@ -580,14 +679,14 @@ var myc3 = (function() {
                 chart.hiddenSerieIds.add(serieId);
             }
             chart.applyHiddenSeries();
+            chart.updateXYScalesDomain();
+            chart.updateHiddenCurves();
+            chart.updateSelectionCircle();
         };
     
         chart.applyHiddenSeries = function() {
             legendGroup.selectAll('.legend-item')
                 .style("opacity", function(d) { return chart.hiddenSerieIds.has(d.id) ? 0.3 : 1; })
-            chart.updateXYScalesDomain();
-            chart.updateCurves();
-            chart.updateSelectionCircle();
         };
     
         // ****************************
@@ -663,7 +762,6 @@ var myc3 = (function() {
         }
 
         chart.load(args.data);
-        chart.draw();
     
         return chart;
     }
@@ -671,6 +769,10 @@ var myc3 = (function() {
     return {
       "generate": function(args) {
         return generate(args);
-      }
+      },
+      "LINE": LINE,
+      "AREA": AREA,
+      "LINEAR_CURVE": LINEAR_CURVE,
+      "STEP_AFTER_CURVE": STEP_AFTER_CURVE
     };
   })();

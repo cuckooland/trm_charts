@@ -628,7 +628,13 @@ function applyJSonRep(jsonRep) {
     updateTimeXLabels();
     updateAccountYLabels();
     updateTransactionArea();
+
+    accountsChart.hide(jsonRep.g.ac.hs);
+    dividendChart.hide(jsonRep.g.dc.hs);
+    headcountChart.hide(jsonRep.g.hc.hs);
+    monetarySupplyChart.hide(jsonRep.g.sc.hs);
     redrawCharts();
+
     openTab(jsonRep.g.t);
     if (jsonRep.g.s) {
         var chart = searchChartWithData(jsonRep.g.s);
@@ -637,11 +643,6 @@ function applyJSonRep(jsonRep) {
     else {
         comment(jsonRep.g.com);
     }
-    
-    accountsChart.hide(jsonRep.g.ac.hs);
-    dividendChart.hide(jsonRep.g.dc.hs);
-    headcountChart.hide(jsonRep.g.hc.hs);
-    monetarySupplyChart.hide(jsonRep.g.sc.hs);
 }
     
 // Init the different selectors
@@ -783,14 +784,6 @@ function joinTransactionSelectorToData() {
     options.exit().remove();
 };
 
-function lineCurveType() {
-    return (curveType == LINEAR_CURVE) ? 'line' : 'step_after';
-}
-
-function areaCurveType() {
-    return (curveType == LINEAR_CURVE) ? 'area' : 'area_step_after';
-}
-
 function generateAccountsData() {
 	var accountsData = {
         xFormat: DATE_PATTERN,
@@ -799,9 +792,9 @@ function generateAccountsData() {
             'stableAverage': STABLE_AVERAGE_LABEL
         },
         series: [],
-        types: {
-            average: areaCurveType(),
-            stableAverage: lineCurveType()
+        repTypes: {
+            average: myc3.AREA,
+            stableAverage: myc3.LINE
         },
         onclick: function(d, i) {
             commentChartData(accountsChart, d.id, i);
@@ -812,6 +805,7 @@ function generateAccountsData() {
     var averageSerie = {};
     averageSerie.id = AVERAGE_ID;
     averageSerie.points = [];
+    averageSerie.linkType = (curveType == LINEAR_CURVE) ? myc3.LINEAR_CURVE : myc3.STEP_AFTER_CURVE;
 	for (var i = 0; i < money.averages.x.length; i++) {
 	    averageSerie.points.push([asDate(money.averages.x[i]), money.averages.y[i]]);
     }
@@ -820,6 +814,7 @@ function generateAccountsData() {
     var stableAverageSerie = {};
     stableAverageSerie.id = STABLE_AVERAGE_ID;
     stableAverageSerie.points = [];
+    stableAverageSerie.linkType = (curveType == LINEAR_CURVE) ? myc3.LINEAR_CURVE : myc3.STEP_AFTER_CURVE;
 	for (var i = 0; i < money.stableAverages.x.length; i++) {
 	    stableAverageSerie.points.push([asDate(money.stableAverages.x[i]), money.stableAverages.y[i]]);
 	}
@@ -830,13 +825,14 @@ function generateAccountsData() {
         var accountSerie = {};
         accountSerie.id = c3IdFromAccountId(money.accounts[iAccount].id);
         accountSerie.points = [];
+        accountSerie.linkType = (curveType == LINEAR_CURVE) ? myc3.LINEAR_CURVE : myc3.STEP_AFTER_CURVE;
         if (money.accounts[iAccount].x.length > 1) {
             for (var i = 0; i < money.accounts[iAccount].x.length; i++) {
                 accountSerie.points.push([asDate(money.accounts[iAccount].x[i]), money.accounts[iAccount].y[i]]);
             }
             accountsData.series.push(accountSerie);
             accountsData.names[accountSerie.id] = accountName3(money.accounts[iAccount]);
-            accountsData.types[accountSerie.id] = lineCurveType();
+            accountsData.repTypes[accountSerie.id] = myc3.LINE;
         }
     }
 
@@ -896,9 +892,9 @@ function generateDividendData() {
             'stableDividend': STABLE_DIVIDEND_LABEL
         },
         series: [],
-        types: {
-            dividend: areaCurveType(),
-            stableDividend: lineCurveType()
+        repTypes: {
+            dividend: myc3.AREA,
+            stableDividend: myc3.LINE
         },
         onclick: function(d, i) {
             commentChartData(dividendChart, d.id, i);
@@ -909,6 +905,7 @@ function generateDividendData() {
     var dividendSerie = {};
     dividendSerie.id = DIVIDEND_ID;
     dividendSerie.points = [];
+    dividendSerie.linkType = (curveType == LINEAR_CURVE) ? myc3.LINEAR_CURVE : myc3.STEP_AFTER_CURVE;
 	for (var i = 0; i < money.dividends.x.length; i++) {
 	    dividendSerie.points.push([asDate(money.dividends.x[i]), money.dividends.y[i]]);
     }
@@ -917,6 +914,7 @@ function generateDividendData() {
     var stableDividendSerie = {};
     stableDividendSerie.id = STABLE_DIVIDEND_ID;
     stableDividendSerie.points = [];
+    stableDividendSerie.linkType = (curveType == LINEAR_CURVE) ? myc3.LINEAR_CURVE : myc3.STEP_AFTER_CURVE;
 	for (var i = 0; i < money.stableDividends.x.length; i++) {
 	    stableDividendSerie.points.push([asDate(money.stableDividends.x[i]), money.stableDividends.y[i]]);
     }
@@ -932,8 +930,8 @@ function generateHeadcountData() {
             'headcount': HEADCOUNT_LABEL + ' (' + getDemographicProfileLabel(money.demographicProfileKey) + ')'
         },
         series: [],
-        types: {
-            headcount: areaCurveType()
+        repTypes: {
+            headcount: myc3.AREA
         },
         onmouseover : function(d) { 
             showAllTooltips(headcountChart, d);
@@ -950,6 +948,7 @@ function generateHeadcountData() {
     var headcountSerie = {};
     headcountSerie.id = HEADCOUNT_ID;
     headcountSerie.points = [];
+    headcountSerie.linkType = (curveType == LINEAR_CURVE) ? myc3.LINEAR_CURVE : myc3.STEP_AFTER_CURVE;
 	for (var i = 0; i < money.headcounts.x.length; i++) {
 	    headcountSerie.points.push([asDate(money.headcounts.x[i]), money.headcounts.y[i]]);
     }
@@ -966,9 +965,9 @@ function generateMonetarySupplyData() {
             'stableMonetarySupply': STABLE_MONETARY_SUPPLY_LABEL
         },
         series: [],
-        types: {
-            monetarySupply: areaCurveType(),
-            stableMonetarySupply: lineCurveType()
+        repTypes: {
+            monetarySupply: myc3.AREA,
+            stableMonetarySupply: myc3.LINE
         },
         onclick: function(d, i) {
             commentChartData(monetarySupplyChart, d.id, i);
@@ -979,6 +978,7 @@ function generateMonetarySupplyData() {
     var monetarySupplySerie = {};
     monetarySupplySerie.id = MONETARY_SUPPLY_ID;
     monetarySupplySerie.points = [];
+    monetarySupplySerie.linkType = (curveType == LINEAR_CURVE) ? myc3.LINEAR_CURVE : myc3.STEP_AFTER_CURVE;
 	for (var i = 0; i < money.monetarySupplies.x.length; i++) {
 	    monetarySupplySerie.points.push([asDate(money.monetarySupplies.x[i]), money.monetarySupplies.y[i]]);
     }
@@ -987,6 +987,7 @@ function generateMonetarySupplyData() {
     var stableMonetarySupplySerie = {};
     stableMonetarySupplySerie.id = STABLE_MONETARY_SUPPLY_ID;
     stableMonetarySupplySerie.points = [];
+    stableMonetarySupplySerie.linkType = (curveType == LINEAR_CURVE) ? myc3.LINEAR_CURVE : myc3.STEP_AFTER_CURVE;
 	for (var i = 0; i < money.stableMonetarySupplies.x.length; i++) {
 	    stableMonetarySupplySerie.points.push([asDate(money.stableMonetarySupplies.x[i]), money.stableMonetarySupplies.y[i]]);
     }
