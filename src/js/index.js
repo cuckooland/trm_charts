@@ -786,7 +786,6 @@ function joinTransactionSelectorToData() {
 
 function generateAccountsData() {
 	var accountsData = {
-        xFormat: DATE_PATTERN,
         names: {
             'average': AVERAGE_LABEL,
             'stableAverage': STABLE_AVERAGE_LABEL
@@ -839,42 +838,6 @@ function generateAccountsData() {
     return accountsData;
 }
 
-var tooltipingChart = null;
-
-function showAllTooltips(chart, d) {
-    if (tooltipingChart == null) {
-        tooltipingChart = chart;
-        var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
-        charts.forEach(function(c) {
-            if (c != chart) {
-                showTooltip(c, d);
-            }
-        });
-        tooltipingChart = null;
-    }
-}
-
-function showTooltip(chart, d) {
-    var shownDataList = chart.shownData();
-    for (i = 0; i < shownDataList.length; i++) {
-        for (j = 0; j < shownDataList[i].points.length; j++) {
-            if (shownDataList[i].points[j][0].getTime() == d.x.getTime()) {
-                chart.tooltip.show({ data: {x: d.x, value: shownDataList[i].point[j][1], id: shownDataList[i].id} });
-                return;
-            }
-        }
-    }
-}
-	
-function hideAllTooltips(chart) {
-    var charts = [accountsChart, dividendChart, headcountChart, monetarySupplyChart];
-    charts.forEach(function(c) {
-        if (c != chart) {
-            c.tooltip.hide();
-        }
-    });
-}
-
 function unselectChartPoints() {
     curSelectedDataId = "";
     selectedPointIndex = -1;
@@ -886,7 +849,6 @@ function unselectChartPoints() {
 
 function generateDividendData() {
     var dividendData = {
-        xFormat: DATE_PATTERN,
         names: {
             'dividend': "${p0} (${p1})".format(DIVIDEND_LABEL, universalDividendName()),
             'stableDividend': STABLE_DIVIDEND_LABEL
@@ -925,19 +887,12 @@ function generateDividendData() {
 
 function generateHeadcountData() {
     var headcountData = {
-        xFormat: DATE_PATTERN,
         names: {
             'headcount': HEADCOUNT_LABEL + ' (' + getDemographicProfileLabel(money.demographicProfileKey) + ')'
         },
         series: [],
         repTypes: {
             headcount: myc3.AREA
-        },
-        onmouseover : function(d) { 
-            showAllTooltips(headcountChart, d);
-        },
-        onmouseout : function(d) {
-            hideAllTooltips(headcountChart);
         },
         onclick: function(d, i) {
             commentChartData(headcountChart, d.id, i);
@@ -959,7 +914,6 @@ function generateHeadcountData() {
     
 function generateMonetarySupplyData() {
     var monetarySupplyData = {
-        xFormat: DATE_PATTERN,
         names: {
             'monetarySupply': MONETARY_SUPPLY_LABEL,
             'stableMonetarySupply': STABLE_MONETARY_SUPPLY_LABEL
@@ -1192,31 +1146,20 @@ function generateAccountsChart() {
         axis: {
             x: {
                 label: {
-                    text: timeLabel(),
-                    position: 'outer-center'
+                    text: timeLabel()
                 },
-                type: 'timeseries',
                 tick: {
-                    format: DATE_PATTERN,
-                    count: 2
+                    format: DATE_PATTERN
                 },
                 min: asDate(money.getTimeLowerBound(money.YEAR), money.YEAR),
                 max: asDate(money.getTimeUpperBound(money.YEAR), money.YEAR)
             },
             y: {
                 label: {
-                    text: accountYLabel(),
-                    position: 'outer-middle'
+                    text: accountYLabel()
                 },
                 tick: {
                     format: tickFormat
-                }
-            }
-        },
-        tooltip: {
-            format: {
-                value: function (value, ratio, id, index) {
-                    return amountTooltipFormat(value);
                 }
             }
         },
@@ -1234,16 +1177,6 @@ function generateAccountsChart() {
         },
         transition: {
             duration: TRANSITION_DURATION
-        },
-        point: {
-            show: false,
-            r: 2,
-            select: {
-                r: 3
-            }
-        },
-        onmouseout: function() {
-            hideAllTooltips(accountsChart);
         }
     });
 }
@@ -1263,32 +1196,20 @@ function generateDividendChart() {
         axis: {
             x: {
                 label: {
-                    text: timeLabel(),
-                    position: 'outer-center'
+                    text: timeLabel()
                 },
-                type: 'timeseries',
                 tick: {
-                    format: DATE_PATTERN,
-                    count: 2 
+                    format: DATE_PATTERN
                 },
                 min: asDate(money.getTimeLowerBound(money.YEAR), money.YEAR),
                 max: asDate(money.getTimeUpperBound(money.YEAR), money.YEAR)
             },
             y: {
                 label: {
-                    text: accountYLabel(),
-                    position: 'outer-middle'
+                    text: accountYLabel()
                 },
-                position: 'outer-top',
                 tick: {
                     format: tickFormat
-                }
-            }
-        },
-        tooltip: {
-            format: {
-                value: function (value, ratio, id, index) {
-                    return amountTooltipFormat(value);
                 }
             }
         },
@@ -1306,16 +1227,6 @@ function generateDividendChart() {
         },
         transition: {
             duration: TRANSITION_DURATION
-        },
-        point: {
-            show: false,
-            r: 2,
-            select: {
-                r: 3
-            }
-        },
-        onmouseout: function() {
-            hideAllTooltips(dividendChart);
         }
     });
 }
@@ -1335,33 +1246,20 @@ function generateHeadcountChart() {
         axis: {
             x: {
                 label: {
-                    text: timeLabel(),
-                    position: 'outer-center'
+                    text: timeLabel()
                 },
-                type: 'timeseries',
                 tick: {
-                    format: DATE_PATTERN,
-                    count: 2
+                    format: DATE_PATTERN
                 },
                 min: asDate(money.getTimeLowerBound(money.YEAR), money.YEAR),
                 max: asDate(money.getTimeUpperBound(money.YEAR), money.YEAR)
             },
             y: {
                 label: {
-                    text: "Nombre d\'individus",
-                    position: 'outer-middle'
+                    text: "Nombre d\'individus"
                 },
-                position: 'outer-top',
                 tick: {
                     format: d3.format("d")
-                }
-            }
-        },
-        tooltip: {
-            format: {
-                value: function (value, ratio, id, index) {
-                    var f = d3.format('.3d');
-                    return f(value);
                 }
             }
         },
@@ -1379,16 +1277,6 @@ function generateHeadcountChart() {
         },
         transition: {
             duration: TRANSITION_DURATION
-        },
-        point: {
-            show: false,
-            r: 2,
-            select: {
-                r: 3
-            }
-        },
-        onmouseout: function() {
-            hideAllTooltips(headcountChart);
         }
     });
 }
@@ -1408,32 +1296,20 @@ function generateMonetarySupplyChart() {
         axis: {
             x: {
                 label: {
-                    text: timeLabel(),
-                    position: 'outer-center'
+                    text: timeLabel()
                 },
-                type: 'timeseries',
                 tick: {
-                    format: DATE_PATTERN,
-                    count: 2
+                    format: DATE_PATTERN
                 },
                 min: asDate(money.getTimeLowerBound(money.YEAR), money.YEAR),
                 max: asDate(money.getTimeUpperBound(money.YEAR), money.YEAR)
             },
             y: {
                 label: {
-                    text: accountYLabel(),
-                    position: 'outer-middle'
+                    text: accountYLabel()
                 },
-                position: 'outer-top',
                 tick: {
                     format: tickFormat
-                }
-            }
-        },
-        tooltip: {
-            format: {
-                value: function (value, ratio, id, index) {
-                    return amountTooltipFormat(value);
                 }
             }
         },
@@ -1451,16 +1327,6 @@ function generateMonetarySupplyChart() {
         },
         transition: {
             duration: TRANSITION_DURATION
-        },
-        point: {
-            show: false,
-            r: 2,
-            select: {
-                r: 3
-            }
-        },
-        onmouseout: function() {
-            hideAllTooltips(monetarySupplyChart);
         }
     });
 }
@@ -1468,26 +1334,6 @@ function generateMonetarySupplyChart() {
 function tickFormat(value) {
     var f = d3.format('.2s');
     return withExp(f(value));
-}
-
-function amountTooltipFormat(value) {
-    var isInfinite = money.isInfinite(value);
-    if (isInfinite < 0) {
-        return '-Infini';
-    }
-    if (isInfinite > 0) {
-        return '+Infini';
-    }
-    var f = d3.format('.3s');
-    var unit = getRefUnitLabel1(money.referenceFrameKey);
-    if (money.referenceFrames[money.referenceFrameKey].logScale) {
-        var noLogValue = Math.exp(value * Math.log(10));
-        var f3f = d3.format('.3f');
-        return "${p0} ${p1} = 1E ${p2}".format(withExp(f(noLogValue)), unit, f3f(value));
-    }
-    else {
-        return "${p0} ${p1}".format(withExp(f(value)), unit);
-    }
 }
 
 function commentFormat(value) {
