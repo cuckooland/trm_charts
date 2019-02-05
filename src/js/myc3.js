@@ -97,10 +97,15 @@ var myc3 = (function() {
             .attr("height", args.size.height - args.padding.bottom - args.padding.top)
             .style("opacity", 0)
             .on("mouseover", function() {
-                d3.selectAll('.xMouseLine').style("display", null);
-                svg.selectAll('.yMouseLine').style("display", null);
-                distLine.style("display", null);
-                distCircle.style("display", null);
+                var mouse = d3.mouse(this);
+                var series = svg.selectAll('path.line');
+                var best = chart.closestPoint(series, mouse);
+                if (best) {
+                    d3.selectAll('.xMouseLine').style("display", null);
+                    svg.selectAll('.yMouseLine').style("display", null);
+                    distLine.style("display", null);
+                    distCircle.style("display", null);
+                }
             })
             .on("mouseout", function() {
                 d3.selectAll('.xMouseLine').style("display", "none");
@@ -112,13 +117,15 @@ var myc3 = (function() {
                 var mouse = d3.mouse(this);
                 var series = svg.selectAll('path.line');
                 var best = chart.closestPoint(series, mouse);
-                var p = best.serie.points[best.index].slice();
-                p[0] = chart.xScale(p[0]);
-                p[1] = chart.yScale(p[1]);
-                distLine.attr("x1", p[0]).attr("y1", p[1]).attr("x2", mouse[0]).attr("y2", mouse[1]);
-                distCircle.attr("cx", p[0]).attr("cy", p[1]);
-                d3.selectAll('.xMouseLine').attr("transform", "translate(" + p[0] + ",0)");
-                svg.selectAll('.yMouseLine').attr("transform", "translate(0," + p[1] + ")");
+                if (best) {
+                    var p = best.serie.points[best.index].slice();
+                    p[0] = chart.xScale(p[0]);
+                    p[1] = chart.yScale(p[1]);
+                    distLine.attr("x1", p[0]).attr("y1", p[1]).attr("x2", mouse[0]).attr("y2", mouse[1]);
+                    distCircle.attr("cx", p[0]).attr("cy", p[1]);
+                    d3.selectAll('.xMouseLine').attr("transform", "translate(" + p[0] + ",0)");
+                    svg.selectAll('.yMouseLine').attr("transform", "translate(0," + p[1] + ")");
+                }
             })
             .on('click', function() {
                 var mouse = d3.mouse(this);
