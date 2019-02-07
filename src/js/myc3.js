@@ -20,6 +20,15 @@ var myc3 = (function() {
         var svg = d3.select(args.bindto).append("svg")
             .attr("width", args.size.width)
             .attr("height", args.size.height);
+
+        // define clipping (useful for zoom transition)
+        svg.append('defs')
+            .append('clipPath')
+            .attr('id', 'clip-' + args.bindto)
+            .append('rect')
+            .attr("transform", "translate(0,-1)")
+            .attr("width", args.size.width - args.padding.left - args.padding.right + 1)
+            .attr("height", args.size.height - args.padding.bottom - args.padding.top + 1);
         
         var plotGroup = svg.append("g")
             .attr("transform", "translate(" + args.padding.left + "," + args.padding.top + ")");
@@ -33,7 +42,8 @@ var myc3 = (function() {
         chart.yScale = d3.scaleLinear()
             .range([args.size.height - args.padding.bottom - args.padding.top, 0]);
     
-        var seriesGroup = plotGroup.append('g');
+        var seriesGroup = plotGroup.append('g')
+            .attr("clip-path", "url(#clip-" + args.bindto + ") ");
         var legendGroup = plotGroup.append('g')
             .attr('transform', "translate(" + (legendPadding.l - args.padding.left) +"," + (legendPadding.t + args.size.height - args.padding.bottom - args.padding.top) + ")");
     
@@ -372,7 +382,84 @@ var myc3 = (function() {
                 totalLengthList.push(curTotalLength);
                 return totalLengthList;
             }
-        };
+        }
+
+        chart.updateZoom = function() {
+            var series = chart.theData.series;
+            var serieGroup = seriesGroup.selectAll('.serieGroup').data(series, function(d) { return d.id; });
+    
+            var serieGroupEnter = serieGroup.enter()
+                .append('g')
+                .attr('class', 'serieGroup');
+            serieGroupEnter.filter(d=>chart.theData.repTypes && chart.theData.repTypes[d.id] == AREA)
+                .append('path')
+                .attr('class', 'area')
+                .attr('d', function(d) { return chart.areaGenerator(d.linkType)(d.points); })
+                .style('fill', (d, i) => color(i))
+                .style('stroke', 'none')
+                .style('fill-opacity', 0.2);
+            serieGroupEnter
+                .append('path')
+                .attr('class', 'line')
+                .attr('d', function(d) { return chart.lineGenerator(d.linkType)(d.points); })
+                .style('stroke', (d, i) => color(i))
+                .style('fill', 'none')
+                .style('stroke-width', 2);
+
+            serieGroup.filter(d=>chart.theData.repTypes && chart.theData.repTypes[d.id] == AREA)
+                .select('path.area')
+                .attr('d', function(d) { return chart.areaGenerator(d.linkType)(d.points); });
+            serieGroup
+                .select('path.line')
+                .attr('d', function(d) { return chart.lineGenerator(d.linkType)(d.points); });
+
+            // Draw circles representing a selection and a reference for each serie
+            serieGroupEnter
+                .append('circle')
+                .attr('class', 'selection')
+                .attr('r', 3.5)
+                .style('stroke-width', 1);
+            
+            serieGroupEnter
+                .append('circle')
+                .attr('class', 'reference')
+                .attr('r', 2)
+                .style('stroke-width', 2);
+            
+            chart.updateSelectionCircle();
+            chart.updateReferencedCircle();
+
+            serieGroup.exit().remove();
+
+            // Transition to new X and Y range
+            chart.updateXYScalesDomain();
+
+            serieGroup = seriesGroup.selectAll('.serieGroup');
+            serieGroup.filter(d=>chart.theData.repTypes && chart.theData.repTypes[d.id] == AREA)
+                .select('path.area')
+                .transition().duration(args.transition.duration)
+                .attr('d', function(d) { return chart.areaGenerator(d.linkType)(d.points); });
+            var zoomTransition = serieGroup
+                .select('path.line')
+                .transition().duration(args.transition.duration)
+                .attr('d', function(d) { return chart.lineGenerator(d.linkType)(d.points); });
+
+            // Draw axes
+            if (series.length > 0 && series[0].id == HEADCOUNT_ID && chart.axis.rangeVal.max.y < 10) {
+                chart.yAxis.ticks(chart.axis.rangeVal.max.y);
+            }
+            else {
+                chart.yAxis.ticks(10);
+            }
+            plotGroup.select('.x.axis')
+                .transition().duration(args.transition.duration)
+                .call(chart.xAxis);
+            plotGroup.select('.y.axis')
+                .transition().duration(args.transition.duration)
+                .call(chart.yAxis);
+
+            return zoomTransition;
+        }
 
         chart.updateXYScalesDomain = function() {
             var series = chart.theData.series;
@@ -397,13 +484,17 @@ var myc3 = (function() {
             }
             if (visibleSeries.length != 0) {
                 chart.axis.rangeVal.min.y = d3.min(visibleSeries, function (d) { 
-                    return d.points.length == 0 ? 1 : d3.min(d.points, function (p) { 
+                    // During zoom process, some points can have to be ignored (when out of the X range)
+                    var points = d.points.filter(p=>p[0]>= chart.axis.rangeVal.min.x && p[0] <= chart.axis.rangeVal.max.x);
+                    return points.length == 0 ? 1 : d3.min(points, function (p) { 
                         return p[1];
                     });
                 });
                 chart.axis.rangeVal.min.y = Math.min(chart.axis.rangeVal.min.y, 0);
                 chart.axis.rangeVal.max.y = d3.max(visibleSeries, function (d) { 
-                    return d.points.length == 0 ? 1 : d3.max(d.points, function (p) { 
+                    // During zoom process, some points can have to be ignored (when out of the X range)
+                    var points = d.points.filter(p=>p[0]>= chart.axis.rangeVal.min.x && p[0] <= chart.axis.rangeVal.max.x);
+                    return points.length == 0 ? 1 : d3.max(points, function (p) { 
                         return p[1];
                     });
                 });

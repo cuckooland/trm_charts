@@ -604,6 +604,33 @@ function applyEncodedURI(encodedURI) {
 }
 
 function applyJSonRep(jsonRep) {
+    // If current X range has changed, apply zoom first (except if no serie is already drawn)
+    var zoomTransition;
+    if (!d3.selectAll('.serieGroup').empty() && 
+            ((money.timeLowerBoundInYears != jsonRep.m.tm)
+            || (money.timeUpperBoundInYears != jsonRep.m.tM))) {
+        var oldTimeBounds = { lower: money.getTimeLowerBound(money.YEAR), upper: money.getTimeUpperBound(money.YEAR) };
+        money.setTimeLowerBound(jsonRep.m.tm); 
+        money.setTimeUpperBound(jsonRep.m.tM);
+        zoomTransition = updateZoom(oldTimeBounds);
+    }
+    if (zoomTransition) {
+        zoomTransition
+            .on("end", function(p,j) {
+                // If transition 0 is ended, no need to wait the others, they are virtually ended
+                if (j==0) {
+                    // Finalize drawing (do a chained transition)  
+                    applyJSonRepFinal(jsonRep);
+                    var encodedURI = asEncodedURI();
+                    window.history.replaceState(encodedURI, '', '?' + encodedURI);
+                }
+            });
+    } else {
+        applyJSonRepFinal(jsonRep);
+    }
+}
+
+function applyJSonRepFinal(jsonRep) {
     curveType = jsonRep.g.ct;
     money.applyJSonRep(jsonRep.m);
     
@@ -1385,6 +1412,37 @@ function redrawCharts() {
     dividendChart.draw();
     headcountChart.draw();
     monetarySupplyChart.draw();
+}
+
+function updateZoom(oldTimeBounds) {
+    // calculate C3 data
+    money.generateData({ 
+        lower: Math.min(money.getTimeLowerBound(money.YEAR), oldTimeBounds.lower), 
+        upper: Math.max(money.getTimeUpperBound(money.YEAR), oldTimeBounds.upper)
+    });
+    var accountsData = generateAccountsData();
+    var dividendData = generateDividendData();
+    var headcountData = generateHeadcountData();
+    var monetarySupplyData = generateMonetarySupplyData();
+
+    // reload data in chart
+    accountsChart.load(accountsData);
+    dividendChart.load(dividendData);
+    headcountChart.load(headcountData);
+    monetarySupplyChart.load(monetarySupplyData);
+    
+    var lowerBoundDate = asDate(money.getTimeLowerBound(money.YEAR), money.YEAR);
+    var upperBoundDate = asDate(money.getTimeUpperBound(money.YEAR), money.YEAR);
+    accountsChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    dividendChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    headcountChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+    monetarySupplyChart.axis.range({min: {x: lowerBoundDate}, max: {x: upperBoundDate}});
+
+    // If the transition of one of the charts is ended, no need to wait the others, they are virtually ended
+    accountsChart.updateZoom();
+    dividendChart.updateZoom();
+    headcountChart.updateZoom();
+    return monetarySupplyChart.updateZoom();
 }
 
 function searchChartWithData(c3DataId) {
@@ -2391,8 +2449,9 @@ function changeStepCurves() {
 function changeTimeLowerBound() {
     var timeLowerBound = fromYearRep(parseInt(this.value));
     if (timeLowerBound >= 0 && timeLowerBound < 200) {
+        var oldTimeBounds = { lower: money.getTimeLowerBound(money.YEAR), upper: money.getTimeUpperBound(money.YEAR) };
         money.setTimeLowerBound(timeLowerBound); 
-        redrawCharts();
+        updateZoom(oldTimeBounds);
         d3.select('#TimeUpperBound').property("value", toYearRep(money.getTimeUpperBound(money.YEAR)));
     }
     else {
@@ -2404,8 +2463,9 @@ function changeTimeLowerBound() {
 function changeTimeUpperBound() {
     var timeUpperBound = fromYearRep(parseInt(this.value));
     if (timeUpperBound > 0 && timeUpperBound <= 200) {
+        var oldTimeBounds = { lower: money.getTimeLowerBound(money.YEAR), upper: money.getTimeUpperBound(money.YEAR) };
         money.setTimeUpperBound(timeUpperBound); 
-        redrawCharts();
+        updateZoom(oldTimeBounds);
         d3.select('#TimeLowerBound').property("value", toYearRep(money.getTimeLowerBound(money.YEAR)));
     }
     else {

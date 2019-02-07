@@ -864,7 +864,10 @@ var libreMoneyClass = function(lifeExpectancy) {
         throw new Error(transactionIndex + "is an invalid transaction index");
     };
 
-    this.generateData = function () {
+    this.generateData = function (timeBounds) {
+        if (!timeBounds) {
+            timeBounds = {lower: this.getTimeLowerBound(), upper: this.getTimeUpperBound()};
+        }
 
         if (this.calculateGrowth) {
             this.calcGrowth();
@@ -891,7 +894,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         var iAccount, timeStep;
         var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
         
-        for (timeStep = 0; timeStep <= this.getTimeUpperBound(); timeStep++) {
+        for (timeStep = 0; timeStep <= timeBounds.upper; timeStep++) {
            
             this.headcounts.values.push(this.getHeadcount(timeStep));
             this.dividends.values.push(this.getDividend(timeStep));
@@ -906,7 +909,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         // Set x,y arrays
         // **************
         
-        for (timeStep = this.getTimeLowerBound(); timeStep <= this.getTimeUpperBound(); timeStep++) {
+        for (timeStep = timeBounds.lower; timeStep <= timeBounds.upper; timeStep++) {
            
             if (timeStep >= moneyBirthStep) {
                 this.dividends.x.push(timeStep);
