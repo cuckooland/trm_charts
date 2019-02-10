@@ -117,6 +117,7 @@ var myc3 = (function() {
                 var series = svg.selectAll('path.line');
                 var best = chart.closestPoint(series, mouse);
                 if (best) {
+                    chart.updateMouseDrawing(mouse, best);
                     d3.selectAll('.xMouseLine').style("display", null);
                     svg.selectAll('.yMouseLine').style("display", null);
                     distLine.style("display", null);
@@ -124,23 +125,14 @@ var myc3 = (function() {
                 }
             })
             .on("mouseout", function() {
-                d3.selectAll('.xMouseLine').style("display", "none");
-                svg.selectAll('.yMouseLine').style("display", "none");
-                distLine.style("display", "none");
-                distCircle.style("display", "none");
+                chart.hideMouseDrawing();
             })
             .on("mousemove", function() {
                 var mouse = d3.mouse(this);
                 var series = svg.selectAll('path.line');
                 var best = chart.closestPoint(series, mouse);
                 if (best) {
-                    var p = best.serie.points[best.index].slice();
-                    p[0] = chart.xScale(p[0]);
-                    p[1] = chart.yScale(p[1]);
-                    distLine.attr("x1", p[0]).attr("y1", p[1]).attr("x2", mouse[0]).attr("y2", mouse[1]);
-                    distCircle.attr("cx", p[0]).attr("cy", p[1]);
-                    d3.selectAll('.xMouseLine').attr("transform", "translate(" + p[0] + ",0)");
-                    svg.selectAll('.yMouseLine').attr("transform", "translate(0," + p[1] + ")");
+                    chart.updateMouseDrawing(mouse, best);
                 }
             })
             .on('click', function() {
@@ -220,8 +212,29 @@ var myc3 = (function() {
             }
             chart.hiddenSerieIds = intersection;
         }
+
+        chart.hideMouseDrawing = function() {
+            d3.selectAll('.xMouseLine').style("display", "none");
+            svg.selectAll('.yMouseLine').style("display", "none");
+            distLine.style("display", "none");
+            distCircle.style("display", "none");
+        }
+
+        chart.updateMouseDrawing = function(mouse, best) {
+            var p = best.serie.points[best.index].slice();
+            p[0] = chart.xScale(p[0]);
+            p[1] = chart.yScale(p[1]);
+            distLine.attr("x1", p[0]).attr("y1", p[1]).attr("x2", mouse[0]).attr("y2", mouse[1]);
+            distCircle.attr("cx", p[0]).attr("cy", p[1]);
+            d3.selectAll('.xMouseLine').attr("transform", "translate(" + p[0] + ",0)");
+            svg.selectAll('.yMouseLine').attr("transform", "translate(0," + p[1] + ")");
+        }
     
         chart.draw = function() {
+            // Desactivate 'pointer-events' for '.overlay' and hide mouse drawing
+            plotGroup.select("rect.overlay").style('pointer-events', 'none');
+            chart.hideMouseDrawing();
+
             var series = chart.theData.series;
             var oldSeries = seriesGroup.selectAll('.serieGroup').data();
             var oldYDomain = chart.yScale.domain();
@@ -386,6 +399,10 @@ var myc3 = (function() {
         }
 
         chart.updateZoom = function() {
+            // Desactivate 'pointer-events' for '.overlay' and hide mouse drawing
+            plotGroup.select("rect.overlay").style('pointer-events', 'none');
+            chart.hideMouseDrawing();
+
             var series = chart.theData.series;
             var serieGroup = seriesGroup.selectAll('.serieGroup').data(series, function(d) { return d.id; });
     
@@ -459,6 +476,15 @@ var myc3 = (function() {
                 .transition().duration(args.transition.duration)
                 .call(chart.yAxis);
 
+            // Finalization after transition
+            zoomTransition
+                .on("end", function(p,j) {
+                    // If transition 0 is ended, no need to wait the others, they are virtually ended
+                    if (j==0) {
+                        // Activate 'pointer-events' for '.overlay'
+                        plotGroup.select("rect.overlay").style('pointer-events', 'auto');
+                    }
+                });
             return zoomTransition;
         }
 
@@ -572,7 +598,15 @@ var myc3 = (function() {
             serieGroup.select('path.line')
                 .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .transition(trans)
-                .attrTween("d", function(d) { return lineTween.call(this, d); });
+                .attrTween("d", function(d) { return lineTween.call(this, d); })
+                .on("end", function(p,j) {
+                    // If transition 0 is ended, no need to wait the others, they are virtually ended
+                    if (j==0) {
+                        // Activate 'pointer-events' for '.overlay'
+                        plotGroup.select("rect.overlay").style('pointer-events', 'auto');
+                    }
+                });
+                
             
             function lineTween(newSerie) {
                 var areaRep = d3.select(this).classed('area');
