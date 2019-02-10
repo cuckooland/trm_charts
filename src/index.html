@@ -737,7 +737,7 @@
                             <p>Ce simulateur a une configuration par défaut. Cet onglet permet de mettre en avant d'autres configurations.</p>
                             
                         </div>
-                        <div class="Comment" id="config1-1Comment">
+                        <div class="Comment" id="cS0Comment">
                             <p>Dans cette configuration, le système monétaire est constitué d'un seul individu, comme nous le confirme la <span class="headcount">courbe du nombre d'individu</span> (voir le graphe en bas à gauche). Le compte de cet individu est représenté par une <span class="account">courbe</span> dans le graphe en haut à gauche.</p>
                             
                             <p><strong>Note</strong>&nbsp;: chaque point des courbes peut être cliqué, la façon dont il est calculé sera alors indiquée.</p>
@@ -747,15 +747,13 @@
                             <p><strong>Note</strong>&nbsp;: après avoir testé différents attributs, l'historique du navigateur peut être utilisé pour revenir en arrière.</p>
                             
                         </div>
-                        <div class="Comment" id="config1-2Comment">
-                            <p>Cette configuration n'a qu'une seule différence par rapport à la précédente&nbsp;: les "Courbes en escalier" sont activées grâce à une case à cocher se trouvant dans l'onglet <span class="boundsTabLink">Affichage</span>.</p>
+                        <div class="Comment" id="cNOSTEPComment">
+                            <p>Cette configuration n'a qu'une seule différence par rapport à la précédente&nbsp;: les "Courbes en escalier" sont désactivées grâce à une case à cocher se trouvant dans l'onglet <span class="boundsTabLink">Affichage</span>.</p>
 
-                            <p>Dans la configuration précédente où les "Courbes en escalier" ne sont pas activées, des points sont calculés pour chaque année et des lignes sont tracées pour les relier. Ces segments forment ainsi des courbes "lisses" qui aident à mieux visualiser les variations. Mais ils sont trompeurs&nbsp;: par exemple, ils peuvent laisser penser qu'au bout d'un mois, le montant sur le compte a augmenté. En cochant la case <span class="boundsTabLink">"Courbes en escalier"</span>, on a des courbes en escalier qui n'ont plus cet inconvénient.</p>
-                            
-                            <p><strong>Note</strong>&nbsp;: pour faciliter la comparaison avec le cas précédent, il peut être intéressant de l'ouvrir dans un deuxième onglet du navigateur et de passer de l'un à l'autre.</p>
+                            <p>Dans cette configuration sans "Courbes en escalier", les points calculés pour chaque année sont directement reliés par des lignes. Ces segments forment ainsi des courbes "lisses" qui aident à mieux visualiser les variations. Mais ils sont trompeurs&nbsp;: par exemple, ils peuvent laisser penser qu'au bout d'un mois, le montant sur le compte a augmenté. En cochant la case <span class="boundsTabLink">"Courbes en escalier"</span>, on a des courbes en escalier qui n'ont plus cet inconvénient.</p>
                             
                         </div>
-                        <div class="Comment" id="config1-3Comment">
+                        <div class="Comment" id="cSMNComment">
                             <p>Ici aussi, le système monétaire est constitué d'un seul individu mais il démarre avec une somme le plaçant dans un "régime de croisière" (sur ce sujet, voir l'onglet <span class="accountsTabLink">Comptes</span>).</p>
                             
                             <p>En testant les différentes formules de calcul du <span class="dividendTabLink">Dividende Universel</span>, on peut noter que les courbes ne changent pas&nbsp;: en "régime de croisière", toutes sont équivalentes à la formule fondamentale de base DU&nbsp;=&nbsp;c*M(t-1)/N(t).</p>
@@ -765,15 +763,15 @@
                             <p><strong>Note</strong>&nbsp;: l'état de l'application est contenu sous une forme codée dans la zone "Adresse" du navigateur (voir la suite de caractères qui suit le "?"), ce qui en facilite l'échange lors de discussion ou la sauvegarde sous forme de marque-page/favori.</p>
                             
                         </div>
-                        <div class="Comment" id="config1-4Comment">
+                        <div class="Comment" id="cX40Comment">
                             <p>Comme précédemment, le système monétaire est constitué d'un seul individu qui démarre avec une somme le plaçant dans un "régime de croisière". Dans cette configuration, la différence réside dans la période représentée, qui couvre maintenant 40 ans au lieu de 5 (voir l'onglet <span class="boundsTabLink">Affichage</span>).</p>
                             
-                            <p>Dans le graphe en bas à droite, les variations au fil du temps de la <span class="monetarySupply">masse monétaire</span> sont représentées. Étant en régime de croisière, on peut vérifier qu'elle est multipliée par 40 au bout de 40 ans, ce qui est propre au taux d'expansion utilisé (voir l'onglet <span class="growth">Taux d'expansion</span>).</p>
+                            <p>Dans le graphe en bas à droite, les variations au fil du temps de la <span class="monetarySupply">masse monétaire</span> sont représentées. Étant en régime de croisière, on peut vérifier qu'elle est multipliée par 40 au bout de 40 ans, ce qui est propre au taux d'expansion utilisé (voir l'onglet <span class="growth">Taux d'expansion</span>), qui n'est plus de 10&nbsp;% par an comme précédemment, mais de 9.66&nbsp;%.</p>
                             
                             <p>On peut aussi vérifier qu'en régime de croisière, toutes les formules du <span class="dividendTabLink">Dividende Universel</span> sont équivalentes.</p>
                             
                         </div>
-                        <div class="Comment" id="config2-1Comment">
+                        <div class="Comment" id="c2CCComment">
                             <p>Au départ, dans cette configuration, le système monétaire est constitué d'un seul individu, puis un deuxième entre dans le système un an après le premier.</p>
                             
                             <p>Dans les graphes, les montants sont exprimés, non plus en nombre d'unités monétaires, mais en pourcentage de la répartition moyenne par individu (sur ce sujet, voir l'onglet <span class="referenceTabLink">Référentiel</span>). On peut vérifier que la courbe <span class="average label">M/N</span> apparaît comme une horizontale "y=100". A noter également la <span class="monetarySupply">masse monétaire</span> est à 100&nbsp;% dans un premier temps, puis à 200&nbsp;% lors de l'arrivée du deuxième individu.</p>
@@ -781,7 +779,7 @@
                             <p>En testant les différentes formules de calcul du <span class="dividendTabLink">Dividende Universel</span>, on peut comparer les vitesses de convergence des comptes vers la moyenne.</p>
                             
                         </div>
-                        <div class="Comment" id="config2-2Comment">
+                        <div class="Comment" id="cCAUCHYComment">
                             <p>Comme précédemment, les montants sont exprimés en pourcentage de la répartition moyenne par individu. Là encore (voir graphe en haut à gauche), deux comptes sont représentés, mais sur une période plus longue.</p>
                             
                             <p>Ici, DUĞ est utilisée. Autre différence (voir graphe en bas à gauche), un plus grand nombre d'individus constitue le système monétaire, ce qui est paramétrable dans l'onglet <span class="demographyTabLink">Démographie</span>, en appliquant un profil.</p>
@@ -791,7 +789,7 @@
                             <p>Dans le graphe en haut à droite illustrant les variations du DU, la courbe <span class="stableDividend label">DU stable</span> est affichée, permettant de vérifier qu'elle apparaît comme une horizontale "y=c/(1+c)". Pour en savoir plus, cliquer la courbe.</p>
                             
                         </div>
-                        <div class="Comment" id="config2-3Comment">
+                        <div class="Comment" id="c4DATESComment">
                             <p>Dans cette configuration, la période couverte ainsi que le profil pour l'évolution de la population sont les mêmes que précédemment. L'affichage des montants se fait désormais en nombre de DU (voir l'onglet <span class="referenceTabLink">Référentiel</span>).</p>
                             
                             <p>Dans le graphe en haut à gauche, deux comptes de plus sont affichés afin de mieux visualiser l'impact de la variation de la population suivant la date d'arrivée dans la monnaie d'un individu.</p>
@@ -799,25 +797,25 @@
                             <p>De plus, dans ce graphe, la courbe <span class="stableAverage label">M/N stable</span> est affichée, permettant de vérifier qu'elle apparaît comme une horizontale "y=(1+c)/c". Pour en savoir plus, cliquer la courbe.</p>
                             
                         </div>
-                        <div class="Comment" id="config3-1Comment">
+                        <div class="Comment" id="cLMU1Comment">
                             <p>Deux comptes sont représentés dans cette configuration, et ils ne sont pas co-créateurs de la monnaie. L'unité monétaire est utilisée pour les axes verticaux des graphes. Au cours de l'année 2004, un transfert de 5000 unités monétaires a lieu du Compte 1 vers le Compte 2&nbsp;; puis, chaque année durant les dix suivantes, un transfert de 500 unités monétaires est réalisé du Compte 2 vers le Compte 1.</p>
                             
                             <p>Au bout de 11 ans, les deux comptes se retrouvent au même montant. Cette configuration pourrait rappeler un prêt suivi d'un remboursement en 10 échéances, sans intérêt.</p>
                             
                         </div>
-                        <div class="Comment" id="config3-2Comment">
+                        <div class="Comment" id="cLMU2Comment">
                             <p>Cette configuration est très similaire à la précédente. Cette fois, les deux comptes sont co-créateurs de la monnaie. De plus, le DU est l'unité utilisée pour les axes verticaux des graphes.</p>
                             
                             <p>Visuellement, par rapport à la configuration précédente, la partie "Remboursement" apparaît courbée. Autrement dit, dans ce référentiel, les premiers remboursements semblent plus élevés que les derniers.</p>
                             
                         </div>
-                        <div class="Comment" id="config3-3Comment">
+                        <div class="Comment" id="cLUDComment">
                             <p>La différence dans cette configuration par rapport à la précédente est dans l'unité utilisée pour les transactions. Au cours de l'année 2004, un transfert de 5 DU (au lieu des 5000 unités monétaires précédemment) a lieu du Compte 1 vers le Compte 2&nbsp;; puis, chaque année durant les dix suivantes, un transfert de 0.5 DU (au lieu des 500 unités monétaires précédemment) est réalisé du Compte 2 vers le Compte 1.</p>
                             
                             <p>Cette fois, au bout de 11 ans, les deux comptes ne se retrouvent pas au même montant, le compte "prêteur" finit au dessus du compte "emprunteur". On dit communément que "les additions fonctionnent mal quand on compte en DU". Là encore, cette configuration pourrait rappeler un prêt suivi d'un remboursement en 10 échéances, mais cette fois avec intérêts.</p>
                             
                         </div>
-                        <div class="Comment" id="config4-1Comment">
+                        <div class="Comment" id="c3CCComment">
                             <p>Cette configuration est seulement constituée de trois co-créateurs de la monnaie. Le premier (<span class="accountsTabLink">Compte 2</span>) démarre avec 50&nbsp;% de <span class="dividendTabLink">DU0/c</span>, le deuxième (<span class="accountsTabLink">Compte 3</span>) avec 150&nbsp;%, et le troisième (<span class="accountsTabLink">Compte 4</span>) avec 100&nbsp;%. Le <span class="growth">taux d'expansion</span> est de 10&nbsp;%.</p>
                             
                             <p>Au niveau des axes verticaux, le <span class="referenceTabLink">référentiel</span> utilisé est le DU.</p>
@@ -827,7 +825,7 @@
                             <p>A noter que le <span class="accountsTabLink">Compte 1</span> n'a pas d'utilitité, il n'est présent que pour faciliter la comparaison graphique avec la configuration suivante. Par défaut, il n'est pas représenté, mais il suffit de cliquer la légende pour le faire apparaitre.</p>
                             
                         </div>
-                        <div class="Comment" id="config4-2Comment">
+                        <div class="Comment" id="c3UBIComment">
                             <p>Ici, il n'y a <strong>aucun co-créateur</strong> de la monnaie. Le <span class="accountsTabLink">Compte 1</span> (par défaut non représenté, cliquer la légende pour le faire apparaitre) peut être vu comme une caisse collective. D'abord, il est rempli via un prélèvement de 10&nbsp;% de chaque compte  (voir <span class="transactionsTabLink">Transaction 1</span>), puis il est redistribué en totalité et à parts égales (voir <span class="transactionsTabLink">Transaction 2</span>).</p>
                             
                             <p>Comme dans la configuration précédente, on a trois utilisateurs de la monnaie, le premier démarrant avec 50&nbsp;% de <span class="dividendTabLink">DU0/c</span>, le deuxième avec 150&nbsp;%, et le troisième avec 100&nbsp;%.</p>
@@ -835,13 +833,13 @@
                             <p>Au niveau des axes verticaux, le <span class="referenceTabLink">référentiel</span> utilisé est l'unité monétaire. Graphiquement, cette configuration ressemble étrangement à la précédente, on peut y voir le même phénomène d'attraction vers la moyenne et une masse monétaire constante. Il existe en fait une équivalence entre Dividende Universel par création monétaire et Revenu de Base via une taxe, comme l'a montré Stéphane Laborde.</p>
                             
                         </div>
-                        <div class="Comment" id="config4-3Comment">
+                        <div class="Comment" id="c4CCComment">
                             <p>Cette configuration est sensiblement la même que la première&nbsp;: trois co-créateurs de la monnaies, et un compte sans utililité permettant de faciliter la comparaison avec le cas "Revenu de Base via une taxe".</p>
 
                             <p>Mais un nouveau compte fait son apparition au bout de quelques années. Le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux devient "%(M/N)", afin de faciliter la comparaison avec la configuration suivante.</p>
                             
                         </div>
-                        <div class="Comment" id="config4-4Comment">
+                        <div class="Comment" id="c4UBIComment">
                             <p>Cette configuration est sensiblement la même que la deuxième&nbsp;: trois non-créateurs de la monnaies, une caisse et deux transactions permettant de réaliser un Revenu de Base via une taxe.</p>
                         
                             <p>Comme précédemment, un nouveau compte fait son apparition au bout de quelques années. Vu que <span class="headcount">N</span> varie, le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux est "%(M/N)" (plus adapté pour comparer cette configuration avec la précédente).</p>
@@ -849,7 +847,7 @@
                             <p>Là encore, graphiquement, cette configuration ressemble étrangement à la précédente.</p>
                             
                         </div>
-                        <div class="Comment" id="config4-5Comment">
+                        <div class="Comment" id="c4CC-MComment">
                             <p>Cette configuration est sensiblement la même que la troisème&nbsp;: trois co-créateurs de la monnaies, et un compte sans utililité facilitant la comparaison avec le cas "Revenu de Base via une taxe"&nbsp;; puis un nouveau compte fait son apparition au bout de quelques années.</p>
                         
                             <p>La différence ici est que l'émission des Dividendes devient mensuelle, passant à 0,797&nbsp;% par mois au lieu de 10&nbsp;% par an.</p>
@@ -857,7 +855,7 @@
                             <p>La formule de base est utilisée pour le DU. Cette configuration et la suivante (la cinquième) mettront en évidence une équivalence. Mais il sera intéressant de tester d'autres formules pour le DU et de remarquer que l'équivalence est alors moins grande, ce qui parait logique&nbsp;: contrairement aux formules alternatives du DU, le "RdB via une taxe" présenté ici n'est pas prévu pour lisser les variations de N.</p>
                             
                         </div>
-                        <div class="Comment" id="config4-6Comment">
+                        <div class="Comment" id="c4UBI-MComment">
                             <p>Cette configuration est sensiblement la même que la quatrième&nbsp;: trois non-créateurs de la monnaies, une caisse et deux transactions permettant de réaliser un Revenu de Base via une taxe&nbsp;; puis un nouveau compte fait son apparition au bout de quelques années.</p>
                         
                             <p>La différence ici est que les transactions sont répétées tous les mois, avec un prélèvement qui passe à 0,797&nbsp;% par mois au lieu de 10&nbsp;% par an.</p>
@@ -865,7 +863,7 @@
                             <p>En utilisant une émission annuelle, on voyait déjà combien les deux configurations "DU" et "RdB par taxe" étaient semblables. Avec une émission mensuelle, c'est encore plus criant. Dis autrement&nbsp;: l'émission du DU et du RdB se fait par à-coups, mais plus le rythme est rapide pour s'approcher d'un processus continu, plus les deux configurations  "DU" et "RdB par taxe" sont équivalentes.</p>
                             
                         </div>
-                        <div class="Comment" id="config5-1Comment">
+                        <div class="Comment" id="cFALLComment">
                             <p>Juste une configuration illustrant un écroulement (peu réaliste car trop marqué) de N. Ce qui offre aussi l'occasion d'introduire l'utilisation sur les axes verticaux de l'échelle "log" (attribut décrit et positionnable dans l'onglet <span class="referenceTabLink">Référentiel</span>).</p>
                             
                         </div>
@@ -1015,7 +1013,7 @@
 
                         </div>
                         <div class="Comment" id="TimeLowerBoundComment">
-                            <p>Dans cette simulation, la monnaie démarre en 2000. Sur les graphes, les axes horizontaux ont donc par défaut 2000 comme borne inférieure. Cette borne peut être ajustée grâce à ce champ. 0 correspond à 2000, 1 à 2001, etc. La valeur maximale autorisée est 199.</p>
+                            <p>Dans cette simulation, la monnaie démarre en 2000. Sur les graphes, les axes horizontaux ont donc par défaut 2000 comme borne inférieure. Cette borne peut être ajustée grâce à ce champ. La valeur maximale autorisée est 2199.</p>
 
                             <p>A noter&nbsp;: quand la période étudiée est "petite" (par rapport à l'espérance de vie), le <span class="referenceTabLink">référentiel</span> "Unité monétaire" reste praticable&nbsp;; quand la période étudiée devient grande, mieux vaut utiliser un autre <span class="referenceTabLink">référentiel</span>, ou passer en échelle logarithmique.</p>
 

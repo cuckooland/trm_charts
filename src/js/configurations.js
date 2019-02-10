@@ -1,7 +1,7 @@
 var configs1 = {
     none: {
     },
-    'config1-1': {
+    'cS0': {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -20,7 +20,6 @@ var configs1 = {
             ud0: 1000,
             tm: 0,
             tM: 5,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -41,67 +40,7 @@ var configs1 = {
             }
         },
         g: {
-            c: "config1-1",
-            t: "WorkshopsItem",
-            ac: {
-                hs: ['average', "stableAverage"]
-            },
-            dc: {
-                hs: ["stableDividend"]
-            },
-            hc: {
-                hs: []
-            },
-            sc: {
-                hs: ["stableMonetarySupply"]
-            },
-            ct: "L",
-            a: 0,
-            com: "config1-1"
-        }
-    },
-    
-    'config1-2': {
-        m: {
-            f: "BasicUD",
-            r: "monetaryUnit",
-            rs: {
-                mu: {
-                    log: false
-                },
-                ud: {
-                    log: false
-                },
-                mn: {
-                    log: false
-                }
-            },
-            le: 80,
-            ud0: 1000,
-            tm: 0,
-            tM: 5,
-            tR: "MONTH",
-            cc: false,
-            cu: "YEAR",
-            c: 0.1,
-            d: "None",
-            dyM: 10000,
-            dxm: 0,
-            dxM: 80,
-            dxPv: 40,
-            dp: 78,
-            dxs: 4,
-            ac: 1,
-            a0: {
-                id: 1,
-                b: 1,
-                d: 80,
-                a0: 0,
-                t: 'CC'
-            }
-        },
-        g: {
-            c: "config1-2",
+            c: "cS0",
             t: "WorkshopsItem",
             ac: {
                 hs: ['average', "stableAverage"]
@@ -117,11 +56,11 @@ var configs1 = {
             },
             ct: "SA",
             a: 0,
-            com: "config1-2"
+            com: "cS0"
         }
     },
     
-    'config1-3': {
+    'cNOSTEP': {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -137,70 +76,9 @@ var configs1 = {
                 }
             },
             le: 80,
-            ud0: 100,
-            tm: 0,
-            tM: 5,
-            tR: "YEAR",
-            cc: false,
-            cu: "YEAR",
-            c: 0.1,
-            d: "None",
-            dyM: 10000,
-            dxm: 0,
-            dxM: 80,
-            dxPv: 40,
-            dp: 78,
-            dxs: 4,
-            ac: 1,
-            a0: {
-                id: 1,
-                b: 1,
-                d: 80,
-                a0: 100,
-                t: 'CC'
-            }
-        },
-        g: {
-            c: "config1-3",
-            t: "WorkshopsItem",
-            ac: {
-                hs: ['average', "stableAverage"]
-            },
-            dc: {
-                hs: ["stableDividend"]
-            },
-            hc: {
-                hs: []
-            },
-            sc: {
-                hs: ["stableMonetarySupply"]
-            },
-            ct: "L",
-            a: 0,
-            com: "config1-3"
-        }
-    },
-    
-    'config1-4': {
-        m: {
-            f: "BasicUD",
-            r: "monetaryUnit",
-            rs: {
-                mu: {
-                    log: false
-                },
-                ud: {
-                    log: false
-                },
-                mn: {
-                    log: false
-                }
-            },
-            le: 80,
-            ud0: 96.6,
+            ud0: 966,
             tm: 0,
             tM: 40,
-            tR: "YEAR",
             cc: true,
             cu: "YEAR",
             c: 0.09660822712436135,
@@ -221,7 +99,7 @@ var configs1 = {
             }
         },
         g: {
-            c: "config1-4",
+            c: "cNOSTEP",
             t: "WorkshopsItem",
             ac: {
                 hs: ['average', "stableAverage"]
@@ -237,7 +115,125 @@ var configs1 = {
             },
             ct: "L",
             a: 0,
-            com: "config1-4"
+            com: "cNOSTEP"
+        }
+    },
+
+    'cSMN': {
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 5,
+            cc: false,
+            cu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: 'CC'
+            }
+        },
+        g: {
+            c: "cSMN",
+            t: "WorkshopsItem",
+            ac: {
+                hs: ['average', "stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            ct: "SA",
+            a: 0,
+            com: "cSMN"
+        }
+    },
+    
+    'cX40': {
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 966,
+            tm: 0,
+            tM: 40,
+            cc: true,
+            cu: "YEAR",
+            c: 0.09660822712436135,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: 'CC'
+            }
+        },
+        g: {
+            c: "cX40",
+            t: "WorkshopsItem",
+            ac: {
+                hs: ['average', "stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            ct: "SA",
+            a: 0,
+            com: "cX40"
         }
     }
 };
@@ -245,7 +241,7 @@ var configs1 = {
 var configs2 = {
     none: {
     },
-    'config2-1': {
+    'c2CC': {
         m: {
             f: "BasicUD",
             r: "average",
@@ -264,7 +260,6 @@ var configs2 = {
             ud0: 1000,
             tm: 0,
             tM: 10,
-            tR: "YEAR",
             cc: true,
             cu: "YEAR",
             c: 0.09660822712436135,
@@ -293,7 +288,7 @@ var configs2 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config2-1",
+            c: "c2CC",
             ac: {
                 hs: ["stableAverage"]
             },
@@ -306,12 +301,12 @@ var configs2 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
-            ct: "L",
+            ct: "SA",
             a: 1,
-            com: "config2-1"
+            com: "c2CC"
         }
     },
-    'config2-2': {
+    'cCAUCHY': {
         m: {
             f: "UDG",
             r: "average",
@@ -330,7 +325,6 @@ var configs2 = {
             ud0: 1000,
             tm: 0,
             tM: 80,
-            tR: "YEAR",
             cc: true,
             cu: "YEAR",
             c: 0.09660822712436135,
@@ -359,7 +353,7 @@ var configs2 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config2-2",
+            c: "cCAUCHY",
             ac: {
                 hs: ["stableAverage"]
             },
@@ -372,12 +366,12 @@ var configs2 = {
             sc: {
                 hs: []
             },
-            ct: "L",
+            ct: "SA",
             a: 1,
-            com: "config2-2"
+            com: "cCAUCHY"
         }
     },
-    'config2-3': {
+    'c4DATES': {
         m: {
             f: "UDG",
             r: "dividend",
@@ -396,7 +390,6 @@ var configs2 = {
             ud0: 1000,
             tm: 0,
             tM: 80,
-            tR: "YEAR",
             cc: true,
             cu: "YEAR",
             c: 0.09660822712436135,
@@ -438,7 +431,7 @@ var configs2 = {
             }
         },
         g: {
-            c: "config2-3",
+            c: "c4DATES",
             t: "WorkshopsItem",
             ac: {
                 hs: []
@@ -452,9 +445,9 @@ var configs2 = {
             sc: {
                 hs: []
             },
-            ct: "L",
+            ct: "SA",
             a: 3,
-            com: "config2-3"
+            com: "c4DATES"
         }
     }
 };
@@ -462,7 +455,7 @@ var configs2 = {
 var configs3 = {
     none: {
     },
-    'config3-1': {
+    'cLMU1': {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -481,7 +474,6 @@ var configs3 = {
             ud0: 1000,
             tm: 0,
             tM: 20,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -529,7 +521,7 @@ var configs3 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config3-1",
+            c: "cLMU1",
             ac: {
                 hs: [
                     "average",
@@ -551,15 +543,15 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
-            ct: "L",
+            ct: "SA",
             a: 1,
             tr: 1,
             s: "",
             i: -1,
-            com: "config3-1"
+            com: "cLMU1"
         }
     },
-    'config3-2': {
+    'cLMU2': {
         m: {
             f: "BasicUD",
             r: "dividend",
@@ -578,7 +570,6 @@ var configs3 = {
             ud0: 1000,
             tm: 0,
             tM: 20,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -626,7 +617,7 @@ var configs3 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config3-2",
+            c: "cLMU2",
             ac: {
                 hs: [
                     "average",
@@ -648,15 +639,15 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
-            ct: "L",
+            ct: "SA",
             a: 1,
             tr: 1,
             s: "",
             i: -1,
-            com: "config3-2"
+            com: "cLMU2"
         }
     },
-    'config3-3': {
+    'cLUD': {
         m: {
             f: "BasicUD",
             r: "dividend",
@@ -675,7 +666,6 @@ var configs3 = {
             ud0: 1000,
             tm: 0,
             tM: 20,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -723,7 +713,7 @@ var configs3 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config3-3",
+            c: "cLUD",
             ac: {
                 hs: [
                     "average",
@@ -745,12 +735,12 @@ var configs3 = {
                     "stableMonetarySupply"
                 ]
             },
-            ct: "L",
+            ct: "SA",
             a: 1,
             tr: 1,
             s: "",
             i: -1,
-            com: "config3-3"
+            com: "cLUD"
         }
     }
 };
@@ -758,7 +748,7 @@ var configs3 = {
 var configs4 = {
     none: {
     },
-    'config4-1': {
+    'c3CC': {
         m: {
             f: "BasicUD",
             r: "dividend",
@@ -777,7 +767,6 @@ var configs4 = {
             ud0: 1000,
             tm: 0,
             tM: 40,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -820,7 +809,7 @@ var configs4 = {
             }
         },
         g: {
-            c: "config4-1",
+            c: "c3CC",
             t: "WorkshopsItem",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
@@ -834,15 +823,15 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
-            ct: "L",
+            ct: "SA",
             a: 2,
             tr: -1,
             s: "",
             i: -1,
-            com: "config4-1"
+            com: "c3CC"
         }
     },    
-    'config4-2': {
+    'c3UBI': {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -861,7 +850,6 @@ var configs4 = {
             ud0: 1000,
             tm: 0,
             tM: 40,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -922,7 +910,7 @@ var configs4 = {
             }
         },
         g: {
-            c: "config4-2",
+            c: "c3UBI",
             t: "WorkshopsItem",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
@@ -936,15 +924,15 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
-            ct: "L",
+            ct: "SA",
             a: 3,
             tr: 0,
             s: "",
             i: -1,
-            com: "config4-2"
+            com: "c3UBI"
         }
     },
-    'config4-3': {
+    'c4CC': {
         m: {
             f: "BasicUD",
             r: "average",
@@ -963,7 +951,6 @@ var configs4 = {
             ud0: 1000,
             tm: 0,
             tM: 40,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -1014,7 +1001,7 @@ var configs4 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config4-3",
+            c: "c4CC",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
             },
@@ -1027,15 +1014,15 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
-            ct: "L",
+            ct: "SA",
             a: 3,
             tr: -1,
             s: "",
             i: -1,
-            com: "config4-3"
+            com: "c4CC"
         }
     },
-    'config4-4': {
+    'c4UBI': {
         m: {
             f: "BasicUD",
             r: "average",
@@ -1054,7 +1041,6 @@ var configs4 = {
             ud0: 1000,
             tm: 0,
             tM: 40,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -1123,7 +1109,7 @@ var configs4 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config4-4",
+            c: "c4UBI",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
             },
@@ -1136,15 +1122,15 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
-            ct: "L",
+            ct: "SA",
             a: 4,
             tr: 0,
             s: "",
             i: -1,
-            com: "config4-4"
+            com: "c4UBI"
         }
     },
-    'config4-5': {
+    'c4CC-M': {
         m: {
             f: "BasicUD",
             r: "average",
@@ -1163,7 +1149,6 @@ var configs4 = {
             ud0: 1000,
             tm: 0,
             tM: 40,
-            tR: "MONTH",
             cc: false,
             cu: "MONTH",
             c: 0.00797,
@@ -1214,7 +1199,7 @@ var configs4 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config4-5",
+            c: "c4CC-M",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
             },
@@ -1227,15 +1212,15 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
-            ct: "L",
+            ct: "SA",
             a: 3,
             tr: -1,
             s: "",
             i: -1,
-            com: "config4-5"
+            com: "c4CC-M"
         }
     },
-    'config4-6': {
+    'c4UBI-M': {
         m: {
             f: "BasicUD",
             r: "average",
@@ -1254,7 +1239,6 @@ var configs4 = {
             ud0: 1000,
             tm: 0,
             tM: 40,
-            tR: "MONTH",
             cc: false,
             cu: "MONTH",
             c: 0.1,
@@ -1323,7 +1307,7 @@ var configs4 = {
         },
         g: {
             t: "WorkshopsItem",
-            c: "config4-6",
+            c: "c4UBI-M",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
             },
@@ -1336,12 +1320,12 @@ var configs4 = {
             sc: {
                 hs: ["stableMonetarySupply"]
             },
-            ct: "L",
+            ct: "SA",
             a: 4,
             tr: 0,
             s: "",
             i: -1,
-            com: "config4-6"
+            com: "c4UBI-M"
         }
     }
 };
@@ -1349,7 +1333,7 @@ var configs4 = {
 var configs5 = {
     none: {
     },
-    'config5-1': {
+    'cFALL': {
         m: {
             f: "UDG",
             r: "dividend",
@@ -1368,7 +1352,6 @@ var configs5 = {
             ud0: 1000,
             tm: 5,
             tM: 80,
-            tR: "YEAR",
             cc: false,
             cu: "YEAR",
             c: 0.1,
@@ -1389,7 +1372,7 @@ var configs5 = {
             }
         },
         g: {
-            c: "config5-1",
+            c: "cFALL",
             t: "WorkshopsItem",
             ac: {
                 hs: []
@@ -1403,9 +1386,9 @@ var configs5 = {
             sc: {
                 hs: []
             },
-            ct: "L",
+            ct: "SA",
             a: 0,
-            com: "config4-1"
+            com: "cFALL"
         }
     }
 };

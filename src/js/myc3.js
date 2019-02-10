@@ -227,6 +227,7 @@ var myc3 = (function() {
             var oldYDomain = chart.yScale.domain();
             chart.updateXYScalesDomain();
 
+            // Draw lines and areas representing each serie
             var serieGroup = seriesGroup.selectAll('.serieGroup').data(series, function(d) { return d.id; });
     
             var serieGroupEnter = serieGroup.enter()
@@ -499,7 +500,8 @@ var myc3 = (function() {
                     });
                 });
             }
-            chart.xScale.domain([chart.axis.rangeVal.min.x, chart.axis.rangeVal.max.x]).nice();
+            // Don't change bounds set by user for X domain using 'nice' function
+            chart.xScale.domain([chart.axis.rangeVal.min.x, chart.axis.rangeVal.max.x]);
             chart.yScale.domain([chart.axis.rangeVal.min.y, chart.axis.rangeVal.max.y]).nice();
         }
 
@@ -589,7 +591,8 @@ var myc3 = (function() {
                 function addingScale(serie) {
                     return (serie.linkType == STEP_AFTER_CURVE)
                     ? function(x) {
-                        return serie.points[d3.bisectRight(serie.points.map(p=>p[0].getTime()), x) - 1][1];
+                        var insertionIndex = d3.bisectRight(serie.points.map(p=>p[0].getTime()), x);
+                        return serie.points[insertionIndex == 0 ? insertionIndex : insertionIndex - 1][1];
                     }
                     : d3.scaleLinear()
                         .domain(serie.points.map(p=>p[0].getTime()))
@@ -685,13 +688,15 @@ var myc3 = (function() {
                 })
                 .transition(t)
                 .attr('cx', function(d) {
-                    if (chart.selectedPoint && d.id == chart.selectedPoint.serieId && d.points.length != 0) {
+                    if (chart.selectedPoint && d.id == chart.selectedPoint.serieId 
+                        && d.points.length != 0 && d.points.length > chart.selectedPoint.pointIndex) {
                         return chart.xScale(d.points[chart.selectedPoint.pointIndex][0]);
                     }
                     return 0;
                 })
                 .attr('cy', function(d) {
-                    if (chart.selectedPoint && d.id == chart.selectedPoint.serieId && d.points.length != 0) {
+                    if (chart.selectedPoint && d.id == chart.selectedPoint.serieId 
+                        && d.points.length != 0 && d.points.length > chart.selectedPoint.pointIndex) {
                         return chart.yScale(d.points[chart.selectedPoint.pointIndex][1]);
                     }
                     return 0;
@@ -701,13 +706,15 @@ var myc3 = (function() {
         chart.updateReferencedCircle = function() {
             d3.select(args.bindto).selectAll('.serieGroup').select('circle.reference')
                 .attr('cx', function(d) {
-                    if (chart.referencedPoint && d.id == chart.referencedPoint.serieId && d.points.length != 0) {
+                    if (chart.referencedPoint && d.id == chart.referencedPoint.serieId 
+                        && d.points.length != 0 && d.points.length > chart.selectedPoint.pointIndex) {
                         return chart.xScale(d.points[chart.referencedPoint.pointIndex][0]);
                     }
                     return 0;
                 })
                 .attr('cy', function(d) {
-                    if (chart.referencedPoint && d.id == chart.referencedPoint.serieId && d.points.length != 0) {
+                    if (chart.referencedPoint && d.id == chart.referencedPoint.serieId 
+                        && d.points.length != 0 && d.points.length > chart.selectedPoint.pointIndex) {
                         return chart.yScale(d.points[chart.referencedPoint.pointIndex][1]);
                     }
                     return 0;

@@ -183,7 +183,7 @@ addTabEffectsFromHtml();
 generateC3Charts();
 
 if (!applyEncodedURIFromLocation()) {
-    applyJSonRep(configs1['config1-1']);
+    applyJSonRep(configs1['cS0']);
     openTab('IntroItem');
     comment('IntroItem');
     var encodedURI = asEncodedURI();
@@ -705,7 +705,7 @@ function setConfigSelection() {
             return;
         }
     }
-    throw new Error("Configuration not managed: " + curConfigId);
+    console.log("Configuration not managed: " + curConfigId);
 };
 
 // Create reference frame selectors
@@ -994,55 +994,55 @@ function getConfigLabel(configKey) {
         case 'none':
             configLabel = "";
             break;
-        case 'config1-1':
+        case 'cS0':
             configLabel = "Départ à 0";
             break;
-        case 'config1-2': 
-            configLabel = "En escalier";
+        case 'cNOSTEP':
+            configLabel = "Sans escalier";
             break;
-        case 'config1-3': 
+        case 'cSMN':
             configLabel = "Départ à DU0/c";
             break;
-        case 'config1-4': 
+        case 'cX40':
             configLabel = "Vue sur 40 ans";
             break;
-        case 'config2-1': 
+        case 'c2CC':
             configLabel = "2nd co-créateur";
             break;
-        case 'config2-2': 
+        case 'cCAUCHY':
             configLabel = "Profil de Cauchy";
             break;
-        case 'config2-3': 
+        case 'c4DATES':
             configLabel = "4 dates d'entrée";
             break;
-        case 'config3-1': 
+        case 'cLMU1':
             configLabel = "Prêt en UM (V1)";
             break;
-        case 'config3-2': 
+        case 'cLMU2':
             configLabel = "Prêt en UM (V2)";
             break;
-        case 'config3-3': 
+        case 'cLUD':
             configLabel = "Prêt en DU";
             break;
-        case 'config4-1': 
+        case 'c3CC':
             configLabel = "3 co-créateurs";
             break;
-        case 'config4-2': 
+        case 'c3UBI':
             configLabel = "RdB via une taxe";
             break;
-        case 'config4-3': 
+        case 'c4CC':
             configLabel = "Nouvel entrant (DU)";
             break;
-        case 'config4-4': 
+        case 'c4UBI':
             configLabel = "Nouvel entrant (RdB)";
             break;
-        case 'config4-5': 
+        case 'c4CC-M':
             configLabel = "Nouvel entrant (DU/mois)";
             break;
-        case 'config4-6': 
+        case 'c4UBI-M':
             configLabel = "Nouvel entrant (RdB/mois)";
             break;
-        case 'config5-1': 
+        case 'cFALL':
             configLabel = "Ecroulement de N";
             break;
         default:
@@ -1417,8 +1417,8 @@ function redrawCharts() {
 function updateZoom(oldTimeBounds) {
     // calculate C3 data
     money.generateData({ 
-        lower: Math.min(money.getTimeLowerBound(money.YEAR), oldTimeBounds.lower), 
-        upper: Math.max(money.getTimeUpperBound(money.YEAR), oldTimeBounds.upper)
+        lower: Math.min(money.getTimeLowerBound(), money.getTimeStep(oldTimeBounds.lower, money.YEAR)), 
+        upper: Math.max(money.getTimeUpperBound(), money.getTimeStep(oldTimeBounds.upper, money.YEAR))
     });
     var accountsData = generateAccountsData();
     var dividendData = generateDividendData();
