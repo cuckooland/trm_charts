@@ -21,14 +21,15 @@ var myc3 = (function() {
             .attr("width", args.size.width)
             .attr("height", args.size.height);
 
-        // define clipping (useful for zoom transition)
+        // Define clipping (useful for zoom transition)
+        // add 4 pixels to width and hight to avoid to cut curve lines and selection circle
         svg.append('defs')
             .append('clipPath')
             .attr('id', 'clip-' + args.bindto)
             .append('rect')
             .attr("transform", "translate(0,-1)")
-            .attr("width", args.size.width - args.padding.left - args.padding.right + 1)
-            .attr("height", args.size.height - args.padding.bottom - args.padding.top + 1);
+            .attr("width", args.size.width - args.padding.left - args.padding.right + 4)
+            .attr("height", args.size.height - args.padding.bottom - args.padding.top + 4);
         
         var plotGroup = svg.append("g")
             .attr("transform", "translate(" + args.padding.left + "," + args.padding.top + ")");
