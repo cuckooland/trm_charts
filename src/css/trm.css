@@ -279,19 +279,19 @@ span.transactionsTabLink {
     transition: 0.3s;
 }
 
-.xMouseLine,
-.yMouseLine {
+.xLocLine,
+.yLocLine {
     stroke-width: 0.2;
     stroke: #000;
 }
 
-.distLine {
+.locLine {
     fill: none;
     stroke: red;
     stroke-width: 1.5px;
 }
   
-.distCircle {
+.locCircle {
     fill: red;
 }
 

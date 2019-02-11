@@ -80,18 +80,18 @@ var myc3 = (function() {
             .text(args.axis.y.label.text);
     
         // Add location supports
-        var distLine = plotGroup.append("line")
-            .attr('class', 'distLine')
+        var locLine = plotGroup.append("line")
+            .attr('class', 'locLine')
             .style("stroke-dasharray", "3,3")
             .style("display", "none");
 
-        var distCircle = plotGroup.append("circle")
+        var locCircle = plotGroup.append("circle")
             .attr("r", 3)
-            .attr('class', 'distCircle')
+            .attr('class', 'locCircle')
             .style("display", "none");
 
         plotGroup.append('line')
-            .attr("class", "xMouseLine")
+            .attr("class", "xLocLine")
             .style("stroke-dasharray", "4,2,2,2")
             .attr("x1", 0)
             .attr("y1", 0)
@@ -100,7 +100,7 @@ var myc3 = (function() {
             .style("display", "none");
     
         plotGroup.append('line')
-            .attr("class", "yMouseLine")
+            .attr("class", "yLocLine")
             .style("stroke-dasharray", "4,2,2,2")
             .attr("x1", 0)
             .attr("y1", 0)
@@ -116,31 +116,31 @@ var myc3 = (function() {
             .on("mouseover", function() {
                 var mouse = d3.mouse(this);
                 var series = svg.selectAll('path.line');
-                var best = chart.closestPoint(series, mouse);
-                if (best) {
-                    chart.updateMouseDrawing(mouse, best);
-                    d3.selectAll('.xMouseLine').style("display", null);
-                    svg.selectAll('.yMouseLine').style("display", null);
-                    distLine.style("display", null);
-                    distCircle.style("display", null);
+                var closest = chart.closestPoint(series, mouse);
+                if (closest) {
+                    chart.updateLocDrawing(mouse, closest);
+                    d3.selectAll('.xLocLine').style("display", null);
+                    svg.selectAll('.yLocLine').style("display", null);
+                    locLine.style("display", null);
+                    locCircle.style("display", null);
                 }
             })
             .on("mouseout", function() {
-                chart.hideMouseDrawing();
+                chart.hideLocDrawing();
             })
             .on("mousemove", function() {
                 var mouse = d3.mouse(this);
                 var series = svg.selectAll('path.line');
-                var best = chart.closestPoint(series, mouse);
-                if (best) {
-                    chart.updateMouseDrawing(mouse, best);
+                var closest = chart.closestPoint(series, mouse);
+                if (closest) {
+                    chart.updateLocDrawing(mouse, closest);
                 }
             })
             .on('click', function() {
                 var mouse = d3.mouse(this);
                 var series = svg.selectAll('path.line');
-                var best = chart.closestPoint(series, mouse);
-                args.data.onclick(best.serie, best.index);
+                var closest = chart.closestPoint(series, mouse);
+                args.data.onclick(closest.serie, closest.index);
             });
 
         // TODO: replace 'chart' by 'args'?
@@ -214,27 +214,27 @@ var myc3 = (function() {
             chart.hiddenSerieIds = intersection;
         }
 
-        chart.hideMouseDrawing = function() {
-            d3.selectAll('.xMouseLine').style("display", "none");
-            svg.selectAll('.yMouseLine').style("display", "none");
-            distLine.style("display", "none");
-            distCircle.style("display", "none");
+        chart.hideLocDrawing = function() {
+            d3.selectAll('.xLocLine').style("display", "none");
+            svg.selectAll('.yLocLine').style("display", "none");
+            locLine.style("display", "none");
+            locCircle.style("display", "none");
         }
 
-        chart.updateMouseDrawing = function(mouse, best) {
-            var p = best.serie.points[best.index].slice();
+        chart.updateLocDrawing = function(mouse, closest) {
+            var p = closest.serie.points[closest.index].slice();
             p[0] = chart.xScale(p[0]);
             p[1] = chart.yScale(p[1]);
-            distLine.attr("x1", p[0]).attr("y1", p[1]).attr("x2", mouse[0]).attr("y2", mouse[1]);
-            distCircle.attr("cx", p[0]).attr("cy", p[1]);
-            d3.selectAll('.xMouseLine').attr("transform", "translate(" + p[0] + ",0)");
-            svg.selectAll('.yMouseLine').attr("transform", "translate(0," + p[1] + ")");
+            locLine.attr("x1", p[0]).attr("y1", p[1]).attr("x2", mouse[0]).attr("y2", mouse[1]);
+            locCircle.attr("cx", p[0]).attr("cy", p[1]);
+            d3.selectAll('.xLocLine').attr("transform", "translate(" + p[0] + ",0)");
+            svg.selectAll('.yLocLine').attr("transform", "translate(0," + p[1] + ")");
         }
     
         chart.draw = function() {
             // Desactivate 'pointer-events' for '.overlay' and hide mouse drawing
             plotGroup.select("rect.overlay").style('pointer-events', 'none');
-            chart.hideMouseDrawing();
+            chart.hideLocDrawing();
 
             var series = chart.theData.series;
             var oldSeries = seriesGroup.selectAll('.serieGroup').data();
@@ -402,7 +402,7 @@ var myc3 = (function() {
         chart.updateZoom = function() {
             // Desactivate 'pointer-events' for '.overlay' and hide mouse drawing
             plotGroup.select("rect.overlay").style('pointer-events', 'none');
-            chart.hideMouseDrawing();
+            chart.hideLocDrawing();
 
             var series = chart.theData.series;
             var serieGroup = seriesGroup.selectAll('.serieGroup').data(series, function(d) { return d.id; });
@@ -873,25 +873,25 @@ var myc3 = (function() {
                     dy = p[1] - point[1];
                 return dx * dx + dy * dy;
             }
-            var bestList = [];
+            var closestList = [];
             series.filter(s=>!chart.hiddenSerieIds.has(s.id)).each(function(serie) {
                 var pathPoints = serie.points.map(p=>[chart.xScale(p[0]), chart.yScale(p[1])]);
-                var best = {};
-                best.serie = serie;
-                best.index = -1;
-                best.distance2 = Infinity;
+                var closest = {};
+                closest.serie = serie;
+                closest.index = -1;
+                closest.distance2 = Infinity;
     
                 pathPoints.forEach(function(pathPoint, i) {
                     var distance2 = sqrDistance(pathPoint);
-                    if (distance2 < best.distance2) {
-                        best.distance2 = distance2;
-                        best.index = i;
+                    if (distance2 < closest.distance2) {
+                        closest.distance2 = distance2;
+                        closest.index = i;
                     }
                 })
     
-                bestList.push(best);
+                closestList.push(closest);
             });
-            return bestList[d3.scan(bestList, (a, b) => a.distance2 - b.distance2)];
+            return closestList[d3.scan(closestList, (a, b) => a.distance2 - b.distance2)];
         }
 
         chart.load(args.data);
