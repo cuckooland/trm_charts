@@ -741,14 +741,14 @@ var myc3 = (function() {
             d3.select(args.bindto).selectAll('.serieGroup').select('circle.reference')
                 .attr('cx', function(d) {
                     if (chart.referencedPoint && d.id == chart.referencedPoint.serieId 
-                        && d.points.length != 0 && d.points.length > chart.selectedPoint.pointIndex) {
+                        && d.points.length != 0 && d.points.length > chart.referencedPoint.pointIndex) {
                         return chart.xScale(d.points[chart.referencedPoint.pointIndex][0]);
                     }
                     return 0;
                 })
                 .attr('cy', function(d) {
                     if (chart.referencedPoint && d.id == chart.referencedPoint.serieId 
-                        && d.points.length != 0 && d.points.length > chart.selectedPoint.pointIndex) {
+                        && d.points.length != 0 && d.points.length > chart.referencedPoint.pointIndex) {
                         return chart.yScale(d.points[chart.referencedPoint.pointIndex][1]);
                     }
                     return 0;
