@@ -59,65 +59,6 @@ var configs1 = {
             com: "cS0"
         }
     },
-    
-    'cNOSTEP': {
-        m: {
-            f: "BasicUD",
-            r: "monetaryUnit",
-            rs: {
-                mu: {
-                    log: false
-                },
-                ud: {
-                    log: false
-                },
-                mn: {
-                    log: false
-                }
-            },
-            le: 80,
-            ud0: 966,
-            tm: 0,
-            tM: 40,
-            cc: true,
-            cu: "YEAR",
-            c: 0.09660822712436135,
-            d: "None",
-            dyM: 10000,
-            dxm: 0,
-            dxM: 80,
-            dxPv: 40,
-            dp: 78,
-            dxs: 4,
-            ac: 1,
-            a0: {
-                id: 1,
-                b: 1,
-                d: 80,
-                a0: 100,
-                t: 'CC'
-            }
-        },
-        g: {
-            c: "cNOSTEP",
-            t: "WorkshopsItem",
-            ac: {
-                hs: ['average', "stableAverage"]
-            },
-            dc: {
-                hs: ["stableDividend"]
-            },
-            hc: {
-                hs: []
-            },
-            sc: {
-                hs: ["stableMonetarySupply"]
-            },
-            ct: "L",
-            a: 0,
-            com: "cNOSTEP"
-        }
-    },
 
     'cSMN': {
         m: {
@@ -234,6 +175,65 @@ var configs1 = {
             ct: "SA",
             a: 0,
             com: "cX40"
+        }
+    },
+    
+    'cNOSTEP': {
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 966,
+            tm: 0,
+            tM: 40,
+            cc: true,
+            cu: "YEAR",
+            c: 0.09660822712436135,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: 'CC'
+            }
+        },
+        g: {
+            c: "cNOSTEP",
+            t: "WorkshopsItem",
+            ac: {
+                hs: ['average', "stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            ct: "L",
+            a: 0,
+            com: "cNOSTEP"
         }
     }
 };
