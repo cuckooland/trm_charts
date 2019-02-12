@@ -103,12 +103,6 @@ var libreMoneyClass = function(lifeExpectancy) {
         },
         'dividend': {
             transform: function(money, value, timeStep, amountRef) {
-                if (value === 0) {
-                    return 0;
-                }
-                if (money.dividends.values[timeStep] === 0) {
-                    return 0;
-                }
                 return value / money.dividends.values[timeStep];
             },
             invTransform: function(money, value, timeStep, amountRef) {
@@ -118,9 +112,6 @@ var libreMoneyClass = function(lifeExpectancy) {
         },
         'average': {
             transform: function(money, value, timeStep, amountRef) {
-                if (value === 0) {
-                    return 0;
-                }
                 if (money.monetarySupplies.values[timeStep] === 0) {
                     return Infinity;
                 }
@@ -474,10 +465,10 @@ var libreMoneyClass = function(lifeExpectancy) {
         }
         var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
         var dividend = 0;
-        if (timeStep === moneyBirthStep + 1) {
+        if (timeStep === moneyBirthStep) {
             dividend = this.getDividendStart();
         }
-        else if (timeStep > moneyBirthStep + 1) {
+        else if (timeStep > moneyBirthStep) {
             // After first issuance, calculate next dividend depending on formula...
             dividend = this.udFormulas[this.udFormulaKey].calculate(this, timeStep);
         }
@@ -491,7 +482,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
         var monetarySupply = 0;
        
-        if (timeStep >= moneyBirthStep + 1) {
+        if (timeStep >= moneyBirthStep) {
             var currentDividend = this.getDividend(timeStep);
             var currentDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
             monetarySupply = this.getMonetarySupply(timeStep - 1);
@@ -528,15 +519,20 @@ var libreMoneyClass = function(lifeExpectancy) {
             accountIncrease = this.getDividend(timeStep);
         }
 
-        if (account.startingPercentage != 0 && timeStep === birthStep) {
+        var startingRatio = account.startingPercentage / 100;
+        if (startingRatio != 0) {
             // At birth, add some money according to the 'startingPercentage' attribute
-            if (birthStep === this.getTimeStep(this.moneyBirth, this.YEAR)) {
-                // If this account starts at the same time as the currency, the amount to add is a ratio of UD0/c.
-                accountIncrease += account.startingPercentage / 100 * this.getDividendStart() / this.getGrowth();
+            var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
+            if (birthStep === moneyBirthStep) {
+                if (timeStep === moneyBirthStep - 1) {
+                    // If this account starts at the same time as the currency, the amount to add is a ratio of UD0/c.
+                    // We artificially add this money to this account just before it exists.
+                    accountIncrease += startingRatio * this.getDividend(moneyBirthStep) / this.getGrowth();
+                }
             }
-            else {
+            else if (timeStep === birthStep) {
                 // If this account starts later than the currency, the amount to add is a ratio of M/N.
-                accountIncrease += account.startingPercentage / 100 * this.getMonetarySupply(timeStep - 1) / this.getHeadcount(timeStep - 1);
+                accountIncrease += startingRatio * this.getMonetarySupply(timeStep - 1) / this.getHeadcount(timeStep - 1);
             }
         }
        
