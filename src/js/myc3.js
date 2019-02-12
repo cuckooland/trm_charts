@@ -27,9 +27,9 @@ var myc3 = (function() {
             .append('clipPath')
             .attr('id', 'clip-' + args.bindto)
             .append('rect')
-            .attr("transform", "translate(0,-1)")
-            .attr("width", args.size.width - args.padding.left - args.padding.right + 4)
-            .attr("height", args.size.height - args.padding.bottom - args.padding.top + 4);
+            .attr("transform", "translate(-4,-4)")
+            .attr("width", args.size.width - args.padding.left - args.padding.right + 8)
+            .attr("height", args.size.height - args.padding.bottom - args.padding.top + 8);
         
         var plotGroup = svg.append("g")
             .attr("transform", "translate(" + args.padding.left + "," + args.padding.top + ")");
