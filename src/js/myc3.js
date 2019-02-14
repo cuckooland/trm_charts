@@ -598,6 +598,7 @@ var myc3 = (function() {
                 .attrTween('d', function(d) { return lineTween.call(this, d); });
             serieGroup.select('path.line')
                 .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
+                .style('stroke-width', 2)
                 .transition(trans)
                 .attrTween("d", function(d) { return lineTween.call(this, d); })
                 .on("end", function(p,j) {
