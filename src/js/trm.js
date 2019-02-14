@@ -103,11 +103,8 @@ var libreMoneyClass = function(lifeExpectancy) {
         },
         'dividend': {
             transform: function(money, value, timeStep, amountRef) {
-                if (value === 0) {
-                    return 0;
-                }
-                if (money.dividends.values[timeStep] === 0) {
-                    return value / money.getDividendStart() * (1 + money.getGrowth());
+                if (!money.dividends.values[timeStep]) {
+                    return NaN;
                 }
                 return value / money.dividends.values[timeStep];
             },
@@ -118,18 +115,12 @@ var libreMoneyClass = function(lifeExpectancy) {
         },
         'average': {
             transform: function(money, value, timeStep, amountRef) {
-                if (value === 0) {
-                    return 0;
-                }
-                if (money.monetarySupplies.values[timeStep] === 0) {
-                    return Infinity;
+                if (!money.monetarySupplies.values[timeStep] || !money.headcounts.values[timeStep]) {
+                    return NaN;
                 }
                 return value / money.monetarySupplies.values[timeStep] * money.headcounts.values[timeStep] * 100;
             },
             invTransform: function(money, value, timeStep, amountRef) {
-                if (money.headcounts.values[timeStep] === 0) {
-                    return Infinity;
-                }
                 return value * money.monetarySupplies.values[timeStep] / money.headcounts.values[timeStep] / 100;
             },
             logScale: false
@@ -916,25 +907,43 @@ var libreMoneyClass = function(lifeExpectancy) {
         for (timeStep = timeBounds.lower; timeStep <= timeBounds.upper; timeStep++) {
            
             if (timeStep >= moneyBirthStep) {
-                this.dividends.x.push(timeStep);
-                this.dividends.y.push(this.applyPov(this.getDividend(timeStep), timeStep));
+                var du2 = this.applyPov(this.getDividend(timeStep), timeStep);
+                if (!isNaN(du2)) {
+                    this.dividends.x.push(timeStep);
+                    this.dividends.y.push(du2);
+                }
                
-                this.stableAverages.x.push(timeStep);
-                this.stableAverages.y.push(this.applyPov((1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth(), timeStep));
+                var smn2 = this.applyPov((1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth(), timeStep);
+                if (!isNaN(smn2)) {
+                    this.stableAverages.x.push(timeStep);
+                    this.stableAverages.y.push(smn2);
+                }
                
-                this.monetarySupplies.x.push(timeStep);
-                this.monetarySupplies.y.push(this.applyPov(this.getMonetarySupply(timeStep), timeStep));
+                var ms2 = this.applyPov(this.getMonetarySupply(timeStep), timeStep);
+                if (!isNaN(ms2)) {
+                    this.monetarySupplies.x.push(timeStep);
+                    this.monetarySupplies.y.push(ms2);
+                }
                
-                this.stableMonetarySupplies.x.push(timeStep);
-                this.stableMonetarySupplies.y.push(this.applyPov(this.getHeadcount(timeStep) * (1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth(), timeStep));
+                var sms2 = this.applyPov(this.getHeadcount(timeStep) * (1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth(), timeStep);
+                if (!isNaN(sms2)) {
+                    this.stableMonetarySupplies.x.push(timeStep);
+                    this.stableMonetarySupplies.y.push(sms2);
+                }
             }
            
             if (timeStep >= moneyBirthStep && this.headcounts.values[timeStep] > 0) {
-                this.averages.x.push(timeStep);
-                this.averages.y.push(this.applyPov(this.getAverage(timeStep), timeStep));
+                var mn2 = this.applyPov(this.getAverage(timeStep), timeStep);
+                if (!isNaN(mn2)) {
+                    this.averages.x.push(timeStep);
+                    this.averages.y.push(mn2);
+                }
                
-                this.stableDividends.x.push(timeStep);
-                this.stableDividends.y.push(this.applyPov(this.getGrowth() * this.getMonetarySupply(timeStep) / this.getHeadcount(timeStep) / (1 + this.getGrowth()), timeStep));
+                var sdu2 = this.applyPov(this.getGrowth() * this.getMonetarySupply(timeStep) / this.getHeadcount(timeStep) / (1 + this.getGrowth()), timeStep);
+                if (!isNaN(sdu2)) {
+                    this.stableDividends.x.push(timeStep);
+                    this.stableDividends.y.push(sdu2);
+                }
             }
            
             this.headcounts.x.push(timeStep);
@@ -945,8 +954,11 @@ var libreMoneyClass = function(lifeExpectancy) {
                 var birthStep = this.getTimeStep(this.accounts[iAccount].birth, this.YEAR);
                 // if account is born...
                 if (timeStep >= birthStep) {
-                    this.accounts[iAccount].x.push(timeStep);
-                    this.accounts[iAccount].y.push(this.applyPov(this.getAccountBalance(this.accounts[iAccount], timeStep), timeStep));
+                    var a2 = this.applyPov(this.getAccountBalance(this.accounts[iAccount], timeStep), timeStep);
+                    if (!isNaN(a2)) {
+                        this.accounts[iAccount].x.push(timeStep);
+                        this.accounts[iAccount].y.push(a2);
+                    }
                 }
             }
         }
