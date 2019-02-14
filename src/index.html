@@ -281,9 +281,9 @@
                         <!-- Charts Comments -->
                         <div class="Comment" id="averageComment">
                             <div class=CurveComment>
-                                <p>Si la <span class="monetarySupply">masse monétaire</span> était répartie de façon égale, quel montant aurait chacun des membres&nbsp;?</p>
+                                <p>Si la <span class="monetarySupply">masse monétaire</span> était répartie à parts égales, quel montant aurait chacun des <span class="headcount">individus</span>&nbsp;?</p>
                                 
-                                <p>Ce montant et ses évolutions au fil du temps peuvent être visualisés sur la courbe <span class="average label">M/N</span> (voir le diagramme en haut à gauche). Pour mieux la visualiser, la zone entre la courbe et la droite "Montant=0" est colorée.</p>
+                                <p>Ce montant et ses évolutions au fil du temps peuvent être visualisés sur la courbe <span class="average label">M/N</span> (voir le diagramme en haut à gauche). Afin que cette courbe soit plus facile à suivre, la zone située entre elle et la droite "Montant = 0" est colorée.</p>
                                 
                                 <!-- 
                                 <p>En comparant <span class="average">cette courbe</span> avec celle des comptes, on peut par exemple répondre à la question "Si la monnaie était redistribuée de façon égale, tel compte subirait-il une baisse ou une hausse&nbsp;?" </p>
@@ -306,8 +306,16 @@
                                 <div class="RefComment UD">
                                     <p><span class="average label">M/N</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="average ud value nolink">0</span> <span class="duUnit">DU</span></p>
                                 
-                                    <p>= la <span class="average current mu">moyenne exprimé en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span></p>
-                                    <p>= <span class="average current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>= la <span class="average current mu">moyenne exprimé en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="dividendTabLink">DU0</span></p>
+                                        <p>= <span class="average current mu value">0</span>&nbsp;/&nbsp;<span class="dividendTabLink du0Value">0</span></p>
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (le <span class="dividend current mu">DU</span> n'existe pas à cette date), DU0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= la <span class="average current mu">moyenne exprimé en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span></p>
+                                        <p>= <span class="average current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment UD-log">
@@ -319,7 +327,13 @@
                                 <div class="RefComment MN">
                                     <p><span class="average label">M/N</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="average mn value nolink">0</span> <span class="mnUnit">% M/N</span></p>
                                 
-                                    <p>= 100 fois la <span class="average current mu">moyenne exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="average current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (le <span class="dividend current mu">DU</span> n'existe pas à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= 100 fois la <span class="average current mu">moyenne exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="average current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment MN-log">
@@ -354,7 +368,13 @@
                                 <div class="RefComment UD">
                                     <p><span class="stableAverage label">DU/c</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableAverage ud value nolink">0</span> <span class="duUnit">DU</span></p>
                                 
-                                    <p>= la <span class="stableAverage current mu">moyenne stable exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="stableAverage current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (le <span class="dividend current mu">DU</span> n'existe pas à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= la <span class="stableAverage current mu">moyenne stable exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="stableAverage current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment UD-log">
@@ -366,7 +386,13 @@
                                 <div class="RefComment MN">
                                     <p><span class="stableAverage label">DU/c</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableAverage mn value nolink">0</span> <span class="mnUnit">% M/N</span></p>
                                 
-                                    <p>= 100 fois la <span class="stableAverage current mu">moyenne stable exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="stableAverage current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (<span class="average current mu">M/N</span> est nulle à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= 100 fois la <span class="stableAverage current mu">moyenne stable exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="stableAverage current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment MN-log">
@@ -399,15 +425,15 @@
                                     
                                     <p>
                                         <span class="AmountComment CoCreator AtMoneyBirth">
-                                            = le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividend">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes</span>) auquel s'ajoute, en tant que co-créateur de la monnaie, le <span class="dividend current mu">DU</span>
+                                            = le <span class="accountsTabLink amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividendTabLink">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes</span>)
                                         </span>
     
                                         <span class="AmountComment NonCreator AtMoneyBirth">
-                                            = le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividend">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes</span>)
+                                            = le <span class="accountsTabLink amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividendTabLink">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes</span>)
                                         </span>
     
                                         <span class="AmountComment CoCreator AtBirth">
-                                            = le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="average">M/N</span>, voir l'onglet <span class="accountsTabLink">Comptes</span>) auquel s'ajoute, en tant que co-créateur de la monnaie, le <span class="dividend current mu">DU</span>
+                                            = le <span class="accountsTabLink amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="average">M/N</span>, voir l'onglet <span class="accountsTabLink">Comptes</span>) auquel s'ajoute, en tant que co-créateur de la monnaie, le <span class="dividend current mu">DU</span>
                                         </span>
     
                                         <span class="AmountComment NonCreator AtBirth">
@@ -430,19 +456,19 @@
                                 
                                     <p>
                                         <span class="AmountComment CoCreator AtMoneyBirth">
-                                            = <span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span>
+                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividendTabLink du0Value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span>
                                         </span>
     
                                         <span class="AmountComment NonCreator AtMoneyBirth">
-                                            = <span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span>
+                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividendTabLink du0Value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span>
                                         </span>
     
                                         <span class="AmountComment CoCreator AtBirth">
-                                            = <span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="average previous mu value">0</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span>
+                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="average previous mu value">0</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span>
                                         </span>
     
                                         <span class="AmountComment NonCreator AtBirth">
-                                            = <span class="amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="average previous mu value">0</span>
+                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="average previous mu value">0</span>
                                         </span>
     
                                         <span class="AmountComment CoCreator WhenAlive">
@@ -470,7 +496,13 @@
                                 <div class="RefComment UD">
                                     <p><span class="account name">compte</span>, le <span class="dateValue">01-01-2001</span>, est âgé de <span class="accountAge">0</span> et vaut&nbsp;: <span class="account ud value nolink">0</span> <span class="duUnit">DU</span></p>
                                 
-                                    <p>= la <span class="account current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="account current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (le <span class="dividend current mu">DU</span> n'existe pas à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= la <span class="account current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="account current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment UD-log">
@@ -481,8 +513,14 @@
                                 
                                 <div class="RefComment MN">
                                     <p><span class="account name">compte</span>, le <span class="dateValue">01-01-2001</span>, est âgé de <span class="accountAge">0</span> et vaut&nbsp;: <span class="account mn value nolink">0</span> <span class="mnUnit">% M/N</span></p>
+                                    
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (<span class="average current mu">M/N</span> est nulle à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
                                 
-                                    <p>= 100 fois la <span class="account current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="account current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    <div class="MbComment NoMB">
+                                        <p>= 100 fois la <span class="account current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="account current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment MN-log">
@@ -503,6 +541,10 @@
                                 <div class="RefComment MU">
                                     <p><span class="dividend label">Dividende Universel</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="dividend current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                     
+                                    <div class="DuComment NoUD">
+                                        <p>La valeur 0 est utilisée pour montrer qu'à cette date, aucun DU n'est émis.</p>
+                                    </div>
+    
                                     <div class="DuComment UD0">
                                         <p>= la valeur du premier Dividende Universel "DU0", tel que définie dans l'onglet <span class="dividendTabLink">Dividende Universel</span>.</p>
                                     </div>
@@ -543,7 +585,13 @@
                                 <div class="RefComment UD">
                                     <p><span class="dividend label">Dividende Universel</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="dividend ud value nolink">0</span> <span class="duUnit">DU</span></p>
                                 
-                                    <p>= la <span class="dividend current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (le <span class="dividend current mu">DU</span> n'existe pas à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= la <span class="dividend current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment UD-log">
@@ -555,7 +603,13 @@
                                 <div class="RefComment MN">
                                     <p><span class="dividend label">Dividende Universel</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="dividend mn value nolink">0</span> <span class="mnUnit">% M/N</span></p>
                                 
-                                    <p>= 100 fois la <span class="dividend current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (<span class="average current mu">M/N</span> est nulle à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= 100 fois la <span class="dividend current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment MN-log">
@@ -590,7 +644,13 @@
                                 <div class="RefComment UD">
                                     <p><span class="stableDividend label">c*M/N</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableDividend ud value nolink">1</span> <span class="duUnit">DU</span></p>
                                 
-                                    <p>= la <span class="stableDividend current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="stableDividend current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (le <span class="dividend current mu">DU</span> n'existe pas à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= la <span class="stableDividend current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="stableDividend current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment UD-log">
@@ -602,7 +662,13 @@
                                 <div class="RefComment MN">
                                     <p><span class="stableDividend label">c*M/N</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableDividend mn value nolink">0</span> <span class="mnUnit">% M/N</span></p>
                                 
-                                    <p>= 100 fois la <span class="stableDividend current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="stableDividend current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (<span class="average current mu">M/N</span> est nulle à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= 100 fois la <span class="stableDividend current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="stableDividend current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment MN-log">
@@ -622,8 +688,8 @@
                             <div class=PointComment>
                                 <p><span class="headcount label">Nombre d'individus</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="headcount current value nolink">0</span></p>
                                 
-                                <p>= le nombre d'individus définis dans l'onglet <span class="accountsTabLink">Comptes</span>&nbsp;+&nbsp;le nombre d'individus définis via l'onglet <span class="demographyTabLink">Démographie</span> pour le profil "<span class="demographyLabel">Cauchy</span>"</p>
-                                <p>= <span class="accountsNumberValue">0</span>&nbsp;+&nbsp;<span class="demographyValue">0</span></p>
+                                <p>= le nombre d'individus définis dans l'onglet <span class="accountsTabLink">Comptes</span> co-produisant la monnaie à cette date +&nbsp;le nombre d'individus définis via l'onglet <span class="demographyTabLink">Démographie</span> pour le profil "<span class="demographyLabel">Cauchy</span>"</p>
+                                <p>= <span class="accountsTabLink accountsNumberValue">0</span>&nbsp;+&nbsp;<span class="demographyTabLink demographyValue">0</span></p>
                             </div>
                                 
                         </div>
@@ -637,8 +703,15 @@
                                 <div class="RefComment MU">
                                     <p><span class="monetarySupply label">Masse Monétaire</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="monetarySupply current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                 
-                                    <p>= la <span class="monetarySupply previous mu">masse monétaire précédente</span> à laquelle s'ajoute, d'une part le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>, d'autre part d'éventuels montants à la naissance (voir l'onglet <span class="accountsTabLink">Comptes</span>) </p>
-                                    <p>= <span class="monetarySupply previous mu value">0</span>&nbsp;+&nbsp;<span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;+&nbsp;<span class="birthAmounts value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>= le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>, auquel s'ajoute d'éventuels montants à la naissance (voir l'onglet <span class="accountsTabLink">Comptes</span>) </p>
+                                        <p>= <span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;+&nbsp;<span class="accountsTabLink birthAmounts value">0</span></p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= la <span class="monetarySupply previous mu">masse monétaire précédente</span> à laquelle s'ajoute, d'une part le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>, d'autre part d'éventuels montants à la naissance (voir l'onglet <span class="accountsTabLink">Comptes</span>) </p>
+                                        <p>= <span class="monetarySupply previous mu value">0</span>&nbsp;+&nbsp;<span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;+&nbsp;<span class="accountsTabLink birthAmounts value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment MU-log">
@@ -650,7 +723,13 @@
                                 <div class="RefComment UD">
                                     <p><span class="monetarySupply label">Masse Monétaire</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="monetarySupply ud value nolink">0</span> <span class="duUnit">DU</span></p>
                                 
-                                    <p>= la <span class="monetarySupply current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="monetarySupply current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (le <span class="dividend current mu">DU</span> n'existe pas à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= la <span class="monetarySupply current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="monetarySupply current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment UD-log">
@@ -662,8 +741,14 @@
                                 <div class="RefComment MN">
                                     <p><span class="monetarySupply label">Masse Monétaire</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="monetarySupply mn value nolink">0</span> <span class="mnUnit">% M/N</span></p>
                                 
-                                    <p>= 100 fois la <span class="monetarySupply current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span></p>
-                                    <p>= 100&nbsp;*&nbsp;<span class="monetarySupply current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (<span class="average current mu">M/N</span> est nulle à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= 100 fois la <span class="monetarySupply current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span></p>
+                                        <p>= 100&nbsp;*&nbsp;<span class="monetarySupply current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment MN-log">
@@ -698,7 +783,13 @@
                                 <div class="RefComment UD">
                                     <p><span class="stableMonetarySupply label">N*DU/c</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableMonetarySupply ud value nolink">0</span> <span class="duUnit">DU</span></p>
                                 
-                                    <p>= la <span class="stableMonetarySupply current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="stableMonetarySupply current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (le <span class="dividend current mu">DU</span> n'existe pas à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= la <span class="stableMonetarySupply current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par le <span class="dividend current mu">dernier DU</span> =&nbsp;<span class="stableMonetarySupply current mu value">0</span>&nbsp;/&nbsp;<span class="dividend current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment UD-log">
@@ -708,9 +799,15 @@
                                 </div>
                                 
                                 <div class="RefComment MN">
-                                    <p><span class="stableMonetarySupply label">N*DU/c</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableMonetarySupply mn value nolink">0</span> <span class="duUnit">% M/N</span></p>
+                                    <p><span class="stableMonetarySupply label">N*DU/c</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableMonetarySupply mn value nolink">0</span> <span class="mnUnit">% M/N</span></p>
                                 
-                                    <p>= 100 fois la <span class="stableMonetarySupply current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="stableMonetarySupply current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    <div class="MbComment MB">
+                                        <p>Le point ne pouvant pas être représenté dans ce référentiel (<span class="average current mu">M/N</span> est nulle à cette date), la valeur 0 est utilisée de façon tout à fait arbitraire.</p>
+                                    </div>
+                                
+                                    <div class="MbComment NoMB">
+                                        <p>= 100 fois la <span class="stableMonetarySupply current mu">valeur exprimée en <span class="muUnit">Unité Monétaire</span></span> divisée par <span class="average current mu">M/N</span> =&nbsp;100&nbsp;*&nbsp;<span class="stableMonetarySupply current mu value">0</span>&nbsp;/&nbsp;<span class="average current mu value">0</span></p>
+                                    </div>
                                 </div>
                                 
                                 <div class="RefComment MN-log">
@@ -740,11 +837,11 @@
                         <div class="Comment" id="cS0Comment">
                             <p>Dans cette configuration, le système monétaire est constitué d'un seul individu, comme nous le confirme la <span class="headcount">courbe du nombre d'individu</span> (voir le graphe en bas à gauche). Le compte de cet individu est représenté par une <span class="account">courbe</span> dans le graphe en haut à gauche.</p>
                             
-                            <p><strong>Note</strong>&nbsp;: chaque point des courbes peut être cliqué, la façon dont il est calculé sera alors indiquée.</p>
-                            
-                            <p>Dans le graphe en haut à droite, on observe la <span class="dividend">courbe du Dividende Universel</span>. Ici, la formule fondamentale de base DU = c*M/N est utilisée. Son aspect heurté est notable. D'autres formules peuvent être utilisées (voir l'onglet <span class="dividendTabLink">Dividende Universel</span>) ce qui permet de mettre en évidence l'effet de lissage de chacune.</p>
-                            
                             <p><strong>Note</strong>&nbsp;: après avoir testé différents attributs, l'historique du navigateur peut être utilisé pour revenir en arrière.</p>
+                            
+                            <p>Dans le graphe en haut à droite, on observe la <span class="dividend">courbe du Dividende Universel</span>. Ici, la formule fondamentale de base DU = c*M/N est utilisée. Son aspect heurté est notable (elle passe de 0 à 1000 pour redescendre ensuite à 100). D'autres formules peuvent être utilisées (voir l'onglet <span class="dividendTabLink">Dividende Universel</span>) ce qui permet de mettre en évidence l'effet de "lissage" de chacune.</p>
+                            
+                            <p><strong>Note</strong>&nbsp;: chaque point des courbes peut être cliqué, la façon dont il est calculé sera alors indiquée.</p>
                             
                         </div>
                         <div class="Comment" id="cNOSTEPComment">
@@ -769,6 +866,20 @@
                             <p>Dans le graphe en bas à droite, les variations au fil du temps de la <span class="monetarySupply">masse monétaire</span> sont représentées. Étant en régime de croisière, on peut vérifier qu'elle est multipliée par 40 au bout de 40 ans, ce qui est propre au taux d'expansion utilisé (voir l'onglet <span class="growth">Taux d'expansion</span>), qui n'est plus de 10&nbsp;% par an comme précédemment, mais de 9.66&nbsp;%.</p>
                             
                             <p>On peut aussi vérifier qu'en régime de croisière, toutes les formules du <span class="dividendTabLink">Dividende Universel</span> sont équivalentes.</p>
+                            
+                        </div>
+                        <div class="Comment" id="cSMN-MComment">
+                            <p>Cette configuration est la même que "Départ à DU0/c", excepté que dans l'onglet <span class="dividendTabLink">Dividende Universel</span>, "DU0/c" a été positionné sur une émission mensuelle du DU. Cette action change non seulement le rythme d'émission (action également disponible dans l'onglet <span class="growth">Taux d'expansion</span>), mais propose également un "DU0" calculé pour garder "DU0/c" inchangé. Ici, "DU0" vaut donc 79.74 unités monétaires au lieu de 1000.</p>
+                            
+                            <p>Ainsi, en cliquant le premier point de <span class="account">Compte 1</span>, on peut noter que sa valeur est 10&nbsp;000 unités monétaires ; et en cliquant le dernier point, sa valeur est 14&nbsp;600 unités monétaires. En passant à la configuration "Départ à DU0/c", on retrouve les mêmes valeurs.</p>
+                            
+                        </div>
+                        <div class="Comment" id="cS0-MComment">
+                            <p>Cette configuration est la même que précédemment, excepté que <span class="account">Compte 1</span> part à 0 au lieu de "DU0/c". Elle peut également être comparée à la configuration "Départ à 0"&nbsp;: l'émission est ici mensuelle, et "DU0" vaut 79.74 unités monétaires au lieu de 1000.</p>
+                            
+                            <p>Cette fois, si on note la valeur pour le dernier point de <span class="account">Compte 1</span>, la valeur est 116 unités monétaires, alors que dans la configuaration "Départ à 0", elle vaut 1&nbsp;330. Cette fois, contrairement à ce qui est constaté en comparant les configurations "Départ à DU0/c (mois)" et "Départ à DU0/c", on ne retrouve pas les mêmes valeurs.</p>
+                            
+                            <p>La formule utilisée pour le calcul du DU est "DU Basique". En utilisant par exemple DUĞ (voir l'onglet <span class="dividendTabLink">Dividende Universel</span>) la valeur pour le dernier point de <span class="account">Compte 1</span> est alors 3&nbsp;920 unités monétaires, puis 4&nbsp;040 en passant en émission annuelle. La différence est bien moindre, cela illustre la qualité des différentes formules.</p>
                             
                         </div>
                         <div class="Comment" id="c2CCComment">
@@ -837,6 +948,8 @@
                             <p>Cette configuration est sensiblement la même que la première&nbsp;: trois co-créateurs de la monnaies, et un compte sans utililité permettant de faciliter la comparaison avec le cas "Revenu de Base via une taxe".</p>
 
                             <p>Mais un nouveau compte fait son apparition au bout de quelques années. Le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux devient "%(M/N)", afin de faciliter la comparaison avec la configuration suivante.</p>
+                            
+                            <p>La formule utilisée pour le calcul du DU est "DU Basique". Il est intéressant de tester d'autres formules, par exemple DUĞ (voir l'onglet <span class="dividendTabLink">Dividende Universel</span>).</p>
                             
                         </div>
                         <div class="Comment" id="c4UBIComment">
@@ -1029,7 +1142,7 @@
                         <div class="Comment" id="StepCurvesComment">
                             <p>En utilisant cette case à cocher, les courbes apparaissent constantes par palier.</p>
                             
-                            <p>Illustration&nbsp;: quand la co-création monétaire est annuelle, des points sont calculés pour chaque année ; en traçant des lignes reliant ces points, cela forme des courbes. Ces segments qui relient tous ces points permettent de mieux visualiser les variations mais ils peuvent être trompeurs. Par exemple, ces segments peuvent laissés penser qu'au bout d'un mois, un compte (exprimé en unité monétaire) a changé. En cochant cette case, on se rend compte que ce n'est pas le cas.</p>
+                            <p>Illustration&nbsp;: quand la co-création monétaire est annuelle, des points sont calculés pour chaque année ; en traçant des lignes reliant ces points, cela forme des courbes. Ces segments qui relient tous ces points permettent de mieux visualiser les variations mais ils peuvent être trompeurs. Par exemple, ces segments peuvent laissés penser qu'au bout d'un mois, un compte (exprimé en unité monétaire) a changé. En cochant cette case "Courbes en escalier", on se rend compte que ce n'est pas le cas.</p>
                             
                         </div>
 

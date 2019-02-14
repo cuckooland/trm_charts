@@ -245,11 +245,11 @@ function fillForms() {
 }
 
 function toYearRep(value) {
-    return 2000 + value;
+    return 1999 + value;
 }
 
 function fromYearRep(value) {
-    return value - 2000;
+    return value - 1999;
 }
 
 function enableForms() {
@@ -997,14 +997,20 @@ function getConfigLabel(configKey) {
         case 'cS0':
             configLabel = "Départ à 0";
             break;
-        case 'cNOSTEP':
-            configLabel = "Sans escalier";
-            break;
         case 'cSMN':
             configLabel = "Départ à DU0/c";
             break;
         case 'cX40':
             configLabel = "Vue sur 40 ans";
+            break;
+        case 'cNOSTEP':
+            configLabel = "Sans escalier";
+            break;
+        case 'cS0-M':
+            configLabel = "Départ à 0 (mois)";
+            break;
+        case 'cSMN-M':
+            configLabel = "Départ à DU0/c (mois)";
             break;
         case 'c2CC':
             configLabel = "2nd co-créateur";
@@ -1665,10 +1671,10 @@ function asDate(timeStep, timeUnit) {
     timeUnit = timeUnit || money.growthTimeUnit;
     
     if (timeUnit === money.MONTH) {
-        return new Date(2000 + Math.trunc(timeStep / 12), timeStep % 12, 1);
+        return new Date(1999 + Math.trunc(timeStep / 12), timeStep % 12, 1);
     }
     else if (timeUnit === money.YEAR) {
-        return new Date(2000 + timeStep, 0, 1);
+        return new Date(1999 + timeStep, 0, 1);
     }
     else {
         throw new Error("Time unit not managed: " + timeUnit);
@@ -1889,7 +1895,10 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
     
     var dividendMuValue = money.dividends.values[timeStep];
     d3.selectAll("span.dividend.current.mu.value").text(commentFormat(dividendMuValue));
-    
+
+    d3.selectAll("span.du0Value").text(commentFormat(money.getDividendStart()));
+    commentAccordingToMoneyBirth(timeStep);
+
     var headcountValue = money.headcounts.values[timeStep];
     d3.selectAll("span.headcount.current.value").text(f(headcountValue));
     
@@ -1914,9 +1923,9 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
     switch(c3DataId) {
         case AVERAGE_ID:
             var averageMuLogValue = Math.log(averageMuValue) / Math.log(10);
-            var averageUdValue = averageMuValue / dividendMuValue;
+            var averageUdValue = (!dividendMuValue) ? 0 : averageMuValue / dividendMuValue;
             var averageUdLogValue = Math.log(averageUdValue) / Math.log(10);
-            var averageMnValue = 100 * averageMuValue / averageMuValue;
+            var averageMnValue = (!averageMuValue) ? 0 : 100 * averageMuValue / averageMuValue;
             var averageMnLogValue = Math.log(averageMnValue) / Math.log(10);
             var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
             d3.selectAll("span.average.label").text(AVERAGE_LABEL);
@@ -1931,9 +1940,9 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
         case STABLE_AVERAGE_ID:
             var stableAverageMuValue = (1 + growthValue) * dividendMuValue / growthValue;
             var stableAverageMuLogValue = Math.log(stableAverageMuValue) / Math.log(10);
-            var stableAverageUdValue = stableAverageMuValue / dividendMuValue;
+            var stableAverageUdValue = (!dividendMuValue) ? 0 : stableAverageMuValue / dividendMuValue;
             var stableAverageUdLogValue = Math.log(stableAverageUdValue) / Math.log(10);
-            var stableAverageMnValue = 100 * stableAverageMuValue / averageMuValue;
+            var stableAverageMnValue = (!averageMuValue) ? 0 : 100 * stableAverageMuValue / averageMuValue;
             var stableAverageMnLogValue = Math.log(stableAverageMnValue) / Math.log(10);
             d3.selectAll("span.stableAverage.label").text(STABLE_AVERAGE_LABEL);
             d3.selectAll("span.stableAverage.current.mu.value").text(commentFormat(stableAverageMuValue));
@@ -1946,9 +1955,9 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
 
         case DIVIDEND_ID: 
             var dividendMuLogValue = Math.log(dividendMuValue) / Math.log(10);
-            var dividendUdValue = dividendMuValue / dividendMuValue;
+            var dividendUdValue = (!dividendMuValue) ? 0 : dividendMuValue / dividendMuValue;
             var dividendUdLogValue = Math.log(dividendUdValue) / Math.log(10);
-            var dividendMnValue = 100 * dividendMuValue / averageMuValue;
+            var dividendMnValue = (!averageMuValue) ? 0 : 100 * dividendMuValue / averageMuValue;
             var dividendMnLogValue = Math.log(dividendMnValue) / Math.log(10);
             var previousDividendMuValue = money.dividends.values[pTimeStep];
             var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
@@ -1975,9 +1984,9 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
         case STABLE_DIVIDEND_ID: 
             var stableDividendMuValue = growthValue * averageMuValue / (1 + growthValue);
             var stableDividendMuLogValue = Math.log(stableDividendMuValue) / Math.log(10);
-            var stableDividendUdValue = stableDividendMuValue / dividendMuValue;
+            var stableDividendUdValue = (!dividendMuValue) ? 0 : stableDividendMuValue / dividendMuValue;
             var stableDividendUdLogValue = Math.log(stableDividendUdValue) / Math.log(10);
-            var stableDividendMnValue = 100 * stableDividendMuValue / averageMuValue;
+            var stableDividendMnValue = (!averageMuValue) ? 0 : 100 * stableDividendMuValue / averageMuValue;
             var stableDividendMnLogValue = Math.log(stableDividendMnValue) / Math.log(10);
             d3.selectAll("span.stableDividend.label").text(STABLE_DIVIDEND_LABEL);
             d3.selectAll("span.stableDividend.current.mu.value").text(commentFormat(stableDividendMuValue));
@@ -1999,9 +2008,9 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
         case MONETARY_SUPPLY_ID: 
             var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
             var monetarySupplyMuLogValue = Math.log(monetarySupplyMuValue) / Math.log(10);
-            var monetarySupplyUdValue = monetarySupplyMuValue / dividendMuValue;
+            var monetarySupplyUdValue = (!dividendMuValue) ? 0 : monetarySupplyMuValue / dividendMuValue;
             var monetarySupplyUdLogValue = Math.log(monetarySupplyUdValue) / Math.log(10);
-            var monetarySupplyMnValue = 100 * monetarySupplyMuValue / averageMuValue;
+            var monetarySupplyMnValue = (!averageMuValue) ? 0 : 100 * monetarySupplyMuValue / averageMuValue;
             var monetarySupplyMnLogValue = Math.log(monetarySupplyMnValue) / Math.log(10);
             var previousMonetarySupplyMuValue = money.monetarySupplies.values[pTimeStep];
             d3.selectAll("span.monetarySupply.label").text(MONETARY_SUPPLY_LABEL);
@@ -2022,9 +2031,9 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
         case STABLE_MONETARY_SUPPLY_ID: 
             var stableMonetarySupplyMuValue = headcountValue * (1 + growthValue) * dividendMuValue / growthValue;
             var stableMonetarySupplyMuLogValue = Math.log(stableMonetarySupplyMuValue) / Math.log(10);
-            var stableMonetarySupplyUdValue = stableMonetarySupplyMuValue / dividendMuValue;
+            var stableMonetarySupplyUdValue = (!dividendMuValue) ? 0 : stableMonetarySupplyMuValue / dividendMuValue;
             var stableMonetarySupplyUdLogValue = Math.log(stableMonetarySupplyUdValue) / Math.log(10);
-            var stableMonetarySupplyMnValue = 100 * stableMonetarySupplyMuValue / averageMuValue;
+            var stableMonetarySupplyMnValue = (!averageMuValue) ? 0 : 100 * stableMonetarySupplyMuValue / averageMuValue;
             var stableMonetarySupplyMnLogValue = Math.log(stableMonetarySupplyMnValue) / Math.log(10);
             d3.selectAll("span.stableMonetarySupply.label").text(STABLE_MONETARY_SUPPLY_LABEL);
             d3.selectAll("span.stableMonetarySupply.current.mu.value").text(commentFormat(stableMonetarySupplyMuValue));
@@ -2041,9 +2050,9 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
                 accountSpan.style('color', ACCOUNT_COLORS[account.id - 1]);
                 var accountMuValue = account.values[timeStep];
                 var accountMuLogValue = Math.log(accountMuValue) / Math.log(10);
-                var accountUdValue = accountMuValue / dividendMuValue;
+                var accountUdValue = (!dividendMuValue) ? 0 : accountMuValue / dividendMuValue;
                 var accountUdLogValue = Math.log(accountUdValue) / Math.log(10);
-                var accountMnValue = 100 * accountMuValue / averageMuValue;
+                var accountMnValue = (!averageMuValue) ? 0 : 100 * accountMuValue / averageMuValue;
                 var accountMnLogValue = Math.log(accountMnValue) / Math.log(10);
                 d3.selectAll("span.account.name").text(accountName1(account));
                 d3.selectAll("span.accountAge").text(accountAgeLabel(account, timeStep));
@@ -2079,10 +2088,24 @@ function commentAccordingToUD(timeStep) {
     d3.selectAll("div.DuComment").style("display", "none");
     var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
     if (timeStep == moneyBirthStep) {
+        d3.selectAll("div.NoUD").style("display", "block");
+    }
+    else if (timeStep == moneyBirthStep + 1) {
         d3.selectAll("div.UD0").style("display", "block");
     }
     else {
         d3.selectAll("div." + money.udFormulaKey).style("display", "block");
+    }
+}
+
+function commentAccordingToMoneyBirth(timeStep) {
+    d3.selectAll("div.MbComment").style("display", "none");
+    var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
+    if (timeStep == moneyBirthStep) {
+        d3.selectAll("div.MB").style("display", "block");
+    }
+    else {
+        d3.selectAll("div.NoMB").style("display", "block");
     }
 }
 
@@ -2104,7 +2127,7 @@ function commentAccordingToAccount(timeStep, account) {
         d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
         d3.selectAll("span.AtBirth." + udProductorClass).style("display", "inline");
     }
-    else if (timeStep >= deathStep) {
+    else if (timeStep > deathStep) {
         d3.selectAll("span.AfterDeath." + udProductorClass).style("display", "inline");
     }
     else {

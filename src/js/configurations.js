@@ -137,7 +137,7 @@ var configs1 = {
             le: 80,
             ud0: 966,
             tm: 0,
-            tM: 40,
+            tM: 41,
             cc: true,
             cu: "YEAR",
             c: 0.09660822712436135,
@@ -196,7 +196,7 @@ var configs1 = {
             le: 80,
             ud0: 966,
             tm: 0,
-            tM: 40,
+            tM: 41,
             cc: true,
             cu: "YEAR",
             c: 0.09660822712436135,
@@ -235,7 +235,126 @@ var configs1 = {
             a: 0,
             com: "cNOSTEP"
         }
+    },
+
+    'cSMN-M': {
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 79.74,
+            tm: 0,
+            tM: 5,
+            cc: false,
+            cu: "MONTH",
+            c: 0.00797,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: 'CC'
+            }
+        },
+        g: {
+            c: "cSMN-M",
+            t: "WorkshopsItem",
+            ac: {
+                hs: ['average', "stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            ct: "SA",
+            a: 0,
+            com: "cSMN-M"
+        }
+    },
+    
+    'cS0-M': {
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 79.74,
+            tm: 0,
+            tM: 5,
+            cc: false,
+            cu: "MONTH",
+            c: 0.00797,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 0,
+                t: 'CC'
+            }
+        },
+        g: {
+            c: "cS0-M",
+            t: "WorkshopsItem",
+            ac: {
+                hs: ['average', "stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            ct: "SA",
+            a: 0,
+            com: "cS0-M"
+        }
     }
+
 };
 
 var configs2 = {
@@ -815,7 +934,7 @@ var configs4 = {
                 hs: ["average", "stableAverage", "account1"]
             },
             dc: {
-                hs: ["stableDividend"]
+                hs: []
             },
             hc: {
                 hs: []
@@ -1006,7 +1125,7 @@ var configs4 = {
                 hs: ["average", "stableAverage", "account1"]
             },
             dc: {
-                hs: ["stableDividend"]
+                hs: []
             },
             hc: {
                 hs: []
@@ -1204,7 +1323,7 @@ var configs4 = {
                 hs: ["average", "stableAverage", "account1"]
             },
             dc: {
-                hs: ["stableDividend"]
+                hs: []
             },
             hc: {
                 hs: []
