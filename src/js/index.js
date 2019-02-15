@@ -1434,8 +1434,8 @@ function redrawCharts() {
 function updateZoom(oldTimeBounds) {
     // calculate C3 data
     money.generateData({ 
-        lower: Math.min(money.getTimeLowerBound(), money.getTimeStep(oldTimeBounds.lower, money.YEAR)), 
-        upper: Math.max(money.getTimeUpperBound(), money.getTimeStep(oldTimeBounds.upper, money.YEAR))
+        lower: Math.min(money.getTimeLowerBound(), money.toTimeStep(oldTimeBounds.lower, money.YEAR)), 
+        upper: Math.max(money.getTimeUpperBound(), money.toTimeStep(oldTimeBounds.upper, money.YEAR))
     });
     var accountsData = generateAccountsData();
     var dividendData = generateDividendData();
@@ -2006,7 +2006,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
             break;
     
         case HEADCOUNT_ID: 
-            var demographyValue = money.demographicProfiles[money.demographicProfileKey].calculate(money, money.getTimeValue(timeStep, money.YEAR));
+            var demographyValue = money.demographicProfiles[money.demographicProfileKey].calculate(money, money.fromTimeStep(timeStep, money.YEAR));
             d3.selectAll("span.headcount.label").text(HEADCOUNT_LABEL);
             d3.selectAll("span.demographyLabel").text(getDemographicProfileLabel(money.demographicProfileKey));
             d3.selectAll("span.accountsNumberValue").text(headcountValue - demographyValue);
@@ -2096,7 +2096,7 @@ function commentAccordingToRef() {
 
 function commentAccordingToUD(timeStep) {
     d3.selectAll("div.DuComment").style("display", "none");
-    var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
+    var moneyBirthStep = money.toTimeStep(money.moneyBirth, money.YEAR);
     if (timeStep == moneyBirthStep) {
         d3.selectAll("div.NoUD").style("display", "block");
     }
@@ -2110,7 +2110,7 @@ function commentAccordingToUD(timeStep) {
 
 function commentAccordingToMoneyBirth(timeStep) {
     d3.selectAll("div.MbComment").style("display", "none");
-    var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
+    var moneyBirthStep = money.toTimeStep(money.moneyBirth, money.YEAR);
     if (timeStep == moneyBirthStep) {
         d3.selectAll("div.MB").style("display", "block");
     }
@@ -2122,9 +2122,9 @@ function commentAccordingToMoneyBirth(timeStep) {
 function commentAccordingToAccount(timeStep, account) {
     d3.selectAll(".AmountComment").style("display", "none");
     var pTimeStep = money.previousTimeStep(timeStep);
-    var moneyBirthStep = money.getTimeStep(money.moneyBirth, money.YEAR);
-    var birthStep = money.getTimeStep(account.birth, money.YEAR);
-    var deathStep = money.getTimeStep(account.birth + money.lifeExpectancy, money.YEAR);
+    var moneyBirthStep = money.toTimeStep(money.moneyBirth, money.YEAR);
+    var birthStep = money.toTimeStep(account.birth, money.YEAR);
+    var deathStep = money.toTimeStep(account.birth + money.lifeExpectancy, money.YEAR);
     var udProductorClass = money.isCoCreator(account) ? 'CoCreator' : 'NonCreator';
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
@@ -2278,7 +2278,7 @@ function changeTransactionYear() {
 function changeTransactionRep() {
     var transactionRep = parseInt(this.value);
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
-    if (transactionRep > 0 && transactionRep < money.getTimeStep(200, money.YEAR)) {
+    if (transactionRep > 0 && transactionRep < money.toTimeStep(200, money.YEAR)) {
         selectedTransaction.repetitionCount = transactionRep;
         redrawCharts();
     }

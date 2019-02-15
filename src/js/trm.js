@@ -347,7 +347,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             }
         }
         
-        return headcount + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
+        return headcount + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.fromTimeStep(timeStep, this.YEAR));
     };
 
     this.asJSonRep = function() {
@@ -463,7 +463,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         if (timeStep < this.dividends.values.length) {
             return this.dividends.values[timeStep];
         }
-        var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
+        var moneyBirthStep = this.toTimeStep(this.moneyBirth, this.YEAR);
         var dividend = 0;
         if (timeStep === moneyBirthStep + 1) {
             dividend = this.getDividendStart();
@@ -479,12 +479,12 @@ var libreMoneyClass = function(lifeExpectancy) {
         if (timeStep < this.monetarySupplies.values.length) {
             return this.monetarySupplies.values[timeStep];
         }
-        var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
+        var moneyBirthStep = this.toTimeStep(this.moneyBirth, this.YEAR);
         var monetarySupply = 0;
        
         if (timeStep >= moneyBirthStep + 1) {
             var currentDividend = this.getDividend(timeStep);
-            var currentDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this, this.getTimeValue(timeStep, this.YEAR));
+            var currentDemography = this.demographicProfiles[this.demographicProfileKey].calculate(this, this.fromTimeStep(timeStep, this.YEAR));
             monetarySupply = this.getMonetarySupply(timeStep - 1);
             monetarySupply += currentDemography * currentDividend;
         }
@@ -513,7 +513,7 @@ var libreMoneyClass = function(lifeExpectancy) {
    
     this.getAccountIncrease = function(account, timeStep) {
         var accountIncrease = 0;
-        var birthStep = this.getTimeStep(account.birth, this.YEAR);
+        var birthStep = this.toTimeStep(account.birth, this.YEAR);
         if (this.isAlive(account, timeStep - 1) && this.isCoCreator(account)) {
             // Add a dividend coming from producer
             accountIncrease = this.getDividend(timeStep);
@@ -521,7 +521,7 @@ var libreMoneyClass = function(lifeExpectancy) {
 
         if (account.startingPercentage != 0 && timeStep === birthStep) {
             // At birth, add some money according to the 'startingPercentage' attribute
-            if (birthStep === this.getTimeStep(this.moneyBirth, this.YEAR)) {
+            if (birthStep === this.toTimeStep(this.moneyBirth, this.YEAR)) {
                 // If this account starts at the same time as the currency, the amount to add is a ratio of UD0/c.
                 accountIncrease += account.startingPercentage / 100 * this.getDividendStart() / this.getGrowth();
             }
@@ -609,8 +609,8 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
 
     this.validTransactionDate = function(transaction, timeStep) {
-        var firstTransStep = this.getTimeStep(transaction.year, this.YEAR);
-        var lastTransStep = this.getTimeStep(transaction.year, this.YEAR) + this.getTimeStep(transaction.repetitionCount - 1, this.growthTimeUnit);
+        var firstTransStep = this.toTimeStep(transaction.year, this.YEAR);
+        var lastTransStep = this.toTimeStep(transaction.year, this.YEAR) + this.toTimeStep(transaction.repetitionCount - 1, this.growthTimeUnit);
         return timeStep >= firstTransStep && timeStep <= lastTransStep;
     }
 
@@ -666,8 +666,8 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
 
     this.isAlive = function(account, timeStep) {
-        var birthStep = this.getTimeStep(account.birth, this.YEAR);
-        var deathStep = this.getTimeStep(account.birth + account.duration, this.YEAR);
+        var birthStep = this.toTimeStep(account.birth, this.YEAR);
+        var deathStep = this.toTimeStep(account.birth + account.duration, this.YEAR);
         return timeStep >= birthStep && timeStep < deathStep;
     }
         
@@ -772,27 +772,27 @@ var libreMoneyClass = function(lifeExpectancy) {
         }
     }
     
-    this.getTimeStep = function(timeValue, timeUnit) {
-        if (timeUnit === this.growthTimeUnit) {
-            return timeValue;
+    this.toTimeStep = function(inputValue, inputUnit) {
+        if (inputUnit === this.growthTimeUnit) {
+            return inputValue;
         }
-        if (timeUnit === this.MONTH) {
-            return timeValue / 12;
+        if (inputUnit === this.MONTH) {
+            return inputValue / 12;
         }
-        if (timeUnit === this.YEAR) {
-            return timeValue * 12;
+        if (inputUnit === this.YEAR) {
+            return inputValue * 12;
         }
         throw new Error("Time unit not managed");
     }
    
-    this.getTimeValue = function(timeStep, timeUnit) {
-        if (timeUnit === this.growthTimeUnit) {
+    this.fromTimeStep = function(timeStep, outputUnit) {
+        if (outputUnit === this.growthTimeUnit) {
             return timeStep;
         }
-        if (timeUnit === this.YEAR) {
+        if (outputUnit === this.YEAR) {
             return timeStep / 12;
         }
-        if (timeUnit === this.MONTH) {
+        if (outputUnit === this.MONTH) {
             return timeStep * 12;
         }
         throw new Error("Time unit not managed");
@@ -859,9 +859,9 @@ var libreMoneyClass = function(lifeExpectancy) {
         throw new Error(transactionIndex + "is an invalid transaction index");
     };
 
-    this.generateData = function (timeBounds) {
-        if (!timeBounds) {
-            timeBounds = {lower: this.getTimeLowerBound(), upper: this.getTimeUpperBound()};
+    this.generateData = function (timeStepBounds) {
+        if (!timeStepBounds) {
+            timeStepBounds = {lower: this.getTimeLowerBound(), upper: this.getTimeUpperBound()};
         }
 
         if (this.calculateGrowth) {
@@ -887,9 +887,9 @@ var libreMoneyClass = function(lifeExpectancy) {
         // **************
            
         var iAccount, timeStep;
-        var moneyBirthStep = this.getTimeStep(this.moneyBirth, this.YEAR);
+        var moneyBirthStep = this.toTimeStep(this.moneyBirth, this.YEAR);
         
-        for (timeStep = 0; timeStep <= timeBounds.upper; timeStep++) {
+        for (timeStep = 0; timeStep <= timeStepBounds.upper; timeStep++) {
            
             this.headcounts.values.push(this.getHeadcount(timeStep));
             this.dividends.values.push(this.getDividend(timeStep));
@@ -904,7 +904,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         // Set x,y arrays
         // **************
         
-        for (timeStep = timeBounds.lower; timeStep <= timeBounds.upper; timeStep++) {
+        for (timeStep = timeStepBounds.lower; timeStep <= timeStepBounds.upper; timeStep++) {
            
             if (timeStep >= moneyBirthStep) {
                 var du2 = this.applyPov(this.getDividend(timeStep), timeStep);
@@ -951,7 +951,7 @@ var libreMoneyClass = function(lifeExpectancy) {
            
             for (iAccount = 0; iAccount < this.accounts.length; iAccount++) {
 
-                var birthStep = this.getTimeStep(this.accounts[iAccount].birth, this.YEAR);
+                var birthStep = this.toTimeStep(this.accounts[iAccount].birth, this.YEAR);
                 // if account is born...
                 if (timeStep >= birthStep) {
                     var a2 = this.applyPov(this.getAccountBalance(this.accounts[iAccount], timeStep), timeStep);
