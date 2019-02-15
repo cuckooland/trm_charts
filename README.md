@@ -6,11 +6,7 @@ The main purpose is to centralize javascript libraries about the RTM to use in y
 
 ## Dependencies
 
-To display beautiful charts, we use `C3.js` and `D3.js` libraries:
-
-* [C3.js](http://c3js.org)
-
-* [D3.js](https://d3js.org)
+To display beautiful charts, we use [D3.js](https://d3js.org) library.
 
 ## Install
 
