@@ -593,14 +593,14 @@ var myc3 = (function() {
             var trans = d3.transition().duration(args.transition.duration);
     
             serieGroup.select('path.area')
-                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .transition(trans)
-                .attrTween('d', function(d) { return lineTween.call(this, d); });
+                .attrTween('d', function(d) { return lineTween.call(this, d); })
+                .style("opacity", function(d) { return chart.hiddenSerieIds.has(d.id) ? 0 : 1; });
             serieGroup.select('path.line')
-                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .style('stroke-width', 2)
                 .transition(trans)
                 .attrTween("d", function(d) { return lineTween.call(this, d); })
+                .style("opacity", function(d) { return chart.hiddenSerieIds.has(d.id) ? 0 : 1; })
                 .on("end", function(p,j) {
                     // If transition 0 is ended, no need to wait the others, they are virtually ended
                     if (j==0) {
@@ -699,12 +699,12 @@ var myc3 = (function() {
             var t = d3.transition().duration(args.transition.duration);
     
             serieGroup.select('path.area')
-                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .transition(t)
+                .style("opacity", function(d) { return chart.hiddenSerieIds.has(d.id) ? 0 : 1; })
                 .attr('d', function(d) { return chart.areaGenerator(d.linkType)(d.points); });
             serieGroup.select('path.line')
-                .style("display", function(d) { return chart.hiddenSerieIds.has(d.id) ? 'none' : null; })
                 .transition(t)
+                .style("opacity", function(d) { return chart.hiddenSerieIds.has(d.id) ? 0 : 1; })
                 .attr('d', function(d) { return chart.lineGenerator(d.linkType)(d.points); });
 
             plotGroup.select('.x.axis')
