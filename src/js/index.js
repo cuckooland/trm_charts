@@ -2640,7 +2640,7 @@ function getCurConfigJsonRep() {
 
 function clickTab(tabItemId, otherRef) {
     openTab(tabItemId);
-    if (tabItemId == "WorkshopsItem") {
+    if (tabItemId == "WorkshopsItem" && curConfigId != "none") {
         var jsonRep = getCurConfigJsonRep();
         applyJSonRep(jsonRep);
         comment(curConfigId);
