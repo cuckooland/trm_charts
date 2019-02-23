@@ -59,7 +59,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.moneyBirth = -1;
     // {int} Members life expectancy
     this.lifeExpectancy = lifeExpectancy || this.LIFE_EXPECTANCY;
-    // {int} First dividend amount (at first year or first month, it depends of 'growthTimeUnit')
+    // {int} First dividend amount (at first year or first month, it depends of 'prodStepUnit')
     this.dividendStart = this.DIVIDEND_START;
     // {int} Time lower bound for plot generation
     this.timeLowerBoundInYears = this.TIME_LOWER_BOUND_IN_YEARS;
@@ -68,8 +68,10 @@ var libreMoneyClass = function(lifeExpectancy) {
 
     // {boolean} Indicate if growth has to be calculated from life expectancy
     this.calculateGrowth = this.CALCULATE_GROWTH;
-    // {String} Indicate the rythm of the dividend creation (YEAR or MONTH)
+    // {String} Indicate the rythm of the re-evaluation of the dividend (YEAR or MONTH)
     this.growthTimeUnit = this.YEAR;
+    // {String} Indicate the rythm of the dividend creation (YEAR or MONTH)
+    this.prodStepUnit = this.YEAR;
     // {int} Order of magnitude of the maximum demography
     this.maxDemography = this.MAX_DEMOGRAPHY;
     this.xMinDemography = this.XMIN_DEMOGRAPHY;
@@ -139,84 +141,98 @@ var libreMoneyClass = function(lifeExpectancy) {
     // dididend formulas
     this.udFormulas = {
         'BasicUD': {
-            // BasicUD(t+dt) = c*M(t)/N(t+dt)
+            // BasicUD(t+dt) = c*M(t)/N(t)
             calculate: function (money, timeStep) {
-                var pTimeStep = money.previousTimeStep(timeStep);
-                var currentHeadcount = money.headcounts.values[timeStep]
-                if (currentHeadcount > 0) {
-                    var previousMonetarySupply = money.getMonetarySupply(pTimeStep);
-                    return money.getGrowth() * (previousMonetarySupply / currentHeadcount);
+                var headcount = money.headcounts.values[timeStep - 1]
+                if (headcount > 0) {
+                    var monetarySupply = money.getMonetarySupply(timeStep - 1);
+                    return money.getGrowth() * (monetarySupply / headcount);
                 } else {
-                    var previousDividend = money.dividends.values[pTimeStep];
-                    return previousDividend;
+                    // In this special case, the next UD is the same as the current
+                    return money.dividends.values[timeStep - 1] * money.prodFactor();
                 }
             }
         },
         'UDA': {
-            // UDA(t+dt) = Max[UDA(t) ; c*M(t)/N(t+dt)]
+            // UDA(t+dt) = Max[UDA(t) ; c*M(t)/N(t)]
             calculate: function (money, timeStep) {
-                var pTimeStep = money.previousTimeStep(timeStep);
-                var previousDividend = money.dividends.values[pTimeStep];
-                var currentHeadcount = money.headcounts.values[timeStep]
-                if (currentHeadcount > 0) {
-                    var previousMonetarySupply = money.getMonetarySupply(pTimeStep);
-                    return Math.max(previousDividend, money.getGrowth() * (previousMonetarySupply / currentHeadcount));
+                var dividend = money.dividends.values[timeStep - 1] * money.prodFactor();
+                var headcount = money.headcounts.values[timeStep - 1]
+                if (headcount > 0) {
+                    var monetarySupply = money.getMonetarySupply(timeStep - 1);
+                    return Math.max(dividend, money.getGrowth() * (monetarySupply / headcount));
                 } else {
-                    return previousDividend;
+                    // In this special case, the next UD is the same as the current
+                    return dividend;
                 }
             }
         },
         'UDB': {
             // UDB(t+dt) = (1+c)*UDB(t)
             calculate: function (money, timeStep) {
-                var pTimeStep = money.previousTimeStep(timeStep);
-                var previousDividend = money.dividends.values[pTimeStep];
-                var currentHeadcount = money.headcounts.values[timeStep]
-                if (currentHeadcount > 0) {
-                    return previousDividend * (1 + money.getGrowth());
+                var dividend = money.dividends.values[timeStep - 1] * money.prodFactor();
+                var headcount = money.headcounts.values[timeStep - 1]
+                if (headcount > 0) {
+                    return dividend * (1 + money.getGrowth());
                 } else {
-                    return previousDividend;
+                    // In this special case, the next UD is the same as the current
+                    return dividend;
                 }
             }
         },
         'UDC': {
             // UDC(t+dt) = 1/2*(UDBasique + UDB)
             calculate: function (money, timeStep) {
-                var pTimeStep = money.previousTimeStep(timeStep);
-                var previousDividend = money.dividends.values[pTimeStep];
-                var currentHeadcount = money.headcounts.values[timeStep]
-                if (currentHeadcount > 0) {
-                    var previousMonetarySupply = money.getMonetarySupply(pTimeStep);
-                    var udBasic = money.getGrowth() * (previousMonetarySupply / currentHeadcount);
-                    var udb = previousDividend * (1 + money.getGrowth());
+                var dividend = money.dividends.values[timeStep - 1] * money.prodFactor();
+                var headcount = money.headcounts.values[timeStep - 1]
+                if (headcount > 0) {
+                    var monetarySupply = money.getMonetarySupply(timeStep - 1);
+                    var udBasic = money.getGrowth() * (monetarySupply / headcount);
+                    var udb = dividend * (1 + money.getGrowth());
                     return (udBasic + udb) / 2;
-                    //return Math.pow((udBasic * udb), 0.5);
                 } else {
-                    return previousDividend;
+                    // In this special case, the next UD is the same as the current
+                    return dividend;
                 }
             }
         },
         'UDG': {
-            // DU(t+dt) = DU(t) + c² M(t-dt)/N(t)
+            // DU(t+dt) = DU(t) + c² M(t)/N(t)
             calculate: function (money, timeStep) {
-                var pTimeStep = money.previousTimeStep(timeStep);
-                var ppTimeStep = money.previousTimeStep(pTimeStep);
-                var previousDividend = money.dividends.values[pTimeStep];
-                var previousHeadcount = money.headcounts.values[pTimeStep]
-                var currentHeadcount = money.headcounts.values[timeStep]
-                if (previousHeadcount > 0 && currentHeadcount > 0) {
-                    var previous2MonetarySupply = money.monetarySupplies.values[ppTimeStep];
-                    return previousDividend + (Math.pow(money.getGrowth(), 2) * (previous2MonetarySupply / previousHeadcount));
+                var dividend = money.dividends.values[timeStep - 1] * money.prodFactor();
+                var headcount = money.headcounts.values[timeStep - 1]
+                var previousHeadcount = money.headcounts.values[money.previousGrowthStep(timeStep - 1)]
+                if (previousHeadcount > 0 && headcount > 0) {
+                    var previousMonetarySupply = money.monetarySupplies.values[money.previousGrowthStep(timeStep - 1)];
+                    return dividend + (Math.pow(money.getGrowth(), 2) * (previousMonetarySupply / previousHeadcount));
                 }
                 else {
-                    return previousDividend;
+                    // In this special case, the next UD is the same as the current
+                    return dividend;
                 }
             }
         }
     };
    
-    this.previousTimeStep = function(timeStep) {
-        return timeStep - 1;
+    this.previousGrowthStep = function(timeStep) {
+        return timeStep - this.prodFactor();
+    }
+
+    this.prodFactor = function() {
+        if (this.growthTimeUnit === this.YEAR && this.prodStepUnit === this.MONTH) {
+            return 12;
+        }
+        return 1;
+    }
+
+    this.getProdStepUnit = function() {
+        if (this.growthTimeUnit === this.MONTH || (this.growthTimeUnit === this.YEAR && this.prodStepUnit === this.MONTH)) {
+            return this.MONTH;
+        }
+        if (this.growthTimeUnit === this.YEAR) {
+            return this.YEAR;
+        }
+        throw new Error("Time unit not managed: " + this.growthTimeUnit);
     }
     
     // population variation profiles
@@ -371,6 +387,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             tM : this.timeUpperBoundInYears,
             cc : this.calculateGrowth,
             cu : this.growthTimeUnit,
+            pu : this.prodStepUnit,
             c : this.growth,
             d : this.demographicProfileKey,
             dyM : this.maxDemography,
@@ -417,6 +434,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         this.timeUpperBoundInYears = jsonRep.tM;
         this.calculateGrowth = jsonRep.cc;
         this.growthTimeUnit = jsonRep.cu;
+        this.prodStepUnit = jsonRep.pu;
         this.growth = jsonRep.c;
         this.demographicProfileKey = jsonRep.d;
         this.maxDemography = jsonRep.dyM;
@@ -466,11 +484,15 @@ var libreMoneyClass = function(lifeExpectancy) {
         var moneyBirthStep = this.toTimeStep(this.moneyBirth, this.YEAR);
         var dividend = 0;
         if (timeStep === moneyBirthStep + 1) {
-            dividend = this.getDividendStart();
+            dividend = this.getDividendStart() / this.prodFactor();
         }
         else if (timeStep > moneyBirthStep + 1) {
-            // After first issuance, calculate next dividend depending on formula...
-            dividend = this.udFormulas[this.udFormulaKey].calculate(this, timeStep);
+            if (this.prodFactor() != 1 && (timeStep - moneyBirthStep) % this.prodFactor() != 1) {
+                dividend = this.dividends.values[timeStep - 1];
+            }
+            else {
+                dividend = this.udFormulas[this.udFormulaKey].calculate(this, timeStep) / this.prodFactor();
+            }            
         }
         return dividend;
     };
@@ -526,8 +548,8 @@ var libreMoneyClass = function(lifeExpectancy) {
                 accountIncrease += account.startingPercentage / 100 * this.getDividendStart() / this.getGrowth();
             }
             else {
-                // If this account starts later than the currency, the amount to add is a ratio of M/N.
-                accountIncrease += account.startingPercentage / 100 * this.getMonetarySupply(timeStep - 1) / this.getHeadcount(timeStep - 1);
+                // If this account starts later than the currency, the amount to add is a ratio of M/N after emission of the dividend.
+                accountIncrease += account.startingPercentage / 100 * (this.getMonetarySupply(timeStep - 1) / this.getHeadcount(timeStep - 1) + this.getDividend(timeStep));
             }
         }
        
@@ -610,7 +632,7 @@ var libreMoneyClass = function(lifeExpectancy) {
 
     this.validTransactionDate = function(transaction, timeStep) {
         var firstTransStep = this.toTimeStep(transaction.year, this.YEAR);
-        var lastTransStep = this.toTimeStep(transaction.year, this.YEAR) + this.toTimeStep(transaction.repetitionCount - 1, this.growthTimeUnit);
+        var lastTransStep = this.toTimeStep(transaction.year, this.YEAR) + this.toTimeStep(transaction.repetitionCount - 1, this.getProdStepUnit());
         return timeStep >= firstTransStep && timeStep <= lastTransStep;
     }
 
@@ -721,23 +743,23 @@ var libreMoneyClass = function(lifeExpectancy) {
         });
     };
 
-    this.getGrowth = function(growthTimeUnit) {
-        growthTimeUnit = growthTimeUnit || this.growthTimeUnit;
+    this.getGrowth = function(timeUnit) {
+        timeUnit = timeUnit || this.growthTimeUnit;
        
-        if (growthTimeUnit === this.growthTimeUnit) {
+        if (timeUnit === this.growthTimeUnit) {
             return this.growth;
         }
-        if (growthTimeUnit === this.MONTH) {
+        if (timeUnit === this.MONTH) {
             return Math.pow((1 + this.growth), 1/12) - 1;
         }
-        if (growthTimeUnit === this.YEAR) {
+        if (timeUnit === this.YEAR) {
             return Math.pow((1 + this.growth), 12) - 1;
         }
         throw new Error("Growth time unit not managed");
     }
        
     this.getTimeUpperBound = function(timeUnit) {
-        timeUnit = timeUnit || this.growthTimeUnit;
+        timeUnit = timeUnit || this.getProdStepUnit();
         if (timeUnit === this.MONTH) {
             return 12 * this.timeUpperBoundInYears;
         }
@@ -755,7 +777,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
     
     this.getTimeLowerBound = function(timeUnit) {
-        timeUnit = timeUnit || this.growthTimeUnit;
+        timeUnit = timeUnit || this.getProdStepUnit();
         if (timeUnit === this.MONTH) {
             return 12 * this.timeLowerBoundInYears;
         }
@@ -773,7 +795,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
     
     this.toTimeStep = function(inputValue, inputUnit) {
-        if (inputUnit === this.growthTimeUnit) {
+        if (inputUnit === this.getProdStepUnit()) {
             return inputValue;
         }
         if (inputUnit === this.MONTH) {
@@ -786,7 +808,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
    
     this.fromTimeStep = function(timeStep, outputUnit) {
-        if (outputUnit === this.growthTimeUnit) {
+        if (outputUnit === this.getProdStepUnit()) {
             return timeStep;
         }
         if (outputUnit === this.YEAR) {
@@ -798,16 +820,16 @@ var libreMoneyClass = function(lifeExpectancy) {
         throw new Error("Time unit not managed");
     }
    
-    this.getDividendStart = function(growthTimeUnit) {
-        growthTimeUnit = growthTimeUnit || this.growthTimeUnit;
+    this.getDividendStart = function(timeUnit) {
+        timeUnit = timeUnit || this.growthTimeUnit;
        
-        if (growthTimeUnit === this.growthTimeUnit) {
+        if (timeUnit === this.growthTimeUnit) {
             return this.dividendStart;
         }
-        if (growthTimeUnit === this.MONTH) {
+        if (timeUnit === this.MONTH) {
             return this.dividendStart * this.getGrowth(this.MONTH) / this.getGrowth(this.YEAR);
         }
-        if (growthTimeUnit === this.YEAR) {
+        if (timeUnit === this.YEAR) {
             return this.dividendStart * this.getGrowth(this.YEAR) / this.getGrowth(this.MONTH);
         }
         throw new Error("Growth time unit not managed");
@@ -913,7 +935,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                     this.dividends.y.push(du2);
                 }
                
-                var smn2 = this.applyPov((1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth(), timeStep);
+                var smn2 = this.applyPov((1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth() * this.prodFactor(), timeStep);
                 if (!isNaN(smn2)) {
                     this.stableAverages.x.push(timeStep);
                     this.stableAverages.y.push(smn2);
@@ -925,7 +947,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                     this.monetarySupplies.y.push(ms2);
                 }
                
-                var sms2 = this.applyPov(this.getHeadcount(timeStep) * (1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth(), timeStep);
+                var sms2 = this.applyPov(this.getHeadcount(timeStep) * (1 + this.getGrowth()) * this.getDividend(timeStep) / this.getGrowth() * this.prodFactor(), timeStep);
                 if (!isNaN(sms2)) {
                     this.stableMonetarySupplies.x.push(timeStep);
                     this.stableMonetarySupplies.y.push(sms2);
@@ -939,7 +961,7 @@ var libreMoneyClass = function(lifeExpectancy) {
                     this.averages.y.push(mn2);
                 }
                
-                var sdu2 = this.applyPov(this.getGrowth() * this.getMonetarySupply(timeStep) / this.getHeadcount(timeStep) / (1 + this.getGrowth()), timeStep);
+                var sdu2 = this.applyPov(this.getGrowth() * this.getMonetarySupply(timeStep) / this.getHeadcount(timeStep) / (1 + this.getGrowth()) / this.prodFactor(), timeStep);
                 if (!isNaN(sdu2)) {
                     this.stableDividends.x.push(timeStep);
                     this.stableDividends.y.push(sdu2);

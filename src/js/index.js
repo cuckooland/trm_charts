@@ -234,6 +234,7 @@ function fillForms() {
     d3.select('#StepCurves').property("checked", curveType == STEP_AFTER_CURVE);
     d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
     d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
+    d3.select('#MonthlyProd').property("checked", money.prodStepUnit === money.MONTH);
     d3.select('#MaxDemography').property("value", money.maxDemography);
     d3.select('#xMinDemography').property("value", toYearRep(money.xMinDemography));
     d3.select('#xMaxDemography').property("value", toYearRep(money.xMaxDemography));
@@ -390,10 +391,10 @@ function addChartEffectsFromHtml() {
             return indexToSelect;
         }
         else if (serieSpan.classed('previous')) {
-            return money.previousTimeStep(indexToSelect);
+            return indexToSelect - 1;
         }
         else if (serieSpan.classed('previous2')) {
-            return money.previousTimeStep(money.previousTimeStep(indexToSelect));
+            return money.previousGrowthStep(indexToSelect - 1);
         }
         return -1;
     }
@@ -441,10 +442,10 @@ function addChartEffectsFromHtml() {
         var clickedData = searchChartWithData(clickedSerieId).getData(clickedSerieId)[0];
         var indexToSelect = d3.bisectLeft(clickedData.points.map(p=>p[0].getTime()), selectedPointTime);
         if (serieSpan.classed('previous')) {
-            indexToSelect = money.previousTimeStep(indexToSelect);
+            indexToSelect = indexToSelect - 1;
         }
         else if (serieSpan.classed('previous2')) {
-            indexToSelect = money.previousTimeStep(money.previousTimeStep(indexToSelect));
+            indexToSelect = money.previousGrowthStep(indexToSelect - 1);
         }
 
         commentChartData(clickedSerieAttributes.chart, clickedSerieId, indexToSelect);
@@ -540,6 +541,7 @@ function initCallbacks() {
     d3.select("#CalculateGrowth").on("click", changeCalculateGrowth);
     d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
     d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
+    d3.select("#MonthlyProd").on("click", changeMonthlyProd);
     d3.select("#LogScale").on("click", changeLogScale);
     d3.select("#StepCurves").on("click", changeStepCurves);
     d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
@@ -1129,15 +1131,15 @@ function getRefUnitLabel3(referenceFrameKey) {
 function getUdFormulaLabel(udFormulaKey) {
     switch(udFormulaKey) {
         case money.BASIC_UD_KEY:
-            return "Basique : DU(t) = c*M(t-1)/N(t)";
+            return "Basique : DU(t) = c*M(t)/N(t)";
         case money.UDA_KEY:
-            return "DUA : DU(t) = max[DU(t-1) ; c*M(t-1)/N(t)]";
+            return "DUA : DU(t) = max[DU(t-1) ; c*M(t)/N(t)]";
         case money.UDB_KEY: 
             return "DUB : DU(t) = (1+c)*DU(t-1)";
         case money.UDC_KEY: 
-            return "DUC : DU(t) = 1/2 [c*M(t-1)/N(t) + (1+c)*DU(t-1)]";
+            return "DUC : DU(t) = 1/2 [c*M(t)/N(t) + (1+c)*DU(t-1)]";
         case money.UDG_KEY:
-            return "DUĞ : DU(t) = DU(t-1) + c²*M(t-2)/N(t-1)";
+            return "DUĞ : DU(t) = DU(t-1) + c²*M(t-1)/N(t-1)";
         default:
             throw new Error("Dividend formula not managed: " + udFormulaKey);
     }
@@ -1553,22 +1555,22 @@ function accountTypeLabel(account) {
 function accountAgeLabel(account, timeStep) {
     var year = 0;
     var month = 0;
-    if (money.growthTimeUnit === money.MONTH) {
+    if (money.getProdStepUnit() === money.MONTH) {
         year = Math.trunc(timeStep / 12)  - account.birth;
         month = timeStep % 12;
     }
-    else if (money.growthTimeUnit === money.YEAR) {
+    else if (money.getProdStepUnit() === money.YEAR) {
         year = timeStep - account.birth;
         month = 0;
     }
     else {
-        throw new Error("Time resolution not managed: " + money.growthTimeUnit);
+        throw new Error("Time resolution not managed: " + money.getProdStepUnit());
     }
     if (year == 0 && month == 0) {
-        if (money.growthTimeUnit === money.MONTH) {
+        if (money.getProdStepUnit() === money.MONTH) {
             return "0 mois";
         }
-        else if (money.growthTimeUnit === money.YEAR) {
+        else if (money.getProdStepUnit() === money.YEAR) {
             return "0 année";
         }
     }
@@ -1679,7 +1681,7 @@ function enableTransactionArea() {
 }
 
 function asDate(timeStep, timeUnit) {
-    timeUnit = timeUnit || money.growthTimeUnit;
+    timeUnit = timeUnit || money.getProdStepUnit();
     
     if (timeUnit === money.MONTH) {
         return new Date(1999 + Math.trunc(timeStep / 12), timeStep % 12, 1);
@@ -1791,7 +1793,12 @@ function timeLabel() {
         return 'Temps (émission mensuelle)';
     }
     else {
-        return 'Temps (émission annuelle)';
+        if (money.getProdStepUnit() == money.MONTH) {
+            return 'Temps (émission mensuelle, réévaluation annuelle)';
+        }
+        else {
+            return 'Temps (émission annuelle)';
+        }
     }
 }
 
@@ -1899,10 +1906,11 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
     var growthValue = money.getGrowth();
 
     d3.selectAll("span.dateValue").text(asFormattedDate(timeStep));
-    var pTimeStep = money.previousTimeStep(timeStep);
-    var ppTimeStep = money.previousTimeStep(pTimeStep);
+    var pTimeStep = timeStep - 1;
+    var ppTimeStep = money.previousGrowthStep(pTimeStep);
 
     d3.selectAll("span.growth.value").text(commentFormat(growthValue * 100) + NONBREAKING_SPACE + '%');
+    d3.selectAll(".prodFactor").style("display", (money.prodFactor() == 12) ? null : "none");
     
     var dividendMuValue = money.dividends.values[timeStep];
     d3.selectAll("span.dividend.current.mu.value").text(commentFormat(dividendMuValue));
@@ -1946,7 +1954,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
             break;
             
         case STABLE_AVERAGE_ID:
-            var stableAverageMuValue = (1 + growthValue) * dividendMuValue / growthValue;
+            var stableAverageMuValue = (1 + growthValue) * dividendMuValue / growthValue * money.prodFactor();
             var stableAverageMuLogValue = Math.log(stableAverageMuValue) / Math.log(10);
             var stableAverageUdValue = stableAverageMuValue / dividendMuValue;
             var stableAverageUdLogValue = Math.log(stableAverageUdValue) / Math.log(10);
@@ -1968,14 +1976,13 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
             var dividendMnValue = 100 * dividendMuValue / averageMuValue;
             var dividendMnLogValue = Math.log(dividendMnValue) / Math.log(10);
             var previousDividendMuValue = money.dividends.values[pTimeStep];
-            var monetarySupplyMuValue = money.monetarySupplies.values[timeStep];
             var previousMonetarySupplyMuValue = money.monetarySupplies.values[pTimeStep];
             var previous2MonetarySupplyMuValue = money.monetarySupplies.values[ppTimeStep];
             var previousHeadcountValue = money.headcounts.values[pTimeStep];
             d3.selectAll("span.dividend.label").text(DIVIDEND_LABEL);
             d3.selectAll("span.dividend.formulaName").text(universalDividendName());
             d3.selectAll("span.dividend.previous.mu.value").text(commentFormat(previousDividendMuValue));
-            d3.selectAll("span.dividend.basicMuValue").text(commentFormat(growthValue * previousMonetarySupplyMuValue / headcountValue));
+            d3.selectAll("span.dividend.basicMuValue").text(commentFormat(growthValue * previousMonetarySupplyMuValue / headcountValue / money.prodFactor()));
             d3.selectAll("span.dividend.mu.logValue").text(commentFormat(dividendMuLogValue));
             d3.selectAll("span.dividend.ud.value").text(commentFormat(dividendUdValue));
             d3.selectAll("span.dividend.ud.logValue").text(commentFormat(dividendUdLogValue));
@@ -1983,14 +1990,13 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
             d3.selectAll("span.dividend.mn.logValue").text(commentFormat(dividendMnLogValue));
             d3.selectAll("span.udbMuValue").text(commentFormat((1 + growthValue) * previousDividendMuValue));
             d3.selectAll("span.headcount.previous.value").text(f(previousHeadcountValue));
-            d3.selectAll("span.monetarySupply.current.mu.value").text(commentFormat(monetarySupplyMuValue));
             d3.selectAll("span.monetarySupply.previous.mu.value").text(commentFormat(previousMonetarySupplyMuValue));
             d3.selectAll("span.monetarySupply.previous2.mu.value").text(commentFormat(previous2MonetarySupplyMuValue));
             commentAccordingToUD(timeStep);
             break;
     
         case STABLE_DIVIDEND_ID: 
-            var stableDividendMuValue = growthValue * averageMuValue / (1 + growthValue);
+            var stableDividendMuValue = growthValue * averageMuValue / (1 + growthValue) / money.prodFactor();
             var stableDividendMuLogValue = Math.log(stableDividendMuValue) / Math.log(10);
             var stableDividendUdValue = stableDividendMuValue / dividendMuValue;
             var stableDividendUdLogValue = Math.log(stableDividendUdValue) / Math.log(10);
@@ -2038,7 +2044,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
             break;
         
         case STABLE_MONETARY_SUPPLY_ID: 
-            var stableMonetarySupplyMuValue = headcountValue * (1 + growthValue) * dividendMuValue / growthValue;
+            var stableMonetarySupplyMuValue = headcountValue * (1 + growthValue) * dividendMuValue / growthValue * money.prodFactor();
             var stableMonetarySupplyMuLogValue = Math.log(stableMonetarySupplyMuValue) / Math.log(10);
             var stableMonetarySupplyUdValue = stableMonetarySupplyMuValue / dividendMuValue;
             var stableMonetarySupplyUdLogValue = Math.log(stableMonetarySupplyUdValue) / Math.log(10);
@@ -2103,6 +2109,9 @@ function commentAccordingToUD(timeStep) {
     else if (timeStep == moneyBirthStep + 1) {
         d3.selectAll("div.UD0").style("display", "block");
     }
+    else if (money.growthTimeUnit === money.YEAR && money.getProdStepUnit() === money.MONTH && (timeStep - moneyBirthStep) % 12 != 1) {
+            d3.selectAll("div.UDM").style("display", "block");
+    }
     else {
         d3.selectAll("div." + money.udFormulaKey).style("display", "block");
     }
@@ -2121,7 +2130,7 @@ function commentAccordingToMoneyBirth(timeStep) {
 
 function commentAccordingToAccount(timeStep, account) {
     d3.selectAll(".AmountComment").style("display", "none");
-    var pTimeStep = money.previousTimeStep(timeStep);
+    var pTimeStep = timeStep - 1;
     var moneyBirthStep = money.toTimeStep(money.moneyBirth, money.YEAR);
     var birthStep = money.toTimeStep(account.birth, money.YEAR);
     var deathStep = money.toTimeStep(account.birth + money.lifeExpectancy, money.YEAR);
@@ -2453,6 +2462,19 @@ function changeMonthlyDividendStart() {
     money.dividendStart = parseFloat(this.value);
     redrawCharts();
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
+    pushNewHistoryState();
+}
+
+function changeMonthlyProd() {
+    if (this.checked) {
+        money.prodStepUnit = money.MONTH;
+    }
+    else {
+        money.prodStepUnit = money.YEAR;
+    }
+    
+    redrawCharts();
+    comment(this.id);
     pushNewHistoryState();
 }
 
