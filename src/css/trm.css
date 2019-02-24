@@ -261,6 +261,11 @@ span.stableMonetarySupply:hover {
     cursor: pointer;
 }
 
+.configLink {
+    color: darkslateblue;
+    cursor: pointer;
+}
+
 span.accountName,
 span.transactionName,
 span.workshopsTabLink,
@@ -277,6 +282,10 @@ span.transactionsTabLink {
     border-radius: 5px;
     white-space: nowrap;
     transition: 0.3s;
+}
+
+.prodFactor {
+    font-style: italic;
 }
 
 .xLocLine,

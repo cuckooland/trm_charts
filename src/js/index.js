@@ -190,6 +190,7 @@ if (!applyEncodedURIFromLocation()) {
     window.history.replaceState(encodedURI, '', '?' + encodedURI);
 }
 
+addConfigLinksFromHtml();
 addChartEffectsFromHtml();
 initCallbacks();
 
@@ -320,6 +321,18 @@ function addTabEffectsFromHtml() {
             });
     });
     
+}
+
+function addConfigLinksFromHtml() {
+    for (var i = 0; i < workshops.length; i++) {
+        const workshopJSonRep = workshops[i].jsonRep;
+        Object.keys(workshopJSonRep).forEach(function(key) {
+            const configIdToSelect = key;
+            d3.selectAll('.configLink.' + key).on('click', function() {
+                changeConfiguration(configIdToSelect, workshopJSonRep);
+            });
+        });
+    }
 }
 
 function addChartEffectsFromHtml() {
@@ -515,7 +528,7 @@ function addChartEffectsFromHtml() {
 function initCallbacks() {
     for (var i = 0; i < workshops.length; i++) {
         const workshopJSonRep = workshops[i].jsonRep;
-        d3.select('#' + workshops[i].selectorId).on("change", function() { changeConfiguration(this, workshopJSonRep); });
+        d3.select('#' + workshops[i].selectorId).on("change", function() { changeConfiguration(this.options[this.selectedIndex].value, workshopJSonRep); });
     }
     d3.select("#ReferenceFrameSelector").on("change", changeReferenceFrame);
     d3.select("#UdFormulaSelector").on("change", changeUdFormula);
@@ -2224,8 +2237,8 @@ function pushNewHistoryState() {
 // Callbacks
 // *********
 
-function changeConfiguration(selectElement, configs) {
-    curConfigId = selectElement.options[selectElement.selectedIndex].value;
+function changeConfiguration(configIdToSelect, configs) {
+    curConfigId = configIdToSelect;
     if (curConfigId != 'none') {
         var jsonRep = configs[curConfigId];
         applyJSonRep(jsonRep);
