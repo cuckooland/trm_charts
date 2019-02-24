@@ -356,9 +356,12 @@ var libreMoneyClass = function(lifeExpectancy) {
             return this.headcounts.values[timeStep];
         }
         var headcount = 0;
+        var noCoCreators = (this.accounts.filter(account=>this.isCoCreator(account)).length == 0);
 
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
-            if (this.isAlive(this.accounts[iAccount], timeStep/* -1 */) && !this.isCommunity(this.accounts[iAccount])) {
+            if (this.isAlive(this.accounts[iAccount], timeStep/* -1 */) 
+                && !this.isCommunity(this.accounts[iAccount])
+                && (noCoCreators || this.isCoCreator(this.accounts[iAccount]))) {
                 headcount++;
             }
         }
