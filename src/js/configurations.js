@@ -359,7 +359,67 @@ var configs1 = {
             a: 0,
             com: "cS0-M"
         }
-    }
+    },
+
+    'cS0-YM': {
+        m: {
+            f: "BasicUD",
+            r: "monetaryUnit",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 5,
+            cc: false,
+            cu: "YEAR",
+            pu: "MONTH",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 1,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 0,
+                t: 'CC'
+            }
+        },
+        g: {
+            c: "cS0-YM",
+            t: "WorkshopsItem",
+            ac: {
+                hs: ['average', "stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            ct: "SA",
+            a: 0,
+            com: "cS0-YM"
+        }
+    },
 
 };
 

@@ -1038,6 +1038,9 @@ function getConfigLabel(configKey) {
         case 'cSMN-M':
             configLabel = "Départ à DU0/c (mois)";
             break;
+        case 'cS0-YM':
+            configLabel = "Départ à 0 (an/mois)";
+            break;
         case 'c2CC':
             configLabel = "2nd co-créateur";
             break;
