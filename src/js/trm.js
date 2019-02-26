@@ -69,7 +69,7 @@ var libreMoneyClass = function(lifeExpectancy) {
     // {boolean} Indicate if growth has to be calculated from life expectancy
     this.calculateGrowth = this.CALCULATE_GROWTH;
     // {String} Indicate the rythm of the re-evaluation of the dividend (YEAR or MONTH)
-    this.growthTimeUnit = this.YEAR;
+    this.growthStepUnit = this.YEAR;
     // {String} Indicate the rythm of the dividend creation (YEAR or MONTH)
     this.prodStepUnit = this.YEAR;
     // {int} Order of magnitude of the maximum demography
@@ -80,11 +80,11 @@ var libreMoneyClass = function(lifeExpectancy) {
     this.plateauDemography = this.PLATEAU_DEMOGRAPHY;
     this.xScaleDemography = this.XSCALE_DEMOGRAPHY;
    
-    // {double} Monetary supply growth in percent (per year or per month, it depends of 'growthTimeUnit')
-    if (this.growthTimeUnit === this.MONTH) {
+    // {double} Monetary supply growth in percent (per year or per month, it depends of 'growthStepUnit')
+    if (this.growthStepUnit === this.MONTH) {
         this.growth = this.PER_MONTH_GROWTH;
     }
-    else if (this.growthTimeUnit === this.YEAR) {
+    else if (this.growthStepUnit === this.YEAR) {
         this.growth = this.PER_YEAR_GROWTH;
     }
     else {
@@ -219,20 +219,20 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
 
     this.prodFactor = function() {
-        if (this.growthTimeUnit === this.YEAR && this.prodStepUnit === this.MONTH) {
+        if (this.growthStepUnit === this.YEAR && this.prodStepUnit === this.MONTH) {
             return 12;
         }
         return 1;
     }
 
     this.getProdStepUnit = function() {
-        if (this.growthTimeUnit === this.MONTH || (this.growthTimeUnit === this.YEAR && this.prodStepUnit === this.MONTH)) {
+        if (this.growthStepUnit === this.MONTH || (this.growthStepUnit === this.YEAR && this.prodStepUnit === this.MONTH)) {
             return this.MONTH;
         }
-        if (this.growthTimeUnit === this.YEAR) {
+        if (this.growthStepUnit === this.YEAR) {
             return this.YEAR;
         }
-        throw new Error("Time unit not managed: " + this.growthTimeUnit);
+        throw new Error("Time unit not managed: " + this.growthStepUnit);
     }
     
     // population variation profiles
@@ -340,10 +340,10 @@ var libreMoneyClass = function(lifeExpectancy) {
    
     this.calcGrowth = function() {
         var growthPerYear = Math.pow(this.lifeExpectancy / 2, 2 / this.lifeExpectancy) - 1;
-        if (this.growthTimeUnit === this.YEAR) {
+        if (this.growthStepUnit === this.YEAR) {
             this.growth = growthPerYear;
         }
-        else if (this.growthTimeUnit === this.MONTH) {
+        else if (this.growthStepUnit === this.MONTH) {
             this.growth = Math.pow((1 + growthPerYear), 1/12) - 1;
         }
         else {
@@ -389,7 +389,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             tm : this.timeLowerBoundInYears,
             tM : this.timeUpperBoundInYears,
             cc : this.calculateGrowth,
-            cu : this.growthTimeUnit,
+            cu : this.growthStepUnit,
             pu : this.prodStepUnit,
             c : this.growth,
             d : this.demographicProfileKey,
@@ -436,7 +436,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         this.timeLowerBoundInYears = jsonRep.tm;
         this.timeUpperBoundInYears = jsonRep.tM;
         this.calculateGrowth = jsonRep.cc;
-        this.growthTimeUnit = jsonRep.cu;
+        this.growthStepUnit = jsonRep.cu;
         this.prodStepUnit = jsonRep.pu;
         this.growth = jsonRep.c;
         this.demographicProfileKey = jsonRep.d;
@@ -747,9 +747,9 @@ var libreMoneyClass = function(lifeExpectancy) {
     };
 
     this.getGrowth = function(timeUnit) {
-        timeUnit = timeUnit || this.growthTimeUnit;
+        timeUnit = timeUnit || this.growthStepUnit;
        
-        if (timeUnit === this.growthTimeUnit) {
+        if (timeUnit === this.growthStepUnit) {
             return this.growth;
         }
         if (timeUnit === this.MONTH) {
@@ -824,9 +824,9 @@ var libreMoneyClass = function(lifeExpectancy) {
     }
    
     this.getDividendStart = function(timeUnit) {
-        timeUnit = timeUnit || this.growthTimeUnit;
+        timeUnit = timeUnit || this.growthStepUnit;
        
-        if (timeUnit === this.growthTimeUnit) {
+        if (timeUnit === this.growthStepUnit) {
             return this.dividendStart;
         }
         if (timeUnit === this.MONTH) {

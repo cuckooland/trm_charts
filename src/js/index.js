@@ -233,8 +233,8 @@ function fillForms() {
     d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
     d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
     d3.select('#StepCurves').property("checked", curveType == STEP_AFTER_CURVE);
-    d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
-    d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
+    d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthStepUnit === money.MONTH);
+    d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthStepUnit === money.YEAR);
     d3.select('#MonthlyProd').property("checked", money.prodStepUnit === money.MONTH);
     d3.select('#MaxDemography').property("value", money.maxDemography);
     d3.select('#xMinDemography').property("value", toYearRep(money.xMinDemography));
@@ -1719,7 +1719,7 @@ function enableGrowthForms(calculateGrowth) {
         d3.select('#AnnualGrowth').attr('disabled', 'disabled');
         d3.select('#MonthlyGrowth').attr('disabled', 'disabled');
     } else {
-        if (money.growthTimeUnit === money.MONTH) {
+        if (money.growthStepUnit === money.MONTH) {
             d3.select('#AnnualGrowth').attr('disabled', 'disabled');
             d3.select('#MonthlyGrowth').attr('disabled', null);
         }
@@ -1731,7 +1731,7 @@ function enableGrowthForms(calculateGrowth) {
 }
 
 function enableUD0Forms() {
-    if (money.growthTimeUnit === money.MONTH) {
+    if (money.growthStepUnit === money.MONTH) {
         d3.select('#AnnualDividendStart').attr('disabled', 'disabled');
         d3.select('#MonthlyDividendStart').attr('disabled', null);
     }
@@ -1805,7 +1805,7 @@ function accountYLabel() {
 }
 
 function timeLabel() {
-    if (money.growthTimeUnit == money.MONTH) {
+    if (money.growthStepUnit == money.MONTH) {
         return 'Temps (émission mensuelle)';
     }
     else {
@@ -2125,7 +2125,7 @@ function commentAccordingToUD(timeStep) {
     else if (timeStep == moneyBirthStep + 1) {
         d3.selectAll("div.UD0").style("display", "block");
     }
-    else if (money.growthTimeUnit === money.YEAR && money.getProdStepUnit() === money.MONTH && (timeStep - moneyBirthStep) % 12 != 1) {
+    else if (money.growthStepUnit === money.YEAR && money.getProdStepUnit() === money.MONTH && (timeStep - moneyBirthStep) % 12 != 1) {
             d3.selectAll("div.UDM").style("display", "block");
     }
     else {
@@ -2398,18 +2398,18 @@ function changeDemographicProfile() {
 
 function changeRythm() {
     if (this.value === "byMonth") {
-        money.growthTimeUnit = money.MONTH;
+        money.growthStepUnit = money.MONTH;
         money.dividendStart = parseFloat(document.getElementById('MonthlyDividendStart').value);
     	money.growth = parseFloat(document.getElementById('MonthlyGrowth').value) / 100;
     }
     else {
-        money.growthTimeUnit = money.YEAR;
+        money.growthStepUnit = money.YEAR;
         money.dividendStart = parseFloat(document.getElementById('AnnualDividendStart').value);
     	money.growth = parseFloat(document.getElementById('AnnualGrowth').value) / 100;
     }
     
-    d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthTimeUnit === money.MONTH);
-    d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthTimeUnit === money.YEAR);
+    d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthStepUnit === money.MONTH);
+    d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthStepUnit === money.YEAR);
         
     updateTimeXLabels();
     
@@ -2458,7 +2458,7 @@ function updateCalculateGrowth() {
         d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
         d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
         
-        if (money.growthTimeUnit === money.MONTH) {
+        if (money.growthStepUnit === money.MONTH) {
             d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
         }
         else {
