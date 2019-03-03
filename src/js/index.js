@@ -167,6 +167,7 @@ var curSelectedDataId = "";
 var selectedPointIndex = -1;
 var commentedId = "";
 var curveType = LINEAR_CURVE;
+var paramBgColor;
 
 window.addEventListener('popstate', function(e) {
     var encodedURI = e.state;
@@ -179,6 +180,7 @@ window.addEventListener('popstate', function(e) {
 initSelectors();
 
 addTabEffectsFromHtml();
+addParamLinksFromHtml();
 
 generateC3Charts();
 
@@ -272,6 +274,76 @@ function generateC3Charts() {
     generateMonetarySupplyChart();
 }
 
+function addParamLinksFromHtml() {
+    var paramIdList = ['growth', 'AnnualGrowth', 'MonthlyGrowth', 'UD0', 'StartingPercentage'/*, 'LifeExpectancy', 'CalculateGrowth', 'AnnualDividendStart', 'YearMonthDividendStart', 'MonthlyDividendStart', 'ReferenceFrameSelector', 'TimeUpperBound', 'StepCurves'*/];
+    
+    paramIdList.forEach(function(paramId) {
+        d3.selectAll('span.' + paramId + '.ParamLink')
+            .style('background-color', '#f1f1f1')
+            .on('mouseover', function () {
+                var adaptedParamId = adaptParamId(paramId);
+                var tabId = getParentTabContentId(adaptedParamId) + 'Item';
+
+                d3.selectAll('span.' + paramId + '.ParamLink').style('background-color', '#dd7777');
+                d3.select('#' + tabId).classed('focused', true);
+
+                paramBgColor = d3.select('#' + adaptedParamId).style('background-color')
+                d3.select('#' + adaptedParamId).style('background-color', '#dd7777');
+                showTab(tabId);
+            })
+            .on('mouseout', function () {
+                var adaptedParamId = adaptParamId(paramId);
+                var tabId = getParentTabContentId(adaptedParamId) + 'Item';
+
+                d3.selectAll('span.' + paramId + '.ParamLink').style('background-color', '#f1f1f1');
+                d3.select('#' + tabId).classed('focused', false);
+
+                d3.select('#' + adaptedParamId).style('background-color', paramBgColor);
+                showTab(curTabId);
+            })
+            .on('click', function() {
+                var adaptedParamId = adaptParamId(paramId);
+                var tabId = getParentTabContentId(adaptedParamId) + 'Item';
+                d3.select('#' + tabId).classed('focused', false);
+                clickTab(tabId);
+            });
+    });
+}
+
+function getParentTabContentId(id) {
+    var param = d3.select('#' + id);
+    var parentNode = d3.select(param.node().parentNode);
+    while (!parentNode.classed('tabcontent')) {
+        parentNode = d3.select(parentNode.node().parentNode);
+    }
+    return parentNode.node().id;
+}
+
+function adaptParamId(id) {
+    switch (id) {
+        case 'UD0':
+            if (money.growthStepUnit === money.MONTH && money.getProdStepUnit() === money.MONTH) {
+                return 'MonthlyDividendStart';
+            }
+            else if (money.growthStepUnit === money.YEAR && money.getProdStepUnit() === money.YEAR) {
+                return 'AnnualDividendStart';
+            }
+            else {
+                return 'YearMonthDividendStart';
+            }
+        case 'growth':
+            if (money.growthStepUnit === money.MONTH) {
+                return 'MonthlyGrowth';
+            }
+            else {
+                return 'AnnualGrowth';
+            }
+        default:
+            break;
+    }
+    return id;
+}
+
 function addTabEffectsFromHtml() {
     var workshopsTabAttributes = {
         tabId: 'WorkshopsItem',
@@ -279,10 +351,10 @@ function addTabEffectsFromHtml() {
     };
     var growthTabAttributes = {
         tabId: 'GrowingRateItem',
-        referingClass: 'growth'
+        referingClass: 'growthTabLink'
     };
     var udTabAttributes = {
-        tabId: 'UdItem',
+        tabId: 'UniversalDividendItem',
         referingClass: 'dividendTabLink'
     };
     var referenceTabAttributes = {
@@ -2113,7 +2185,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
                     var previousMuAccountValue = account.values[pTimeStep];
                     d3.selectAll("span.account.previous.mu.value").text(commentFormat(previousMuAccountValue));
                 }
-                d3.selectAll("span.du0Value").text(commentFormat(money.getDividendStart()));
+                d3.selectAll("span.UD0.value").text(commentFormat(money.getDividendStart()));
                 commentAccordingToAccount(timeStep, account)
             }
             else {
@@ -2171,13 +2243,13 @@ function commentAccordingToAccount(timeStep, account) {
     d3.selectAll(".prodFactor.AtMoneyBirth").style("display", (timeStep == moneyBirthStep && money.prodFactor() == 12) ? null : "none");
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
-        d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
+        d3.selectAll("span.StartingPercentage.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
         d3.selectAll("span.AtMoneyBirth." + coCreatorsClass).style("display", "inline");
     }
     else if (timeStep == birthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
         d3.selectAll("span.average.previous.mu.value").text(commentFormat(previousAverageMuValue));
-        d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
+        d3.selectAll("span.StartingPercentage.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
         d3.selectAll("span.AtBirth." + coCreatorsClass).style("display", "inline");
     }
     else if (timeStep > deathStep) {

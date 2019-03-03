@@ -83,7 +83,7 @@ input[disabled=disabled] {
 }
 
 .CommentPart {
-    width: 63%;
+    width: 65%;
     float: left;
     height:11.5em;
     padding: 5px 5px 5px 10px;
@@ -266,6 +266,7 @@ span.stableMonetarySupply:hover {
     cursor: pointer;
 }
 
+span.ParamLink,
 span.accountName,
 span.transactionName,
 span.workshopsTabLink,
