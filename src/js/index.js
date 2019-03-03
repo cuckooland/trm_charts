@@ -289,9 +289,9 @@ function addTabEffectsFromHtml() {
         tabId: 'ReferenceItem',
         referingClass: 'referenceTabLink'
     };
-    var boundsTabAttributes = {
-        tabId: 'BoundsItem',
-        referingClass: 'boundsTabLink'
+    var displayTabAttributes = {
+        tabId: 'DisplayItem',
+        referingClass: 'DisplayTabLink'
     };
     var accountsTabAttributes = {
         tabId: 'AccountsItem',
@@ -305,7 +305,7 @@ function addTabEffectsFromHtml() {
         tabId: 'TransactionsItem',
         referingClass: 'transactionsTabLink'
     };
-    var tabAttributesList = [workshopsTabAttributes, growthTabAttributes, udTabAttributes, referenceTabAttributes, boundsTabAttributes, accountsTabAttributes, demographyTabAttributes, transactionsTabAttributes];
+    var tabAttributesList = [workshopsTabAttributes, growthTabAttributes, udTabAttributes, referenceTabAttributes, displayTabAttributes, accountsTabAttributes, demographyTabAttributes, transactionsTabAttributes];
     
     tabAttributesList.forEach(function(tabAttributes) {
         d3.selectAll('span.' + tabAttributes.referingClass)

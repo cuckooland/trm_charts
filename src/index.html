@@ -23,7 +23,7 @@
                         <li><span class="tablinks" id="GrowingRateItem" tabContentId="GrowingRate">Taux d'expansion</span></li>
                         <li><span class="tablinks" id="UdItem" tabContentId="UniversalDividend">Dividende Universel</span></li>
                         <li><span class="tablinks" id="ReferenceItem" tabContentId="Reference">Référentiel</span></li>
-                        <li><span class="tablinks" id="BoundsItem" tabContentId="Bounds">Affichage</span></li>
+                        <li><span class="tablinks" id="DisplayItem" tabContentId="Display">Affichage</span></li>
                         <li><span class="tablinks" id="AccountsItem" tabContentId="Accounts">Comptes</span></li>
                         <li><span class="tablinks" id="DemographyItem" tabContentId="Demography">Démographie</span></li>
                         <li><span class="tablinks" id="TransactionsItem" tabContentId="Transactions">Transactions</span></li>
@@ -142,8 +142,8 @@
                             </div>
                         </div>
                         
-                        <!-- Bounds Tab Parameters -->
-                        <div id="Bounds" class="tabcontent">
+                        <!-- Display Tab Parameters -->
+                        <div id="Display" class="tabcontent">
                             <div class="row">
                                 <label>Période affichée (en année)</label>
                             </div>
@@ -743,7 +743,7 @@
                         <div class="Comment" id="IntroItemComment">
                             <p>«&nbsp;La TRM en Couleur&nbsp;», publiée il y a quelques années, se voulait une introduction à la Théorie Relative de la Monnaie de Stéphane Laborde. «&nbsp;La TRM en Transition&nbsp;» prolonge cette introduction et tente de garder son souci d'accéssibilité au plus grand nombre, tout en abordant des questions plus avancées.</p>
                             
-                            <p>L'utilisateur, en positionnant différents attributs, pourra étudier certaines situations grâce aux quatre graphes placés dans la partie inférieure de l'application. Les attributs sont rangés par thématique dans des onglets&nbsp;: <span class="growth">Taux d'expansion</span>, <span class="dividendTabLink">Dividende Universel</span>, <span class="referenceTabLink">Référentiel</span>, <span class="boundsTabLink">Affichage</span>, <span class="accountsTabLink">Comptes</span>, <span class="demographyTabLink">Démographie</span>, <span class="transactionsTabLink">Transactions</span>.</p>
+                            <p>L'utilisateur, en positionnant différents attributs, pourra étudier certaines situations grâce aux quatre graphes placés dans la partie inférieure de l'application. Les attributs sont rangés par thématique dans des onglets&nbsp;: <span class="growth">Taux d'expansion</span>, <span class="dividendTabLink">Dividende Universel</span>, <span class="referenceTabLink">Référentiel</span>, <span class="DisplayTabLink">Affichage</span>, <span class="accountsTabLink">Comptes</span>, <span class="demographyTabLink">Démographie</span>, <span class="transactionsTabLink">Transactions</span>.</p>
                             
                             <p>L'utilisateur pourra également étudier les configurations proposées dans l'onglet <span class="workshopsTabLink bouncy">Ateliers</span>, ce qui lui permettra par la même occasion de découvrir progressivement les différentes possibilités de cette application.</p>
                             
@@ -765,9 +765,9 @@
                             
                         </div>
                         <div class="Comment" id="cNOSTEPComment">
-                            <p>Cette configuration n'a qu'une seule différence par rapport à la <span class="configLink cX40">précédente</span>&nbsp;: les "Courbes en escalier" sont désactivées grâce à une case à cocher se trouvant dans l'onglet <span class="boundsTabLink">Affichage</span>.</p>
+                            <p>Cette configuration n'a qu'une seule différence par rapport à la <span class="configLink cX40">précédente</span>&nbsp;: les "Courbes en escalier" sont désactivées grâce à une case à cocher se trouvant dans l'onglet <span class="DisplayTabLink">Affichage</span>.</p>
 
-                            <p>Dans cette configuration sans "Courbes en escalier", les points calculés pour chaque année sont directement reliés par des lignes. Ces segments forment ainsi des courbes "lisses" qui aident à mieux visualiser les variations. Mais ils sont trompeurs&nbsp;: par exemple, ils peuvent laisser penser qu'au bout d'un mois, le montant sur le compte a augmenté. En cochant la case <span class="boundsTabLink">"Courbes en escalier"</span>, on a des courbes en escalier qui n'ont plus cet inconvénient.</p>
+                            <p>Dans cette configuration sans "Courbes en escalier", les points calculés pour chaque année sont directement reliés par des lignes. Ces segments forment ainsi des courbes "lisses" qui aident à mieux visualiser les variations. Mais ils sont trompeurs&nbsp;: par exemple, ils peuvent laisser penser qu'au bout d'un mois, le montant sur le compte a augmenté. En cochant la case <span class="DisplayTabLink">"Courbes en escalier"</span>, on a des courbes en escalier qui n'ont plus cet inconvénient.</p>
                             
                         </div>
                         <div class="Comment" id="cSMNComment">
@@ -781,7 +781,7 @@
                             
                         </div>
                         <div class="Comment" id="cX40Comment">
-                            <p>Comme <span class="configLink cSMN">précédemment</span>, le système monétaire est constitué d'un seul individu qui démarre avec une somme le plaçant dans un "régime de croisière". Dans cette configuration, la différence réside dans la période représentée, qui couvre maintenant 40 ans au lieu de 5 (voir l'onglet <span class="boundsTabLink">Affichage</span>).</p>
+                            <p>Comme <span class="configLink cSMN">précédemment</span>, le système monétaire est constitué d'un seul individu qui démarre avec une somme le plaçant dans un "régime de croisière". Dans cette configuration, la différence réside dans la période représentée, qui couvre maintenant 40 ans au lieu de 5 (voir l'onglet <span class="DisplayTabLink">Affichage</span>).</p>
                             
                             <p>Dans le graphe en bas à droite, les variations au fil du temps de la <span class="monetarySupply">masse monétaire</span> sont représentées. Étant en régime de croisière, on peut vérifier qu'elle est multipliée par 40 au bout de 40 ans, ce qui est propre au taux d'expansion utilisé (voir l'onglet <span class="growth">Taux d'expansion</span>), qui n'est plus de 10&nbsp;% par an comme précédemment, mais de 9.66&nbsp;%.</p>
                             
@@ -1081,8 +1081,8 @@
 
                         </div>
                         
-                        <!-- Bounds Tab Comments -->
-                        <div class="Comment" id="BoundsItemComment">
+                        <!-- Display Tab Comments -->
+                        <div class="Comment" id="DisplayItemComment">
                             <p>Cet onglet permet de régler différents atttributs purement visuels.</p>
 
                             <p>Suivant ce que l'on veut étudier, il peut être intéressant de réduire l'affichage à une petite période, ou au contraire, de l'élargir à une plus grande période. Cet onglet permet donc de positionner les bornes inférieures et supérieures de l'axe horizontal des graphes (axes des temps).</p>
