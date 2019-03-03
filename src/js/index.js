@@ -313,10 +313,12 @@ function addTabEffectsFromHtml() {
             .on('mouseover', function () {
                 d3.selectAll('span.' + tabAttributes.referingClass).style('background-color', '#dddddd');
                 d3.select('#' + tabAttributes.tabId).classed('focused', true);
+                showTab(tabAttributes.tabId);
             })
             .on('mouseout', function () {
                 d3.selectAll('span.' + tabAttributes.referingClass).style('background-color', '#f1f1f1');
                 d3.select('#' + tabAttributes.tabId).classed('focused', false);
+                showTab(curTabId);
             })
             .on('click', function() {
                 d3.select('#' + tabAttributes.tabId).classed('focused', false);
@@ -1850,12 +1852,14 @@ function universalDividendName() {
 function openTab(tabId) {
     d3.selectAll(".tablinks").classed("active", false);
     d3.select("#" + tabId).classed("active", true);
-    
+    showTab(tabId);
+    curTabId = tabId;
+}
+
+function showTab(tabId) {
     d3.selectAll(".tabcontent").style("display", "none");
     var tabContentId = d3.select("#" + tabId).attr("tabContentId");
     d3.select("#" + tabContentId).style("display", "block");
-
-    curTabId = tabId;
 }
 
 function comment(id) {
