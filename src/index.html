@@ -98,32 +98,32 @@
                         <!-- Universal Divividend Tab Parameters -->
                         <div id="UniversalDividend" class="tabcontent">
                             <div class="row">
+                                <div class="labelledForm">
+                                    <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <label>Dividende de départ "DU0" (en unités monétaires)</label>
                             </div>
                             <div class="ParamSection">
                                 <div class="row">
                                     <div class="labelledForm">
-                                        <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byYear" checked>Pour taux annuelle</label>
-                                        <input id="AnnualDividendStart" type="text" name="AnnualDividendStart"
-                                                title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
+                                        <input id="AnnualDividendStart" type="text" name="AnnualDividendStart"/>
+                                        <label class="leftComp"><input class="ud0Rythm" type="radio" name="ud0Rythm" value="ud0ByYear" checked>Taux et émission annuels</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="labelledForm">
-                                        <label class="leftComp"><input class="firstDividend" type="radio" name="firstDividend" value="byMonth" checked>Pour taux mensuelle</label>
-                                        <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"
-                                                title="Valeur du Dividende Universel au démarrage de la monnaie (en unités monétaires)"/>
+                                        <input id="YearMonthDividendStart" type="text" name="YearMonthDividendStart"/>
+                                        <label class="leftComp"><input class="ud0Rythm" type="radio" name="ud0Rythm" value="ud0ByYearMonth" checked>Taux annuel, émission mensuel</label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="labelledForm">
-                                    <label for="UdFormulaSelector">Formule du dividende</label><select id="UdFormulaSelector" name="UdFormulaSelector"></select>
+                                <div class="row">
+                                    <div class="labelledForm">
+                                        <input id="MonthlyDividendStart" type="text" name="MonthlyDividendStart"/>
+                                        <label class="leftComp"><input class="ud0Rythm" type="radio" name="ud0Rythm" value="ud0ByMonth" checked>Taux et émission mensuels</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="labelledForm">
-                                <label for="MonthlyProd">Emission mensualisée</label>
-                                <input id="MonthlyProd" type="checkbox" name="MonthlyProd" value="1">
                             </div>
                         </div>
                         
@@ -387,12 +387,15 @@
                                 <p>Dans ce premier diagramme (en haut à gauche), l'évolution au fil du temps d'un ou plusieurs comptes (voir l'onglet <span class="accountsTabLink">Comptes</span>) est représentée.</p>
                                 
                                 <p>Par défaut, un seul compte est affiché, intitulé "Compte 1" et correspond à un co-créateur de la monnaie, comme indiqué entre parenthèses dans la légende.</p>
+                                <p class="prodFactor AtMoneyBirth">
+                                    Dans la configuration actuelle, <span class="growth">c</span> est défini sur une base annuelle et l'émission du DU est <span class="dividendTabLink">mensualisée</span>. DU0 doit donc être multiplié par 12. 
+                                </p>
                             </div>
                             
                             <div class=PointComment>
                                 <div class="RefComment MU">
                                     <p>
-                                        <span class="AmountComment CoCreator NonCreator AtMoneyBirth AtBirth WhenAlive">
+                                        <span class="AmountComment CoCreator NonCreator CoCreators NoCreators AtMoneyBirth AtBirth WhenAlive">
                                             <p><span class="account name">compte</span>, le <span class="dateValue">01-01-2001</span>, est âgé de <span class="accountAge">0</span> et vaut&nbsp;: <span class="account current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                         </span>
                                         
@@ -402,19 +405,15 @@
                                     </p>
                                     
                                     <p>
-                                        <span class="AmountComment CoCreator AtMoneyBirth">
+                                        <span class="AmountComment CoCreators NoCreators AtMoneyBirth">
                                             = le <span class="accountsTabLink amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividendTabLink">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes</span>)
                                         </span>
     
-                                        <span class="AmountComment NonCreator AtMoneyBirth">
-                                            = le <span class="accountsTabLink amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="dividendTabLink">DU0</span>/<span class="growth">c</span>, voir <span class="accountsTabLink">Comptes</span>)
+                                        <span class="AmountComment CoCreators AtBirth">
+                                            = le <span class="accountsTabLink amountAtBirth">montant à la naissance</span>, qui est un pourcentage de <span class="average">M/N</span>  après émission du <span class="dividend current mu">DU</span> (voir l'onglet <span class="accountsTabLink">Comptes</span>)
                                         </span>
     
-                                        <span class="AmountComment CoCreator AtBirth">
-                                            = le <span class="accountsTabLink amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="average">M/N</span>, voir l'onglet <span class="accountsTabLink">Comptes</span>) auquel s'ajoute, en tant que co-créateur de la monnaie, le <span class="dividend current mu">DU</span>
-                                        </span>
-    
-                                        <span class="AmountComment NonCreator AtBirth">
+                                        <span class="AmountComment NoCreators AtBirth">
                                             = le <span class="amountAtBirth">montant à la naissance</span> (en pourcentage de <span class="average">M/N</span>, voir l'onglet <span class="accountsTabLink">Comptes</span>)
                                         </span>
     
@@ -433,19 +432,15 @@
                                     </p>
                                 
                                     <p>
-                                        <span class="AmountComment CoCreator AtMoneyBirth">
-                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividendTabLink du0Value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span>
+                                        <span class="AmountComment CoCreators NoCreators AtMoneyBirth">
+                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividendTabLink du0Value">0</span><span class="prodFactor">&nbsp;*&nbsp;12</span>&nbsp;/&nbsp;<span class="growth value">0 %</span>
                                         </span>
     
-                                        <span class="AmountComment NonCreator AtMoneyBirth">
-                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="dividendTabLink du0Value">0</span>&nbsp;/&nbsp;<span class="growth value">0 %</span>
+                                        <span class="AmountComment CoCreators AtBirth">
+                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;(<span class="average previous mu value">0</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span>)
                                         </span>
     
-                                        <span class="AmountComment CoCreator AtBirth">
-                                            = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="average previous mu value">0</span>&nbsp;+&nbsp;<span class="dividend current mu value">0</span>
-                                        </span>
-    
-                                        <span class="AmountComment NonCreator AtBirth">
+                                        <span class="AmountComment NoCreators AtBirth">
                                             = <span class="accountsTabLink amountAtBirth value">0 %</span>&nbsp;*&nbsp;<span class="average previous mu value">0</span>
                                         </span>
     
@@ -942,7 +937,7 @@
 
                             <p>En utilisant la formule de base du Dividende Universel, notez par exemple combien cette formulation favorise les premiers entrants (au démarrage de la monnaie) par rapport à des entrants plus tardifs. L'effet est encore plus criant quand l'émission est mensuelle.</p>
 
-                            <p>On peut visualiser des entrants plus tardifs en se rendant dans l'onglet <span class="accountsTabLink">Comptes</span>.</p>
+                            <p>On peut visualiser des comptes d'entrants plus tardifs en le spécifiant dans l'onglet <span class="accountsTabLink">Comptes</span>.</p>
 
                         </div>
                         <div class="Comment" id="AnnualGrowthComment">
@@ -966,21 +961,48 @@
                             
                         </div>
                         <div class="Comment" id="AnnualDividendStartComment">
-                            <p>Par défaut, si le rythme de co-création monétaire est annuel, le premier dividende DU0 vaut 1000 unités monétaires. C'est une valeur tout à fait arbitraire.</p>
+                            <p>Par défaut, si le rythme de co-création monétaire est annuel, le premier dividende DU0 vaut 1000 unités monétaires. C'est une valeur tout à fait arbitraire. Ce champ permet d'utiliser d'autres valeurs</p>
 
-                            <p>A noter&nbsp;: si on choisit d'utiliser un <span class="growth">taux mensuel</span> et de renseigner le DU0 mensuel à la main, le champ du DU0 annuel est automatiquement modifié afin de faciliter les comparaisons entre les deux rythmes. La formule utilisée est alors&nbsp;: DU0<sub>annuel</sub> = DU0<sub>mensuel</sub> &times; <span class="growth">c<sub>annuelle</sub></span>&nbsp;/&nbsp;<span class="growth">c<sub>mensuelle</sub></span></p>
+                            <p>A noter&nbsp;: si par exemple on choisit d'utiliser un <span class="growth">taux mensuel</span> et de renseigner le DU0 mensuel à la main, le champ du DU0 annuel est automatiquement modifié suivant la formule&nbsp;:</p>
+
+                            <p>DU0<sub>annuel</sub> = DU0<sub>mensuel</sub>&nbsp;&times;&nbsp;((1&nbsp;+&nbsp;<span class="growth">c<sub>mensuelle</sub></span>)<sup>12</sup> - 1) / <span class="growth">c<sub>mensuelle</sub></span></p>
                             
+                            <p>Ces valeurs sont calculées de telle sorte que le total des montants émis dans une année reste le même, quelque soit le rythme d'émission choisi. Cela facilite les comparaisons.</p>
+
                         </div>
                         <div class="Comment" id="MonthlyDividendStartComment">
-                            <p>Par défaut, le dividende DU0 mensuel est calculé à partir du DU0 annuel selon la formule&nbsp;: 
-                            <br>DU0<sub>mensuel</sub> = DU0<sub>annuel</sub> &times; c<sub>mensuelle</sub>&nbsp;/&nbsp;c<sub>annuelle</sub></p>
+                            <p>Le montant du DU0 mensuel est par défaut fixé à une valeur calculée à partir du DU0 annuel selon la formule&nbsp;: 
+                            <br>DU0<sub>mensuel</sub> = DU0<sub>annuel</sub>&nbsp;&times;&nbsp;((1&nbsp;+&nbsp;<span class="growth">c<sub>annuelle</sub></span>)<sup>1/12</sup> - 1) / <span class="growth">c<sub>annuelle</sub></span></p>
                             
-                            <p>A noter&nbsp;: si on choisit d'utiliser un <span class="growth">taux annuel</span> et de renseigner le DU0 annuel à la main, le champ du DU0 mensuel est automatiquement modifié en utilisant cette même formule, ceci afin de faciliter les comparaisons entre les deux rythmes.</p>
+                            <p>Plus généralement&nbsp;: si on choisit d'utiliser un <span class="growth">taux annuel</span> et de renseigner le DU0 annuel à la main, le champ du DU0 mensualisé est automatiquement modifié en utilisant cette même formule.</p>
+
+                            <p>Ces valeurs sont calculées de telle sorte que le total des montants émis dans une année reste le même, quelque soit le rythme d'émission choisi. Cela facilite les comparaisons.</p>
 
                         </div>
-                        <div class="Comment" id="MonthlyProdComment">
-                            <p>Cette case à cocher a uniquement un sens quand le taux du dividende est exprimé par année. Elle permet de mensualiser le dividende, en ayant une réévalution annuelle.</p>
+                        <div class="Comment" id="YearMonthDividendStartComment">
+                            <p>Le montant du DU0 mensualisé est par défaut fixé à une valeur calculée à partir du DU0 annuel selon la formule&nbsp;: 
+                            <br>DU0<sub>mensualisé</sub> = DU0<sub>annuel</sub> / 12</p>
                             
+                            <p>Plus généralement&nbsp;: si on choisit d'utiliser un <span class="growth">taux annuel</span> et de renseigner le DU0 annuel à la main, le champ du DU0 mensuel est automatiquement modifié en utilisant cette même formule.</p>
+
+                            <p>Ces valeurs sont calculées de telle sorte que le total des montants émis dans une année reste le même, quelque soit le rythme d'émission choisi. Cela facilite les comparaisons.</p>
+                            
+                        </div>
+                        <div class="Comment" id="ud0ByYearComment">
+                            <p>Avec ce radio-bouton, on choisit un mode de co-création monétaire dont la fréquence est l'année. Mais il est possible, tout en gardant un taux annuel, de mensualiser l'émission, ce que permet le radio-bouton intitulé "Taux annuel, émission mensuel".</p>
+
+                        </div>
+                        <div class="Comment" id="ud0ByMonthComment">
+                            <p>Avec ce radio-bouton, on choisit un mode de co-création monétaire dont la fréquence est le mois.</p>
+
+                            <p>En utilisant la formule de base du Dividende Universel, notez par exemple combien cette formulation favorise les premiers entrants (au démarrage de la monnaie) par rapport à des entrants plus tardifs. Et noter comme l'effet est encore plus criant quand l'émission est mensuelle.</p>
+
+                            <p>On peut visualiser des comptes d'entrants plus tardifs en le spécifiant dans l'onglet <span class="accountsTabLink">Comptes</span>.</p>
+
+                        </div>
+                        <div class="Comment" id="ud0ByYearMonthComment">
+                            <p>Avec ce radio-bouton, on choisit un mode de co-création monétaire dont la fréquence est le mois mais dont la ré-évalution est du montant est annuelle.</p>
+
                             <p>Par exemple, pour la Ğ1, l'émission du DU est quotidienne mais sa ré-évaluation semestrielle.</p>
                             
                             <p>L'intérêt est d'avoir moins d'attente entre les émissions du DU, tout en ayant des variations du montant du DU moins fréquentes donc moins perturbantes.</p>

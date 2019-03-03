@@ -356,7 +356,7 @@ var libreMoneyClass = function(lifeExpectancy) {
             return this.headcounts.values[timeStep];
         }
         var headcount = 0;
-        var noCoCreators = (this.accounts.filter(account=>this.isCoCreator(account)).length == 0);
+        var noCoCreators = this.hasNoCoCreators();
 
         for (var iAccount = 0; iAccount < this.accounts.length; iAccount++) {
             if (this.isAlive(this.accounts[iAccount], timeStep/* -1 */) 
@@ -368,6 +368,10 @@ var libreMoneyClass = function(lifeExpectancy) {
         
         return headcount + this.demographicProfiles[this.demographicProfileKey].calculate(this, this.fromTimeStep(timeStep, this.YEAR));
     };
+
+    this.hasNoCoCreators = function() {
+        return (this.accounts.filter(account=>this.isCoCreator(account)).length == 0);
+    }
 
     this.asJSonRep = function() {
         var jsonRep = {
@@ -487,7 +491,7 @@ var libreMoneyClass = function(lifeExpectancy) {
         var moneyBirthStep = this.toTimeStep(this.moneyBirth, this.YEAR);
         var dividend = 0;
         if (timeStep === moneyBirthStep + 1) {
-            dividend = this.getDividendStart() / this.prodFactor();
+            dividend = this.getDividendStart();
         }
         else if (timeStep > moneyBirthStep + 1) {
             if (this.prodFactor() != 1 && (timeStep - moneyBirthStep) % this.prodFactor() != 1) {
@@ -548,11 +552,11 @@ var libreMoneyClass = function(lifeExpectancy) {
             // At birth, add some money according to the 'startingPercentage' attribute
             if (birthStep === this.toTimeStep(this.moneyBirth, this.YEAR)) {
                 // If this account starts at the same time as the currency, the amount to add is a ratio of UD0/c.
-                accountIncrease += account.startingPercentage / 100 * this.getDividendStart() / this.getGrowth();
+                accountIncrease += account.startingPercentage / 100 * this.getDividendStart() * this.prodFactor() / this.getGrowth();
             }
             else {
                 // If this account starts later than the currency, the amount to add is a ratio of M/N after emission of the dividend.
-                accountIncrease += account.startingPercentage / 100 * (this.getMonetarySupply(timeStep - 1) / this.getHeadcount(timeStep - 1) + this.getDividend(timeStep));
+                accountIncrease += account.startingPercentage / 100 * (this.getMonetarySupply(timeStep - 1) / this.getHeadcount(timeStep - 1) + (this.hasNoCoCreators() ? 0 : this.getDividend(timeStep)));
             }
         }
        
@@ -823,19 +827,32 @@ var libreMoneyClass = function(lifeExpectancy) {
         throw new Error("Time unit not managed");
     }
    
-    this.getDividendStart = function(timeUnit) {
-        timeUnit = timeUnit || this.growthStepUnit;
+    this.getDividendStart = function(gthStepUnit, prdStepUnit) {
+        gthStepUnit = gthStepUnit || this.growthStepUnit;
+        prdStepUnit = prdStepUnit || this.getProdStepUnit();
        
-        if (timeUnit === this.growthStepUnit) {
+        if (gthStepUnit === this.growthStepUnit && prdStepUnit === this.getProdStepUnit()) {
             return this.dividendStart;
         }
-        if (timeUnit === this.MONTH) {
-            return this.dividendStart * this.getGrowth(this.MONTH) / this.getGrowth(this.YEAR);
+        var udStart = this.dividendStart;
+        if (gthStepUnit != this.growthStepUnit) {
+            if (gthStepUnit === this.MONTH) {
+                udStart = udStart * (Math.pow((1 + this.growth), 1/12) - 1) / this.growth;
+            }
+            else if (gthStepUnit === this.YEAR) {
+                udStart = udStart * (Math.pow((1 + this.growth), 12) - 1) / this.growth;
+            }
+            else {
+                throw new Error("Growth step unit not managed");
+            }
         }
-        if (timeUnit === this.YEAR) {
-            return this.dividendStart * this.getGrowth(this.YEAR) / this.getGrowth(this.MONTH);
+        if (this.growthStepUnit === this.YEAR && this.prodStepUnit === this.MONTH) {
+            udStart = udStart * 12;
         }
-        throw new Error("Growth time unit not managed");
+        if (gthStepUnit === this.YEAR && prdStepUnit === this.MONTH) {
+            udStart = udStart / 12;
+        }
+        return udStart;
     }
    
     /**

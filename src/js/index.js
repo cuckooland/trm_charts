@@ -226,16 +226,19 @@ function changeTimeStep(offset) {
 // Fill the forms
 function fillForms() {
     d3.select('#LifeExpectancy').property("value", money.lifeExpectancy);
-    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
-    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
+    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR, money.YEAR)).toFixed(2));
+    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH, money.MONTH)).toFixed(2));
+    d3.select('#YearMonthDividendStart').property("value", (money.getDividendStart(money.YEAR, money.MONTH)).toFixed(2));
     d3.select('#TimeLowerBound').property("value", toYearRep(money.timeLowerBoundInYears));
     d3.select('#TimeUpperBound').property("value", toYearRep(money.timeUpperBoundInYears));
     d3.select('#CalculateGrowth').property("checked", money.calculateGrowth);
     d3.select('#LogScale').property("checked", money.referenceFrames[money.referenceFrameKey].logScale);
     d3.select('#StepCurves').property("checked", curveType == STEP_AFTER_CURVE);
-    d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthStepUnit === money.MONTH);
-    d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthStepUnit === money.YEAR);
-    d3.select('#MonthlyProd').property("checked", money.prodStepUnit === money.MONTH);
+    d3.select("input[value=\"byMonth\"]").property("checked", money.growthStepUnit === money.MONTH);
+    d3.select("input[value=\"byYear\"]").property("checked", money.growthStepUnit === money.YEAR);
+    d3.select("input[value=\"ud0ByMonth\"]").property("checked", money.growthStepUnit === money.MONTH && money.getProdStepUnit() === money.MONTH);
+    d3.select("input[value=\"ud0ByYear\"]").property("checked", money.growthStepUnit === money.YEAR && money.getProdStepUnit() === money.YEAR);
+    d3.select("input[value=\"ud0ByYearMonth\"]").property("checked", money.growthStepUnit === money.YEAR && money.getProdStepUnit() === money.MONTH);
     d3.select('#MaxDemography').property("value", money.maxDemography);
     d3.select('#xMinDemography').property("value", toYearRep(money.xMinDemography));
     d3.select('#xMaxDemography').property("value", toYearRep(money.xMaxDemography));
@@ -540,7 +543,7 @@ function initCallbacks() {
     d3.select("#TransactionRef").on("change", changeTransactionRefSelection);
     
     d3.selectAll(".rythm").on("change", changeRythm);
-    d3.selectAll(".firstDividend").on("change", changeRythm);
+    d3.selectAll(".ud0Rythm").on("change", changeUd0Rythm);
 
     d3.select("#AddAccount").on("click", clickAddAccount);
     d3.select("#DeleteAccount").on("click", clickDeleteAccount);
@@ -554,7 +557,7 @@ function initCallbacks() {
     d3.select("#CalculateGrowth").on("click", changeCalculateGrowth);
     d3.select("#AnnualDividendStart").on("change", changeAnnualDividendStart);
     d3.select("#MonthlyDividendStart").on("change", changeMonthlyDividendStart);
-    d3.select("#MonthlyProd").on("click", changeMonthlyProd);
+    d3.select("#YearMonthDividendStart").on("change", changeYearMonthDividendStart);
     d3.select("#LogScale").on("click", changeLogScale);
     d3.select("#StepCurves").on("click", changeStepCurves);
     d3.select("#TimeLowerBound").on("change", changeTimeLowerBound);
@@ -1734,10 +1737,19 @@ function enableUD0Forms() {
     if (money.growthStepUnit === money.MONTH) {
         d3.select('#AnnualDividendStart').attr('disabled', 'disabled');
         d3.select('#MonthlyDividendStart').attr('disabled', null);
+        d3.select('#YearMonthDividendStart').attr('disabled', 'disabled');
     }
     else {
-        d3.select('#AnnualDividendStart').attr('disabled', null);
-        d3.select('#MonthlyDividendStart').attr('disabled', 'disabled');
+        if (money.getProdStepUnit() === money.YEAR) {
+            d3.select('#AnnualDividendStart').attr('disabled', null);
+            d3.select('#MonthlyDividendStart').attr('disabled', 'disabled');
+            d3.select('#YearMonthDividendStart').attr('disabled', 'disabled');
+        }
+        else {
+            d3.select('#AnnualDividendStart').attr('disabled', 'disabled');
+            d3.select('#MonthlyDividendStart').attr('disabled', 'disabled');
+            d3.select('#YearMonthDividendStart').attr('disabled', null);
+        }
     }
 }
 
@@ -2151,16 +2163,18 @@ function commentAccordingToAccount(timeStep, account) {
     var birthStep = money.toTimeStep(account.birth, money.YEAR);
     var deathStep = money.toTimeStep(account.birth + money.lifeExpectancy, money.YEAR);
     var udProductorClass = money.isCoCreator(account) ? 'CoCreator' : 'NonCreator';
+    var coCreatorsClass = money.hasNoCoCreators() ? 'NoCreators' : 'CoCreators';
+    d3.selectAll(".prodFactor.AtMoneyBirth").style("display", (timeStep == moneyBirthStep && money.prodFactor() == 12) ? null : "none");
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
         d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
-        d3.selectAll("span.AtMoneyBirth." + udProductorClass).style("display", "inline");
+        d3.selectAll("span.AtMoneyBirth." + coCreatorsClass).style("display", "inline");
     }
     else if (timeStep == birthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
         d3.selectAll("span.average.previous.mu.value").text(commentFormat(previousAverageMuValue));
         d3.selectAll("span.amountAtBirth.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
-        d3.selectAll("span.AtBirth." + udProductorClass).style("display", "inline");
+        d3.selectAll("span.AtBirth." + coCreatorsClass).style("display", "inline");
     }
     else if (timeStep > deathStep) {
         d3.selectAll("span.AfterDeath." + udProductorClass).style("display", "inline");
@@ -2399,18 +2413,52 @@ function changeDemographicProfile() {
 function changeRythm() {
     if (this.value === "byMonth") {
         money.growthStepUnit = money.MONTH;
-        money.dividendStart = parseFloat(document.getElementById('MonthlyDividendStart').value);
     	money.growth = parseFloat(document.getElementById('MonthlyGrowth').value) / 100;
     }
     else {
         money.growthStepUnit = money.YEAR;
-        money.dividendStart = parseFloat(document.getElementById('AnnualDividendStart').value);
     	money.growth = parseFloat(document.getElementById('AnnualGrowth').value) / 100;
     }
-    
-    d3.selectAll("input[value=\"byMonth\"]").property("checked", money.growthStepUnit === money.MONTH);
-    d3.selectAll("input[value=\"byYear\"]").property("checked", money.growthStepUnit === money.YEAR);
+    rythmAndUD0Update.call(this);
+}
+
+function changeUd0Rythm() {
+    if (this.value === "ud0ByMonth") {
+        money.growthStepUnit = money.MONTH;
+        money.prodStepUnit = money.MONTH;
+    	money.growth = parseFloat(document.getElementById('MonthlyGrowth').value) / 100;
+    }
+    else if (this.value === "ud0ByYear") {
+        money.growthStepUnit = money.YEAR;
+        money.prodStepUnit = money.YEAR;
+    	money.growth = parseFloat(document.getElementById('AnnualGrowth').value) / 100;
+    }
+    else {
+        money.growthStepUnit = money.YEAR;
+        money.prodStepUnit = money.MONTH;
+    	money.growth = parseFloat(document.getElementById('AnnualGrowth').value) / 100;
+    }
+    rythmAndUD0Update.call(this);
+}
+
+function rythmAndUD0Update() {
+    d3.select("input[value=\"byMonth\"]").property("checked", money.growthStepUnit === money.MONTH);
+    d3.select("input[value=\"byYear\"]").property("checked", money.growthStepUnit === money.YEAR);
         
+    d3.select("input[value=\"ud0ByMonth\"]").property("checked", money.growthStepUnit === money.MONTH && money.getProdStepUnit() === money.MONTH);
+    d3.select("input[value=\"ud0ByYear\"]").property("checked", money.growthStepUnit === money.YEAR && money.getProdStepUnit() === money.YEAR);
+    d3.select("input[value=\"ud0ByYearMonth\"]").property("checked", money.growthStepUnit === money.YEAR && money.getProdStepUnit() === money.MONTH);
+        
+    if (money.growthStepUnit === money.MONTH && money.getProdStepUnit() === money.MONTH) {
+        money.dividendStart = parseFloat(document.getElementById('MonthlyDividendStart').value);
+    }
+    else if (money.growthStepUnit === money.YEAR && money.getProdStepUnit() === money.YEAR) {
+        money.dividendStart = parseFloat(document.getElementById('AnnualDividendStart').value);
+    }
+    else {
+        money.dividendStart = parseFloat(document.getElementById('YearMonthDividendStart').value);
+    }
+
     updateTimeXLabels();
     
     enableGrowthForms(money.calculateGrowth);
@@ -2430,7 +2478,7 @@ function changeLifeExpectancy() {
 function changeAnnualGrowth() {
 	money.growth = parseFloat(this.value) / 100;
     redrawCharts();
-    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
+    growthChanged();
     d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
     pushNewHistoryState();
 }
@@ -2438,7 +2486,7 @@ function changeAnnualGrowth() {
 function changeMonthlyGrowth() {
 	money.growth = parseFloat(this.value) / 100;
     redrawCharts();
-    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
+    growthChanged();
     d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
     pushNewHistoryState();
 }
@@ -2457,40 +2505,46 @@ function updateCalculateGrowth() {
     if (money.calculateGrowth) {
         d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
         d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
-        
-        if (money.growthStepUnit === money.MONTH) {
-            d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
-        }
-        else {
-            d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
-        }
+        growthChanged();
+    }
+}
+
+function growthChanged() {
+    if (money.growthStepUnit === money.MONTH && money.getProdStepUnit() === money.MONTH) {
+        d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR, money.YEAR)).toFixed(2));
+        d3.select('#YearMonthDividendStart').property("value", (money.getDividendStart(money.YEAR, money.MONTH)).toFixed(2));
+    }
+    else if (money.growthStepUnit === money.YEAR && money.getProdStepUnit() === money.YEAR) {
+        d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH, money.MONTH)).toFixed(2));
+        d3.select('#YearMonthDividendStart').property("value", (money.getDividendStart(money.YEAR, money.MONTH)).toFixed(2));
+    }
+    else {
+        d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR, money.YEAR)).toFixed(2));
+        d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH, money.MONTH)).toFixed(2));
     }
 }
 
 function changeAnnualDividendStart() {
     money.dividendStart = parseFloat(this.value);
     redrawCharts();
-    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH)).toFixed(2));
+    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH, money.MONTH)).toFixed(2));
+    d3.select('#YearMonthDividendStart').property("value", (money.getDividendStart(money.YEAR, money.MONTH)).toFixed(2));
     pushNewHistoryState();
 }
 
 function changeMonthlyDividendStart() {
     money.dividendStart = parseFloat(this.value);
     redrawCharts();
-    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR)).toFixed(2));
+    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR, money.YEAR)).toFixed(2));
+    d3.select('#YearMonthDividendStart').property("value", (money.getDividendStart(money.YEAR, money.MONTH)).toFixed(2));
     pushNewHistoryState();
 }
 
-function changeMonthlyProd() {
-    if (this.checked) {
-        money.prodStepUnit = money.MONTH;
-    }
-    else {
-        money.prodStepUnit = money.YEAR;
-    }
-    
+function changeYearMonthDividendStart() {
+    money.dividendStart = parseFloat(this.value);
     redrawCharts();
-    comment(this.id);
+    d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR, money.YEAR)).toFixed(2));
+    d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH, money.MONTH)).toFixed(2));
     pushNewHistoryState();
 }
 
