@@ -694,6 +694,15 @@ var libreMoneyClass = function(lifeExpectancy) {
         return null;
     }
 
+    this.accountIndex = function(accountId) {
+        for (var i = 0; i < this.accounts.length; i++) {
+            if (this.accounts[i].id == accountId) {
+                return i;
+            }
+        };
+        return -1;
+    }
+
     this.isAlive = function(account, timeStep) {
         var birthStep = this.toTimeStep(account.birth, this.YEAR);
         var deathStep = this.toTimeStep(account.birth + account.duration, this.YEAR);
@@ -900,6 +909,15 @@ var libreMoneyClass = function(lifeExpectancy) {
         }
         throw new Error(transactionIndex + "is an invalid transaction index");
     };
+    
+    this.transactionIndex = function(transactionId) {
+        for (var i = 0; i < this.transactions.length; i++) {
+            if (this.transactions[i].id == transactionId) {
+                return i;
+            }
+        };
+        return -1;
+    }
 
     this.generateData = function (timeStepBounds) {
         if (!timeStepBounds) {

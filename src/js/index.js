@@ -275,7 +275,7 @@ function generateC3Charts() {
 }
 
 function addParamLinksFromHtml() {
-    var paramIdList = ['growth', 'AnnualGrowth', 'MonthlyGrowth', 'UD0', 'StartingPercentage'/*, 'LifeExpectancy', 'CalculateGrowth', 'AnnualDividendStart', 'YearMonthDividendStart', 'MonthlyDividendStart', 'ReferenceFrameSelector', 'TimeUpperBound', 'StepCurves'*/];
+    var paramIdList = ['LifeExpectancy', 'growth', 'AnnualGrowth', 'MonthlyGrowth', 'UD0', 'StartingPercentage'/*, 'CalculateGrowth', 'AnnualDividendStart', 'YearMonthDividendStart', 'MonthlyDividendStart', 'ReferenceFrameSelector', 'TimeUpperBound', 'StepCurves'*/];
     
     paramIdList.forEach(function(paramId) {
         d3.selectAll('span.' + paramId + '.ParamLink')
@@ -284,12 +284,18 @@ function addParamLinksFromHtml() {
                 var adaptedParamId = adaptParamId(paramId);
                 var tabId = getParentTabContentId(adaptedParamId) + 'Item';
 
-                d3.selectAll('span.' + paramId + '.ParamLink').style('background-color', '#dd7777');
+                d3.selectAll('span.' + paramId + '.ParamLink').style('background-color', '#DDDD00');
                 d3.select('#' + tabId).classed('focused', true);
 
                 paramBgColor = d3.select('#' + adaptedParamId).style('background-color')
-                d3.select('#' + adaptedParamId).style('background-color', '#dd7777');
+                d3.select('#' + adaptedParamId).style('background-color', '#DDDD00');
                 showTab(tabId);
+
+                var paramElemId = d3.select(this).attr('id');
+                if (paramElemId) {
+                    var modelId = + paramElemId.split('-')[1];
+                    setSelectorIndex(tabId, modelId);
+                }
             })
             .on('mouseout', function () {
                 var adaptedParamId = adaptParamId(paramId);
@@ -305,7 +311,7 @@ function addParamLinksFromHtml() {
                 var adaptedParamId = adaptParamId(paramId);
                 var tabId = getParentTabContentId(adaptedParamId) + 'Item';
                 d3.select('#' + tabId).classed('focused', false);
-                clickTab(tabId);
+                clickParamInput(tabId, adaptedParamId);
             });
     });
 }
@@ -2243,11 +2249,15 @@ function commentAccordingToAccount(timeStep, account) {
     d3.selectAll(".prodFactor.AtMoneyBirth").style("display", (timeStep == moneyBirthStep && money.prodFactor() == 12) ? null : "none");
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
+        // Change 'id' to have a link to the corresponding account
+        d3.selectAll("span.StartingPercentage").attr('id', function(d, i) { return 'sp' + i + '-' + account.id; });
         d3.selectAll("span.StartingPercentage.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
         d3.selectAll("span.AtMoneyBirth." + coCreatorsClass).style("display", "inline");
     }
     else if (timeStep == birthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
+        // Change 'id' to have a link to the corresponding account
+        d3.selectAll("span.StartingPercentage").attr('id', function(d, i) { return 'sp' + i + '-' + account.id; });
         d3.selectAll("span.average.previous.mu.value").text(commentFormat(previousAverageMuValue));
         d3.selectAll("span.StartingPercentage.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
         d3.selectAll("span.AtBirth." + coCreatorsClass).style("display", "inline");
@@ -2280,7 +2290,7 @@ function commentAccordingToAccount(timeStep, account) {
         })
         .on('click', function() {
             d3.select('#TransactionsItem').classed('focused', false);
-            clickTab('TransactionsItem', idFromTransactionName(d3.select(this).text()) - 1);
+            clickTab('TransactionsItem', idFromTransactionName(d3.select(this).text()));
         });
     }
     else {
@@ -2806,25 +2816,57 @@ function getCurConfigJsonRep() {
     throw new Error("Configuration not managed: " + curConfigId);
 }
 
-function clickTab(tabItemId, otherRef) {
-    openTab(tabItemId);
-    if (tabItemId == "WorkshopsItem" && curConfigId != "none") {
+function clickTab(tabId, otherRef) {
+    openTab(tabId);
+    if (tabId == "WorkshopsItem" && curConfigId != "none") {
         var jsonRep = getCurConfigJsonRep();
         applyJSonRep(jsonRep);
         comment(curConfigId);
     }
-    else {
-        if (tabItemId == "AccountsItem") {
-            document.getElementById("AccountSelector").selectedIndex = otherRef;
-            updateAddedAccountArea();
+    else if (otherRef) {
+        if (tabId == "AccountsItem") {
+            var toSelectIndex = money.accountIndex(otherRef);
+            if (document.getElementById("AccountSelector").selectedIndex != toSelectIndex) {
+                document.getElementById("AccountSelector").selectedIndex = toSelectIndex;
+                updateAddedAccountArea();
+            }
         }
-        else if (tabItemId == "TransactionsItem") {
-            document.getElementById("TransactionSelector").selectedIndex = otherRef;
-            updateTransactionArea();
+        else if (tabId == "TransactionsItem") {
+            var toSelectIndex = money.transactionIndex(otherRef);
+            if (document.getElementById("TransactionSelector").selectedIndex != toSelectIndex) {
+                document.getElementById("TransactionSelector").selectedIndex = toSelectIndex;
+                updateTransactionArea();
+            }
         }
-        comment(tabItemId);
+        comment(tabId);
     }
     pushNewHistoryState();
     
     return false;
 }
+
+function clickParamInput(tabId, paramId) {
+    openTab(tabId);
+    document.getElementById(paramId).focus();
+    comment(paramId);
+    pushNewHistoryState();
+}
+
+function setSelectorIndex(tabId, modelId) {
+    var modelId = + paramElemId.split('-')[1];
+    if (tabId == "AccountsItem") {
+        var toSelectIndex = money.accountIndex(modelId);
+        if (document.getElementById("AccountSelector").selectedIndex != toSelectIndex) {
+            document.getElementById("AccountSelector").selectedIndex = toSelectIndex;
+            updateAddedAccountArea();
+        }
+    }
+    if (tabId == "TransactionsItem") {
+        var toSelectIndex = money.transactionIndex(modelId);
+        if (document.getElementById("TransactionSelector").selectedIndex != toSelectIndex) {
+            document.getElementById("TransactionSelector").selectedIndex = toSelectIndex;
+            updateTransactionArea();
+        }
+    }
+}
+
