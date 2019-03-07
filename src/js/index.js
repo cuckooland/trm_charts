@@ -186,8 +186,8 @@ generateC3Charts();
 
 if (!applyEncodedURIFromLocation()) {
     applyJSonRep(configs1['cS0']);
-    openTab('IntroItem');
-    comment('IntroItem');
+    openTab('IntroTab');
+    comment('IntroTab');
     var encodedURI = asEncodedURI();
     window.history.replaceState(encodedURI, '', '?' + encodedURI);
 }
@@ -282,7 +282,7 @@ function addParamLinksFromHtml() {
             .style('background-color', '#f1f1f1')
             .on('mouseover', function () {
                 var adaptedParamId = adaptParamId(paramId);
-                var tabId = getParentTabContentId(adaptedParamId) + 'Item';
+                var tabId = getParentTabContentId(adaptedParamId) + 'Tab';
 
                 d3.selectAll('span.' + paramId + '.ParamLink').style('background-color', '#DDDD00');
                 d3.select('#' + tabId).classed('focused', true);
@@ -299,7 +299,7 @@ function addParamLinksFromHtml() {
             })
             .on('mouseout', function () {
                 var adaptedParamId = adaptParamId(paramId);
-                var tabId = getParentTabContentId(adaptedParamId) + 'Item';
+                var tabId = getParentTabContentId(adaptedParamId) + 'Tab';
 
                 d3.selectAll('span.' + paramId + '.ParamLink').style('background-color', '#f1f1f1');
                 d3.select('#' + tabId).classed('focused', false);
@@ -309,7 +309,7 @@ function addParamLinksFromHtml() {
             })
             .on('click', function() {
                 var adaptedParamId = adaptParamId(paramId);
-                var tabId = getParentTabContentId(adaptedParamId) + 'Item';
+                var tabId = getParentTabContentId(adaptedParamId) + 'Tab';
                 d3.select('#' + tabId).classed('focused', false);
                 clickParamInput(tabId, adaptedParamId);
             });
@@ -352,35 +352,35 @@ function adaptParamId(id) {
 
 function addTabEffectsFromHtml() {
     var workshopsTabAttributes = {
-        tabId: 'WorkshopsItem',
+        tabId: 'WorkshopsTab',
         referingClass: 'workshopsTabLink'
     };
     var growthTabAttributes = {
-        tabId: 'GrowingRateItem',
+        tabId: 'GrowingRateTab',
         referingClass: 'growthTabLink'
     };
     var udTabAttributes = {
-        tabId: 'UniversalDividendItem',
+        tabId: 'UniversalDividendTab',
         referingClass: 'dividendTabLink'
     };
     var referenceTabAttributes = {
-        tabId: 'ReferenceItem',
+        tabId: 'ReferenceTab',
         referingClass: 'referenceTabLink'
     };
     var displayTabAttributes = {
-        tabId: 'DisplayItem',
+        tabId: 'DisplayTab',
         referingClass: 'DisplayTabLink'
     };
     var accountsTabAttributes = {
-        tabId: 'AccountsItem',
+        tabId: 'AccountsTab',
         referingClass: 'accountsTabLink'
     };
     var demographyTabAttributes = {
-        tabId: 'DemographyItem',
+        tabId: 'DemographyTab',
         referingClass: 'demographyTabLink'
     };
     var transactionsTabAttributes = {
-        tabId: 'TransactionsItem',
+        tabId: 'TransactionsTab',
         referingClass: 'transactionsTabLink'
     };
     var tabAttributesList = [workshopsTabAttributes, growthTabAttributes, udTabAttributes, referenceTabAttributes, displayTabAttributes, accountsTabAttributes, demographyTabAttributes, transactionsTabAttributes];
@@ -2281,16 +2281,16 @@ function commentAccordingToAccount(timeStep, account) {
         .on('mouseover', function () {
             d3.selectAll('span.transactionsTabLink').style('background-color', '#dddddd');
             d3.selectAll('span.transactionName').style('background-color', '#dddddd');
-            d3.select('#TransactionsItem').classed('focused', true);
+            d3.select('#TransactionsTab').classed('focused', true);
         })
         .on('mouseout', function () {
             d3.selectAll('span.transactionsTabLink').style('background-color', '#f1f1f1');
             d3.selectAll('span.transactionName').style('background-color', '#f1f1f1');
-            d3.select('#TransactionsItem').classed('focused', false);
+            d3.select('#TransactionsTab').classed('focused', false);
         })
         .on('click', function() {
-            d3.select('#TransactionsItem').classed('focused', false);
-            clickTab('TransactionsItem', idFromTransactionName(d3.select(this).text()));
+            d3.select('#TransactionsTab').classed('focused', false);
+            clickTab('TransactionsTab', idFromTransactionName(d3.select(this).text()));
         });
     }
     else {
@@ -2348,7 +2348,7 @@ function changeConfiguration(configIdToSelect, configs) {
         comment(curConfigId);
     }
     else {
-        comment("WorkshopsItem");
+        comment("WorkshopsTab");
     }
     pushNewHistoryState();
 }
@@ -2818,20 +2818,20 @@ function getCurConfigJsonRep() {
 
 function clickTab(tabId, otherRef) {
     openTab(tabId);
-    if (tabId == "WorkshopsItem" && curConfigId != "none") {
+    if (tabId == "WorkshopsTab" && curConfigId != "none") {
         var jsonRep = getCurConfigJsonRep();
         applyJSonRep(jsonRep);
         comment(curConfigId);
     }
     else if (otherRef) {
-        if (tabId == "AccountsItem") {
+        if (tabId == "AccountsTab") {
             var toSelectIndex = money.accountIndex(otherRef);
             if (document.getElementById("AccountSelector").selectedIndex != toSelectIndex) {
                 document.getElementById("AccountSelector").selectedIndex = toSelectIndex;
                 updateAddedAccountArea();
             }
         }
-        else if (tabId == "TransactionsItem") {
+        else if (tabId == "TransactionsTab") {
             var toSelectIndex = money.transactionIndex(otherRef);
             if (document.getElementById("TransactionSelector").selectedIndex != toSelectIndex) {
                 document.getElementById("TransactionSelector").selectedIndex = toSelectIndex;
@@ -2854,14 +2854,14 @@ function clickParamInput(tabId, paramId) {
 
 function setSelectorIndex(tabId, modelId) {
     var modelId = + paramElemId.split('-')[1];
-    if (tabId == "AccountsItem") {
+    if (tabId == "AccountsTab") {
         var toSelectIndex = money.accountIndex(modelId);
         if (document.getElementById("AccountSelector").selectedIndex != toSelectIndex) {
             document.getElementById("AccountSelector").selectedIndex = toSelectIndex;
             updateAddedAccountArea();
         }
     }
-    if (tabId == "TransactionsItem") {
+    if (tabId == "TransactionsTab") {
         var toSelectIndex = money.transactionIndex(modelId);
         if (document.getElementById("TransactionSelector").selectedIndex != toSelectIndex) {
             document.getElementById("TransactionSelector").selectedIndex = toSelectIndex;

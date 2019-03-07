@@ -42,7 +42,7 @@ var configs1 = {
         },
         g: {
             c: "cS0",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -102,7 +102,7 @@ var configs1 = {
         },
         g: {
             c: "cSMN",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -162,7 +162,7 @@ var configs1 = {
         },
         g: {
             c: "cX40",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -222,7 +222,7 @@ var configs1 = {
         },
         g: {
             c: "cNOSTEP",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -282,7 +282,7 @@ var configs1 = {
         },
         g: {
             c: "cSMN-M",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -342,7 +342,7 @@ var configs1 = {
         },
         g: {
             c: "cS0-M",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -402,7 +402,7 @@ var configs1 = {
         },
         g: {
             c: "cS0-YM",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ['average', "stableAverage"]
             },
@@ -473,7 +473,7 @@ var configs2 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "c2CC",
             ac: {
                 hs: ["stableAverage"]
@@ -539,7 +539,7 @@ var configs2 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "cCAUCHY",
             ac: {
                 hs: ["stableAverage"]
@@ -620,7 +620,7 @@ var configs2 = {
         },
         g: {
             c: "c4DATES",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: []
             },
@@ -709,7 +709,7 @@ var configs3 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "cLMU1",
             ac: {
                 hs: [
@@ -806,7 +806,7 @@ var configs3 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "cLMU2",
             ac: {
                 hs: [
@@ -903,7 +903,7 @@ var configs3 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "cLUD",
             ac: {
                 hs: [
@@ -1002,7 +1002,7 @@ var configs4 = {
         },
         g: {
             c: "c3CC",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
             },
@@ -1104,7 +1104,7 @@ var configs4 = {
         },
         g: {
             c: "c3UBI",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
             },
@@ -1194,7 +1194,7 @@ var configs4 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "c4CC",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
@@ -1303,7 +1303,7 @@ var configs4 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "c4UBI",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
@@ -1394,7 +1394,7 @@ var configs4 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "c4CC-M",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
@@ -1503,7 +1503,7 @@ var configs4 = {
             }
         },
         g: {
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             c: "c4UBI-M",
             ac: {
                 hs: ["average", "stableAverage", "account1"]
@@ -1571,7 +1571,7 @@ var configs5 = {
         },
         g: {
             c: "cFALL",
-            t: "WorkshopsItem",
+            t: "WorkshopsTab",
             ac: {
                 hs: []
             },
