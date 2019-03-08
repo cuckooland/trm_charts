@@ -2853,7 +2853,6 @@ function clickParamInput(tabId, paramId) {
 }
 
 function setSelectorIndex(tabId, modelId) {
-    var modelId = + paramElemId.split('-')[1];
     if (tabId == "AccountsTab") {
         var toSelectIndex = money.accountIndex(modelId);
         if (document.getElementById("AccountSelector").selectedIndex != toSelectIndex) {
