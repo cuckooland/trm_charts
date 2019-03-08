@@ -517,10 +517,10 @@ function addChartEffectsFromHtml() {
         return;
     }
         
-    function clickValue(serieSpan) {
+    function clickSerieValue(serieSpan) {
         var referenceFrameKey = getReferenceFrameKey(serieSpan);
         var clickedSerieAttributes = getSerieAttributes(serieSpan);
-        var clickedSerieId = getTargetedSerieId(clickedSerieAttributes);
+        var clickedSerieId = getTargetedSerieId(serieSpan, clickedSerieAttributes);
         var curSelectedData = searchChartWithData(curSelectedDataId).getData(curSelectedDataId)[0];
         var selectedPointTime = curSelectedData.points[selectedPointIndex][0].getTime();
         
@@ -548,32 +548,38 @@ function addChartEffectsFromHtml() {
         pushNewHistoryState();
     }
 
-    function getTargetedSerieId(serieAttributes) {
+    function getTargetedSerieId(serieSpan, serieAttributes) {
         var serieClass = serieAttributes.class;
         if (serieClass == ACCOUNT_ID_PREFIX) {
-            // For now, if an account serie is targeted, it necessarly corresponds to the current selected serie (else we use the first one)
-            if (curSelectedDataId.startsWith(ACCOUNT_ID_PREFIX)) {
-                return curSelectedDataId;
+            var accountElemId = serieSpan.attr('id');
+            if (accountElemId) {
+                var accountId = + accountElemId.split('-')[1];
+                return c3IdFromAccountId(accountId);
             }
             else {
-                return c3IdFromAccountId(1);
+                return curSelectedDataId;
             }
         }
         return serieClass;
     }
 
-    function getSerieColor(serieAttributes) {
+    function getSerieColor(serieSpan, serieAttributes) {
         var serieColor = serieAttributes.color;
-        if (serieAttributes.class == ACCOUNT_ID_PREFIX && curSelectedDataId.startsWith(ACCOUNT_ID_PREFIX)) {
-            // For now, if an account serie is targeted, it necessarly corresponds to the current selected serie
-            var accountId = idFromC3AccountId(curSelectedDataId);
-            return ACCOUNT_COLORS[accountId];
+        if (serieAttributes.class == ACCOUNT_ID_PREFIX) {
+            var accountElemId = serieSpan.attr('id');
+            if (accountElemId) {
+                var accountId = + accountElemId.split('-')[1];
+                return ACCOUNT_COLORS[accountId - 1];
+            }
+            else {
+                return serieSpan.style('color');
+            }
         }
         return serieColor;
     }
 
     function mouseoverSerieSpan(serieSpan, serieAttributes) {
-        var targetedSerieId = getTargetedSerieId(serieAttributes);
+        var targetedSerieId = getTargetedSerieId(serieSpan, serieAttributes);
         // Highlight specified targets and fade out the others.
         serieAttributes.chart.focus(targetedSerieId);
 
@@ -594,7 +600,9 @@ function addChartEffectsFromHtml() {
 
     serieAttributesList.forEach(function(serieAttributes) {
         d3.selectAll('span.' + serieAttributes.class)
-            .style('color', getSerieColor(serieAttributes))
+            .style('color', function () {
+                return getSerieColor(d3.select(this), serieAttributes);
+            })
             .on('mouseover', function () {
                 mouseoverSerieSpan(d3.select(this), serieAttributes);
             })
@@ -604,7 +612,7 @@ function addChartEffectsFromHtml() {
     });
         
     d3.selectAll('span.current:not(.nolink), span.previous, span.previous2').on('click', function() {
-        clickValue(d3.select(this));
+        clickSerieValue(d3.select(this));
     });
 }
 
@@ -2171,7 +2179,7 @@ function commentSelectedPoint(c3DataId, timeStep, account) {
     
         default:
             if (c3DataId.startsWith(ACCOUNT_ID_PREFIX)) {
-                var accountSpan = d3.selectAll('span.account');
+                var accountSpan = d3.select("#accountComment").selectAll('span.account');
                 accountSpan.style('color', ACCOUNT_COLORS[account.id - 1]);
                 var accountMuValue = account.values[timeStep];
                 var accountMuLogValue = Math.log(accountMuValue) / Math.log(10);
@@ -2250,14 +2258,14 @@ function commentAccordingToAccount(timeStep, account) {
     if (timeStep == moneyBirthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
         // Change 'id' to have a link to the corresponding account
-        d3.selectAll("span.StartingPercentage").attr('id', function(d, i) { return 'sp' + i + '-' + account.id; });
+        d3.select("#accountComment").selectAll("span.StartingPercentage").attr('id', function(d, i) { return 'sp' + i + '-' + account.id; });
         d3.selectAll("span.StartingPercentage.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
         d3.selectAll("span.AtMoneyBirth." + coCreatorsClass).style("display", "inline");
     }
     else if (timeStep == birthStep) {
         var previousAverageMuValue = money.getAverage(pTimeStep);
         // Change 'id' to have a link to the corresponding account
-        d3.selectAll("span.StartingPercentage").attr('id', function(d, i) { return 'sp' + i + '-' + account.id; });
+        d3.select("#accountComment").selectAll("span.StartingPercentage").attr('id', function(d, i) { return 'sp' + i + '-' + account.id; });
         d3.selectAll("span.average.previous.mu.value").text(commentFormat(previousAverageMuValue));
         d3.selectAll("span.StartingPercentage.value").text(account.startingPercentage + NONBREAKING_SPACE + '%');
         d3.selectAll("span.AtBirth." + coCreatorsClass).style("display", "inline");

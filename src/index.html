@@ -31,6 +31,8 @@
                     <div class="ParamPart">
                         <!-- Intro Tab Parameters -->
                         <div id="Intro" class="tabcontent">
+                            <!-- Maybe put a logo here? -->
+                            <p></p>
                         </div>
                         
                         <!-- Workshops Tab Parameters -->
@@ -648,12 +650,12 @@
                                     <p><span class="monetarySupply label">Masse Monétaire</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="monetarySupply current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                 
                                     <div class="MbComment MB">
-                                        <p>= le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>, auquel s'ajoute d'éventuels montants à la naissance (voir l'onglet <span class="accountsTabLink">Comptes</span>) </p>
+                                        <p>= le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>, auquel s'ajoute d'éventuels <span class="StartingPercentage ParamLink">montants à la naissance</span></p>
                                         <p>= <span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;+&nbsp;<span class="accountsTabLink birthAmounts value">0</span></p>
                                     </div>
                                 
                                     <div class="MbComment NoMB">
-                                        <p>= la <span class="monetarySupply previous mu">masse monétaire avant émission des DU</span> à laquelle s'ajoute, d'une part le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>, d'autre part d'éventuels montants à la naissance (voir l'onglet <span class="accountsTabLink">Comptes</span>) </p>
+                                        <p>= la <span class="monetarySupply previous mu">masse monétaire avant émission des DU</span> à laquelle s'ajoute, d'une part le <span class="headcount current">nombre d'individus</span> multiplié par le <span class="dividend current mu">DU</span>, d'autre part d'éventuels <span class="StartingPercentage ParamLink">montants à la naissance</span></p>
                                         <p>= <span class="monetarySupply previous mu value">0</span>&nbsp;+&nbsp;<span class="headcount current value">0</span>&nbsp;*&nbsp;<span class="dividend current mu value">0</span>&nbsp;+&nbsp;<span class="accountsTabLink birthAmounts value">0</span></p>
                                     </div>
                                 </div>
@@ -811,9 +813,9 @@
                         <div class="Comment" id="c2CCComment">
                             <p>Au départ, dans cette configuration, le système monétaire est constitué d'un seul individu, puis un deuxième entre dans le système un an après le premier.</p>
                             
-                            <p>Dans les graphes, les montants sont exprimés, non plus en nombre d'unités monétaires, mais en pourcentage de la répartition moyenne par individu (sur ce sujet, voir l'onglet <span class="referenceTabLink">Référentiel</span>). On peut vérifier que la courbe <span class="average label">M/N</span> apparaît comme une horizontale "y=100". A noter également la <span class="monetarySupply">masse monétaire</span> est à 100&nbsp;% dans un premier temps, puis à 200&nbsp;% lors de l'arrivée du deuxième individu.</p>
+                            <p>Dans les graphes, les montants sont exprimés, non plus en nombre d'unités monétaires, mais en pourcentage de la répartition moyenne par individu (sur ce sujet, voir l'onglet <span class="referenceTabLink">Référentiel</span>). On peut vérifier que la courbe <span class="average label">M/N</span> apparaît comme une horizontale "Montant&nbsp;=&nbsp;100&nbsp;%". A noter également la <span class="monetarySupply">masse monétaire</span> est à 100&nbsp;% dans un premier temps, puis à 200&nbsp;% lors de l'arrivée du deuxième individu.</p>
                             
-                            <p>En testant les différentes formules de calcul du <span class="dividendTabLink">Dividende Universel</span>, on peut comparer les vitesses de convergence des comptes vers la moyenne.</p>
+                            <p>En testant les différentes formules de calcul du <span class="dividendTabLink">Dividende Universel</span>, on peut comparer les vitesses de convergence des comptes vers la <span class="average">moyenne</span>.</p>
                             
                         </div>
                         <div class="Comment" id="cCAUCHYComment">
@@ -835,7 +837,7 @@
                             
                         </div>
                         <div class="Comment" id="cLMU1Comment">
-                            <p>Deux comptes sont représentés dans cette configuration, et ils ne sont pas co-créateurs de la monnaie. L'unité monétaire est utilisée pour les axes verticaux des graphes. Au cours de l'année 2004, un transfert de 5000 unités monétaires a lieu du Compte 1 vers le Compte 2&nbsp;; puis, chaque année durant les dix suivantes, un transfert de 500 unités monétaires est réalisé du Compte 2 vers le Compte 1.</p>
+                            <p>Deux comptes sont représentés dans cette configuration, et ils ne sont pas co-créateurs de la monnaie. L'unité monétaire est utilisée pour les axes verticaux des graphes. Au cours de l'année 2004, un transfert de 5000 unités monétaires a lieu du <span id="cLMU11-1" class="account">Compte 1</span> vers le <span id="cLMU12-2" class="account">Compte 2</span>&nbsp;; puis, chaque année durant les dix suivantes, un transfert de 500 unités monétaires est réalisé du <span id="cLMU13-2" class="account">Compte 2</span> vers le <span id="cLMU14-1" class="account">Compte 1</span>.</p>
                             
                             <p>Au bout de 11 ans, les deux comptes se retrouvent au même montant. Cette configuration pourrait rappeler un prêt suivi d'un remboursement en 10 échéances, sans intérêt.</p>
                             
@@ -847,25 +849,25 @@
                             
                         </div>
                         <div class="Comment" id="cLUDComment">
-                            <p>La différence dans cette configuration par rapport à la <span class="configLink cLMU2">précédente</span> est dans l'unité utilisée pour les transactions. Au cours de l'année 2004, un transfert de 5 DU (au lieu des 5000 unités monétaires précédemment) a lieu du Compte 1 vers le Compte 2&nbsp;; puis, chaque année durant les dix suivantes, un transfert de 0.5 DU (au lieu des 500 unités monétaires précédemment) est réalisé du Compte 2 vers le Compte 1.</p>
+                            <p>La différence dans cette configuration par rapport à la <span class="configLink cLMU2">précédente</span> est dans l'unité utilisée pour les transactions. Au cours de l'année 2004, un transfert de 5 DU (au lieu des 5000 unités monétaires précédemment) a lieu du <span id="cLUD1-1" class="account">Compte 1</span> vers le <span id="cLUD1-2" class="account">Compte 2</span>&nbsp;; puis, chaque année durant les dix suivantes, un transfert de 0.5 DU (au lieu des 500 unités monétaires précédemment) est réalisé du <span id="cLUD3-2" class="account">Compte 2</span> vers le <span id="cLUD4-1" class="account">Compte 1</span>.</p>
                             
-                            <p>Cette fois, au bout de 11 ans, les deux comptes ne se retrouvent pas au même montant, le compte "prêteur" finit au dessus du compte "emprunteur". On dit communément que "les additions fonctionnent mal quand on compte en DU". Là encore, cette configuration pourrait rappeler un prêt suivi d'un remboursement en 10 échéances, mais cette fois avec intérêts.</p>
+                            <p>Cette fois, au bout de 11 ans, les deux comptes ne se retrouvent pas au même montant, le <span id="cLUD5-1" class="account">compte "prêteur"</span> finit au dessus du <span id="cLUD6-2" class="account">compte "emprunteur"</span>. On dit communément que "les additions fonctionnent mal quand on compte en DU". Là encore, cette configuration pourrait rappeler un prêt suivi d'un remboursement en 10 échéances, mais cette fois avec intérêts.</p>
                             
                         </div>
                         <div class="Comment" id="c3CCComment">
-                            <p>Cette configuration est seulement constituée de trois co-créateurs de la monnaie. Le premier (<span class="accountsTabLink">Compte 2</span>) démarre avec <span id="c3CC-2" class="StartingPercentage ParamLink">50&nbsp;%</span> de <span class="UD0 ParamLink">DU0</span>/c, le deuxième (<span class="accountsTabLink">Compte 3</span>) avec <span id="c3CC-3" class="StartingPercentage ParamLink">150&nbsp;%</span>, et le troisième (<span class="accountsTabLink">Compte 4</span>) avec <span id="c3CC-4" class="StartingPercentage ParamLink">100&nbsp;%</span>. Le <span class="growth ParamLink">taux d'expansion</span> est de 10&nbsp;%.</p>
+                            <p>Cette configuration est seulement constituée de trois co-créateurs de la monnaie. Le premier (<span id="c3CC1-2" class="account">Compte 2</span>) démarre avec <span id="c3CC-2" class="StartingPercentage ParamLink">50&nbsp;%</span> de <span class="UD0 ParamLink">DU0</span>/c, le deuxième (<span id="c3CC1-3" class="account">Compte 3</span>) avec <span id="c3CC-3" class="StartingPercentage ParamLink">150&nbsp;%</span>, et le troisième (<span id="c3CC1-4" class="account">Compte 4</span>) avec <span id="c3CC-4" class="StartingPercentage ParamLink">100&nbsp;%</span>. Le <span class="growth ParamLink">taux d'expansion</span> est de 10&nbsp;%.</p>
                             
                             <p>Au niveau des axes verticaux, le <span class="referenceTabLink">référentiel</span> utilisé est le DU.</p>
                             
                             <p>Cette configuration est souvent utilisée pour représenter le phénomène d'attraction vers la moyenne. On peut remarquer que la masse monétaire apparait comme constante.</p>
                             
-                            <p>A noter que le <span class="accountsTabLink">Compte 1</span> n'a pas d'utilitité, il n'est présent que pour faciliter la comparaison graphique avec la <span class="configLink c3UBI">configuration suivante</span>. Par défaut, il n'est pas représenté, mais il suffit de cliquer la légende pour le faire apparaitre.</p>
+                            <p>A noter que le <span id="c3CC1-1" class="account">Compte 1</span> n'a pas d'utilitité, il n'est présent que pour faciliter la comparaison graphique avec la <span class="configLink c3UBI">configuration suivante</span>. Par défaut, il n'est pas représenté, mais il suffit de cliquer la légende pour le faire apparaitre.</p>
                             
                         </div>
                         <div class="Comment" id="c3UBIComment">
                             <p>Ici, il n'y a <strong>aucun co-créateur</strong> de la monnaie. Le <span class="accountsTabLink">Compte 1</span> (par défaut non représenté, cliquer la légende pour le faire apparaitre) peut être vu comme une caisse collective. D'abord, il est rempli via un prélèvement de 10&nbsp;% de chaque compte  (voir <span class="transactionsTabLink">Transaction 1</span>), puis il est redistribué en totalité et à parts égales (voir <span class="transactionsTabLink">Transaction 2</span>).</p>
                             
-                            <p>Comme dans la <span class="configLink c3CC">configuration précédente</span>, on a trois utilisateurs de la monnaie, le premier démarrant avec <span id="c3UBI-2" class="StartingPercentage ParamLink">50&nbsp;%</span> de <span class="UD0 ParamLink">DU0</span>/c, le deuxième avec <span id="c3UBI-3" class="StartingPercentage ParamLink">150&nbsp;%</span>, et le troisième avec <span id="c3UBI-4" class="StartingPercentage ParamLink">100&nbsp;%</span>.</p>
+                            <p>Comme dans la <span class="configLink c3CC">configuration précédente</span>, on a trois utilisateurs de la monnaie, le <span id="c3UBI1-2" class="account">premier</span> démarrant avec <span id="c3UBIsp-2" class="StartingPercentage ParamLink">50&nbsp;%</span> de <span class="UD0 ParamLink">DU0</span>/c, le <span id="c3UBI2-3" class="account">deuxième</span> avec <span id="c3UBIsp-3" class="StartingPercentage ParamLink">150&nbsp;%</span>, et le <span id="c3UBI3-4" class="account">troisième</span> avec <span id="c3UBIsp-4" class="StartingPercentage ParamLink">100&nbsp;%</span>.</p>
                             
                             <p>Au niveau des axes verticaux, le <span class="referenceTabLink">référentiel</span> utilisé est l'unité monétaire. Graphiquement, cette configuration ressemble étrangement à la <span class="configLink c3CC">précédente</span>, on peut y voir le même phénomène d'attraction vers la moyenne et une masse monétaire constante. Il existe en fait une équivalence entre Dividende Universel par création monétaire et Revenu de Base via une taxe, comme l'a montré Stéphane Laborde.</p>
                             
@@ -873,7 +875,7 @@
                         <div class="Comment" id="c4CCComment">
                             <p>Cette configuration est sensiblement la même que la <span class="configLink c3CC">première</span>&nbsp;: trois co-créateurs de la monnaies, et un compte sans utililité permettant de faciliter la comparaison avec le cas "Revenu de Base via une taxe".</p>
 
-                            <p>Mais un nouveau compte fait son apparition au bout de quelques années. Le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux devient "%(M/N)", afin de faciliter la comparaison avec la configuration suivante.</p>
+                            <p>Mais un <span id="c4CC1-5" class="account">nouveau compte</span> fait son apparition au bout de quelques années. Le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux devient "%(M/N)", afin de faciliter la comparaison avec la configuration suivante.</p>
                             
                             <p>La formule utilisée pour le calcul du DU est "DU Basique". Il est intéressant de tester d'autres formules, par exemple DUĞ (voir l'onglet <span class="dividendTabLink">Dividende Universel</span>).</p>
                             
@@ -881,13 +883,13 @@
                         <div class="Comment" id="c4UBIComment">
                             <p>Cette configuration est sensiblement la même que la <span class="configLink c3UBI">deuxième</span>&nbsp;: trois non-créateurs de la monnaies, une caisse et deux transactions permettant de réaliser un Revenu de Base via une taxe.</p>
                         
-                            <p>Comme <span class="configLink c4CC">précédemment</span>, un nouveau compte fait son apparition au bout de quelques années. Vu que <span class="headcount">N</span> varie, le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux est "%(M/N)" (plus adapté pour comparer cette configuration avec la <span class="configLink c4CC">précédente</span>).</p>
+                            <p>Comme <span class="configLink c4CC">précédemment</span>, un <span id="c4UBI1-5" class="account">nouveau compte</span> fait son apparition au bout de quelques années. Vu que <span class="headcount">N</span> varie, le <span class="referenceTabLink">référentiel</span> au niveau des axes verticaux est "%(M/N)" (plus adapté pour comparer cette configuration avec la <span class="configLink c4CC">précédente</span>).</p>
                             
                             <p>Là encore, graphiquement, cette configuration ressemble étrangement à la <span class="configLink c4CC">précédente</span>.</p>
                             
                         </div>
                         <div class="Comment" id="c4CC-MComment">
-                            <p>Cette configuration est sensiblement la même que la <span class="configLink c4CC">troisième</span>&nbsp;: trois co-créateurs de la monnaies, et un compte sans utililité facilitant la comparaison avec le cas "Revenu de Base via une taxe"&nbsp;; puis un nouveau compte fait son apparition au bout de quelques années.</p>
+                            <p>Cette configuration est sensiblement la même que la <span class="configLink c4CC">troisième</span>&nbsp;: trois co-créateurs de la monnaies, et un compte sans utililité facilitant la comparaison avec le cas "Revenu de Base via une taxe"&nbsp;; puis un <span id="c4CC1-5" class="account">nouveau compte</span> fait son apparition au bout de quelques années.</p>
                         
                             <p>La différence ici est que l'émission des Dividendes devient mensuelle, passant à 0,797&nbsp;% par mois au lieu de 10&nbsp;% par an.</p>
                             
@@ -895,7 +897,7 @@
                             
                         </div>
                         <div class="Comment" id="c4UBI-MComment">
-                            <p>Cette configuration est sensiblement la même que la <span class="configLink c4UBI">quatrième</span>&nbsp;: trois non-créateurs de la monnaies, une caisse et deux transactions permettant de réaliser un Revenu de Base via une taxe&nbsp;; puis un nouveau compte fait son apparition au bout de quelques années.</p>
+                            <p>Cette configuration est sensiblement la même que la <span class="configLink c4UBI">quatrième</span>&nbsp;: trois non-créateurs de la monnaies, une caisse et deux transactions permettant de réaliser un Revenu de Base via une taxe&nbsp;; puis un <span id="c4UBI1-5" class="account">nouveau compte</span> fait son apparition au bout de quelques années.</p>
                         
                             <p>La différence ici est que les transactions sont répétées tous les mois, avec un prélèvement qui passe à 0,797&nbsp;% par mois au lieu de 10&nbsp;% par an.</p>
                             
@@ -1112,7 +1114,7 @@
 
                         <!-- Accounts Tab Comments -->
                         <div class="Comment" id="AccountsTabComment">
-                            <p>Par défaut, dans cette application, seul un compte est affiché. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps.</p>
+                            <p>Par défaut, dans cette application, seul un compte est défini. Cet onglet permet d'ajouter d'autres individus et de leur affecter certains attributs (date d'entrée, co-créateur ou non, montant au départ) afin d'étudier les caractéristiques de leur compte au fil du temps. Ils seront alors représentés dans le premier graphe (en haut à gauche).</p>
 
                         </div>
                         <div class="Comment" id="AccountBirthComment">
@@ -1136,7 +1138,7 @@
                         
                         <!-- Demography Tab Comments -->
                         <div class="Comment" id="DemographyTabComment">
-                            <p>Dans l'onglet <span class="accountsTabLink">Comptes</span>, on a pu faire varier le nombre d'individus N au fil du temps. Il s'agit désormais d'étudier différents types de variations, plus réalistes, en jouant sur la forme et sur l'amplitude.</p>
+                            <p>Dans l'onglet <span class="accountsTabLink">Comptes</span>, on a pu faire varier le <span class="headcount">nombre d'individus N</span> au fil du temps. Cet onglet permet de spécifier des variations de N à plus grande échelle. Comment&nbsp;? Il permet d'ajouter des co-créateurs de la monnaie en spécifiant leur nombre au fil du temps via des profils paramétrables (forme, amplitude maximale de la variation, etc.).</p>
 
                         </div>
                         <div class="Comment" id="MaxDemographyComment">
