@@ -275,7 +275,7 @@ function generateC3Charts() {
 }
 
 function addParamLinksFromHtml() {
-    var paramIdList = ['LifeExpectancy', 'growth', 'AnnualGrowth', 'MonthlyGrowth', 'UD0', 'StartingPercentage'/*, 'CalculateGrowth', 'AnnualDividendStart', 'YearMonthDividendStart', 'MonthlyDividendStart', 'ReferenceFrameSelector', 'TimeUpperBound', 'StepCurves'*/];
+    var paramIdList = ['LifeExpectancy', 'growth', 'AnnualGrowth', 'MonthlyGrowth', 'UD0', 'StartingPercentage', 'ReferenceFrameSelector'/*, 'CalculateGrowth', 'AnnualDividendStart', 'YearMonthDividendStart', 'MonthlyDividendStart', 'TimeUpperBound', 'StepCurves'*/];
     
     paramIdList.forEach(function(paramId) {
         d3.selectAll('span.' + paramId + '.ParamLink')
