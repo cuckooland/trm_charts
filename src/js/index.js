@@ -1771,13 +1771,6 @@ function transactionName(transaction) {
     return "${p0} ${p1}".format(TRANSACTION_LABEL_PREFIX, transaction.id);
 }
 
-function idFromTransactionName(transactionName) {
-    if (transactionName.substr(0, TRANSACTION_LABEL_PREFIX.length) === TRANSACTION_LABEL_PREFIX) {
-        return transactionName.substring(TRANSACTION_LABEL_PREFIX.length);
-    }
-    throw new Error(transactionName + " doesn't start with the expected prefix: " + TRANSACTION_LABEL_PREFIX);
-}
-
 function enableTransactionArea() {
     if (money.transactions.length > 0) {
         d3.select("#Transactions>.ParamSection").style("display", "block");
@@ -2281,25 +2274,44 @@ function commentAccordingToAccount(timeStep, account) {
     if (commentsMap.size > 0) {
         d3.selectAll("span.TransactionsDesc").style("display", "inline");
         d3.selectAll("span.TransactionsValuesDesc").style("display", "inline");
-        d3.selectAll("span.TransactionsDesc").html(Array.from(commentsMap.entries()).map(e=>transactionsDesc(e[0], e[1])).join(' '));
-        d3.selectAll("span.TransactionsValuesDesc").text(Array.from(commentsMap.entries()).map(e=>transactionsValuesDesc(e[0], e[1])).join(' '));
-
-        d3.selectAll('span.transactionName')
-        .style('background-color', '#f1f1f1')
-        .on('mouseover', function () {
-            d3.selectAll('span.transactionsTabLink').style('background-color', '#dddddd');
-            d3.selectAll('span.transactionName').style('background-color', '#dddddd');
-            d3.select('#TransactionsTab').classed('focused', true);
-        })
-        .on('mouseout', function () {
-            d3.selectAll('span.transactionsTabLink').style('background-color', '#f1f1f1');
-            d3.selectAll('span.transactionName').style('background-color', '#f1f1f1');
-            d3.select('#TransactionsTab').classed('focused', false);
-        })
-        .on('click', function() {
-            d3.select('#TransactionsTab').classed('focused', false);
-            clickTab('TransactionsTab', idFromTransactionName(d3.select(this).text()));
+        d3.selectAll("span.TransactionsDesc").html(function (d, i) {
+            var prefixId = 'ac' + account.id + 'td' + i;
+            return Array.from(commentsMap.entries()).map(e=>transactionsDesc(prefixId, e[0], e[1])).join(' ');
         });
+        d3.selectAll("span.TransactionsValuesDesc").html(function (d, i) {
+            var prefixId = 'ac' + account.id + 'tvd' + i;
+            return Array.from(commentsMap.entries()).map(e=>transactionsValuesDesc(prefixId, e[0], e[1])).join(' ');
+        });
+
+        d3.selectAll('span.transaction')
+            .style('background-color', '#f1f1f1')
+            .on('mouseover', function () {
+                d3.select('#TransactionsTab').classed('focused', true);
+                showTab('TransactionsTab');
+
+                var paramElemId = d3.select(this).attr('id');
+                if (paramElemId) {
+                    var modelId = + paramElemId.split('-')[1];
+                    setSelectorIndex('TransactionsTab', modelId);
+                    d3.selectAll('span.transaction').filter(function() { return this.id.endsWith('-' + modelId); })
+                        .style('background-color', '#dddddd');
+                }
+            })
+            .on('mouseout', function () {
+                d3.selectAll('span.transactionsTabLink').style('background-color', '#f1f1f1');
+                d3.selectAll('span.transaction').style('background-color', '#f1f1f1');
+                d3.select('#TransactionsTab').classed('focused', false);
+                showTab(curTabId);
+            })
+            .on('click', function() {
+                d3.select('#TransactionsTab').classed('focused', false);
+                var paramElemId = d3.select(this).attr('id');
+                if (paramElemId) {
+                    var modelId = + paramElemId.split('-')[1];
+                    setSelectorIndex('TransactionsTab', modelId);
+                    clickTab('TransactionsTab');
+                }
+            });
     }
     else {
         d3.selectAll("span.TransactionsDesc").style("display", "none");
@@ -2307,11 +2319,14 @@ function commentAccordingToAccount(timeStep, account) {
     }
 }
 
-function transactionsDesc(transaction, actualAmountMap) {
+function transactionsDesc(prefixId, transaction, actualAmountMap) {
+    var descrId = prefixId + '-' + transaction.id;
     var firstActualAmount = actualAmountMap.entries().next().value[1];
     var direction = (firstActualAmount<0) ? '- ' : '+ ';
-    return direction + '<span class="transactionName">${p0} ${p1}</span> (${p2} vers ${p3}, ${p4} ${p5})'
-        .format(TRANSACTION_LABEL_PREFIX, 
+    return direction + '<span id="${p0}" class="transaction name">${p1} ${p2}</span> (${p3} vers ${p4} : ${p5} ${p6})'
+        .format(
+            descrId,
+            TRANSACTION_LABEL_PREFIX, 
             transaction.id, 
             accountName1(transaction.from), 
             accountName1(transaction.to), 
@@ -2320,15 +2335,18 @@ function transactionsDesc(transaction, actualAmountMap) {
 
 }
 
-function transactionsValuesDesc(transaction, actualAmountMap) {
+function transactionsValuesDesc(prefixId, transaction, actualAmountMap) {
+    var descrId = prefixId + '-' + transaction.id;
     var firstActualAmount = actualAmountMap.entries().next().value[1];
     var direction = (firstActualAmount<0) ? '- ' : '+ ';
+    var values; 
     if (actualAmountMap.size > 1) {
-        return direction + '(' + Array.from(actualAmountMap.values()).map(a=>Math.abs(a)).join('+') + ')';
+        values = '(' + Array.from(actualAmountMap.values()).map(a=>Math.abs(a)).join('+') + ')' ;
     }
     else {
-        return direction + Math.abs(firstActualAmount);
+        values = Math.abs(firstActualAmount);
     }
+    return direction + '<span id="${p0}" class="transaction value">${p1}</span>'.format(descrId, values);
 }
 
 function comment0(id) {
@@ -2824,28 +2842,14 @@ function getCurConfigJsonRep() {
     throw new Error("Configuration not managed: " + curConfigId);
 }
 
-function clickTab(tabId, otherRef) {
+function clickTab(tabId) {
     openTab(tabId);
     if (tabId == "WorkshopsTab" && curConfigId != "none") {
         var jsonRep = getCurConfigJsonRep();
         applyJSonRep(jsonRep);
         comment(curConfigId);
     }
-    else if (otherRef) {
-        if (tabId == "AccountsTab") {
-            var toSelectIndex = money.accountIndex(otherRef);
-            if (document.getElementById("AccountSelector").selectedIndex != toSelectIndex) {
-                document.getElementById("AccountSelector").selectedIndex = toSelectIndex;
-                updateAddedAccountArea();
-            }
-        }
-        else if (tabId == "TransactionsTab") {
-            var toSelectIndex = money.transactionIndex(otherRef);
-            if (document.getElementById("TransactionSelector").selectedIndex != toSelectIndex) {
-                document.getElementById("TransactionSelector").selectedIndex = toSelectIndex;
-                updateTransactionArea();
-            }
-        }
+    else {
         comment(tabId);
     }
     pushNewHistoryState();
