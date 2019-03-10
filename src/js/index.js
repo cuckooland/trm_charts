@@ -186,6 +186,7 @@ generateC3Charts();
 
 if (!applyEncodedURIFromLocation()) {
     applyJSonRep(configs1['cS0']);
+    unsetCurConfig();
     openTab('IntroTab');
     comment('IntroTab');
     var encodedURI = asEncodedURI();
@@ -533,6 +534,7 @@ function addChartEffectsFromHtml() {
         }
         updateAccountYLabels();
         redrawCharts();
+        unsetCurConfig();
 
         // Since new chart data are computed, search index to select 
         var clickedData = searchChartWithData(clickedSerieId).getData(clickedSerieId)[0];
@@ -824,6 +826,11 @@ function setConfigSelection() {
     }
     console.log("Configuration not managed: " + curConfigId);
 };
+
+function unsetCurConfig() {
+    curConfigId = 'none';
+    setConfigSelection();
+}
 
 // Create reference frame selectors
 function feedReferenceFrameSelectors(money) {
@@ -1320,6 +1327,7 @@ function generateAccountsChart() {
             item: {
                 onclick: function (id) {
                     accountsChart.toggle(id);
+                    unsetCurConfig();
                     pushNewHistoryState();
                 }
             }
@@ -1370,6 +1378,7 @@ function generateDividendChart() {
             item: {
                 onclick: function (id) {
                     dividendChart.toggle(id);
+                    unsetCurConfig();
                     pushNewHistoryState();
                 }
             }
@@ -1420,6 +1429,7 @@ function generateHeadcountChart() {
             item: {
                 onclick: function (id) {
                     headcountChart.toggle(id);
+                    unsetCurConfig();
                     pushNewHistoryState();
                 }
             }
@@ -1470,6 +1480,7 @@ function generateMonetarySupplyChart() {
             item: {
                 onclick: function (id) {
                     monetarySupplyChart.toggle(id);
+                    unsetCurConfig();
                     pushNewHistoryState();
                 }
             }
@@ -1590,6 +1601,7 @@ function deleteAccount() {
     // If account deleted...
     if (accounts != false && accounts.length > 0) {
         redrawCharts();
+        unsetCurConfig();
         joinAccountSelectorsToData();
         document.getElementById("AccountSelector").selectedIndex = selectedAccountIndex - 1;
         updateAddedAccountArea();
@@ -1617,6 +1629,7 @@ function addAccount() {
     money.addAccount();
     
     redrawCharts();
+    unsetCurConfig();
     joinAccountSelectorsToData();
     document.getElementById("AccountSelector").selectedIndex = money.accounts.length - 1;
     updateAddedAccountArea();
@@ -1713,6 +1726,7 @@ function deleteTransaction() {
     // If transaction deleted...
     if (transactions != false && transactions.length > 0) {
         redrawCharts();
+        unsetCurConfig();
         joinTransactionSelectorToData();
         if (selectedTransactionIndex > 0) {
             document.getElementById("TransactionSelector").selectedIndex = selectedTransactionIndex - 1;
@@ -1762,6 +1776,7 @@ function getTransactionDestIndex() {
 function addTransaction() {
     money.addTransaction();
     redrawCharts();
+    unsetCurConfig();
     joinTransactionSelectorToData();
     document.getElementById("TransactionSelector").selectedIndex = money.transactions.length - 1;
     updateTransactionArea();
@@ -2403,6 +2418,7 @@ function changeTransactionSrcSelection() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     selectedTransaction.from = getTransAccounts()[getTransactionSrcIndex()];
     redrawCharts();
+    unsetCurConfig();
     pushNewHistoryState();
 }
 
@@ -2410,6 +2426,7 @@ function changeTransactionDestSelection() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     selectedTransaction.to = getTransAccounts()[getTransactionDestIndex()];
     redrawCharts();
+    unsetCurConfig();
     pushNewHistoryState();
 }
 
@@ -2419,11 +2436,12 @@ function changeTransactionYear() {
     if (transactionYear >= 0 && transactionYear < 200) {
         selectedTransaction.year = transactionYear;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#TransactionYear').property("value", toYearRep(selectedTransaction.year));
     }
-    pushNewHistoryState();
 }
 
 function changeTransactionRep() {
@@ -2432,11 +2450,12 @@ function changeTransactionRep() {
     if (transactionRep > 0 && transactionRep < money.toTimeStep(200, money.YEAR)) {
         selectedTransaction.repetitionCount = transactionRep;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#TransactionRep').property("value", selectedTransaction.repetitionCount);
     }
-    pushNewHistoryState();
 }
 
 function changeTransactionAmount() {
@@ -2445,17 +2464,19 @@ function changeTransactionAmount() {
     if (transactionAmount >= 0) {
         selectedTransaction.amount = transactionAmount;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#TransactionAmount').property("value", selectedTransaction.amount);
     }
-    pushNewHistoryState();
 }
 
 function changeTransactionRefSelection() {
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
     selectedTransaction.amountRef = this.options[this.selectedIndex].value;
     redrawCharts();
+    unsetCurConfig();
     pushNewHistoryState();
 }
 
@@ -2476,6 +2497,7 @@ function changeReferenceFrame() {
     updateAccountYLabels();
     
     redrawCharts();
+    unsetCurConfig();
     comment(money.referenceFrameKey + 'Ref');
     pushNewHistoryState();
 }
@@ -2510,6 +2532,7 @@ function updateTimeXLabels() {
 function changeUdFormula() {
     money.udFormulaKey = this.options[this.selectedIndex].value;
     redrawCharts();
+    unsetCurConfig();
     comment(money.udFormulaKey);
     pushNewHistoryState();
 }
@@ -2518,6 +2541,7 @@ function changeDemographicProfile() {
     money.demographicProfileKey = this.options[this.selectedIndex].value;
     enableDemographyFields();
     redrawCharts();
+    unsetCurConfig();
     comment(money.demographicProfileKey);
     pushNewHistoryState();
 }
@@ -2576,6 +2600,7 @@ function rythmAndUD0Update() {
     enableGrowthForms(money.calculateGrowth);
     enableUD0Forms();
     redrawCharts();
+    unsetCurConfig();
     comment(this.value);
     pushNewHistoryState();
 }
@@ -2583,6 +2608,7 @@ function rythmAndUD0Update() {
 function changeLifeExpectancy() {
     money.lifeExpectancy = parseInt(this.value);
     redrawCharts();
+    unsetCurConfig();
     updateCalculateGrowth();
     pushNewHistoryState();
 }
@@ -2590,6 +2616,7 @@ function changeLifeExpectancy() {
 function changeAnnualGrowth() {
 	money.growth = parseFloat(this.value) / 100;
     redrawCharts();
+    unsetCurConfig();
     growthChanged();
     d3.select('#MonthlyGrowth').property("value", (money.getGrowth(money.MONTH) * 100).toFixed(2));
     pushNewHistoryState();
@@ -2598,6 +2625,7 @@ function changeAnnualGrowth() {
 function changeMonthlyGrowth() {
 	money.growth = parseFloat(this.value) / 100;
     redrawCharts();
+    unsetCurConfig();
     growthChanged();
     d3.select('#AnnualGrowth').property("value", (money.getGrowth(money.YEAR) * 100).toFixed(2));
     pushNewHistoryState();
@@ -2608,6 +2636,7 @@ function changeCalculateGrowth() {
     
     enableGrowthForms(money.calculateGrowth);
     redrawCharts();
+    unsetCurConfig();
     updateCalculateGrowth();
     comment(this.id);
     pushNewHistoryState();
@@ -2639,6 +2668,7 @@ function growthChanged() {
 function changeAnnualDividendStart() {
     money.dividendStart = parseFloat(this.value);
     redrawCharts();
+    unsetCurConfig();
     d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH, money.MONTH)).toFixed(2));
     d3.select('#YearMonthDividendStart').property("value", (money.getDividendStart(money.YEAR, money.MONTH)).toFixed(2));
     pushNewHistoryState();
@@ -2647,6 +2677,7 @@ function changeAnnualDividendStart() {
 function changeMonthlyDividendStart() {
     money.dividendStart = parseFloat(this.value);
     redrawCharts();
+    unsetCurConfig();
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR, money.YEAR)).toFixed(2));
     d3.select('#YearMonthDividendStart').property("value", (money.getDividendStart(money.YEAR, money.MONTH)).toFixed(2));
     pushNewHistoryState();
@@ -2655,6 +2686,7 @@ function changeMonthlyDividendStart() {
 function changeYearMonthDividendStart() {
     money.dividendStart = parseFloat(this.value);
     redrawCharts();
+    unsetCurConfig();
     d3.select('#AnnualDividendStart').property("value", (money.getDividendStart(money.YEAR, money.YEAR)).toFixed(2));
     d3.select('#MonthlyDividendStart').property("value", (money.getDividendStart(money.MONTH, money.MONTH)).toFixed(2));
     pushNewHistoryState();
@@ -2666,6 +2698,7 @@ function changeLogScale() {
     updateAccountYLabels();
     
     redrawCharts();
+    unsetCurConfig();
     comment(this.id);
     pushNewHistoryState();
 }
@@ -2679,6 +2712,7 @@ function changeStepCurves() {
     }
     
     redrawCharts();
+    unsetCurConfig();
     comment(this.id);
     pushNewHistoryState();
 }
@@ -2689,12 +2723,13 @@ function changeTimeLowerBound() {
         var oldTimeBounds = { lower: money.getTimeLowerBound(money.YEAR), upper: money.getTimeUpperBound(money.YEAR) };
         money.setTimeLowerBound(timeLowerBound); 
         updateZoom(oldTimeBounds);
+        unsetCurConfig();
         d3.select('#TimeUpperBound').property("value", toYearRep(money.getTimeUpperBound(money.YEAR)));
+        pushNewHistoryState();
     }
     else {
         d3.select('#TimeLowerBound').property("value", toYearRep(money.getTimeLowerBound(money.YEAR)));
     }
-    pushNewHistoryState();
 }
 
 function changeTimeUpperBound() {
@@ -2703,12 +2738,13 @@ function changeTimeUpperBound() {
         var oldTimeBounds = { lower: money.getTimeLowerBound(money.YEAR), upper: money.getTimeUpperBound(money.YEAR) };
         money.setTimeUpperBound(timeUpperBound); 
         updateZoom(oldTimeBounds);
+        unsetCurConfig();
         d3.select('#TimeLowerBound').property("value", toYearRep(money.getTimeLowerBound(money.YEAR)));
+        pushNewHistoryState();
     }
     else {
         d3.select('#TimeUpperBound').property("value", toYearRep(money.getTimeUpperBound(money.YEAR)));
     }
-    pushNewHistoryState();
 }
 
 function changeMaxDemography() {
@@ -2716,11 +2752,12 @@ function changeMaxDemography() {
     if (maxDemography >= 0 && maxDemography < 1000000) {
         money.maxDemography = maxDemography;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#MaxDemography').property("value", money.maxDemography);
     }
-    pushNewHistoryState();
 }
 
 function changeXMinDemography() {
@@ -2728,11 +2765,12 @@ function changeXMinDemography() {
     if (xMinDemography >= 0 && xMinDemography < 200) {
         money.xMinDemography = xMinDemography;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#xMinDemography').property("value", toYearRep(money.xMinDemography));
     }
-    pushNewHistoryState();
 }
 
 function changeXMaxDemography() {
@@ -2740,11 +2778,12 @@ function changeXMaxDemography() {
     if (xMaxDemography >= 1 && xMaxDemography < 199) {
         money.xMaxDemography = xMaxDemography;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#xMaxDemography').property("value", toYearRep(money.xMaxDemography));
     }
-    pushNewHistoryState();
 }
 
 function changeXMpvDemography() {
@@ -2752,11 +2791,12 @@ function changeXMpvDemography() {
     if (xMpvDemography >= 1 && xMpvDemography < 199) {
         money.xMpvDemography = xMpvDemography;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#xMpvDemography').property("value", toYearRep(money.xMpvDemography));
     }
-    pushNewHistoryState();
 }
 
 function changePlateauDemography() {
@@ -2764,11 +2804,12 @@ function changePlateauDemography() {
     if (plateauDemography >= 0 && plateauDemography < 199) {
         money.plateauDemography = plateauDemography;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#plateauDemography').property("value", money.plateauDemography);
     }
-    pushNewHistoryState();
 }
 
 function changeXScaleDemography() {
@@ -2776,11 +2817,12 @@ function changeXScaleDemography() {
     if (xScaleDemography > 0) {
         money.xScaleDemography = xScaleDemography;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#xScaleDemography').property("value", money.xScaleDemography);
     }
-    pushNewHistoryState();
 }
 
 function changeAccountBirth() {
@@ -2789,11 +2831,12 @@ function changeAccountBirth() {
     if (birth >= 0 && birth < 200) {
         selectedAccount.birth = birth;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#AccountBirth').property("value", toYearRep(selectedAccount.birth));
     }
-    pushNewHistoryState();
 }
 
 function changeAccountDuration() {
@@ -2802,11 +2845,12 @@ function changeAccountDuration() {
     if (duration > 0 && duration <= 120) {
         selectedAccount.duration = duration;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#AccountDuration').property("value", selectedAccount.duration);
     }
-    pushNewHistoryState();
 }
 
 function changeAccountType() {
@@ -2815,6 +2859,7 @@ function changeAccountType() {
     
     joinAccountSelectorsToData();
     redrawCharts();
+    unsetCurConfig();
     
     comment(this.id);
     pushNewHistoryState();
@@ -2826,11 +2871,12 @@ function changeStartingPercentage() {
     if (startingPercentage >= 0) {
         selectedAccount.startingPercentage = startingPercentage;
         redrawCharts();
+        unsetCurConfig();
+        pushNewHistoryState();
     }
     else {
         d3.select('#StartingPercentage').property("value", selectedAccount.startingPercentage);
     }
-    pushNewHistoryState();
 }
 
 function getCurConfigJsonRep() {
