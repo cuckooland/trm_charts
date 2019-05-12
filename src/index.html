@@ -15,10 +15,15 @@
 			<h1>La TRM en Transition <span class="InProgress">pas terminée, en cours de réalisation...</span>
 			</h1>
             
+            <!-- Intro -->
+            <div class="introduction">
+                <p><a href="http://cuckooland.free.fr/LaTrmEnCouleur.html">La TRM en Couleur</a> a été publiée il y a quelques années et se voulait une introduction à la <a href="http://www.creationmonetaire.info/2012/11/theorie-relative-de-la-monnaie-2-718.html">Théorie Relative de la Monnaie</a> de Stéphane Laborde. <a href="index.html">La TRM en Transition</a> prolonge cette introduction et tente de garder son souci d'accéssibilité au plus grand nombre, tout en abordant des questions plus avancées.</p>
+
+            </div>
+
             <div id="TrmAppli">
                 <div id="ParamsCommentsAndTabs">
                     <ul class="tabsBar">
-                        <li><span class="tablinks" id="IntroTab" tabContentId="Intro">Intro</span></li>
                         <li><span class="tablinks" id="WorkshopsTab" tabContentId="Workshops">Ateliers</span></li>
                         <li><span class="tablinks" id="GrowingRateTab" tabContentId="GrowingRate">Taux d'expansion</span></li>
                         <li><span class="tablinks" id="UniversalDividendTab" tabContentId="UniversalDividend">Dividende Universel</span></li>
@@ -29,12 +34,6 @@
                         <li><span class="tablinks" id="TransactionsTab" tabContentId="Transactions">Transactions</span></li>
                     </ul>
                     <div class="ParamPart">
-                        <!-- Intro Tab Parameters -->
-                        <div id="Intro" class="tabcontent">
-                            <!-- Maybe put a logo here? -->
-                            <p></p>
-                        </div>
-                        
                         <!-- Workshops Tab Parameters -->
                         <div id="Workshops" class="tabcontent">
                             <div class="row">
@@ -215,24 +214,24 @@
                             <div class="ParamSection" id="DemographyParamSection">
                                 <div class="row">
                                     <div class="labelledForm">
-                                        <label for="MaxDemography">Sommet (en Unité Monétaire)</label>
+                                        <label for="MaxDemography">Nombre d'individus au sommet</label>
                                         <input id="MaxDemography" type="text" name="MaxDemography"
                                                 title="Ordre de grandeur de la démographie maximum"/>
                                     </div>
                                     <div class="labelledForm">
-                                        <label for="xMinDemography">Début (en année)</label>
+                                        <label for="xMinDemography">Année de début</label>
                                         <input id="xMinDemography" type="text" name="xMinDemography"/>
                                     </div>
                                     <div class="labelledForm">
-                                        <label for="xMaxDemography">Fin (en année)</label>
+                                        <label for="xMaxDemography">Année de fin</label>
                                         <input id="xMaxDemography" type="text" name="xMaxDemography"/>
                                     </div>
                                     <div class="labelledForm">
-                                        <label for="xMpvDemography">Sommet (en année)</label>
+                                        <label for="xMpvDemography">Année au sommet</label>
                                         <input id="xMpvDemography" type="text" name="xMpvDemography"/>
                                     </div>
                                     <div class="labelledForm">
-                                        <label for="plateauDemography">Durée (en année)</label>
+                                        <label for="plateauDemography">Durée en année</label>
                                         <input id="plateauDemography" type="text" name="plateauDemography"/>
                                     </div>
                                     <div class="labelledForm">
@@ -339,7 +338,7 @@
                         
                         <div class="Comment" id="stableAverageComment">
                             <div class=CurveComment>
-                                <p>En régime stable &ndash;&nbsp;où <span class="headcount">N</span> est constant au fil du temps, où toutes les formules du DU sont équivalentes à la formule fondamentale c*M(t-1)/N(t)&nbsp;&ndash;, en connaissant le montant du <span class="dividend">DU</span> courant, on peut déduire la moyenne <span class="average">M/N</span>&nbsp;: en régime stable, M(t)&nbsp;=&nbsp;(1+c)*M(t-1), donc <span class="average">M/N</span> vaut (1+c)*<span class="dividend">DU</span>/c.</p>
+                                <p>En régime stable, DU(t+1)&nbsp;=&nbsp;c*(M/N)(t), mais aussi DU(t+1)&nbsp;=&nbsp;(1+c)*DU(t). Ainsi, en combinant ces deux formules, on a (M/N)(t)&nbsp;=&nbsp;(1+c)*DU(t)/c. Autrement dit, quelqu'un qui connait le montant du <span class="dividend">DU</span> courant peut facilement en déduire la moyenne <span class="average">M/N</span> courante.</p>
     
                                 <p>Dans le premier diagramme (en haut à gauche), la courbe <span class="stableAverage label">M/N stable</span> représente cette valeur théorique (1+c)*<span class="dividend">DU</span>/c. Elle permet de voir dans quelle proportion, suivant la formule choisie pour calculer le DU (voir onglet <span class="dividendTabLink">Dividende Universel</span>), la moyenne <span class="average">M/N</span> tend vers cette <span class="stableAverage">valeur théorique</span>. <span class="prodFactor">Dans la configuration actuelle, <span class="growth ParamLink">c</span> est défini sur une base annuelle et l'émission du DU est <span class="UD0 ParamLink">mensualisée</span>. Un facteur 12 est donc à appliquer.</span></p>
                             </div>
@@ -581,7 +580,7 @@
                         
                         <div class="Comment" id="stableDividendComment">
                             <div class=CurveComment>
-                                <p>En régime stable &ndash;&nbsp;où <span class="headcount">N</span> est constant au fil du temps, où toutes les formules du DU sont équivalentes à la formule fondamentale c*M(t-1)/N(t)&nbsp;&ndash;, en connaissant la moyenne <span class="average">M/N</span> courante, on peut déduire le montant du dernier <span class="dividend">DU</span>&nbsp;: en régime stable, M(t)&nbsp;=&nbsp;(1+c)*M(t-1), donc le dernier <span class="dividend">DU</span> vaut c/(1+c)*<span class="average">M/N</span>.</p>
+                                <p>En régime stable, DU(t+1)&nbsp;=&nbsp;c*(M/N)(t), mais aussi DU(t+1)&nbsp;=&nbsp;(1+c)*DU(t). Ainsi, en combinant ces deux formules, on a c/(1+c)*(M/N)(t)&nbsp;=&nbsp;DU(t). Autrement dit, quelqu'un qui connait la moyenne <span class="average">M/N</span> courante peut facilement en déduire le montant du <span class="dividend">DU</span> courant.</p>
                                 
                                 <p>Dans le deuxième diagramme (en haut à droite), la courbe <span class="stableDividend label">DU stable</span> représente cette valeur théorique c/(1+c)*<span class="average">M/N</span>. Elle permet de voir dans quelle proportion le <span class="dividend">DU</span> tend vers cette <span class="stableDividend">valeur théorique</span>, suivant la formule choisie pour le calculer (voir onglet <span class="dividendTabLink">Dividende Universel</span>). <span class="prodFactor">Dans la configuration actuelle, <span class="growth ParamLink">c</span> est défini sur une base annuelle et l'émission du DU est <span class="UD0 ParamLink">mensualisée</span>. Une division par 12 est donc à appliquer.</span></p>
                             </div>
@@ -696,7 +695,7 @@
                         
                         <div class="Comment" id="stableMonetarySupplyComment">
                             <div class=CurveComment>
-                                <p>En régime stable &ndash;&nbsp;où <span class="headcount">N</span> est constant au fil du temps, où toutes les formules du DU sont équivalentes à la formule fondamentale c*M(t-1)/N(t)&nbsp;&ndash;, en connaissant le montant du <span class="dividend">DU</span> courant, on peut déduire la <span class="monetarySupply">masse monétaire</span> courante&nbsp;: en régime stable, M(t)&nbsp;=&nbsp;(1+<span class="growth ParamLink">c</span>)*M(t-1), donc la <span class="monetarySupply">masse</span> vaut (1+<span class="growth ParamLink">c</span>)*<span class="headcount">N</span>*<span class="dividend">DU</span>/<span class="growth ParamLink">c</span>.</p>
+                                <p>En régime stable, DU(t+1)&nbsp;=&nbsp;c*(M/N)(t), mais aussi DU(t+1)&nbsp;=&nbsp;(1+c)*DU(t). Ainsi, en combinant ces deux formules, on a M(t)&nbsp;=&nbsp;N*(1+c)*DU(t)/c. Autrement dit, quelqu'un qui connait le nombre d'individus <span class="headcount">N</span> et le montant du <span class="dividend">DU</span> courant peut facilement en déduire la masse monétaire <span class="monetarySupply">M</span> courante.</p>
                                     
                                 <p>Dans le quatrième diagramme (en bas à droite), la courbe <span class="stableMonetarySupply label">Masse stable</span> représente cette valeur théorique (1+<span class="growth ParamLink">c</span>)*<span class="headcount">N</span>*<span class="dividend">DU</span>/<span class="growth ParamLink">c</span>. Elle permet de voir dans quelle proportion, suivant la formule choisie pour calculer le DU (voir onglet <span class="dividendTabLink">Dividende Universel</span>), la <span class="monetarySupply label">masse monétaire</span> tend vers cette <span class="stableMonetarySupply">valeur théorique</span>. <span class="prodFactor">Dans la configuration actuelle, <span class="growth ParamLink">c</span> est défini sur une base annuelle et l'émission du DU est <span class="UD0 ParamLink">mensualisée</span>. Une multiplication par 12 est donc à appliquer.</span></p>
                             </div>
@@ -741,33 +740,27 @@
                             
                         </div>
 
-                        <!-- Intro Tab Comments -->
-                        <div class="Comment" id="IntroTabComment">
-                            <p>«&nbsp;La TRM en Couleur&nbsp;», publiée il y a quelques années, se voulait une introduction à la Théorie Relative de la Monnaie de Stéphane Laborde. «&nbsp;La TRM en Transition&nbsp;» prolonge cette introduction et tente de garder son souci d'accéssibilité au plus grand nombre, tout en abordant des questions plus avancées.</p>
-                            
-                            <p>L'utilisateur, en positionnant différents attributs, pourra étudier certaines situations grâce aux quatre graphes placés dans la partie inférieure de l'application. Les attributs sont rangés par thématique dans des onglets&nbsp;: <span class="growthTabLink">Taux d'expansion</span>, <span class="dividendTabLink">Dividende Universel</span>, <span class="referenceTabLink">Référentiel</span>, <span class="DisplayTabLink">Affichage</span>, <span class="accountsTabLink">Comptes</span>, <span class="demographyTabLink">Démographie</span>, <span class="transactionsTabLink">Transactions</span>.</p>
-                            
-                            <p>L'utilisateur pourra également étudier les configurations proposées dans l'onglet <span class="workshopsTabLink bouncy">Ateliers</span>, ce qui lui permettra par la même occasion de découvrir progressivement les différentes possibilités de cette application.</p>
-                            
-                        </div>
-
                         <!-- Workshops Tab Comments -->
                         <div class="Comment" id="WorkshopsTabComment">
-                            <p>Cet onglet met en avant différentes configurations qui sont rangées par thème et qui sont sélectionnables via des listes déroulantes. L'application démarre sur une configuration par défaut correspondant à <span class="configLink cS0">"Départ à 0"</span></p>
-                        
-                            <p><strong>Note</strong>&nbsp;: en cliquant ce lien <span class="configLink cS0">"Départ à 0"</span>, la configuration associée est sélectionnée dans la liste déroulante du "Thème 1" et un commentaire dédié est affiché.</p>
-                        
-                            <p><strong>Note</strong>&nbsp;: dès qu'un paramètre est modifié (par exemple en changeant la formule utilisée pour calculer le DU), cet onglet n'affiche plus de configuration comme étant sélectionnée.</p>
-                        
-                            <p><strong>Note</strong>&nbsp;: après avoir testé différents attributs, l'historique du navigateur peut être utilisé pour revenir en arrière.</p>
+                            <p>
+                                <strong>N'hésitez pas !</strong> cliquez, testez différents attributs, différentes fonctionnalités, puis utilisez l'historique du navigateur pour revenir en arrière.
+                            </p>
+                            
+                            <p>
+                                Cet onglet met en avant différentes configurations, rangées par thème et sélectionnables via des listes déroulantes. La première configuration de la première liste est intitulée <span class="configLink cS0">Départ à 0</span>. Cliquez ce lien <span class="configLink cS0">Départ à 0</span>&nbsp;: 
+                                <ul>
+                                    <li>la configuration associée sera sélectionnée dans la liste déroulante du "Thème 1"&nbsp;;</li>
+                                    <li>un commentaire dédié sera affiché.</li>
+                                </ul>
+                            </p>
                             
                         </div>
                         <div class="Comment" id="cS0Comment">
-                            <p>Dans cette configuration, le système monétaire est constitué d'un seul individu, comme nous le confirme la <span class="headcount">courbe du nombre d'individu</span> (voir le graphe en bas à gauche). Le compte de cet individu est représenté par une <span class="account">courbe</span> dans le graphe en haut à gauche.</p>
+                            <p><strong>Note</strong>&nbsp;: chaque point des courbes peut être cliqué, la façon dont il est calculé sera alors indiquée. <strong>N'hésitez pas</strong>, l'historique du navigateur peut être utilisé pour revenir en arrière.</p>
+                            
+                            <p>Dans cette configuration, le système monétaire est constitué d'un seul individu, comme nous le confirme la <span class="headcount">courbe du nombre d'individus</span> (voir le graphe en bas à gauche). Le compte de cet individu est représenté par une <span class="account">courbe</span> dans le graphe en haut à gauche.</p>
                             
                             <p>Dans le graphe en haut à droite, on observe la <span class="dividend">courbe du Dividende Universel</span>. Ici, la formule fondamentale de base DU&nbsp;=&nbsp;c*M/N est utilisée. Son aspect heurté est notable (elle passe de 0 à 1000 pour redescendre ensuite à 100). D'autres formules peuvent être utilisées (voir l'onglet <span class="dividendTabLink">Dividende Universel</span>) ce qui permet de mettre en évidence l'effet de "lissage" de chacune.</p>
-                            
-                            <p><strong>Note</strong>&nbsp;: chaque point des courbes peut être cliqué, la façon dont il est calculé sera alors indiquée.</p>
                             
                         </div>
                         <div class="Comment" id="cNOSTEPComment">
@@ -779,7 +772,7 @@
                         <div class="Comment" id="cSMNComment">
                             <p>Ici aussi, le système monétaire est constitué d'un seul individu mais il démarre avec une somme le plaçant dans un <span class="StartingPercentage ParamLink">régime de croisière</span> (cliquer le lien pour en savoir plus).</p>
                             
-                            <p>En testant les différentes formules de calcul du <span class="dividendTabLink">Dividende Universel</span>, on peut noter que les courbes ne changent pas&nbsp;: en "régime de croisière", toutes sont équivalentes à la formule fondamentale de base DU&nbsp;=&nbsp;c*M(t-1)/N(t).</p>
+                            <p>En testant les différentes formules de calcul du <span class="dividendTabLink">Dividende Universel</span>, on peut noter que les courbes ne changent pas&nbsp;: en "régime de croisière", toutes sont équivalentes à la formule fondamentale de base DU&nbsp;=&nbsp;c*M/N.</p>
                             
                             <p><strong>Note</strong>&nbsp;: la légende d'un graphe peut être cliqué pour commander la visibilité des courbes.</p>
                             
@@ -791,27 +784,39 @@
                             
                             <p>Dans le graphe en bas à droite, les variations au fil du temps de la <span class="monetarySupply">masse monétaire</span> sont représentées. Étant en régime de croisière, on peut vérifier qu'elle est multipliée par 40 au bout de 40 ans, ce qui est propre au taux d'expansion utilisé (voir l'onglet <span class="growthTabLink">Taux d'expansion</span>), qui n'est plus de 10&nbsp;% par an comme précédemment, mais de 9.66&nbsp;%.</p>
                             
-                            <p>On peut aussi vérifier qu'en régime de croisière, toutes les formules du <span class="dividendTabLink">Dividende Universel</span> sont équivalentes.</p>
+                            <p>On peut encore vérifier qu'en régime de croisière, toutes les formules du <span class="dividendTabLink">Dividende Universel</span> sont équivalentes.</p>
                             
                         </div>
                         <div class="Comment" id="cSMN-MComment">
-                            <p>Cette configuration est la même que <span class="configLink cSMN">"Départ à DU0/c"</span>, excepté que dans l'onglet <span class="dividendTabLink">Dividende Universel</span>, <span class="UD0 ParamLink">DU0</span> a été positionné sur une émission mensuelle du DU. Cette action change non seulement le rythme d'émission (action également disponible dans l'onglet <span class="growthTabLink">Taux d'expansion</span>), mais propose également un <span class="UD0 ParamLink">DU0</span> calculé pour garder "DU0/c" inchangé. Ici, <span class="UD0 ParamLink">DU0</span> vaut donc 79.74 unités monétaires au lieu de 1000.</p>
+                            <p>Cette configuration est la même que <span class="configLink cSMN">"Départ à DU0/c"</span>, excepté que dans l'onglet <span class="dividendTabLink">Dividende Universel</span>, <span class="UD0 ParamLink">DU0</span> a été positionné sur "Taux et émission mensuels". Cette action change non seulement le rythme d'émission (action également disponible dans l'onglet <span class="growthTabLink">Taux d'expansion</span>), mais propose également un <span class="UD0 ParamLink">DU0</span> calculé pour garder "DU0/c" inchangé. Ici, <span class="UD0 ParamLink">DU0</span> vaut donc 79.74 unités monétaires au lieu de 1000.</p>
                             
-                            <p>Ainsi, en cliquant le premier point de <span class="account">Compte 1</span>, on peut noter que sa valeur est 10&nbsp;000 unités monétaires ; et en cliquant le dernier point, sa valeur est 14&nbsp;600 unités monétaires. En passant à la configuration <span class="configLink cSMN">"Départ à DU0/c"</span>, on retrouve les mêmes valeurs.</p>
+                            <p>Petit exercice :
+                                <ul>
+                                    <li>
+                                        cliquez le premier point de <span class="account">Compte 1</span> pour voir le détail du calcul, et notez qu'il vaut 10&nbsp;000 unités monétaires&nbsp;;
+                                    </li>
+                                    <li>
+                                        cliquez le dernier point, notez que sa valeur est 14&nbsp;600 unités monétaires&nbsp;;
+                                    </li>
+                                    <li>
+                                        sélectionnez la configuration <span class="configLink cSMN">"Départ à DU0/c"</span> et vérifiez que l'on retrouve bien les mêmes valeurs. 
+                                    </li>
+                                </ul>
+                            </p>
                             
                         </div>
                         <div class="Comment" id="cS0-MComment">
-                            <p>Cette configuration est la même que <span class="configLink cSMN-M">précédemment</span>, excepté que <span class="account">Compte 1</span> part à 0 au lieu de "DU0/c". Elle peut également être comparée à la configuration <span class="configLink cS0">"Départ à 0"</span>&nbsp;: l'émission est ici mensuelle, et <span class="UD0 ParamLink">DU0</span> vaut 79.74 unités monétaires au lieu de 1000.</p>
+                            <p>Cette configuration est la même que <span class="configLink cSMN-M">précédemment</span>, excepté que <span class="account">Compte 1</span> part à 0 au lieu de "DU0/c". Elle peut également être comparée à la configuration <span class="configLink cS0">"Départ à 0"</span> (n'hésitez pas à cliquer et à revenir en arrière)&nbsp;: la différence est alors que l'émission est ici mensuelle, et <span class="UD0 ParamLink">DU0</span> vaut 79.74 unités monétaires au lieu de 1000.</p>
                             
-                            <p>Cette fois, si on note la valeur pour le dernier point de <span class="account">Compte 1</span>, la valeur est 116 unités monétaires, alors que dans la configuaration <span class="configLink cS0">"Départ à 0"</span>, elle vaut 1&nbsp;330. Cette fois, contrairement à ce qui est constaté en comparant les configurations <span class="configLink cSMN-M">"Départ à DU0/c (mois)"</span> et <span class="configLink cSMN">"Départ à DU0/c"</span>, on ne retrouve pas les mêmes valeurs.</p>
+                            <p>Cette fois, si on note la valeur pour le dernier point de <span class="account">Compte 1</span>, la valeur est 116 unités monétaires, alors que dans la configuaration <span class="configLink cS0">"Départ à 0"</span>, elle vaut 1&nbsp;330. Ainsi, contrairement à ce qui a été constaté précédemment en comparant les configurations <span class="configLink cSMN-M">"Départ à DU0/c (mois)"</span> et <span class="configLink cSMN">"Départ à DU0/c"</span>, on ne retrouve pas les mêmes valeurs.</p>
                             
                             <p>La formule utilisée pour le calcul du DU est "DU Basique". En utilisant par exemple DUĞ (voir l'onglet <span class="dividendTabLink">Dividende Universel</span>) la valeur pour le dernier point de <span class="account">Compte 1</span> est alors 3&nbsp;920 unités monétaires, puis 4&nbsp;040 en passant en émission annuelle. La différence est bien moindre, cela illustre la qualité des différentes formules.</p>
                             
                         </div>
                         <div class="Comment" id="cS0-YMComment">
-                            <p>Cette configuration est la même que <span class="configLink cS0">"Départ à 0"</span>, en particulier <span class="growth ParamLink">c</span> est calculé sur une base <span class="growth ParamLink">annuelle</span>. Par contre, l'émission est <span class="UD0 ParamLink">mensuelle</span>.</p>
+                            <p>Cette configuration est la même que <span class="configLink cS0">"Départ à 0"</span>, excepté que dans l'onglet <span class="dividendTabLink">Dividende Universel</span>, <span class="UD0 ParamLink">DU0</span> a été positionné sur "Taux annuel, émission mensuelle" (au lieu de "Taux et emission annuels"). Là encore, n'étant pas en "régime de croisière", on ne retrouve pas les mêmes valeurs.</p>
                             
-                            <p>Par rapport à la configuration <span class="configLink cS0-M">précédente</span>, le DU n'étant ré-évalué qu'une fois par an, le même DU est émis 12 mois consécutivement.</p>
+                            <p>Cette configuration peut également être comparée à la <span class="configLink cS0-M">précédente</span>, où le DU est réévalué chaque mois, alors qu'il n'est ici ré-évalué qu'une fois par an (en particulier sur la courbe du <span class="dividend label">Dividende Universel</span>, on voit que le même DU est émis 12 mois consécutivement).</p>
                             
                         </div>
                         <div class="Comment" id="c2CCComment">
@@ -827,7 +832,7 @@
                             
                             <p>Ici, DUĞ est utilisée. Autre différence (voir graphe en bas à gauche), un plus grand nombre d'individus constitue le système monétaire, ce qui est paramétrable dans l'onglet <span class="demographyTabLink">Démographie</span>, en appliquant un profil.</p>
                             
-                            <p>"Cauchy" est le profil utilisé, il illustre une montée de la population vers un sommet suivie d'une descente dans les mêmes proportions.</p>
+                            <p>"<span class="demographyTabLink">Cauchy</span>" est le profil utilisé, il illustre une montée de la population vers un sommet suivie d'une descente dans les mêmes proportions.</p>
                             
                             <p>Dans le graphe en haut à droite illustrant les variations du DU, la courbe <span class="stableDividend label">DU stable</span> est affichée, permettant de vérifier qu'elle apparaît comme une horizontale "y=c/(1+c)". Pour en savoir plus, cliquer la courbe.</p>
                             
@@ -948,7 +953,7 @@
                         </div>
                         <div class="Comment" id="AnnualGrowthComment">
                             <p>Par défaut, le taux "c" est calculé à partir de l'<span class="LifeExpectancy ParamLink">espérance de vie</span>&nbsp;:&nbsp;c<sub>annuelle</sub>&nbsp;=&nbsp;(<span class="LifeExpectancy ParamLink">ev</span>/2)&nbsp;<sup>1&nbsp;/&nbsp;(<span class="LifeExpectancy ParamLink">ev</span>/2)</sup>&nbsp;-&nbsp;1
-                            <br>«&nbsp;La TRM en Couleur&nbsp;» en dit plus à ce sujet.</p>
+                            <br><a href="http://cuckooland.free.fr/LaTrmEnCouleur.html">La TRM en Couleur</a> en dit plus à ce sujet.</p>
 
                             <p>A noter&nbsp;: si on choisit d'utiliser un <span class="MonthlyGrowth ParamLink">taux mensuel</span> et de le renseigner à la main, le champ du taux annuel est automatiquement modifié afin de faciliter les comparaisons entre les deux rythmes. La formule utilisée est alors&nbsp;: c<sub>annuelle</sub>&nbsp;=&nbsp;(1&nbsp;+&nbsp;<span class="MonthlyGrowth ParamLink">c<sub>mensuelle</sub></span>)<sup>12</sup>&nbsp;-&nbsp;1</p>
 
@@ -1014,7 +1019,7 @@
                             
                         </div>
                         <div class="Comment" id="BasicUDComment">
-                            <p>Dans «&nbsp;La TRM en Couleur&nbsp;», la population <span class="headcount">N</span> reste constante et la formule fondamentale <span class="dividend">DU(t)</span>&nbsp;=&nbsp;<span class="growth ParamLink">c</span>*<span class="monetarySupply">M(t)</span>/<span class="headcount">N(t)</span> est utilisée.</p>
+                            <p>Dans <a href="http://cuckooland.free.fr/LaTrmEnCouleur.html">La TRM en Couleur</a>, la population <span class="headcount">N</span> reste constante et la formule fondamentale <span class="dividend">DU(t)</span>&nbsp;=&nbsp;<span class="growth ParamLink">c</span>*<span class="monetarySupply">M(t)</span>/<span class="headcount">N(t)</span> est utilisée.</p>
 
                             <p>Un défaut de cette formule est de très mal se comporter face à une variation brusque de la population. C'est particulièrement notable au commencement de la monnaie, où le <span class="dividend">DU</span> subit une forte baisse. La configuration <span class="configLink cS0">"Départ à 0"</span> fournit une illustration de ce problème.</p>
 
@@ -1030,7 +1035,7 @@
 
                         </div>
                         <div class="Comment" id="UDBComment">
-                            <p>Remarque préliminaire&nbsp;: quand la population <span class="headcount">N</span> reste constante, toutes les formulations du <span class="dividend">DU</span> doivent être équivalentes à la formule fondamentale <span class="growth ParamLink">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t)</span>. Dans ces conditions, à chaque co-création, la masse monétaire augmente d'un facteur <span class="growth ParamLink">c</span>. Autrement dit, si <span class="growth ParamLink">c</span> vaut 10&nbsp;% par an, la <span class="monetarySupply">masse monétaire</span> augmente de 10&nbsp;% par an. Et il en va de même avec le DU annuel&nbsp;: il augmente de 10&nbsp;% chaque année. Ce qui correspond à la formule&nbsp;: <span class="dividend">DU(t)</span> = (1+<span class="growth ParamLink">c</span>)*<span class="dividend">DU(t-1)</span>.</p>
+                            <p>Remarque préliminaire&nbsp;: quand la population <span class="headcount">N</span> reste constante, toutes les formulations du <span class="dividend">DU</span> doivent être équivalentes à la formule fondamentale <span class="growth ParamLink">c</span>*<span class="monetarySupply">M(t)</span>/<span class="headcount">N(t)</span>. Dans ces conditions, à chaque co-création, la masse monétaire augmente d'un facteur <span class="growth ParamLink">c</span>. Autrement dit, si <span class="growth ParamLink">c</span> vaut 10&nbsp;% par an, la <span class="monetarySupply">masse monétaire</span> augmente de 10&nbsp;% par an. Et il en va de même avec le DU annuel&nbsp;: il augmente de 10&nbsp;% chaque année. Ce qui correspond à la formule&nbsp;: <span class="dividend">DU(t)</span> = (1+<span class="growth ParamLink">c</span>)*<span class="dividend">DU(t-1)</span>.</p>
 
                             <p>Ayant noté cette propriété remarquable en régime à <span class="headcount">N</span> constant, il est intéressant d'en faire une formule de calcul du <span class="dividend">DU</span> et d'en étudier le comportement quand <span class="headcount">N</span> n'est pas constant.</p>
 
@@ -1058,7 +1063,7 @@
                         
                         <!-- Reference Tab Comments -->
                         <div class="Comment" id="ReferenceTabComment">
-                            <p>Par défaut, les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires. On dit alors que l'on utilise l'unité monétaire comme référence des mesures. Mais on peut vouloir utiliser d'autres référentiels. Par exemple, il est courant de compter en nombre de salaire&nbsp;: "Telle chose coûte 3 fois mon salaire mensuel".</p>
+                            <p>Par défaut, les axes verticaux des graphes qui représentent des montants sont exprimés en unités monétaires. On dit alors que l'on utilise l'unité monétaire comme référence des mesures. Mais on peut vouloir utiliser d'autres référentiels. Par exemple, il est courant de compter en nombre de salaires&nbsp;: "Telle chose coûte 3 fois mon salaire mensuel".</p>
 
                             <p>Cette application permet l'utilisation de quelques référentiels permettant de mettre en évidence différents aspects.</p>
 
@@ -1074,7 +1079,7 @@
 
                         </div>
                         <div class="Comment" id="dividendRefComment">
-                            <p>Dans ce référentiel "Dividende", les axes verticaux des graphes qui représentent des montants sont exprimés en nombre de dividende.</p>
+                            <p>Dans ce référentiel "Dividende", les axes verticaux des graphes qui représentent des montants sont exprimés en nombre de dividendes.</p>
 
                             <p>Très logiquement, dans ce référentiel, la courbe représentant les variations au fil du temps du Dividende Universel est peu informative&nbsp;: toutes les valeurs valent 1 et constituent un segment horizontal.</p>
 
@@ -1136,7 +1141,17 @@
 
                         </div>
                         <div class="Comment" id="StartingPercentageComment">
-                            <p>A chaque individu peut être attribué un montant à la naissance&nbsp;: au démarrage de la monnaie, ce montant est exprimé en pourcentage du <span class="UD0 ParamLink">dividende de départ</span> divisé par le <span class="growth ParamLink">taux d'expansion</span> (<span class="UD0 ParamLink">DU0</span>/<span class="growth ParamLink">c</span>)&nbsp;; par la suite, c'est un pourcentage de <span class="average">M/N</span> (après émission d'un éventuel DU). Si l'on veut reproduire le cas particulier d'une population stable comme présenté dans «&nbsp;La TRM en Couleur&nbsp;», on peut le faire en positionnant ce montant à 100&nbsp;%.</p>
+                            <p>A chaque individu peut être attribué un montant à la naissance. Ce montant est spécifié via un pourcentage&nbsp;: 
+                                <ul>
+                                    <li>
+                                        après le démarrage de la monnaie, c'est un pourcentage de la répartition moyenne <span class="average">M/N</span> (après émission d'un éventuel DU)&nbsp;;
+                                    </li>
+                                    <li>
+                                        au moment particulier du démarrage de la monnaie, c'est un pourcentage de <span class="UD0 ParamLink">DU0</span>/<span class="growth ParamLink">c</span>.
+                                    </li>
+                                </ul>
+                                Si l'on veut reproduire le cas d'un "régime de croisière" (population stable depuis plusieurs générations) comme présenté dans <a href="http://cuckooland.free.fr/LaTrmEnCouleur.html">La TRM en Couleur</a>, on peut le faire en positionnant ce montant à 100&nbsp;%.
+                            </p>
 
                         </div>
                         

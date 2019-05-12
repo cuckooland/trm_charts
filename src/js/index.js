@@ -187,8 +187,8 @@ generateC3Charts();
 if (!applyEncodedURIFromLocation()) {
     applyJSonRep(configs1['cS0']);
     unsetCurConfig();
-    openTab('IntroTab');
-    comment('IntroTab');
+    openTab('WorkshopsTab');
+    comment('WorkshopsTab');
     var encodedURI = asEncodedURI();
     window.history.replaceState(encodedURI, '', '?' + encodedURI);
 }

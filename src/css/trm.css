@@ -315,16 +315,12 @@ span.transactionsTabLink {
     fill: #dedede;
 }
 
-.bouncy {
-    position: relative;
-    animation: bouncy 4s infinite linear;
+.introduction {
+	font-weight: bold;
+    margin-bottom: 2em;
 }
-@keyframes bouncy {
-    0% { top: 0em; }
-    40% { top: 0em; }
-    43% { top: -0.5em; }
-    46% { top: 0em; }
-    48% { top: -0.2em; }
-    50% { top: 0em; }
-    100% { top: 0em; }
+
+a {
+    text-decoration: none;
+    color: #760001;
 }
