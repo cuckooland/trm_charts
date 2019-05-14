@@ -1142,8 +1142,8 @@ function getConfigLabel(configKey) {
         case 'c2CC':
             configLabel = "2nd co-créateur";
             break;
-        case 'cCAUCHY':
-            configLabel = "Profil de Cauchy";
+        case 'cSIGMOID':
+            configLabel = "Profil sigmoïde";
             break;
         case 'c4DATES':
             configLabel = "4 dates d'entrée";
