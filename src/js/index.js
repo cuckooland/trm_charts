@@ -70,17 +70,17 @@ var STABLE_MONETARY_SUPPLY_COLOR = '#ff9896';
 
 var AVERAGE_LABEL = 'Moyenne "M/N"';
 
-var STABLE_AVERAGE_LABEL = 'M/N' + NONBREAKING_SPACE + 'stable';
+var STABLE_AVERAGE_LABEL = 'M/N' + NONBREAKING_SPACE + 'pleine';
 
 var DIVIDEND_LABEL = 'Dividende Universel';
 
-var STABLE_DIVIDEND_LABEL = 'DU stable';
+var STABLE_DIVIDEND_LABEL = 'DU pleine';
 
 var HEADCOUNT_LABEL = 'Nombre d\'individus "N"';
 
 var MONETARY_SUPPLY_LABEL = 'Masse Monétaire "M"';
 
-var STABLE_MONETARY_SUPPLY_LABEL = 'Masse stable';
+var STABLE_MONETARY_SUPPLY_LABEL = 'Masse pleine';
 
 var ACCOUNT_LABEL_PREFIX = 'Compte';
 
@@ -404,7 +404,7 @@ function addTabEffectsFromHtml() {
                 clickTab(tabAttributes.tabId);
             });
     });
-    
+    initTransactionSpans();    
 }
 
 function addConfigLinksFromHtml() {
@@ -2297,41 +2297,44 @@ function commentAccordingToAccount(timeStep, account) {
             var prefixId = 'ac' + account.id + 'tvd' + i;
             return Array.from(commentsMap.entries()).map(e=>transactionsValuesDesc(prefixId, e[0], e[1])).join(' ');
         });
-
-        d3.selectAll('span.transaction')
-            .style('background-color', '#f1f1f1')
-            .on('mouseover', function () {
-                d3.select('#TransactionsTab').classed('focused', true);
-                showTab('TransactionsTab');
-
-                var paramElemId = d3.select(this).attr('id');
-                if (paramElemId) {
-                    var modelId = + paramElemId.split('-')[1];
-                    setSelectorIndex('TransactionsTab', modelId);
-                    d3.selectAll('span.transaction').filter(function() { return this.id.endsWith('-' + modelId); })
-                        .style('background-color', '#dddddd');
-                }
-            })
-            .on('mouseout', function () {
-                d3.selectAll('span.transactionsTabLink').style('background-color', '#f1f1f1');
-                d3.selectAll('span.transaction').style('background-color', '#f1f1f1');
-                d3.select('#TransactionsTab').classed('focused', false);
-                showTab(curTabId);
-            })
-            .on('click', function() {
-                d3.select('#TransactionsTab').classed('focused', false);
-                var paramElemId = d3.select(this).attr('id');
-                if (paramElemId) {
-                    var modelId = + paramElemId.split('-')[1];
-                    setSelectorIndex('TransactionsTab', modelId);
-                    clickTab('TransactionsTab');
-                }
-            });
+        initTransactionSpans();
     }
     else {
         d3.selectAll("span.TransactionsDesc").style("display", "none");
         d3.selectAll("span.TransactionsValuesDesc").style("display", "none");
     }
+}
+
+function initTransactionSpans() {
+    d3.selectAll('span.transaction')
+    .style('background-color', '#f1f1f1')
+    .on('mouseover', function () {
+        d3.select('#TransactionsTab').classed('focused', true);
+        showTab('TransactionsTab');
+
+        var paramElemId = d3.select(this).attr('id');
+        if (paramElemId) {
+            var modelId = + paramElemId.split('-')[1];
+            setSelectorIndex('TransactionsTab', modelId);
+            d3.selectAll('span.transaction').filter(function() { return this.id.endsWith('-' + modelId); })
+                .style('background-color', '#dddddd');
+        }
+    })
+    .on('mouseout', function () {
+        d3.selectAll('span.transactionsTabLink').style('background-color', '#f1f1f1');
+        d3.selectAll('span.transaction').style('background-color', '#f1f1f1');
+        d3.select('#TransactionsTab').classed('focused', false);
+        showTab(curTabId);
+    })
+    .on('click', function() {
+        d3.select('#TransactionsTab').classed('focused', false);
+        var paramElemId = d3.select(this).attr('id');
+        if (paramElemId) {
+            var modelId = + paramElemId.split('-')[1];
+            setSelectorIndex('TransactionsTab', modelId);
+            clickTab('TransactionsTab');
+        }
+    });
 }
 
 function transactionsDesc(prefixId, transaction, actualAmountMap) {
