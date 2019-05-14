@@ -155,10 +155,6 @@ var workshops = [
     {
         jsonRep: configs4,
         selectorId: 'ConfigSelector4'
-    }, 
-    {
-        jsonRep: configs5,
-        selectorId: 'ConfigSelector5'
     }];
 
 var curConfigId = "";
