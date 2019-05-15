@@ -492,7 +492,7 @@ var configs2 = {
             com: "c2CC"
         }
     },
-    'cSIGMOID': {
+    'cCAUCHY': {
         m: {
             f: "UDG",
             r: "average",
@@ -515,7 +515,7 @@ var configs2 = {
             cu: "YEAR",
             pu: "YEAR",
             c: 0.09660822712436135,
-            d: "Sigmoid",
+            d: "Cauchy",
             dyM: 10000,
             dxm: 0,
             dxM: 80,
@@ -540,7 +540,7 @@ var configs2 = {
         },
         g: {
             t: "WorkshopsTab",
-            c: "cSIGMOID",
+            c: "cCAUCHY",
             ac: {
                 hs: ["stableAverage"]
             },
@@ -555,7 +555,7 @@ var configs2 = {
             },
             ct: "SA",
             a: 1,
-            com: "cSIGMOID"
+            com: "cCAUCHY"
         }
     },
     'c4DATES': {
@@ -581,7 +581,7 @@ var configs2 = {
             cu: "YEAR",
             pu: "YEAR",
             c: 0.09660822712436135,
-            d: "Sigmoid",
+            d: "Cauchy",
             dyM: 10000,
             dxm: 0,
             dxM: 80,
@@ -598,21 +598,21 @@ var configs2 = {
             },
             a1: {
                 id: 2,
-                b: 35,
+                b: 25,
                 d: 80,
                 a0: 0,
                 t: 'CC'
             },
             a2: {
                 id: 3,
-                b: 45,
+                b: 35,
                 d: 80,
                 a0: 0,
                 t: 'CC'
             },
             a3: {
                 id: 4,
-                b: 25,
+                b: 45,
                 d: 80,
                 a0: 0,
                 t: 'CC'
