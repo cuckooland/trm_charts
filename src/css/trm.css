@@ -57,7 +57,7 @@ input[disabled=disabled] {
 .InProgress {
     font-style: italic;
     font-size: 0.5em;
-    color: #ff5555;
+    color: #181818;
 }
 
 .labelledForm {
