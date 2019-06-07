@@ -805,6 +805,9 @@ function feedConfigSelector(workshop) {
       .enter().append("option")
         .text(function(d) { return getConfigLabel(d); })
         .attr('value', function(d) { return d; });
+        
+    d3.select('#' + workshop.selectorId).selectAll("option").filter(d => d == 'none')
+        .attr('disabled', true);
 }
 
 function setConfigSelection() {
@@ -1112,7 +1115,7 @@ function getConfigLabel(configKey) {
     var configLabel;
     switch(configKey) {
         case 'none':
-            configLabel = "";
+            configLabel = "Sélectionnez...";
             break;
         case 'cS0':
             configLabel = "Départ à 0";
