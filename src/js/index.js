@@ -155,6 +155,10 @@ var workshops = [
     {
         jsonRep: configs4,
         selectorId: 'ConfigSelector4'
+    }, 
+    {
+        jsonRep: configs5,
+        selectorId: 'ConfigSelector5'
     }];
 
 var curConfigId = "";
@@ -1174,8 +1178,11 @@ function getConfigLabel(configKey) {
         case 'c4UBI-M':
             configLabel = "Nouvel entrant (RdB/mois)";
             break;
-        case 'cFALL':
-            configLabel = "Ecroulement de N";
+        case 'c160f':
+            configLabel = "La part des morts";
+            break;
+        case 'c160h':
+            configLabel = "Héritage";
             break;
         default:
             throw new Error("Unknown configuration: " + configKey);
@@ -2435,7 +2442,7 @@ function changeTransactionDestSelection() {
 function changeTransactionYear() {
     var transactionYear = fromYearRep(parseInt(this.value));
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
-    if (transactionYear >= 0 && transactionYear < 200) {
+    if (transactionYear >= 0 && transactionYear < 240) {
         selectedTransaction.year = transactionYear;
         redrawCharts();
         unsetCurConfig();
@@ -2449,7 +2456,7 @@ function changeTransactionYear() {
 function changeTransactionRep() {
     var transactionRep = parseInt(this.value);
     var selectedTransaction = money.getTransaction(getSelectedTransactionIndex());
-    if (transactionRep > 0 && transactionRep < money.toTimeStep(200, money.YEAR)) {
+    if (transactionRep > 0 && transactionRep < money.toTimeStep(240, money.YEAR)) {
         selectedTransaction.repetitionCount = transactionRep;
         redrawCharts();
         unsetCurConfig();
@@ -2721,7 +2728,7 @@ function changeStepCurves() {
 
 function changeTimeLowerBound() {
     var timeLowerBound = fromYearRep(parseInt(this.value));
-    if (timeLowerBound >= 0 && timeLowerBound < 200) {
+    if (timeLowerBound >= 0 && timeLowerBound < 240) {
         var oldTimeBounds = { lower: money.getTimeLowerBound(money.YEAR), upper: money.getTimeUpperBound(money.YEAR) };
         money.setTimeLowerBound(timeLowerBound); 
         updateZoom(oldTimeBounds);
@@ -2736,7 +2743,7 @@ function changeTimeLowerBound() {
 
 function changeTimeUpperBound() {
     var timeUpperBound = fromYearRep(parseInt(this.value));
-    if (timeUpperBound > 0 && timeUpperBound <= 200) {
+    if (timeUpperBound > 0 && timeUpperBound <= 240) {
         var oldTimeBounds = { lower: money.getTimeLowerBound(money.YEAR), upper: money.getTimeUpperBound(money.YEAR) };
         money.setTimeUpperBound(timeUpperBound); 
         updateZoom(oldTimeBounds);
@@ -2764,7 +2771,7 @@ function changeMaxDemography() {
 
 function changeXMinDemography() {
     var xMinDemography = fromYearRep(parseInt(this.value));
-    if (xMinDemography >= 0 && xMinDemography < 200) {
+    if (xMinDemography >= 0 && xMinDemography < 240) {
         money.xMinDemography = xMinDemography;
         redrawCharts();
         unsetCurConfig();
@@ -2777,7 +2784,7 @@ function changeXMinDemography() {
 
 function changeXMaxDemography() {
     var xMaxDemography = fromYearRep(parseInt(this.value));
-    if (xMaxDemography >= 1 && xMaxDemography < 199) {
+    if (xMaxDemography >= 1 && xMaxDemography < 239) {
         money.xMaxDemography = xMaxDemography;
         redrawCharts();
         unsetCurConfig();
@@ -2790,7 +2797,7 @@ function changeXMaxDemography() {
 
 function changeXMpvDemography() {
     var xMpvDemography = fromYearRep(parseInt(this.value));
-    if (xMpvDemography >= 1 && xMpvDemography < 199) {
+    if (xMpvDemography >= 1 && xMpvDemography < 239) {
         money.xMpvDemography = xMpvDemography;
         redrawCharts();
         unsetCurConfig();
@@ -2803,7 +2810,7 @@ function changeXMpvDemography() {
 
 function changePlateauDemography() {
     var plateauDemography = parseInt(this.value);
-    if (plateauDemography >= 0 && plateauDemography < 199) {
+    if (plateauDemography >= 0 && plateauDemography < 239) {
         money.plateauDemography = plateauDemography;
         redrawCharts();
         unsetCurConfig();
@@ -2830,7 +2837,7 @@ function changeXScaleDemography() {
 function changeAccountBirth() {
     var birth = fromYearRep(parseInt(this.value));
     var selectedAccount = money.getAccount(getSelectedAccountIndex());
-    if (birth >= 0 && birth < 200) {
+    if (birth >= 0 && birth < 240) {
         selectedAccount.birth = birth;
         redrawCharts();
         unsetCurConfig();

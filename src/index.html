@@ -58,6 +58,11 @@
                                     <label for="ConfigSelector4">Thème 4</label><span class="wsTitle">RdB vs DU</span><select id="ConfigSelector4" name="ConfigSelector4"></select>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="labelledForm">
+                                    <label for="ConfigSelector5">Thème 5</label><span class="wsTitle">Fonte et héritage</span><select id="ConfigSelector5" name="ConfigSelector5"></select>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Money Tab Parameters -->
@@ -755,6 +760,10 @@
                                 </ul>
                             </p>
                             
+                            <p>
+                                <strong>Défi&nbsp;:</strong> ouvrez cette appli dans un second onglet et essayez de reproduire une des configurations. Ludique et formateur&nbsp;!
+                            </p>
+                            
                         </div>
                         <div class="Comment" id="cS0Comment">
                             <p><strong>Note</strong>&nbsp;: chaque point des courbes peut être cliqué, la façon dont il est calculé sera alors indiquée. <strong>N'hésitez pas</strong>, l'historique du navigateur peut être utilisé pour revenir en arrière.</p>
@@ -809,7 +818,7 @@
                         <div class="Comment" id="cS0-MComment">
                             <p>Cette configuration est la même que <span class="configLink cSMN-M">précédemment</span>, excepté que <span class="account">Compte 1</span> part à 0 au lieu de "DU0/c". Elle peut également être comparée à la configuration <span class="configLink cS0">"Départ à 0"</span> (n'hésitez pas à cliquer et à revenir en arrière)&nbsp;: la différence est alors que l'émission est ici mensuelle, et <span class="UD0 ParamLink">DU0</span> vaut 79.74 unités monétaires au lieu de 1000.</p>
                             
-                            <p>Cette fois, si vous notez la valeur pour le dernier point de <span class="account">Compte 1</span>, la valeur est 116 unités monétaires, alors que dans la configuaration <span class="configLink cS0">"Départ à 0"</span>, elle vaut 1&nbsp;330. Ainsi, contrairement à ce qui a été constaté précédemment en comparant les configurations <span class="configLink cSMN-M">"Départ à DU0/c (mois)"</span> et <span class="configLink cSMN">"Départ à DU0/c"</span>, vous ne retrouverez pas les mêmes valeurs.</p>
+                            <p>Cette fois, si vous notez la valeur pour le dernier point de <span class="account">Compte 1</span>, la valeur est 116 unités monétaires, alors que dans la configuration <span class="configLink cS0">"Départ à 0"</span>, elle vaut 1&nbsp;330. Ainsi, contrairement à ce qui a été constaté précédemment en comparant les configurations <span class="configLink cSMN-M">"Départ à DU0/c (mois)"</span> et <span class="configLink cSMN">"Départ à DU0/c"</span>, vous ne retrouverez pas les mêmes valeurs.</p>
                             
                             <p>La formule utilisée pour le calcul du DU est "DU Basique". En utilisant par exemple DUĞ (voir l'onglet <span class="dividendTabLink">Dividende Universel</span>) la valeur pour le dernier point de <span class="account">Compte 1</span> est alors 3&nbsp;920 unités monétaires, puis 4&nbsp;040 en passant en émission annuelle. La différence est bien moindre, cela illustre la qualité des différentes formules.</p>
                             
@@ -863,7 +872,7 @@
                             
                         </div>
                         <div class="Comment" id="c3CCComment">
-                            <p>Cette configuration est seulement constituée de trois co-créateurs de la monnaie. Le premier (<span id="c3CC1-2" class="account">Compte 2</span>) démarre avec <span id="c3CC-2" class="StartingPercentage ParamLink">50&nbsp;%</span> de <span class="UD0 ParamLink">DU0</span>/c, le deuxième (<span id="c3CC1-3" class="account">Compte 3</span>) avec <span id="c3CC-3" class="StartingPercentage ParamLink">150&nbsp;%</span>, et le troisième (<span id="c3CC1-4" class="account">Compte 4</span>) avec <span id="c3CC-4" class="StartingPercentage ParamLink">100&nbsp;%</span>. Le <span class="growth ParamLink">taux d'expansion</span> est de 10&nbsp;%.</p>
+                            <p>Cette configuration est seulement constituée de trois co-créateurs de la monnaie. Le premier (<span id="c3CC1-2" class="account">Compte 2</span>) démarre avec <span id="c3CCsp-2" class="StartingPercentage ParamLink">50&nbsp;%</span> de <span class="UD0 ParamLink">DU0</span>/c, le deuxième (<span id="c3CC1-3" class="account">Compte 3</span>) avec <span id="c3CCsp-3" class="StartingPercentage ParamLink">150&nbsp;%</span>, et le troisième (<span id="c3CC1-4" class="account">Compte 4</span>) avec <span id="c3CCsp-4" class="StartingPercentage ParamLink">100&nbsp;%</span>. Le <span class="growth ParamLink">taux d'expansion</span> est de 10&nbsp;% par an.</p>
                             
                             <p>Au niveau des axes verticaux, le <span class="referenceTabLink">référentiel</span> utilisé est le DU.</p>
                             
@@ -912,8 +921,28 @@
                             <p>En utilisant une émission annuelle, nous pouvions déjà voir combien les deux configurations "DU" et "RdB par taxe" étaient semblables. Avec une émission mensuelle, c'est encore plus criant. Dis autrement&nbsp;: l'émission du DU et du RdB se fait par à-coups, mais plus le rythme est rapide pour s'approcher d'un processus continu, plus les deux configurations  "DU" et "RdB par taxe" sont équivalentes.</p>
                             
                         </div>
-                        <div class="Comment" id="cFALLComment">
-                            <p>Juste une configuration illustrant un écroulement (peu réaliste car trop marqué) de N. Ce qui offre aussi l'occasion d'introduire l'utilisation sur les axes verticaux de l'échelle "log" (attribut décrit et positionnable dans l'onglet <span class="referenceTabLink">Référentiel</span>).</p>
+                        <div class="Comment" id="c160fComment">
+                            <p>L'attraction vers la moyenne est souvent représentée grâce à un graphe sur 80 ans (comme dans la configuration <span class="configLink c3CC">3 co-créateurs</span>). Mais il est aussi intéressant de réaliser une représention sur 160 ans, afin de montrer comment la part des morts disparaît progressivement (on peut alors parler de fonte).</p>
+                            
+                            <p>Cette configuration est constituée au départ de trois co-créateurs de la monnaie. Le premier (<span id="c160f-1" class="account">Compte 1</span>) démarre avec <span id="c160fsp-1" class="StartingPercentage ParamLink">0&nbsp;%</span> de <span class="UD0 ParamLink">DU0</span>/c, le deuxième (<span id="c160f-2" class="account">Compte 2</span>) avec <span id="c160fsp-2" class="StartingPercentage ParamLink">100&nbsp;%</span>, et le troisième (<span id="c160f-3" class="account">Compte 3</span>) avec <span id="c160fsp-3" class="StartingPercentage ParamLink">200&nbsp;%</span>. Ces valeurs sont choisies pour se placer en monnaie pleine.</p>
+                            
+                            <p>Pour rester en monnaie pleine sur 160 ans, trois nouveaux co-créateurs sont ajoutés au bout de 80 ans. Ils ne sont pas affichés pour alléger le graphe. Il est intéressant de les rendre visibles afin de faciliter la comparaison avec la <span class="configLink c160h">configuration suivante</span>.</p>
+                            
+                        </div>
+                        <div class="Comment" id="c160hComment">
+                            <p>Cette configuration est très semblable à la <span class="configLink c160h">précédente</span>&nbsp;: 3 co-créateurs sur les 80 premières années suivis de 3 autres les 80 années suivantes.</p>
+                            
+                            <p>
+                                Sauf qu'ici, les unités monétaires, au lieu de rester bloquée sur le compte des morts, sont transmises&nbsp;:
+
+                                <ul>
+                                    <li>le <span id="c160h-4" class="account">Compte 4</span> reçoit à la fois les unités du <span id="c160h-1" class="account">Compte 1</span> (voir <span id="t160h-1" class="transaction name">Transaction 1</span>) et du <span id="c160h-2" class="account">Compte 2</span> (voir <span id="t160h-2" class="transaction name">Transaction 2</span>)&nbsp;;</li>
+                                    <li>le <span id="c160h-5" class="account">Compte 5</span> reçoit les unités du <span id="c160h-3" class="account">Compte 3</span> (voir <span id="t160h-3" class="transaction name">Transaction 3</span>)&nbsp;;</li>
+                                    <li>le <span id="c160h-6" class="account">Compte 6</span> ne reçoit aucune unité.</li>
+                                </ul>
+                            </p>
+                            
+                            <p>Sans surprise, malgré la présence d'héritages, l'attraction vers la moyenne est de nouveau observable.</p>
                             
                         </div>
                             

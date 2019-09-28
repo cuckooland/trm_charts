@@ -974,7 +974,7 @@ var configs4 = {
             a0: {
                 id: 1,
                 b: 1,
-                d: 200,
+                d: 240,
                 a0: 0,
                 t: 'COM'
             },
@@ -1058,7 +1058,7 @@ var configs4 = {
             a0: {
                 id: 1,
                 b: 1,
-                d: 200,
+                d: 240,
                 a0: 0,
                 t: 'COM'
             },
@@ -1090,7 +1090,7 @@ var configs4 = {
                 y: 1,
                 a: 10,
                 r: "account",
-                rc: 200
+                rc: 240
             },
             t1: {
                 id: 2,
@@ -1099,7 +1099,7 @@ var configs4 = {
                 y: 1,
                 a: 100,
                 r: "account",
-                rc: 200 
+                rc: 240 
             }
         },
         g: {
@@ -1526,3 +1526,231 @@ var configs4 = {
         }
     }
 };
+
+var configs5 = {
+    none: {
+    },
+    'c160f': {
+        m: {
+            f: "BasicUD",
+            r: "dividend",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 161,
+            cc: false,
+            cu: "YEAR",
+            pu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 6,
+            tc: 0,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            },
+            a1: {
+                id: 2,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: "CC"
+            },
+            a2: {
+                id: 3,
+                b: 1,
+                d: 80,
+                a0: 200,
+                t: "CC"
+            },
+            a3: {
+                id: 4,
+                b: 81,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            },
+            a4: {
+                id: 5,
+                b: 81,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            },
+            a5: {
+                id: 6,
+                b: 81,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            }
+        },
+        g: {
+            t: "WorkshopsTab",
+            c: "c160f",
+            ac: {
+                hs: ["stableAverage", "account4", "account5", "account6"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            ct: "SA",
+            a: 0,
+            tr: -1,
+            s: "",
+            i: -1,
+            com: "c160f"
+        }
+    },
+    'c160h': {
+        m: {
+            f: "BasicUD",
+            r: "dividend",
+            rs: {
+                mu: {
+                    log: false
+                },
+                ud: {
+                    log: false
+                },
+                mn: {
+                    log: false
+                }
+            },
+            le: 80,
+            ud0: 1000,
+            tm: 0,
+            tM: 161,
+            cc: false,
+            cu: "YEAR",
+            pu: "YEAR",
+            c: 0.1,
+            d: "None",
+            dyM: 10000,
+            dxm: 0,
+            dxM: 80,
+            dxPv: 40,
+            dp: 78,
+            dxs: 4,
+            ac: 6,
+            tc: 3,
+            a0: {
+                id: 1,
+                b: 1,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            },
+            a1: {
+                id: 2,
+                b: 1,
+                d: 80,
+                a0: 100,
+                t: "CC"
+            },
+            a2: {
+                id: 3,
+                b: 1,
+                d: 80,
+                a0: 200,
+                t: "CC"
+            },
+            a3: {
+                id: 4,
+                b: 81,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            },
+            a4: {
+                id: 5,
+                b: 81,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            },
+            a5: {
+                id: 6,
+                b: 81,
+                d: 80,
+                a0: 0,
+                t: "CC"
+            },
+            t0: {
+                id: 1,
+                f: 1,
+                t: 4,
+                y: 82,
+                a: 100,
+                r: "account",
+                rc: 1
+            },
+            t1: {
+                id: 2,
+                f: 2,
+                t: 4,
+                y: 82,
+                a: 100,
+                r: "account",
+                rc: 1
+            },
+            t2: {
+                id: 3,
+                f: 3,
+                t: 5,
+                y: 82,
+                a: 100,
+                r: "account",
+                rc: 1
+            }
+        },
+        g: {
+            t: "WorkshopsTab",
+            c: "c160h",
+            ac: {
+                hs: ["stableAverage"]
+            },
+            dc: {
+                hs: ["stableDividend"]
+            },
+            hc: {
+                hs: []
+            },
+            sc: {
+                hs: ["stableMonetarySupply"]
+            },
+            ct: "SA",
+            a: 1,
+            tr: 2,
+            s: "",
+            i: -1,
+            com: "c160h"
+        }
+    }        
+}
