@@ -624,21 +624,25 @@ var myc3 = (function() {
                 newSerie.points.forEach(p=>xSet.add(p[0].getTime()));
                 var xArray = [...xSet].sort((a, b) => a - b);
 
-                function addingScale(serie) {
+                function addingScale(serie, domain, range) {
                     return (serie.linkType == STEP_AFTER_CURVE)
                     ? function(x) {
-                        var insertionIndex = d3.bisectRight(serie.points.map(p=>p[0].getTime()), x);
+                        var insertionIndex = d3.bisectRight(domain, x);
                         return serie.points[insertionIndex == 0 ? insertionIndex : insertionIndex - 1][1];
                     }
                     : d3.scaleLinear()
-                        .domain(serie.points.map(p=>p[0].getTime()))
-                        .range(serie.points.map(p=>p[1]));
+                        .domain(domain)
+                        .range(range);
                 }
 
-                var addingOldScale = addingScale(oldSerie);
+                var oldDomain = oldSerie.points.map(p=>p[0].getTime());
+                var oldRange = oldSerie.points.map(p=>p[1]);
+                var addingOldScale = addingScale(oldSerie, oldDomain, oldRange);
                 var oldYArray = xArray.map(x=>addingOldScale(x));
 
-                var addingNewScale = addingScale(newSerie);
+                var newDomain = newSerie.points.map(p=>p[0].getTime());
+                var newRange = newSerie.points.map(p=>p[1]);
+                var addingNewScale = addingScale(newSerie, newDomain, newRange);
                 var newYArray = xArray.map(x=>addingNewScale(x));
                 
                 // Build oldPoints and newPoints with pixel values
