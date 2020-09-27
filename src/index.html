@@ -26,14 +26,14 @@
             <div id="TrmAppli">
                 <div id="ParamsCommentsAndTabs">
                     <ul class="tabsBar">
-                        <li><span class="tablinks" id="WorkshopsTab" tabContentId="Workshops">Ateliers</span></li>
-                        <li><span class="tablinks" id="GrowingRateTab" tabContentId="GrowingRate">Taux d'expansion</span></li>
-                        <li><span class="tablinks" id="UniversalDividendTab" tabContentId="UniversalDividend">Dividende Universel</span></li>
-                        <li><span class="tablinks" id="ReferenceTab" tabContentId="Reference">Référentiel</span></li>
-                        <li><span class="tablinks" id="DisplayTab" tabContentId="Display">Affichage</span></li>
-                        <li><span class="tablinks" id="AccountsTab" tabContentId="Accounts">Comptes</span></li>
-                        <li><span class="tablinks" id="DemographyTab" tabContentId="Demography">Démographie</span></li>
-                        <li><span class="tablinks" id="TransactionsTab" tabContentId="Transactions">Transactions</span></li>
+                        <li><span class="tablinks" id="WorkshopsTab" tab-content-id="Workshops">Ateliers</span></li>
+                        <li><span class="tablinks" id="GrowingRateTab" tab-content-id="GrowingRate">Taux d'expansion</span></li>
+                        <li><span class="tablinks" id="UniversalDividendTab" tab-content-id="UniversalDividend">Dividende Universel</span></li>
+                        <li><span class="tablinks" id="ReferenceTab" tab-content-id="Reference">Référentiel</span></li>
+                        <li><span class="tablinks" id="DisplayTab" tab-content-id="Display">Affichage</span></li>
+                        <li><span class="tablinks" id="AccountsTab" tab-content-id="Accounts">Comptes</span></li>
+                        <li><span class="tablinks" id="DemographyTab" tab-content-id="Demography">Démographie</span></li>
+                        <li><span class="tablinks" id="TransactionsTab" tab-content-id="Transactions">Transactions</span></li>
                     </ul>
                     <div class="ParamPart">
                         <!-- Workshops Tab Parameters -->
@@ -287,7 +287,7 @@
                     <div class="CommentPart">
                         <!-- Charts Comments -->
                         <div class="Comment" id="averageComment">
-                            <div class=CurveComment>
+                            <div class="CurveComment">
                                 <p>Si la <span class="monetarySupply">masse monétaire</span> était répartie à parts égales, quel montant aurait chacun des <span class="headcount">individus</span>&nbsp;?</p>
                                 
                                 <p>Ce montant et ses évolutions au fil du temps peuvent être visualisés sur la courbe <span class="average label">M/N</span> (voir le diagramme en haut à gauche). Afin que cette courbe soit plus facile à suivre, la zone située entre elle et la droite "Montant = 0" est colorée.</p>
@@ -297,7 +297,7 @@
                                 -->
                             </div>
                             
-                            <div class=PointComment>
+                            <div class="PointComment">
                                 <div class="RefComment MU">
                                     <p><span class="average label">M/N</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="average current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                 
@@ -339,13 +339,13 @@
                         </div>
                         
                         <div class="Comment" id="stableAverageComment">
-                            <div class=CurveComment>
+                            <div class="CurveComment">
                                 <p>En <span class="StartingPercentage ParamLink">monnaie pleine</span>, DU(t+1)&nbsp;=&nbsp;c*(M/N)(t), mais aussi DU(t+1)&nbsp;=&nbsp;(1+c)*DU(t). Ainsi, en combinant ces deux formules, on a (M/N)(t)&nbsp;=&nbsp;(1+c)*DU(t)/c. Autrement dit, quelqu'un qui connaît le montant du <span class="dividend">DU</span> courant peut facilement en déduire la masse moyenne <span class="average">M/N</span> courante.</p>
     
                                 <p>Dans le premier diagramme (en haut à gauche), la courbe <span class="stableAverage label">M/N pleine</span> représente cette valeur théorique (1+c)*<span class="dividend">DU</span>/c. Elle permet de voir dans quelle proportion, suivant la formule choisie pour calculer le DU (voir onglet <span class="dividendTabLink">Dividende Universel</span>), la moyenne <span class="average">M/N</span> tend vers cette <span class="stableAverage">valeur théorique</span>. <span class="prodFactor">Dans la configuration actuelle, <span class="growth ParamLink">c</span> est défini sur une base annuelle et l'émission du DU est <span class="UD0 ParamLink">mensualisée</span>. Un facteur 12 est donc à appliquer.</span></p>
                             </div>
 
-                            <div class=PointComment>
+                            <div class="PointComment">
                                 <div class="RefComment MU">
                                     <p><span class="stableAverage label">DU/c</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableAverage current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                 
@@ -386,7 +386,7 @@
                         </div>
                         
                         <div class="Comment" id="accountComment">
-                            <div class=CurveComment>
+                            <div class="CurveComment">
                                 <p>Dans ce premier diagramme (en haut à gauche), l'évolution au fil du temps d'un ou plusieurs comptes (voir l'onglet <span class="accountsTabLink">Comptes</span>) est représentée.</p>
                                 
                                 <p>Par défaut, un seul compte est affiché, intitulé "Compte 1" et correspond à un co-créateur de la monnaie, comme indiqué entre parenthèses dans la légende.</p>
@@ -395,7 +395,7 @@
                                 </p>
                             </div>
                             
-                            <div class=PointComment>
+                            <div class="PointComment">
                                 <div class="RefComment MU">
                                     <p>
                                         <span class="AmountComment CoCreator NonCreator CoCreators NoCreators AtMoneyBirth AtBirth WhenAlive">
@@ -459,7 +459,7 @@
                                             = <span class="account previous mu value">0</span>
                                         </span>
     
-                                        <span class="TransactionsValuesDesc"> - 1 + 1</span></span>
+                                        <span class="TransactionsValuesDesc"> - 1 + 1</span>
                                     </p>
                                 </div>
                                 
@@ -497,14 +497,14 @@
                         </div>
                         
                         <div class="Comment" id="dividendComment">
-                            <div class=CurveComment>
+                            <div class="CurveComment">
                                 <p>Dans ce deuxième diagramme (en haut à droite), l'évolution au fil du temps du <span class="dividend">Dividende Universel</span> est représentée. La formule utilisée pour le calculer est <span class="dividend formulaName">DUA</span>, comme indiquée entre parenthèses dans la légende. L'onglet <span class="dividendTabLink">Dividende Universel</span> présente différentes formules et permet de les tester.</p>
                                 <p class="prodFactor">
                                     Dans la configuration actuelle, <span class="growth ParamLink">c</span> est défini sur une base annuelle et l'émission du DU est <span class="UD0 ParamLink">mensualisée</span>. Suivant la formule du DU utilisée, elle est remaniée d'un facteur 12 (observable au moment de la réévaluation annuelle du DU). 
                                 </p>
                             </div>
 
-                            <div class=PointComment>
+                            <div class="PointComment">
                                 <div class="RefComment MU">
                                     <p><span class="dividend label">Dividende Universel</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="dividend current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                     
@@ -533,7 +533,7 @@
                                     </div>
     
                                     <div class="DuComment UDB">
-                                        <p>= le <span class="dividend previous mu">précédent DU</span> multiplié par <span class="growth ParamLink">c</span></span> =&nbsp;(1&nbsp;+&nbsp;<span class="growth value ParamLink">0</span>)&nbsp;*&nbsp;<span class="dividend previous mu value">0</span></p>
+                                        <p>= le <span class="dividend previous mu">précédent DU</span> multiplié par <span class="growth ParamLink">c</span> =&nbsp;(1&nbsp;+&nbsp;<span class="growth value ParamLink">0</span>)&nbsp;*&nbsp;<span class="dividend previous mu value">0</span></p>
                                     </div>
     
                                     <div class="DuComment UDC">
@@ -581,13 +581,13 @@
                         </div>
                         
                         <div class="Comment" id="stableDividendComment">
-                            <div class=CurveComment>
+                            <div class="CurveComment">
                                 <p>En <span class="StartingPercentage ParamLink">monnaie pleine</span>, DU(t+1)&nbsp;=&nbsp;c*(M/N)(t), mais aussi DU(t+1)&nbsp;=&nbsp;(1+c)*DU(t). Ainsi, en combinant ces deux formules, on a c/(1+c)*(M/N)(t)&nbsp;=&nbsp;DU(t). Autrement dit, quelqu'un qui connaît la moyenne <span class="average">M/N</span> courante peut facilement en déduire le montant du <span class="dividend">DU</span> courant.</p>
                                 
                                 <p>Dans le deuxième diagramme (en haut à droite), la courbe <span class="stableDividend label">DU pleine</span> représente cette valeur théorique c/(1+c)*<span class="average">M/N</span>. Elle permet de voir dans quelle proportion, suivant la formule choisie pour le calculer (voir onglet <span class="dividendTabLink">Dividende Universel</span>), le <span class="dividend">DU</span> tend vers cette <span class="stableDividend">valeur théorique</span>. <span class="prodFactor">Dans la configuration actuelle, <span class="growth ParamLink">c</span> est défini sur une base annuelle et l'émission du DU est <span class="UD0 ParamLink">mensualisée</span>. Une division par 12 est donc à appliquer.</span></p>
                             </div>
                             
-                            <div class=PointComment>
+                            <div class="PointComment">
                                 <div class="RefComment MU">
                                     <p><span class="stableDividend label">DU pleine</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableDividend current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                 
@@ -628,11 +628,11 @@
                         </div>
                         
                         <div class="Comment" id="headcountComment">
-                            <div class=CurveComment>
+                            <div class="CurveComment">
                                 <p>Dans ce troisième diagramme (en bas à gauche), l'évolution au fil du temps du <span class="headcount">nombre d'individus</span> co-produisant la monnaie est représentée. Dans les <span class="configLink c3UBI">configurations particulières</span> où il n'y a pas de co-créateurs de la monnaie, les individus non créateurs de la monnaie sont alors comptabilisés.</p>
     
                             </div>
-                            <div class=PointComment>
+                            <div class="PointComment">
                                 <p><span class="headcount label">Nombre d'individus</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="headcount current value nolink">0</span></p>
                                 
                                 <p>= le nombre d'individus définis dans l'onglet <span class="accountsTabLink">Comptes</span> co-produisant la monnaie à cette date +&nbsp;le nombre d'individus définis via l'onglet <span class="demographyTabLink">Démographie</span> pour le profil "<span class="demographyLabel">Cauchy</span>"</p>
@@ -642,11 +642,11 @@
                         </div>
                         
                         <div class="Comment" id="monetarySupplyComment">
-                            <div class=CurveComment>
+                            <div class="CurveComment">
                                 <p>Dans ce quatrième diagramme (en bas à droite), l'évolution au fil du temps de la <span class="monetarySupply">masse monétaire</span> est représentée.</p>
                             </div>
 
-                            <div class=PointComment>
+                            <div class="PointComment">
                                 <div class="RefComment MU">
                                     <p><span class="monetarySupply label">Masse Monétaire</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="monetarySupply current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                 
@@ -696,13 +696,13 @@
                         </div>
                         
                         <div class="Comment" id="stableMonetarySupplyComment">
-                            <div class=CurveComment>
+                            <div class="CurveComment">
                                 <p>En <span class="StartingPercentage ParamLink">monnaie pleine</span>, DU(t+1)&nbsp;=&nbsp;c*(M/N)(t), mais aussi DU(t+1)&nbsp;=&nbsp;(1+c)*DU(t). Ainsi, en combinant ces deux formules, on a M(t)&nbsp;=&nbsp;N*(1+c)*DU(t)/c. Autrement dit, quelqu'un qui connaît le nombre d'individus <span class="headcount">N</span> et le montant du <span class="dividend">DU</span> courant peut facilement en déduire la masse monétaire <span class="monetarySupply">M</span> courante.</p>
                                     
                                 <p>Dans le quatrième diagramme (en bas à droite), la courbe <span class="stableMonetarySupply label">Masse pleine</span> représente cette valeur théorique (1+<span class="growth ParamLink">c</span>)*<span class="headcount">N</span>*<span class="dividend">DU</span>/<span class="growth ParamLink">c</span>. Elle permet de voir dans quelle proportion, suivant la formule choisie pour calculer le DU (voir onglet <span class="dividendTabLink">Dividende Universel</span>), la <span class="monetarySupply label">masse monétaire</span> tend vers cette <span class="stableMonetarySupply">valeur théorique</span>. <span class="prodFactor">Dans la configuration actuelle, <span class="growth ParamLink">c</span> est défini sur une base annuelle et l'émission du DU est <span class="UD0 ParamLink">mensualisée</span>. Une multiplication par 12 est donc à appliquer.</span></p>
                             </div>
                                 
-                            <div class=PointComment>
+                            <div class="PointComment">
                                 <div class="RefComment MU">
                                     <p><span class="stableMonetarySupply label">Masse pleine</span> le <span class="dateValue">01-01-2001</span> vaut&nbsp;: <span class="stableMonetarySupply current mu value nolink">0</span> <span class="muUnit">Unité monétaire</span></p>
                                 
@@ -882,7 +882,7 @@
                             
                         </div>
                         <div class="Comment" id="c3UBIComment">
-                            <p>Ici, il n'y a <strong>aucun co-créateur</strong> de la monnaie. Le <span class="accountsTabLink">Compte 1</span> (par défaut non représenté, cliquez la légende pour le faire apparaître) peut être vu comme une caisse collective. D'abord, il est rempli via un prélèvement de 10&nbsp;% de chaque compte (voir <span class="transactionsTabLink">Transaction 1</span>), puis il est redistribué en totalité et à parts égales (voir <span class="transactionsTabLink">Transaction 2</span>).</p>
+                            <p>Ici, il n'y a <strong>aucun co-créateur</strong> de la monnaie. Le <span id="c3UBI0-1" class="account">Compte 1</span> (par défaut non représenté, cliquez la légende pour le faire apparaître) peut être vu comme une caisse collective. D'abord, il est rempli via un prélèvement de 10&nbsp;% de chaque compte (voir <span id="t3UBI-1" class="transaction name">Transaction 1</span>), puis il est redistribué en totalité et à parts égales (voir <span id="t3UBI-2" class="transaction name">Transaction 2</span>).</p>
                             
                             <p>Comme dans la <span class="configLink c3CC">configuration précédente</span>, nous avons trois utilisateurs de la monnaie, le <span id="c3UBI1-2" class="account">premier</span> démarrant avec <span id="c3UBIsp-2" class="StartingPercentage ParamLink">50&nbsp;%</span> de <span class="UD0 ParamLink">DU0</span>/c, le <span id="c3UBI2-3" class="account">deuxième</span> avec <span id="c3UBIsp-3" class="StartingPercentage ParamLink">150&nbsp;%</span>, et le <span id="c3UBI3-4" class="account">troisième</span> avec <span id="c3UBIsp-4" class="StartingPercentage ParamLink">100&nbsp;%</span>.</p>
                             
@@ -1083,9 +1083,9 @@
 
                             <p>Avec DUB, on a <span class="dividend">DU(t)</span> = (1+<span class="growth ParamLink">c</span>)*<span class="dividend">DU(t-1)</span> ou dit autrement <span class="dividend">DU(t)</span> = <span class="dividend">DU(t-1)</span>&nbsp;+&nbsp;<span class="growth ParamLink">c</span>*<span class="dividend">DU(t-1)</span></p>
                             
-                            <p>Avec DU<sub>basique</sub> , on a <span class="dividend">DU(t-1)</span> = <span class="growth ParamLink">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t-1)</span>
+                            <p>Avec DU<sub>basique</sub> , on a <span class="dividend">DU(t-1)</span> = <span class="growth ParamLink">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t-1)</span></p>
 
-                            <p>En mixant les deux, on a <span class="dividend">DU(t)</span> = <span class="dividend">DU(t-1)</span>&nbsp;+&nbsp;<span class="growth ParamLink">c</span>*<span class="growth ParamLink">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t-1)</span> 
+                            <p>En mixant les deux, on a <span class="dividend">DU(t)</span> = <span class="dividend">DU(t-1)</span>&nbsp;+&nbsp;<span class="growth ParamLink">c</span>*<span class="growth ParamLink">c</span>*<span class="monetarySupply">M(t-1)</span>/<span class="headcount">N(t-1)</span></p>
 
                         </div>
                         

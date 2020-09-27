@@ -1958,7 +1958,7 @@ function openTab(tabId) {
 
 function showTab(tabId) {
     d3.selectAll(".tabcontent").style("display", "none");
-    var tabContentId = d3.select("#" + tabId).attr("tabContentId");
+    var tabContentId = d3.select("#" + tabId).attr("tab-content-id");
     d3.select("#" + tabContentId).style("display", "block");
 }
 
