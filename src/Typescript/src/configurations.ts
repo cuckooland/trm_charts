@@ -1,7 +1,8 @@
-var configs1 = {
+// eslint-disable-next-line no-unused-vars
+const configs1: {[s: string]: JSonRep | {}} = {
     none: {
     },
-    'cS0': {
+    "cS0": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -37,14 +38,14 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
             c: "cS0",
             t: "WorkshopsTab",
             ac: {
-                hs: ['average', "stableAverage"]
+                hs: ["average", "stableAverage"]
             },
             dc: {
                 hs: ["stableDividend"]
@@ -61,7 +62,7 @@ var configs1 = {
         }
     },
 
-    'cSMN': {
+    "cSMN": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -97,14 +98,14 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
             c: "cSMN",
             t: "WorkshopsTab",
             ac: {
-                hs: ['average', "stableAverage"]
+                hs: ["average", "stableAverage"]
             },
             dc: {
                 hs: ["stableDividend"]
@@ -121,7 +122,7 @@ var configs1 = {
         }
     },
     
-    'cX40': {
+    "cX40": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -157,14 +158,14 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
             c: "cX40",
             t: "WorkshopsTab",
             ac: {
-                hs: ['average', "stableAverage"]
+                hs: ["average", "stableAverage"]
             },
             dc: {
                 hs: ["stableDividend"]
@@ -181,7 +182,7 @@ var configs1 = {
         }
     },
     
-    'cNOSTEP': {
+    "cNOSTEP": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -217,14 +218,14 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
             c: "cNOSTEP",
             t: "WorkshopsTab",
             ac: {
-                hs: ['average', "stableAverage"]
+                hs: ["average", "stableAverage"]
             },
             dc: {
                 hs: ["stableDividend"]
@@ -241,7 +242,7 @@ var configs1 = {
         }
     },
 
-    'cSMN-M': {
+    "cSMN-M": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -277,14 +278,14 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
             c: "cSMN-M",
             t: "WorkshopsTab",
             ac: {
-                hs: ['average', "stableAverage"]
+                hs: ["average", "stableAverage"]
             },
             dc: {
                 hs: ["stableDividend"]
@@ -301,7 +302,7 @@ var configs1 = {
         }
     },
     
-    'cS0-M': {
+    "cS0-M": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -337,14 +338,14 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
             c: "cS0-M",
             t: "WorkshopsTab",
             ac: {
-                hs: ['average', "stableAverage"]
+                hs: ["average", "stableAverage"]
             },
             dc: {
                 hs: ["stableDividend"]
@@ -361,7 +362,7 @@ var configs1 = {
         }
     },
 
-    'cS0-YM': {
+    "cS0-YM": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -397,14 +398,14 @@ var configs1 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
             c: "cS0-YM",
             t: "WorkshopsTab",
             ac: {
-                hs: ['average', "stableAverage"]
+                hs: ["average", "stableAverage"]
             },
             dc: {
                 hs: ["stableDividend"]
@@ -423,10 +424,11 @@ var configs1 = {
 
 };
 
-var configs2 = {
+// eslint-disable-next-line no-unused-vars
+const configs2: {[s: string]: JSonRep | {}} = {
     none: {
     },
-    'c2CC': {
+    "c2CC": {
         m: {
             f: "BasicUD",
             r: "average",
@@ -462,14 +464,14 @@ var configs2 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             },
             a1: {
                 id: 2,
                 b: 3,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
@@ -492,7 +494,7 @@ var configs2 = {
             com: "c2CC"
         }
     },
-    'cCAUCHY': {
+    "cCAUCHY": {
         m: {
             f: "UDG",
             r: "average",
@@ -528,14 +530,14 @@ var configs2 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             },
             a1: {
                 id: 2,
                 b: 35,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
@@ -558,7 +560,7 @@ var configs2 = {
             com: "cCAUCHY"
         }
     },
-    'c4DATES': {
+    "c4DATES": {
         m: {
             f: "UDG",
             r: "dividend",
@@ -594,28 +596,28 @@ var configs2 = {
                 b: 1,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             },
             a1: {
                 id: 2,
                 b: 25,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             },
             a2: {
                 id: 3,
                 b: 35,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             },
             a3: {
                 id: 4,
                 b: 45,
                 d: 80,
                 a0: 0,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
@@ -640,10 +642,11 @@ var configs2 = {
     }
 };
 
-var configs3 = {
+// eslint-disable-next-line no-unused-vars
+const configs3: {[s: string]: JSonRep | {}} = {
     none: {
     },
-    'cLMU1': {
+    "cLMU1": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -680,14 +683,14 @@ var configs3 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'NC'
+                t: "NC"
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'NC'
+                t: "NC"
             },
             t0: {
                 id: 1,
@@ -740,7 +743,7 @@ var configs3 = {
             com: "cLMU1"
         }
     },
-    'cLMU2': {
+    "cLMU2": {
         m: {
             f: "BasicUD",
             r: "dividend",
@@ -777,14 +780,14 @@ var configs3 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             },
             t0: {
                 id: 1,
@@ -837,7 +840,7 @@ var configs3 = {
             com: "cLMU2"
         }
     },
-    'cLUD': {
+    "cLUD": {
         m: {
             f: "BasicUD",
             r: "dividend",
@@ -874,14 +877,14 @@ var configs3 = {
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             },
             t0: {
                 id: 1,
@@ -936,10 +939,11 @@ var configs3 = {
     }
 };
 
-var configs4 = {
+// eslint-disable-next-line no-unused-vars
+const configs4: {[s: string]: JSonRep | {}} = {
     none: {
     },
-    'c3CC': {
+    "c3CC": {
         m: {
             f: "BasicUD",
             r: "dividend",
@@ -976,28 +980,28 @@ var configs4 = {
                 b: 1,
                 d: 240,
                 a0: 0,
-                t: 'COM'
+                t: "COM"
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 50,
-                t: 'CC'
+                t: "CC"
             },
             a2: {
                 id: 3,
                 b: 1,
                 d: 80,
                 a0: 150,
-                t: 'CC'
+                t: "CC"
             },
             a3: {
                 id: 4,
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'CC'
+                t: "CC"
             }
         },
         g: {
@@ -1023,7 +1027,7 @@ var configs4 = {
             com: "c3CC"
         }
     },    
-    'c3UBI': {
+    "c3UBI": {
         m: {
             f: "BasicUD",
             r: "monetaryUnit",
@@ -1060,28 +1064,28 @@ var configs4 = {
                 b: 1,
                 d: 240,
                 a0: 0,
-                t: 'COM'
+                t: "COM"
             },
             a1: {
                 id: 2,
                 b: 1,
                 d: 80,
                 a0: 50,
-                t: 'NC'
+                t: "NC"
             },
             a2: {
                 id: 3,
                 b: 1,
                 d: 80,
                 a0: 150,
-                t: 'NC'
+                t: "NC"
             },
             a3: {
                 id: 4,
                 b: 1,
                 d: 80,
                 a0: 100,
-                t: 'NC'
+                t: "NC"
             },
             t0: {
                 id: 1,
@@ -1125,7 +1129,7 @@ var configs4 = {
             com: "c3UBI"
         }
     },
-    'c4CC': {
+    "c4CC": {
         m: {
             f: "BasicUD",
             r: "average",
@@ -1216,7 +1220,7 @@ var configs4 = {
             com: "c4CC"
         }
     },
-    'c4UBI': {
+    "c4UBI": {
         m: {
             f: "BasicUD",
             r: "average",
@@ -1325,7 +1329,7 @@ var configs4 = {
             com: "c4UBI"
         }
     },
-    'c4CC-M': {
+    "c4CC-M": {
         m: {
             f: "BasicUD",
             r: "average",
@@ -1416,7 +1420,7 @@ var configs4 = {
             com: "c4CC-M"
         }
     },
-    'c4UBI-M': {
+    "c4UBI-M": {
         m: {
             f: "BasicUD",
             r: "average",
@@ -1527,10 +1531,11 @@ var configs4 = {
     }
 };
 
-var configs5 = {
+// eslint-disable-next-line no-unused-vars
+const configs5: {[s: string]: JSonRep | {}} = {
     none: {
     },
-    'c160f': {
+    "c160f": {
         m: {
             f: "BasicUD",
             r: "dividend",
@@ -1628,7 +1633,7 @@ var configs5 = {
             com: "c160f"
         }
     },
-    'c160h': {
+    "c160h": {
         m: {
             f: "BasicUD",
             r: "dividend",

@@ -1,0 +1,76 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly",
+        "d3": true,
+        "$": true,
+        "Shiny": true,
+        "LauncherView": true,
+        "describe": true,
+        "it": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "parser": "@typescript-eslint/parser"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "arrow-spacing": "error",
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "curly": "error",
+        "default-case": "error",
+        "dot-notation": "error",
+        "eqeqeq": "error",
+        "no-multi-spaces": "error",
+        "no-loop-func": "error",
+        "no-multi-str": "error",
+        "no-param-reassign": "error",
+        "no-return-assign": "error",
+        "no-return-await": "error",
+        "no-self-compare": "error",
+        "no-sequences": "error",
+        "no-throw-literal": "error",
+        "no-unmodified-loop-condition": "error",
+        "no-unused-expressions": "error",
+        "no-useless-return": "error",
+        "no-void": "error",
+        "radix": "error",
+        "init-declarations": ["off", "always"],
+        "no-shadow": "error",
+        "no-use-before-define": ["error", { "functions": false, "classes": false }],
+        "handle-callback-err": "error",
+        "prefer-const": "error",
+        "max-lines-per-function": ["error", { "skipComments": true }],
+        "max-nested-callbacks": "error",
+        "max-depth": "error",
+        "multiline-ternary": ["error", "always-multiline"],
+        "no-multi-assign": "error",
+        "no-negated-condition": "error",
+        "no-nested-ternary": "error",
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+        "no-unneeded-ternary": "error",
+        "no-whitespace-before-property": "error",
+        "quotes": ["error", "double", { "avoidEscape": true }],
+        "block-scoped-var": "error",
+        "class-methods-use-this": "error",
+        "complexity": "error",
+        "consistent-return": "error",
+        "no-implicit-globals": "error",
+        "no-undef-init": "error",
+        "func-name-matching": "error",
+        "no-var": "error"
+    }
+}

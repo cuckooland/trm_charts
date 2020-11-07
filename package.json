@@ -1,0 +1,29 @@
+{
+    "name": "rtm-in-transition",
+    "version": "0.0.1",
+    "description": "Advanced introduction to the rtm",
+    "dependencies": {
+        "d3": "5",
+        "lz-string": "1.3"
+    },
+    "devDependencies": {
+        "@types/d3": "^5.7.2",
+        "@types/lz-string": "1.3.34",
+        "@typescript-eslint/eslint-plugin": "^2.15.0",
+        "@typescript-eslint/parser": "^2.15.0",
+        "del": "^5.1.0",
+        "eslint": "^6.5.1",
+        "gulp": "^4.0.2",
+        "gulp-eslint": "^6.0.0",
+        "gulp-mocha": "^7.0.2",
+        "gulp-sourcemaps": "^2.6.5",
+        "gulp-typescript": "^5.0.1",
+        "mocha": "^6.2.0",
+        "typescript": "^3.6.3",
+        "gulp-zip": "^5.0.0"
+    },
+    "scripts": {
+        "build": "gulp buildRtmInTransition",
+        "test": "mocha test/mocha/*.js"
+    }
+}
