@@ -325,7 +325,7 @@ class Chart {
             .remove();
 
         // Draw axes
-        if (series.length > 0 && series[0].id === HEADCOUNT_ID && this.config.axis.rangeVal.max.y < 10) {
+        if (series.length > 0 && this.config.axis.y.intMode && this.config.axis.rangeVal.max.y < 10) {
             this.yAxis.ticks(this.config.axis.rangeVal.max.y);
         }
         else {
@@ -517,7 +517,7 @@ class Chart {
             .attr("d", function(serie) { return thisChart.lineGenerator(serie.linkType)(serie.points); });
 
         // Draw axes
-        if (series.length > 0 && series[0].id === HEADCOUNT_ID && this.config.axis.rangeVal.max.y < 10) {
+        if (series.length > 0 && this.config.axis.y.intMode && this.config.axis.rangeVal.max.y < 10) {
             this.yAxis.ticks(this.config.axis.rangeVal.max.y);
         }
         else {
@@ -1104,7 +1104,8 @@ type ChartConfig = {
             },
             tick: {
                 format: (value: number) => string
-            }
+            },
+            intMode: boolean
         },
         rangeVal: {
             min: {
